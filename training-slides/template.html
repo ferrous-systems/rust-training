@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport"
+        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.5.0/reset.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.5.0/reveal.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.5.0/theme/simple.css" id="theme">
+    <!-- This is the highlight.js theme bundled in reveal.js -->
+    <!-- link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.5.0/plugin/highlight/monokai.css" -->
+    <!-- This is the theme we prefer, which we take from highlight.js directly -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/styles/idea.min.css">
+    <title>$TITLE</title>
+    <style>
+        .open-in-playground {
+            background: #a42;
+            font-size: 100%;
+            color: white;
+            font-weight: 700;
+            cursor: pointer;
+            float: left;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="reveal">
+        <div class="slides">
+            <section data-markdown>
+                <textarea data-template>
+$CONTENT
+                </textarea>
+            </section>
+        </div> <!-- class="slides" -->
+    </div> <!-- class="reveal" -->
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.5.0/reveal.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.5.0/plugin/notes/notes.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.5.0/plugin/markdown/markdown.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.5.0/plugin/highlight/highlight.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/highlight.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js" crossorigin="anonymous"></script>
+    <script>
+        const buttons = '<p><button class="open-in-playground">RUN</button></p>\n';
+
+        function addButtons() {
+            $('pre code.rust:not(.fragment)').each(function (i, block) {
+                $(block).parent().append(buttons);
+            });
+            $('.open-in-playground').click(function () {
+                const code = $(this).siblings('code')[0].cloneNode(true);
+                for (const callout of code.getElementsByClassName("conum")) {
+                    callout.nextSibling.remove();
+                }
+                const baseUrl = 'https://play.rust-lang.org/?version=stable&edition=2018&code=';
+                const payload = encodeURIComponent(code.innerText);
+                const url = baseUrl + payload;
+                window.open(url, '_blank');
+            });
+        }
+        $(addButtons)
+
+        // More info about config & dependencies:
+        // - https://github.com/hakimel/reveal.js#configuration
+        // - https://github.com/hakimel/reveal.js#dependencies
+        Reveal.initialize({
+            // Display presentation control arrows
+            controls: true,
+            // Help the user learn the controls by providing hints, for example by
+            // bouncing the down arrow when they first encounter a vertical slide
+            controlsTutorial: true,
+            // Determines where controls appear, "edges" or "bottom-right"
+            controlsLayout: 'bottom-right',
+            // Visibility rule for backwards navigation arrows; "faded", "hidden"
+            // or "visible"
+            controlsBackArrows: 'faded',
+            // Display a presentation progress bar
+            progress: true,
+            // Display the page number of the current slide
+            slideNumber: true,
+            // Control which views the slide number displays on
+            showSlideNumber: 'all',
+            // Add the current slide number to the URL hash so that reloading the
+            // page/copying the URL will return you to the same slide
+            hash: true,
+            // Push each slide change to the browser history. Implies `hash: true`
+            history: false,
+            // Enable keyboard shortcuts for navigation
+            keyboard: true,
+            // Enable the slide overview mode
+            overview: true,
+            // Disables the default reveal.js slide layout so that you can use custom CSS layout
+            disableLayout: false,
+            // Vertical centering of slides
+            center: true,
+            // Enables touch navigation on devices with touch input
+            touch: true,
+            // Loop the presentation
+            loop: false,
+            // Change the presentation direction to be RTL
+            rtl: false,
+            // See https://github.com/hakimel/reveal.js/#navigation-mode
+            navigationMode: 'default',
+            // Randomizes the order of slides each time the presentation loads
+            shuffle: false,
+            // Turns fragments on and off globally
+            fragments: true,
+            // Flags whether to include the current fragment in the URL,
+            // so that reloading brings you to the same fragment position
+            fragmentInURL: false,
+            // Flags if the presentation is running in an embedded mode,
+            // i.e. contained within a limited portion of the screen
+            embedded: false,
+            // Flags if we should show a help overlay when the questionmark
+            // key is pressed
+            help: true,
+            // Flags if speaker notes should be visible to all viewers
+            showNotes: false,
+            // Global override for autolaying embedded media (video/audio/iframe)
+            // - null: Media will only autoplay if data-autoplay is present
+            // - true: All media will autoplay, regardless of individual setting
+            // - false: No media will autoplay, regardless of individual setting
+            autoPlayMedia: null,
+            // Global override for preloading lazy-loaded iframes
+            // - null: Iframes with data-src AND data-preload will be loaded when within
+            //   the viewDistance, iframes with only data-src will be loaded when visible
+            // - true: All iframes with data-src will be loaded when within the viewDistance
+            // - false: All iframes with data-src will be loaded only when visible
+            preloadIframes: null,
+            // Number of milliseconds between automatically proceeding to the
+            // next slide, disabled when set to 0, this value can be overwritten
+            // by using a data-autoslide attribute on your slides
+            autoSlide: 0,
+            // Stop auto-sliding after user input
+            autoSlideStoppable: true,
+            // Use this method for navigation when auto-sliding
+            autoSlideMethod: Reveal.navigateNext,
+            // Specify the average time in seconds that you think you will spend
+            // presenting each slide. This is used to show a pacing timer in the
+            // speaker view
+            defaultTiming: 60,
+            // Specify the total time in seconds that is available to
+            // present.  If this is set to a nonzero value, the pacing
+            // timer will work out the time available for each slide,
+            // instead of using the defaultTiming value
+            // Set to 60 minutes, because this training is 3x 1 hour blocks
+            totalTime: 3600,
+            // Specify the minimum amount of time you want to allot to
+            // each slide, if using the totalTime calculation method.  If
+            // the automated time allocation causes slide pacing to fall
+            // below this threshold, then you will see an alert in the
+            // speaker notes window
+            minimumTimePerSlide: 0,
+            // Enable slide navigation via mouse wheel
+            mouseWheel: false,
+            // Hide cursor if inactive
+            hideInactiveCursor: true,
+            // Time before the cursor is hidden (in ms)
+            hideCursorTime: 5000,
+            // Hides the address bar on mobile devices
+            hideAddressBar: true,
+            // Opens links in an iframe preview overlay
+            // Add `data-preview-link` and `data-preview-link="false"` to customise each link
+            // individually
+            previewLinks: false,
+            // Transition style (e.g., none, fade, slide, convex, concave, zoom)
+            transition: 'none',
+            // Transition speed (e.g., default, fast, slow)
+            transitionSpeed: 'default',
+            // Transition style for full page slide backgrounds (e.g., none, fade, slide, convex, concave, zoom)
+            backgroundTransition: 'fade',
+            // Number of slides away from the current that are visible
+            viewDistance: 3,
+            // Number of slides away from the current that are visible on mobile
+            // devices. It is advisable to set this to a lower number than
+            // viewDistance in order to save resources.
+            mobileViewDistance: 3,
+            // Parallax background image (e.g., "'https://s3.amazonaws.com/hakim-static/reveal-js/reveal-parallax-1.jpg'")
+            parallaxBackgroundImage: '',
+            // Parallax background size in CSS syntax (e.g., "2100px 900px")
+            parallaxBackgroundSize: '',
+            // Number of pixels to move the parallax background per slide
+            // - Calculated automatically unless specified
+            // - Set to 0 to disable movement along an axis
+            parallaxBackgroundHorizontal: null,
+            parallaxBackgroundVertical: null,
+            // The display mode that will be used to show slides
+            display: 'block',
+
+            // The "normal" size of the presentation, aspect ratio will be preserved
+            // when the presentation is scaled to fit different resolutions. Can be
+            // specified using percentage units.
+            width: 1280,
+            height: 720,
+
+            // Factor of the display size that should remain empty around the content
+            margin: 0.1,
+
+            // Bounds for smallest/largest possible scale to apply to content
+            minScale: 0.2,
+            maxScale: 1.5,
+
+            // PDF Export Options
+            // Put each fragment on a separate page
+            pdfSeparateFragments: true,
+            // For slides that do not fit on a page, max number of pages
+            pdfMaxPagesPerSlide: 1,
+
+            plugins: [RevealMarkdown, RevealHighlight, RevealNotes]
+        });
+
+    </script>
+    <script type="module">
+        // // Use highlight.js to format all the Rust code blocks. We do this (not
+        // // hightlightAll) so that it skips the mermaid-language blocks.
+        // document.addEventListener('DOMContentLoaded', (event) => {
+        //     document.querySelectorAll('pre code.rust').forEach((el) => {
+        //         hljs.highlightElement(el);
+        //     });
+        // });
+
+        // Use mermaid.js to render all the diagrams
+        import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.esm.min.mjs';
+        mermaid.initialize({ startOnLoad: true });
+    </script>
+
+</body>
+
+</html>
