@@ -12,12 +12,12 @@ Rust comes with all standard int types, with and without sign
 
 ## Syntactic clarity in specifying numbers
 
-```rust,ignore
-    123_456   // underscore as separator
-    0x12      // prefix 0x to indicate hex value
-    0o23      // prefix 0o to indicate octal value
-    0b0001    // prefix 0b to indicate binary value
-    b'a'      // A single byte character
+```rust
+let x = 123_456;   // underscore as separator
+let x = 0x12;      // prefix 0x to indicate hex value
+let x = 0o23;      // prefix 0o to indicate octal value
+let x = 0b0001;    // prefix 0b to indicate binary value
+let x = b'a';      // A single u8
 ```
 
 ## Architecture-dependent numbers
@@ -30,11 +30,11 @@ Rust comes with two architecture-dependent number types:
 
 Casts between number are possible, **also shortening casts**:
 
-```rust,editable
-    fn main() {
-        let foo = 3_i64;
-        let bar = foo as i32;
-    }
+```rust
+fn main() {
+    let foo = 3_i64;
+    let bar = foo as i32;
+}
 ```
 
 ---
@@ -51,66 +51,68 @@ behaviour can be configured.
 Rust also comes with floats of all standard sizes: `f32`, `f64`
 
 ```rust
-    fn main() {
-        let float: f64 = 1.0;
-    }
+fn main() {
+    let float: f64 = 1.0;
+}
 ```
+
 ## Boolean
 
-Boolean in Rust is represented by either of two values: `true` or `false`
+Boolean in Rust is represented by either of two values: `true` or
+`false`
 
 ## Character
 
-`char` is a [Unicode Scalar
-Value](https://www.unicode.org/glossary/#unicode_scalar_value) being
-represented as a "single character"
+`char` is a [Unicode Scalar Value](https://www.unicode.org/glossary/#unicode_scalar_value) being represented as a "single character"
 
 -   A literal in single quotes: `'r'`
 -   Four (4) bytes in size
--   Can save more than ASCII, like glyphs, emoji, accented characters
-    etc.
+-   More than just ASCII: glyphs, emoji, accented characters, etc.
 
-<!-- -->
+## Character Literals
 
-```rust,editable
-    fn main() {
-        // U+0072 LATIN SMALL LETTER R
-        let ascii_char = 'r';
-        // U+03BC GREEK SMALL LETTER MU
-        let special_char = 'μ';
-        // U+0154 LATIN CAPITAL LETTER R WITH ACUTE
-        let accented_char = 'Ŕ';
-      // U+1F60E Symbol, other
-        let emoji_char = '😎';
-    }
+```rust [2-3|4-5|6-7|8-9]
+fn main() {
+    // U+0072 LATIN SMALL LETTER R
+    let ascii_char = 'r';
+    // U+03BC GREEK SMALL LETTER MU
+    let special_char = 'μ';
+    // U+0154 LATIN CAPITAL LETTER R WITH ACUTE
+    let accented_char = 'Ŕ';
+    // U+1F60E SMILING FACE WITH SUNGLASSES
+    let emoji_char = '😎';
+}
 ```
 
-```rust,ignore,does_not_compile,editable
-    fn main() {
-        // U+1F468 U+200D U+1F469 U+200D U+1F467 U+200D U+1F467
-        let seven_chars_emoji = '👨‍👩‍👧‍👧'; // Error: char must be one codepoint long
-    }
+## Character Literals
+
+```rust,ignore
+fn main() {
+    // U+1F468 U+200D U+1F469 U+200D U+1F467 U+200D U+1F467
+    let seven_chars_emoji = '👨‍👩‍👧‍👧'; // Error: char must be one codepoint long
+}
 ```
 
 ## Arrays
 
-Fixed-size arrays have the following notation:
+* Arrays have multiple elements of the same type.
+* They are of fixed size (it's part of the type).
 
 ```rust
-    fn main() {
-        let arr: [i32; 4] = [1,2,3,4];
-    }
+fn main() {
+    let arr: [i32; 4] = [1, 2, 3, 4];
+}
 ```
 
-## Arrays of dynamic size
+## Slices
 
-Arrays of dynamic size in Rust are represented as slices.
+* Slices are like arrays, but with a run-time specified size.
+* Slices carry a pointer to some other array, and a length.
+* Slices cannot be resized but can be subsliced.
 
-Slices carry a pointer to the array and a length. Slices cannot be
-resized.
-
-```rust
-    fn main() {
-        let arr: &[i32] = &[1,2,3,4];
-    }
+```rust [2|3]
+fn main() {
+    let slice: &[i32] = &[1, 2, 3, 4];
+    let sub: &[i32] = &slice[0..1];
+}
 ```
