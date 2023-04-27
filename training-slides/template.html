@@ -50,12 +50,22 @@ $CONTENT
                 $(block).parent().append(buttons);
             });
             $('.open-in-playground').click(function () {
-                const code = $(this).siblings('code')[0].cloneNode(true);
-                for (const callout of code.getElementsByClassName("conum")) {
-                    callout.nextSibling.remove();
-                }
                 const baseUrl = 'https://play.rust-lang.org/?version=stable&edition=2018&code=';
-                const payload = encodeURIComponent(code.innerText);
+                const code = $(this).parent().parent().children('code')[0].cloneNode(true);
+                var payload;
+                const content = code.firstChild;
+                if (content.tagName == "TABLE") {
+                    // We have line numbers
+                    var source = "";
+                    for (let row of content.rows) {
+                        // Source is in the second column. The first column is line numbers.
+                        source += row.cells[1].innerText + "\n";
+                    }
+                    payload = encodeURIComponent(source);
+                } else {
+                    // We do not have line numbers
+                    payload = encodeURIComponent(code.innerText);
+                }
                 const url = baseUrl + payload;
                 window.open(url, '_blank');
             });
