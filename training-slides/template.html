@@ -208,24 +208,41 @@ $CONTENT
             // For slides that do not fit on a page, max number of pages
             pdfMaxPagesPerSlide: 1,
 
-            plugins: [RevealMarkdown, RevealHighlight, RevealNotes]
-        });
+            highlight: {
+                highlightOnLoad: false
+            },
 
+            plugins: [RevealMarkdown, RevealHighlight, RevealNotes]
+        }).then(() => {
+            const highlight = Reveal.getPlugin('highlight');
+            document.addEventListener('DOMContentLoaded', (event) => {
+                document.querySelectorAll('pre code.rust').forEach((el) => {
+                    highlight.highlightBlock(el);
+                });
+                document.querySelectorAll('pre code.sh').forEach((el) => {
+                    highlight.highlightBlock(el);
+                });
+                document.querySelectorAll('pre code.console').forEach((el) => {
+                    highlight.highlightBlock(el);
+                });
+                document.querySelectorAll('pre code.mermaid').forEach((el) => {
+                    el.style.cssText += 'text-align: center';
+                });
+            });
+        });
     </script>
     <script type="module">
-        // // Use highlight.js to format all the Rust code blocks. We do this (not
-        // // hightlightAll) so that it skips the mermaid-language blocks.
-        // document.addEventListener('DOMContentLoaded', (event) => {
-        //     document.querySelectorAll('pre code.rust').forEach((el) => {
-        //         hljs.highlightElement(el);
-        //     });
-        // });
-
         // Use mermaid.js to render all the diagrams
         import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.esm.min.mjs';
-        mermaid.initialize({ startOnLoad: true });
+        var config = {
+            startOnLoad: true,
+            htmlLabels: true,
+            flowchart: {
+                useMaxWidth: true,
+            }
+        };
+        mermaid.initialize(config);
     </script>
-
 </body>
 
 </html>
