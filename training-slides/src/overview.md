@@ -33,7 +33,6 @@ fn generate_random_number() -> i32 {
     -   Garbage collector
     -   evented runtime
     -   complex error handling
-    -   All present once, now gone
 -   Orientation towards a usable systems programming language
 
 ## Development
