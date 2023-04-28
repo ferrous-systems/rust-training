@@ -1,6 +1,6 @@
 # Basic Types
 
-## ints
+## Integers
 
 Rust comes with all standard int types, with and without sign
 
