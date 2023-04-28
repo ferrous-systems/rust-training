@@ -98,11 +98,10 @@ spend time discussing the impact of many features on large projects.
 
 ## Pragmatic
 
--   Great tooling
+-   User-focused tooling
 -   Sublanguage for unsafe memory access and techniques to handle these
--   Great FFI support
--   Helpful error messages by the compiler
--   Rust gives support for many hard things and trusts you with the rest
+-   FFI support to interface with existing systems
+-   Compiler gives helpful error messages
 
 ## Where do Rustaceans come from?
 
