@@ -100,7 +100,7 @@ spend time discussing the impact of many features on large projects.
 -   Great tooling
 -   Sublanguage for unsafe memory access and techniques to handle these
 -   Great FFI support
--   Great error messages by the compiler
+-   Helpful error messages by the compiler
 -   Rust gives support for many hard things and trusts you with the rest
 
 ## Where do Rustaceans come from?
