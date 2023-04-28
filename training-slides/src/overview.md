@@ -17,7 +17,7 @@ fn generate_random_number() -> i32 {
 
 ## What is Rust?
 
-- Rust is an empathic systems programming language that is determined to not let you shoot yourself in the foot.
+Rust is an empathic systems programming language that is determined to not let you shoot yourself in the foot.
 
 ## A Little Bit of History
 
