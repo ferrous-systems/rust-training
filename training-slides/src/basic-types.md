@@ -20,7 +20,7 @@ let x = 0b0001;    // prefix 0b to indicate binary value
 let x = b'a';      // A single u8
 ```
 
-## Architecture-dependent numbers
+## Architecture-dependent Numbers
 
 Rust comes with two architecture-dependent number types:
 
