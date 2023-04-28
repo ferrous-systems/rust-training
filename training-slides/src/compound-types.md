@@ -40,11 +40,6 @@ let p = Point { x: 1, y: 2 };
 let q = Point { x: 4, ..p };
 ```
 
-## Side note
-
-It's common to hide construction behind a call to `Point::new()` instead
-of using a raw struct literal.
-
 ## Field Access
 
 ```rust [1-4|6|7-8]
