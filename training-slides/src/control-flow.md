@@ -5,8 +5,8 @@
 -   `if` expressions
 -   `loop` and `while` loops
 -   `match` expressions
--   `if let`, `let else` and `while let`
 -   `for` loops
+-   `break` and `continue`
 -   `return` and `?`
 
 ## Using `if` as a statement
@@ -92,8 +92,8 @@ fn main() {
 
 ## `while`
 
-* `while` is used for conditional loops.
-* Loops while the boolean expression is `true`
+-   `while` is used for conditional loops.
+-   Loops while the boolean expression is `true`
 
 ```rust []
 fn main() {
@@ -122,152 +122,10 @@ fn main() {
     }
 ```
 
-## Doing a `match` on an `enum`
-
-* When an `enum` has variants, you use `match` to extract the data
-* New variables are created from the *pattern* (e.g. `radius`)
-
-```rust [1-4|7-14|8|11]
-enum Shape {
-    Circle(i32),
-    Rectangle(i32, i32),
-}
-
-fn check_shape(shape: &Shape) {
-    match shape {
-        Shape::Circle(radius) => {
-            println!("It's a circle, with radius {}", radius);
-        },
-        _ => {
-            println!("Try a circle instead");
-        }
-    }
-}
-```
-
-## Doing a `match` on an `enum`
-
-* There are two variables called `radius`
-* The later one hides the earlier one
-
-```rust [7|9]
-enum Shape {
-    Circle(i32),
-    Rectangle(i32, i32),
-}
-
-fn check_shape(shape: &Shape) {
-    let radius = 10;
-    match shape {
-        Shape::Circle(radius) => {
-            println!("It's a circle, with radius {}", radius);
-        },
-        _ => {
-            println!("Try a circle instead");
-        }
-    }
-}
-```
-
-## Match guards
-
-Match guards allow further refining of a `match`
-
-```rust [8]
-enum Shape {
-    Circle(i32),
-    Rectangle(i32, i32),
-}
-
-fn check_shape(shape: &Shape) {
-    match shape {
-        Shape::Circle(radius) if *radius > 10 => {
-            println!("It's a BIG circle, with radius {}", radius);
-        },
-        _ => {
-            println!("Try a big circle instead");
-        }
-    }
-}
-```
-
-## Combining patterns
-
-* You can use the `|` operator to join patterns together
-
-```rust [1-16|9]
-enum Shape {
-    Circle(i32),
-    Square(i32),
-    Triangle
-}
-
-fn test_shape(shape: &Shape) {
-    match shape {
-        Shape::Circle(size) | Shape::Square(size) => {
-            println!("Shape has size {}", size);
-        },
-        _ => {
-            println!("Must be a triangle");
-        },
-    }
-}
-```
-
-## Shorthand: `if let` conditionals
-
-* You can use `if let` if only one case is of interest.
-* Still *pattern matching*
-
-```rust []
-enum Shape {
-    Circle(i32),
-    Triangle
-}
-
-fn test_shape(shape: &Shape) {
-    if let Shape::Circle(size) = shape {
-        println!("Circle has size {}", size);
-    }
-}
-```
-
-## Shorthand: `let else` conditionals
-
-* If you expect it to match, but want to handle the error...
-* The `else` block must *diverge*
-
-```rust []
-enum Shape {
-    Circle(i32),
-    Triangle
-}
-
-fn test_shape(shape: &Shape) {
-    let Shape::Circle(size) = shape else {
-        println!("I only like circles");
-        return;
-    };
-}
-```
-
-## Shorthand: `while let` conditionals
-
-* Keep looping whilst the pattern still matches
-
-```rust []
-fn main() {
-    let mut numbers = vec![1, 2, 3];
-    while let Some(num) = numbers.pop() {
-        println!("popped number {}", num);
-    }
-}
-```
-
 ## `for` loops
 
-* `for` is used for iteration
-* Here `0..10` creates a `Range`, which you can iterate
+-   `for` is used for iteration
+-   Here `0..10` creates a `Range`, which you can iterate
 
 ```rust []
 fn main() {
@@ -291,16 +149,18 @@ fn main() {
 
 ## `for` under the hood
 
-What Rust actually does is more like...
+-    What Rust actually does is more like...
+-    (More on this in the section on *Iterators*)
 
 ```rust []
 fn main() {
     let mut iter = "Hello".chars().into_iter();
     loop {
-        let Some(ch) = iter.next() else {
+        if let Some(ch) = iter.next() {
+            println!("{}", ch);
+        } else {
             break;
-        };
-        println!("{}", ch);
+        }
     }
 }
 ```
