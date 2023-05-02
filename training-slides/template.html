@@ -72,7 +72,6 @@ $CONTENT
                 window.open(url, '_blank');
             });
         }
-        $(addButtons)
 
         $(document).ready(function () {
             // More info about config & dependencies:
@@ -227,6 +226,8 @@ $CONTENT
 
                 plugins: [RevealMarkdown, RevealHighlight, RevealNotes]
             }).then(() => {
+                addButtons();
+
                 const highlight = Reveal.getPlugin('highlight');
                 $('pre code.rust').each(function (i, el) {
                     highlight.highlightBlock(el);
