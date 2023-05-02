@@ -2,262 +2,370 @@
 
 ## Control Flow primitives
 
-
--   `if`
-
--   `match` and `enums`
-
--   `for`, `while` and `loop` loops
-
+-   `if` expressions
+-   `loop` and `while` loops
+-   `match` expressions
+-   `if let`, `let else` and `while let`
+-   `for` loops
 -   `return` and `?`
 
-## Control Flow with `if`
+## Using `if` as a statement
 
-
-```rust,editable
-    fn main() {
-        if 1 == 2 { //  
-            println!("unlikely");
-        } else {
-            println!("expected");
-        }
-    }
-```
--   Paranthesis around the conditional are not necessary
-
+-   Tests if a boolean expression is `true` 
+-   Parentheses around the conditional are not necessary
 -   Blocks need brackets, no shorthand
 
-## Control Flow with `match`
-
-```rust,editable
-    fn main() {
-        let a = 4;
-        match a % 3 {
-            0 => { println!("divisible by 3") }, // 
-            _ => { println!("not divisible by 3") }, // 
-        }
+```rust []
+fn main() {
+    if 1 == 2 {
+        println!("integers are broken");
+    } else if 'a' == 'b' {
+        println!("characters are broken");
+    } else {
+        println!("that's what I thought");
     }
+}
 ```
--   match arm
 
--   default arm
+## Using `if` as an expression
 
-## Control Flow with `match` and `enums`
+-   Every block is an expression
+-   Note the final `;` to terminate the `let` statement.
 
-```rust,editable
-    enum Direction { //
-        North(i32), //
-        East(i32),
-        South(i32),
-        West(i32),
-    }
-
-    fn going_west(dir: &Direction) -> bool {
-        match dir { //
-            Direction::West(_) => true, //
-            _ => false
-        }
-    }
+```rust []
+fn main() {
+    let x = if 1 == 2 {
+        100
+    } else if 'a' == 'b' {
+        200
+    } else {
+        300
+    };
+}
 ```
--   `enum` can take multiple forms
 
--   The forms are called "variants" and can carry data
+## Using `if` as the final expression
 
--   Enums are inspected by matching …
+Now the `if` expression is the result of the function:
 
--   … on the structure
-
-## 2 important enums
-
-
-```rust,editable
-    enum Option<T> {
-        Some(T),
-        None,
+```rust []
+fn some_function() -> i32 {
+    if 1 == 2 {
+        100
+    } else if 'a' == 'b' {
+        200
+    } else {
+        300
     }
-
-    enum Result<T, E> {
-        Ok(T),
-        Err(E),
-    }
+}
 ```
--   `Option` describes the possible absence of a value
 
--   `Result` describes that an operation might return an error instead
+## Looping with `loop`
 
-## Using `Option` and `Result`
-
-
-```rust,editable
-    fn main() {
-        let will_overflow: Option<u8> = 10_u8.checked_add(250);
-        match will_overflow {
-            Some(sum) => println!("interesting: {}", sum),
-            None => eprintln!("addition overflow!"),
-        }
-    }
-```
-## Using `Option` and `Result`
-
-
-```rust,editable
-    use std::fs::File;
-    use std::io;
-
-    fn main() {
-        let file_open: Result<File, io::Error> = File::open("Does not exist");
-
-        match file_open {
-            Ok(f)  => println!("Success!"),
-            Err(e) => println!("Open failed: {:?}", e),
-        }
-    }
-```
-## Match guards
-
-
-```rust,editable
-    fn main() {
-        let result: Option<u8> = 5_u8.checked_add(5);
-
-        match result {
-            Some(result) if result % 2 == 0 => println!("5+5 is even!"),
-            _ => println!("5+5 ... isn't even?"),
-        }
-    }
-```
--   Match guards allow further refining of a `match`
-
-## Combining matches
-
-
-You can use the `|` operator to match several values in one arm.
-
-```rust,editable
-    enum Direction {
-        North(u32),
-        East(u32),
-        South(u32),
-        West(u32),
-    }
-
-    fn going_south_or_west(dir: &Direction) -> bool {
-        match dir {
-            Direction::West(_) | Direction::South(_) => true,
-            _ => false,
-        }
-    }
-```
-## Shorthand: `if let` conditionals
-
-
-```rust,editable
-    fn main() {
-        let maybe_arg = std::env::args().nth(2);
-        // can't know at compile time how many args are passed to our program
-        if let Some(arg) = maybe_arg {
-            println!("Got second command line argument: {}", arg);
-        }
-    }
-```
--   `if let` are idiomatic if only one case is of interest
-
-## `loop`
-
-
-```rust,editable
-    fn main() {
-        let mut i = 0;
-
-        loop {
-            i += 1;
-
-            if i > 100 { break; }
-        }
-    }
-```
 `loop` is used for (potentially) infinite loops
 
-## `for`
-
-
-```rust,editable
-    fn main() {
-        let numbers = vec![1, 2, 3];
-        // `for item in iterable` creates an iterator by calling `iterable.into_iter()`
-        // and keeps calling `next() -> Option<Item>` on it until it receives `None`
-        for num in numbers {
-            println!("{}", num);
-        }
+```rust []
+fn main() {
+    let mut i = 0;
+    loop {
+        i += 1;
+        if i > 100 { break; }
     }
+}
 ```
-`for` is used for iteration
+
+## Looping with `loop`
+
+`loop` blocks are also expressions...
+
+```rust []
+fn main() {
+    let mut i = 0;
+    let loop_result = loop {
+        i += 1;
+        if i > 10 { break 6; }
+        println!("i = {}", i);
+    };
+    println!("loop_result = {}", loop_result);
+}
+```
 
 ## `while`
 
+* `while` is used for conditional loops.
+* Loops while the boolean expression is `true`
 
-```rust,editable
+```rust []
+fn main() {
+    let mut i = 0;
+    while i < 10 {
+        i += 1;
+        println!("i = {}", i);
+    }
+}
+```
+
+## Control Flow with `match`
+
+-   The `match` keyword does *pattern matching*
+-   You can use it a bit like an `if/else if/else` expression
+-   The first arm to match, wins
+-   `_` means *match anything*
+
+```rust []
     fn main() {
-        let mut i = 0;
-
-        while !(i > 100) {
-            i += 1;
-        }
-
-        let mut iter = vec![1,2,3].into_iter();
-
-        while let Some(i) = iter.next() {
-            println!("number: {}", i);
+        let a = 4;
+        match a % 3 {
+            0 => { println!("divisible by 3") },
+            _ => { println!("not divisible by 3") },
         }
     }
 ```
-`while` is used for conditional loops
 
-## `break`, `continue`
+## Doing a `match` on an `enum`
 
+* When an `enum` has variants, you use `match` to extract the data
+* New variables are created from the *pattern* (e.g. `radius`)
 
-```rust,editable
-    'outer: for i in 0..10 {
-        loop {
-            if i < 5 {
-                continue 'outer;
-            } else {
-                break 'outer;
+```rust [1-4|7-14|8|11]
+enum Shape {
+    Circle(i32),
+    Rectangle(i32, i32),
+}
+
+fn check_shape(shape: &Shape) {
+    match shape {
+        Shape::Circle(radius) => {
+            println!("It's a circle, with radius {}", radius);
+        },
+        _ => {
+            println!("Try a circle instead");
+        }
+    }
+}
+```
+
+## Doing a `match` on an `enum`
+
+* There are two variables called `radius`
+* The later one hides the earlier one
+
+```rust [7|9]
+enum Shape {
+    Circle(i32),
+    Rectangle(i32, i32),
+}
+
+fn check_shape(shape: &Shape) {
+    let radius = 10;
+    match shape {
+        Shape::Circle(radius) => {
+            println!("It's a circle, with radius {}", radius);
+        },
+        _ => {
+            println!("Try a circle instead");
+        }
+    }
+}
+```
+
+## Match guards
+
+Match guards allow further refining of a `match`
+
+```rust [8]
+enum Shape {
+    Circle(i32),
+    Rectangle(i32, i32),
+}
+
+fn check_shape(shape: &Shape) {
+    match shape {
+        Shape::Circle(radius) if *radius > 10 => {
+            println!("It's a BIG circle, with radius {}", radius);
+        },
+        _ => {
+            println!("Try a big circle instead");
+        }
+    }
+}
+```
+
+## Combining patterns
+
+* You can use the `|` operator to join patterns together
+
+```rust [1-16|9]
+enum Shape {
+    Circle(i32),
+    Square(i32),
+    Triangle
+}
+
+fn test_shape(shape: &Shape) {
+    match shape {
+        Shape::Circle(size) | Shape::Square(size) => {
+            println!("Shape has size {}", size);
+        },
+        _ => {
+            println!("Must be a triangle");
+        },
+    }
+}
+```
+
+## Shorthand: `if let` conditionals
+
+* You can use `if let` if only one case is of interest.
+* Still *pattern matching*
+
+```rust []
+enum Shape {
+    Circle(i32),
+    Triangle
+}
+
+fn test_shape(shape: &Shape) {
+    if let Shape::Circle(size) = shape {
+        println!("Circle has size {}", size);
+    }
+}
+```
+
+## Shorthand: `let else` conditionals
+
+* If you expect it to match, but want to handle the error...
+* The `else` block must *diverge*
+
+```rust []
+enum Shape {
+    Circle(i32),
+    Triangle
+}
+
+fn test_shape(shape: &Shape) {
+    let Shape::Circle(size) = shape else {
+        println!("I only like circles");
+        return;
+    };
+}
+```
+
+## Shorthand: `while let` conditionals
+
+* Keep looping whilst the pattern still matches
+
+```rust []
+fn main() {
+    let mut numbers = vec![1, 2, 3];
+    while let Some(num) = numbers.pop() {
+        println!("popped number {}", num);
+    }
+}
+```
+
+## `for` loops
+
+* `for` is used for iteration
+* Here `0..10` creates a `Range`, which you can iterate
+
+```rust []
+fn main() {
+    for num in 0..10 {
+        println!("{}", num);
+    }
+}
+```
+
+## `for` loops
+
+Lots of things are *iterable*
+
+```rust []
+fn main() {
+    for ch in "Hello".chars() {
+        println!("{}", ch);
+    }
+}
+```
+
+## `for` under the hood
+
+What Rust actually does is more like...
+
+```rust []
+fn main() {
+    let mut iter = "Hello".chars().into_iter();
+    loop {
+        let Some(ch) = iter.next() else {
+            break;
+        };
+        println!("{}", ch);
+    }
+}
+```
+
+## Break labels
+
+If you have nested loops, you can label them to indicate which one you want to break out of.
+
+```rust []
+fn main() {
+    'rows: for x in 0..5 {
+        'cols: for y in 0..5 {
+            println!("x = {}, y = {}", x, y);
+            if x + y >= 6 {
+                break 'rows;
             }
         }
     }
+}
 ```
-terminate current iteration or entire loop, using optional labels if not
-referring to innermost loop
+
+## Continue
+
+Means go around the loop again, rather than break out of the loop
+
+```rust []
+fn main() {
+    'rows: for x in 0..5 {
+        'cols: for y in 0..5 {
+            println!("x = {}, y = {}", x, y);
+            if x + y >= 4 {
+                continue 'rows;
+            }
+        }
+    }
+}
+```
 
 ## `return`
 
-
-```rust,editable
-    fn get_number() -> u32 {
-        return 5;
-
-        8
-    }
-```
 -   `return` can be used for early returns
-
 -   The result of the last expression of a function is always returned
+
+```rust []
+fn get_number(x: bool) -> i32 {
+    if x {
+        return 42;
+    }
+    -1
+}
+```
 
 ## `?` (early return operator)
 
+The `?` operator means "on error, early return, with automatic conversion"
 
-```rust,editable
-    use std::io;
-    use std::io::Read;
+```rust []
+use std::io::{self, prelude::*};
 
-    fn read_file(path: &std::path::Path) -> Result<String, io::Error> {
-         let mut f = std::fs::File::open(path)?;
+fn read_file(path: &std::path::Path) -> Result<String, io::Error> {
+    let mut f = std::fs::File::open(path)?;
 
-         let mut buffer = String::new();
-         f.read_to_string(&mut buffer)?;
+    let mut buffer = String::new();
+    f.read_to_string(&mut buffer)?;
 
-         Ok(buffer)
-    }
+    Ok(buffer)
+}
 ```
--   `?` is "on error, early return"
