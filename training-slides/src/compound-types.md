@@ -274,3 +274,49 @@ fn main() {
     }
 }
 ```
+
+## Very Important Enum #1 - Option
+
+```rust
+enum Option<T> {
+    Some(T),
+    None
+}
+
+let mut iter = "Hello".chars().into_iter();
+while let Some(ch) = iter.next() {
+    println!("ch: {}", ch);
+}
+```
+
+## Very Important Enum #1 - Result
+
+```rust
+enum Result<T, E> {
+    Ok(T),
+    Err(E)
+}
+
+match std::fs::File::open("hello.txt") {
+    Ok(_file_handle) => {
+        println!("I opened the file OK");
+    }
+    Err(error_value) => {
+        println!("Failed to open file due to error: {:?}", error_value);
+    }
+}
+```
+
+## Option and Result have lots of useful methods
+
+Note: The `|x| ...` syntax indicates a *closure*
+
+```rust
+fn main() {
+    let file_length = std::fs::File::open("hello.txt")
+        .and_then(|file| file.metadata())
+        .map(|metadata| metadata.len())
+        .unwrap_or(0);
+    println!("File length is {}", file_length);
+}
+```
