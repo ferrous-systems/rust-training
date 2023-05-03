@@ -212,20 +212,3 @@ fn get_number(x: bool) -> i32 {
     -1
 }
 ```
-
-## `?` (early return operator)
-
-The `?` operator means "on error, early return, with automatic conversion"
-
-```rust []
-use std::io::{self, prelude::*};
-
-fn read_file(path: &std::path::Path) -> Result<String, io::Error> {
-    let mut f = std::fs::File::open(path)?;
-
-    let mut buffer = String::new();
-    f.read_to_string(&mut buffer)?;
-
-    Ok(buffer)
-}
-```
