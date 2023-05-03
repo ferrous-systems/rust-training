@@ -149,8 +149,7 @@ struct File();
 
 impl File {
     fn set_len(&self, size: u64) -> std::io::Result<()> {
-        // ...
-        Ok(())
+        todo!();
     }
 }
 ```
@@ -237,8 +236,7 @@ struct File();
 impl File {
     /// Write a buffer into this writer, returning how many bytes were written.
     fn write(&mut self, buffer: &[u8]) -> std::io::Result<usize> {
-        // ...
-        Ok(0)
+        todo!();
     }
 }
 ```
