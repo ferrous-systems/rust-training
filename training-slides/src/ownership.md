@@ -271,6 +271,13 @@ impl File {
 }
 ```
 
+## A Summary
+
+|                  | Owned  | Borrowed | Mutably Borrowed |
+| ---------------- | ------ | -------- | ---------------- |
+| Types (e.g. i32) | `i32`  | `&i32`   | `&mut i32`       |
+| Methods          | `self` | `&self`  | `&mut self`      |
+
 ## Are there any alternatives to borrowing?
 
 If you want to give a function their own object, and keeps yours separate, you have two choices:
