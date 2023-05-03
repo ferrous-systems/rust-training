@@ -72,6 +72,20 @@ error[E0382]: use of moved value: `f`
 * At that moment, ownership passes to `write_and_close`. We say the function *consumed* the value.
 * The value `f` ceases to exist, and thus `main` is not allowed to access it any more.
 
+## Mutability
+
+* The variable *binding* can be *immutable* (the default) or *mutable*.
+* If you own it, you can rebind it and change this.
+
+```rust
+fn main() {
+    let x = 6;
+    // x += 1; ❌
+    let mut x = x;
+    x += 1; // ✅
+}
+```
+
 ## Borrowing
 
 * Transferring ownership back and forth would get tiresome.
@@ -161,6 +175,7 @@ fn main() -> std::io::Result<()> {
 * Also called a *mutable reference*
 * Use the `&mut` operator to borrow (i.e. to make a reference)
 * Even stricter rules than the `&` references
+* Only a *mutable binding* can make a *mutable reference*
 
 ## Exclusive Reference Rules
 
