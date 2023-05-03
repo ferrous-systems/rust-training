@@ -258,6 +258,21 @@ fn main() -> std::io::Result<()> {
 }
 ```
 
+## Can methods take ownership?
+
+* We saw methods that take `&self` and `&mut self`
+* Is there a version that takes ownership?
+* Yes!
+
+```rust
+struct File();
+impl File {
+    fn into_raw_fd(self) -> i32 {
+        todo!();
+    }
+}
+```
+
 ## Are there any alternatives to borrowing?
 
 If you want to give a function their own object, and keeps yours separate, you have two choices:
