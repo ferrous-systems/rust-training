@@ -21,8 +21,61 @@ This material is organised as an [`mdbook`](https://crates.io/crates/mdbook), wh
 You can:
 
 * Browse [the chapters of the book on Github](./training-slides/src/SUMMARY.md)
-* Clone the repo, and build the book using [`mdbook`](https://crates.io/crates/mdbook) or [`mdslides`](https://crates.io/crates/mdslides)
+* Clone the repo, and build the book (see [Building the material locally](#building-the-material-locally))
 * Download the slides in both slide-deck and book format, from the [releases area](https://github.com/ferrous-systems/rust-exercises/releases)
+
+# Building the material locally
+
+This slide deck is an [`mdbook`](https://crates.io/crates/mdbook) that is also converted into slides using a tool we wrote called [`mdslides`](https://crates.io/crates/mdslides).
+
+To build as a book, run `mdbook` in the usual fashion:
+
+```console
+$ cargo install mdbook
+$ cargo install mdbook-mermaid
+$ cd ./training-slides
+$ mdbook build
+2023-05-03 13:24:46 [INFO] (mdbook::book): Book building has started
+2023-05-03 13:24:46 [INFO] (mdbook::book): Running the html backend
+$ ls -l book/index.html
+-rw-r--r--  1 jonathan  staff  13573 May  3 11:48 book/index.html
+```
+
+You could use `mdbook serve` instead to start a webserver that serves up the book and also rebuilds the book every time you change a file.
+
+To verify that every code example in the book compiles as expected, run:
+
+```sh
+mdbook test
+```
+
+To convert the book to slides, run `mdslides` like this:
+
+```console
+$ cargo install mdslides
+$ cd ./training-slides
+$ mdslides --template ./template.html --output-dir ./slides --mdbook-path . --index-template ./index-template.html 
+$ ls -l slides/index.html 
+-rw-r--r--@ 1 jonathan  staff  46172 May  3 11:48 slides/index.html
+```
+
+For brevity, all the above actions are packed into a shell script, which is what the CI workflow executes:
+
+```sh
+cd ./training-slides
+./build.sh
+```
+
+The `mdslides` tool doesn't have a `serve` mode, so you'll need to either open the HTML files from disk, or run your own webserver. You will need a working internet connection as the HTML files load revealjs and other dependencies from a Content Delivery Network.
+
+```sh
+# If you have Python 3 installed
+python3 -m http.server -d ./slides
+# If you don't have Python 3 installed, try:
+cargo install https
+httplz ./slides
+# Both serve on http://localhost:8000
+```
 
 # Credits
 
