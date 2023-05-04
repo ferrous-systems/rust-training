@@ -9,7 +9,7 @@ Rust has two ways of indicating errors:
 
 ## Returning Values
 
-When a function can *either* be __Ok__ or can return an __Error__, we use `Result<T, E>`:
+When the result of a function is *either* __Ok__, or some __Error__ value, we use `Result<T, E>`:
 
 ```rust []
 enum Error {}
@@ -21,20 +21,32 @@ fn calculate_sum(numbers: &[i32]) -> Result<i32, Error> {
 
 *Why might this function fail?*
 
+Note:
+What happens if all the numbers add up to more than fits in an `i32`?
+
 ## What kind of Error?
 
 You can put anything in for the `E` in `Result<T, E>`:
 
-* A `&'static str`: `"Number overflow"`
-* A `String`: `format!("Number {} too large", sum)`
-* An `enum`: `Error::NumberOverflow(sum)`
-* etc.
+```rust
+fn literals() -> Result<(), &'static str> {
+    Err("oh no")
+}
+fn strings() -> Result<(), String> {
+    Err(String::from("oh no"))
+}
+fn enums() -> Result<(), Error> {
+    Err(Error::BadThing)
+}
+
+enum Error { BadThing, OtherThing }
+```
 
 ## Some magic happens
 
 If you use `?` to return the error early, some extra conversion happens:
 
-```rust [1-13, 1, 7, 2] 
+```rust [1-13|1|7|2] 
 fn main() -> Result<(), String> {
     let num = some_function(true)?;
     println!("num = {}", num);
@@ -50,21 +62,27 @@ fn some_function(works: bool) -> Result<u32, &'static str> {
 }
 ```
 
-## ? also called '.into()' for you
+## ? actually called .into() for you
 
 ```rust [2-7]
 fn main() -> Result<(), String> {
-    let ch = match some_function(true) {
+    let num = match some_function(true) {
         Ok(ok_value) => ok_value,
         Err(error_value) => {
             return Err(error_value.into());
         }
     };
-    println!("ch = {}", ch);
+    println!("num = {}", num);
     Ok(())
 }
 
-fn some_function(works: bool) -> Result<u32, &'static str> { Ok(4) }
+fn some_function(works: bool) -> Result<u32, &'static str> {
+    if works {
+        Ok(42)
+    } else {
+        Err("I'm not working today")
+    }
+}
 ```
 
 ## Using String Literals
@@ -73,16 +91,16 @@ Setting `E` to be `&'static str` lets you use `"String literals"`
 
 * It's cheap
 * It's expressive
-* But you can't change the string to include some specific value
+* But you can't change the text to include some specific value
 * And your program can't tell what *kind* of error it was
 
 ## Using Strings
 
-Setting `E` to be `String` lets you use heap-allocated strings:
+Setting `E` to be `String` lets you make up text at run-time:
 
 * It's expressive
-* You can include some specific values in the String
-* But it costs you a heap allocation to store the bytes for the String
+* You can render some values into the `String`
+* But it costs you a heap allocation to store the bytes for the `String`
 * And your program still can't tell what *kind* of error it was
 
 ## Using enums
@@ -159,8 +177,8 @@ One solution:
 
 ```rust [1-5|1|2|3] should_panic
 fn main() -> Result<(), Box<dyn std::error::Error>> {
-    let f = std::fs::File::open("hello.txt")?; // IO Error
-    let s = std::str::from_utf8(&[0xFF, 0x65])?; // Unicode conversion error
+    let _f = std::fs::File::open("hello.txt")?; // IO Error
+    let _s = std::str::from_utf8(&[0xFF, 0x65])?; // Unicode conversion error
     Ok(())
 }
 ```
@@ -171,8 +189,8 @@ The [`anyhow`](https://crates.io/crates/anyhow) crate gives you a nicer type:
 
 ```rust [1-5|1] ignore
 fn main() -> Result<(), anyhow::Error> {
-    let f = std::fs::File::open("hello.txt")?; // IO Error
-    let s = std::str::from_utf8(&[0xFF, 0x65])?; // Unicode conversion error
+    let _f = std::fs::File::open("hello.txt")?; // IO Error
+    let _s = std::str::from_utf8(&[0xFF, 0x65])?; // Unicode conversion error
     Ok(())
 }
 ```
