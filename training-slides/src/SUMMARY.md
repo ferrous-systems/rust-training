@@ -6,21 +6,37 @@
 
 # Rust Fundamentals
 
+## Introduction and History
+
 -   [Overview](./overview.md)
 -   [Installation](./installation.md)
+
+## Basic Types, Functions and Control Flow
+
 -   [Basic Types](./basic-types.md)
 -   [Control Flow](./control-flow.md)
+
+## Compound Types & match
+
 -   [Compound Types](./compound-types.md)
--   [Ownership](./ownership.md)
--   [Little Helpers](./little-helpers.md)
+
+## Ownership and Borrowing
+
+-   [Ownership and Borrowing](./ownership.md)
+
+## Error Handling
+
 -   [Error Handling](./error-handling.md)
--   [Mutability](./mutability.md)
--   [Strings](./strings.md)
+
+## Collection Types & Iterators
+
+-   [Collections](./collections.md)
 -   [Iterators](./iterators.md)
--   [Functions](./functions.md)
--   [Documentation](./documentation.md)
--   [Testing](./testing.md)
--   [Basic Generics](./basic-generics.md)
+
+## Library Design
+
+-   [Imports and Modules](./imports-and-modules.md)
+-   [Good Design Practices](./good-design-practices.md)
 
 # Applied Rust
 

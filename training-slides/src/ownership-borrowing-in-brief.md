@@ -1,1 +1,0 @@
-# Ownership & Borrowing in brief
