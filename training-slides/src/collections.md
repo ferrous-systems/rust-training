@@ -80,7 +80,7 @@ Check out the [docs](https://doc.rust-lang.org/std/vec/struct.Vec.html)!
 
 * Not great for insertion
 * Everything must be of the same type
-* Indicies are always `usize`
+* Indices are always `usize`
 
 ## Strings ([docs](https://doc.rust-lang.org/std/string/struct.String.html))
 
