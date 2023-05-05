@@ -91,14 +91,70 @@ Check out the [docs](https://doc.rust-lang.org/std/vec/struct.Vec.html)!
 
 ## Making a String
 
-```rust
+```rust [1-7|2|3|4|5|6]
 fn main() {
     let s1 = "String literal up-conversion".to_string();
     let s2: String = "Into also works".into();
     let s3 = String::from("Or using from");
     let s4 = format!("String s1 is {:?}", s1);
+    let s5 = String::new(); // empty
 }
 ```
+
+## Appending to a String
+
+```rust [1-7|2|3|4|5-6]
+fn main() {
+    let mut start = "Mary had a ".to_string();
+    start.push_str("little");
+    let rhyme = start + " lamb";
+    println!("rhyme = {}", rhyme);
+    // println!("start = {}", start);
+}
+```
+
+## Joining pieces of String
+
+```rust [1-5|2|3|4]
+fn main() {
+    let pieces = ["Mary", "had", "a", "little", "lamb"];
+    let rhyme = pieces.join(" ");
+    println!("Rhyme = {}", rhyme);
+}
+```
+
+## String Slices
+
+Slices are a view on to some other array.
+
+String Slices (`&str`) are a view on to some other String.
+
+```rust [1-5|2|3|4]
+fn main() {
+    let s = String::from("Hello, world!");
+    let hello = &s[0..5];
+    println!("hello = {}", hello);
+}
+```
+
+Note:
+A string slice is tied to the lifetime of the String (or other string slice) that
+it refers to.
+
+## Static String Slices
+
+* String literals are string slices, with a lifetime annotation of `'static`.
+
+```rust []
+fn main() {
+    let s: &'static str = "Hello, world!";
+    println!("s = {}", s);
+}
+```
+
+Note:
+The lifetime annotation of 'static just means the string slice lives forever and
+never gets destroyed.
 
 ## VecDeque ([docs](https://doc.rust-lang.org/std/collections/struct.VecDeque.html))
 
