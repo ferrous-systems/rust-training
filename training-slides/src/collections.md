@@ -138,7 +138,7 @@ fn main() {
 ```
 
 Note:
-A string slice is tied to the lifetime of the String (or other string slice) that
+A string slice is tied to the lifetime of the `String` (or other string slice) that
 it refers to.
 
 ## Static String Slices
@@ -153,7 +153,7 @@ fn main() {
 ```
 
 Note:
-The lifetime annotation of 'static just means the string slice lives forever and
+The lifetime annotation of `'static` just means the string slice lives forever and
 never gets destroyed.
 
 ## VecDeque ([docs](https://doc.rust-lang.org/std/collections/struct.VecDeque.html))
