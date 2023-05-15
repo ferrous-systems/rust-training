@@ -238,7 +238,10 @@ fn main() {
 ```
 
 ## Call chaining (2)
+Note:
 
+For the more advanced students, this mini quiz is a good one:
+https://dtolnay.github.io/rust-quiz/26
 What really happened:
 
 ```rust [1-13|1-8|3|4|5|6|7]
