@@ -2,8 +2,10 @@
 
 ## What is Iterating?
 
-* A method of looking at a sequence of data, one at a time
-  * Taking ownership, borrowing mutably, or just borrowing
+> iterate (verb): to repeat a process, especially as part of a computer program ([Cambridge English Dictionary](https://dictionary.cambridge.org/dictionary/english/iterate?q=Iterate))
+
+
+To *iterate* in Rust is to produce a sequence of items, one at a time.
 
 ## How do you Iterate?
 
@@ -15,8 +17,9 @@
 
 * An object with a `.next()` method
   * The method provides `Some(data)`, or `None` once the data has run out
-* Some *Iterators* take data from a collection (e.g. a Slice)
-* Some *Iterators* can just make stuff up
+  * The object holds the iterators *state*
+* Some *Iterators* will take data from a collection (e.g. a Slice)
+* Some *Iterators* will just calculate each item on-the-fly
 
 ## Important to note
 
