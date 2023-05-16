@@ -289,7 +289,7 @@ while let Some(ch) = iter.next() {
 }
 ```
 
-## Very Important Enum #1 - Result
+## Very Important Enum #2 - Result
 
 ```rust
 enum Result<T, E> {
