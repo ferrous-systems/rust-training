@@ -60,7 +60,7 @@ What follows here is the "default roadmap" for each *Training*. You may follow t
 * Using Traits
 * Exercise: impl Error in SimpleDB
 
-### Day 1, Session 2: Defining and Implementing Traits
+### Day 1, Session 2: Defining Traits and Methods
 
 * Implementing Traits
 * Exercise: Shapes, Part I
