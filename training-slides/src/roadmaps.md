@@ -73,7 +73,7 @@ What follows here is the "default roadmap" for each *Training*. You may follow t
 ### Day 2, Session 1: Library Design, Part II
 
 * Library Design Part II
-* Exercise: TBD
+* Exercise: Connected Mailbox
 
 ### Day 2, Session 2: Heap-allocated Memory
 
