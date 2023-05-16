@@ -63,6 +63,7 @@ What follows here is the "default roadmap" for each *Training*. You may follow t
 ### Day 1, Session 2: Defining Traits and Methods
 
 * Implementing Traits
+* Method Syntax
 * Exercise: Shapes, Part I
 
 ### Day 1, Session 3: Generics
