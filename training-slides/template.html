@@ -22,13 +22,27 @@
             cursor: pointer;
             float: left;
         }
+
         .reveal code {
             /* inline code using backticks */
             background: #f0f0f0;
         }
+
         .reveal pre code {
             /* multi-line code blocks using triple backticks */
             background: #fcfcfc;
+        }
+
+        .reveal blockquote {
+            background: #eee;
+        }
+
+        .reveal blockquote p::before {
+            content: open-quote;
+        }
+
+        .reveal blockquote p::after {
+            content: close-quote;
         }
     </style>
 </head>
