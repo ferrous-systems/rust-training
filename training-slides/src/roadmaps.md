@@ -68,7 +68,8 @@ What follows here is the "default roadmap" for each *Training*. You may follow t
 
 ### Day 1, Session 3: Generics
 
-* Generics
+* Generic over Types - `<T>`
+* Generic over Lifetimes - `<'a>`
 * Exercise: Shapes, Part II
 
 ### Day 2, Session 1: Library Design, Part II
