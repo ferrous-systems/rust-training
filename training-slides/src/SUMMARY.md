@@ -4,6 +4,8 @@
 
 [Glossary](./glossary.md)
 
+[Roadmaps](./roadmaps.md)
+
 # Rust Fundamentals
 
 ## Introduction and History
