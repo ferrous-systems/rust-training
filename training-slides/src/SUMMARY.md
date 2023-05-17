@@ -87,6 +87,6 @@
 -   [libcore and libstd](./libcore-and-libstd.md)
 -   [The stdlib](./std-lib-tour.md)
 -   [Iterators Again](./iterators-again.md)
--   [Interior Mutability](./inner-mutability.md)
+-   [Interior Mutability](./interior-mutability.md)
 -   [WASM](./wasm.md)
 -   [Send and Sync](./send-and-sync.md)
