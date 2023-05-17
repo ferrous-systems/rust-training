@@ -94,7 +94,7 @@ What follows here is the "default roadmap" for each *Training*. You may follow t
 
 ### Day 3, Session 2: Multi-threading
 
-* Spawing Threads
+* Spawning Threads
 * Exercise: Multi-threaded Mailbox
 
 ### Day 3, Session 3: Bonus Topics!
