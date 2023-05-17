@@ -264,6 +264,9 @@ $CONTENT
                 $('pre code.console').each(function (i, el) {
                     highlight.highlightBlock(el);
                 });
+                $('pre code.wat').each(function (i, el) {
+                    highlight.highlightBlock(el);
+                });
                 $('pre code.mermaid').each(function (i, el) {
                     // Center the mermaid diagrams.
                     el.style.cssText += 'text-align: center';
