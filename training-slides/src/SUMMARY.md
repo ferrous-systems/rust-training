@@ -46,7 +46,6 @@
 -   [Dynamic Dispatch](./dynamic-dispatch.md)
 -   [Advanced Generics](./advanced-generics-bounds.md)
 -   [Closures](./closures.md)
--   [Imports, Modules, and Visibility](./imports-modules-and-visibility.md)
 -   [Crates](./crates.md)
 -   [libcore and libstd](./libcore-and-libstd.md)
 -   [The stdlib](./std-lib-tour.md)
