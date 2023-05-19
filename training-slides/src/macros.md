@@ -51,14 +51,14 @@ Note:
 
 The actual macro is more complicated as it sets the `Vec` to have the correct capacity up front, to avoid re-allocation during the pushing of the values.
 
-## println and friends
+## `println!` and friends
 
 `println!` is a macro, because:
 
 * Rust does not have variadic functions
 * Rust wants to type-check the call
 
-## Expanding println!
+## Expanding `println!`
 
 ```rust [] ignore
 fn main() {
@@ -92,7 +92,7 @@ This is a simplified example - the real output is slightly more complicated, and
 * Attribute-like macros
 * Function-like macros
 
-## Custom #[derive] macros
+## Custom `#[derive]` macros
 
 Work like the built-in Rust derives:
 
