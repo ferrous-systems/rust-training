@@ -16,7 +16,7 @@
 * Yes, it's a deliberate pun.
 * The Rust Standard Library is a crate.
 
-## Kinds of Crate
+## Kinds of Crates
 
 * Library crate (has a `src/lib.rs`)
 * Binary crates (has e.g. a `src/bin.rs`)
