@@ -55,46 +55,48 @@ What follows here is the "default roadmap" for each *Training*. You may follow t
 
 ## Module: Applied Rust
 
-### Day 1, Session 1: Using Traits
+### Day 1, Session 1: Defining Methods
 
-* Using Traits
-* Exercise: impl Error in SimpleDB
+* [Method Syntax](./method-syntax.md)
+* Exercise: Shapes, Part I - adding methods to structs
 
-### Day 1, Session 2: Defining Traits and Methods
+### Day 1, Session 2: Using Macros
 
-* Implementing Traits
-* Method Syntax
-* Exercise: Shapes, Part I
+* [Macros](./macros.md) - The two kinds, and how to use them
+* Exercise: use `thiserror` in SimpleDB
 
-### Day 1, Session 3: Generics
+### Day 1, Session 3: Traits
 
-* Generic over Types - `<T>`
-* Generic over Lifetimes - `<'a>`
-* Exercise: Shapes, Part II
+* [Defining and Implementing Traits](./traits.md)
+* Exercise: Shapes, Part II - The HasArea trait (or similar)
 
-### Day 2, Session 1: Library Design, Part II
+### Day 2, Session 1: Building Bigger Systems
 
-* Library Design Part II
+* [Cargo Dependencies and Workspaces](./using-cargo.md)
+* [Rust I/O Traits](./io.md)
 * Exercise: Connected Mailbox
 
-### Day 2, Session 2: Heap-allocated Memory
+### Day 2, Session 2: Generics
 
-* Heap Allocated Memory
-* Exercise: TBD
+* [Generic over Types](./generics.md)
+* [Generic over Lifetimes](./lifetimes.md)
+* Exercise: Shapes III - making your Shapes generic over some numeric type T
 
-### Day 2, Session 3: Shared Mutability
+### Day 2, Session 3: Closures
 
-* Cell, RefCell, Mutex
-* Exercise: TBD
+* [Closures and the Fn/FnOnce/FnMut traits](./closures.md)
+* Exercise: TBD some closure exercise, filtering data to find large values
 
-### Day 3, Session 1: Closures
+### Day 3, Session 1: Heap Allocation and Shared Mutability
 
-* Closures
+* [Heap Allocation (Box and Rc)](./heap.md)
+* [Shared Mutability (Cell, RefCell)](./shared-mutability.md)
 * Exercise: TBD
 
 ### Day 3, Session 2: Multi-threading
 
-* Spawning Threads
+* [Thread Safety (Send/Sync, Arc, Mutex)](./thread-safety.md)
+* [Spawning Threads and Scoped Threads](./spawning-threads.md)
 * Exercise: Multi-threaded Mailbox
 
 ### Day 3, Session 3: Bonus Topics!
