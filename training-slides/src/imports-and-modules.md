@@ -18,7 +18,7 @@
 
 ## Kinds of Crates
 
-* Library crate (has a `src/lib.rs`)
+* Library crates (has a `src/lib.rs`)
 * Binary crates (has e.g. a `src/bin.rs`)
 
 Note:
