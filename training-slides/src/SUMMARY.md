@@ -44,6 +44,7 @@
 -   [Interior Mutability](./interior-mutability.md)
 -   [libcore and libstd](./libcore-and-libstd.md)
 -   [Send and Sync](./send-and-sync.md)
+-   [Smart Pointers](./smart-pointers.md)
 -   [Standard Types](./standard-types.md)
 -   [Strings](./strings.md)
 -   [Testing](./testing.md)
