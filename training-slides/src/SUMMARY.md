@@ -59,3 +59,4 @@
 -   [Drop, Panic and Abort](./drop-panic-abort.md)
 -   [Documentation](./documentation.md)
 -   [Design Patterns](./design-patterns.md)
+-   [Deref Coercions](./deref-coercions.md)
