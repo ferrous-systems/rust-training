@@ -101,3 +101,4 @@
 -   [Property Testing](./property-testing.md)
 -   [Drop, Panic and Abort](./drop-panic-abort.md)
 -   [Documentation](./documentation.md)
+-   [Design Patterns](./design-patterns.md)
