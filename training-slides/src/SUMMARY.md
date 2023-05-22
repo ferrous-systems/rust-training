@@ -83,6 +83,7 @@
 -   [Advanced Generics](./advanced-generics-bounds.md)
 -   [Crates](./crates.md)
 -   [Dynamic Dispatch](./dynamic-dispatch.md)
+-   [Foreign Function Interface](./ffi.md)
 -   [Imports, Modules, and Visibility](./imports-modules-and-visibility.md)
 -   [Interior Mutability](./interior-mutability.md)
 -   [libcore and libstd](./libcore-and-libstd.md)
