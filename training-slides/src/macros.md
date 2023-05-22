@@ -1,5 +1,13 @@
 # Macros
 
+## What can macros do?
+
+Macros can be used to things such as:
+
+* Generate repetitive code
+* Create *Domain-Specific Languages* (or *DSLs*)
+* Write things that would otherwise be hard without Macros
+
 ## There are two kinds of macro
 
 * Declarative
@@ -11,10 +19,16 @@
 * Perform pattern matching and substitution
 * Can do repeated actions
 
+## Declarative Macros are:
+
+* __Hygienic__: expansion happens in a different 'syntax context'
+* __Correct__: they cannot expand to invalid code
+* __Limited__: they cannot, for example, pollute their expansion site
+
 ## The `vec!` macro
 
 ```rust [1-10|2-3|4-11]
-fn main1() {
+fn main() {
     // You write:
     let v = vec![1, 2, 3];
     // The compiler sees (roughly):
@@ -79,6 +93,15 @@ fn main() {
 Note:
 
 This is a simplified example - the real output is slightly more complicated, and is in fact handled by a *compiler built-in* so you can't even see the macro source for yourself.
+
+## Downsides of Declarative Macros
+
+* Can be difficult to debug
+* Can be confusing to read and understand
+
+## When Should You Use Declarative Macros?
+
+* When there are no other good alternatives
 
 ## Procedural macros
 
