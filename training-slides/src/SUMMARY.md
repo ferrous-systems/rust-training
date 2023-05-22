@@ -99,3 +99,4 @@
 -   [Working with Nightly](./working-with-nighly.md)
 -   [Stack and Heap](./stack-and-heap.md)
 -   [Property Testing](./property-testing.md)
+-   [Drop, Panic and Abort](./drop-panic-abort.md)
