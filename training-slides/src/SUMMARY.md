@@ -37,12 +37,18 @@
 
 # Additional Material
 
--   [Dynamic Dispatch](./dynamic-dispatch.md)
 -   [Advanced Generics](./advanced-generics-bounds.md)
 -   [Crates](./crates.md)
+-   [Dynamic Dispatch](./dynamic-dispatch.md)
 -   [Imports, Modules, and Visibility](./imports-modules-and-visibility.md)
--   [libcore and libstd](./libcore-and-libstd.md)
--   [The stdlib](./std-lib-tour.md)
 -   [Interior Mutability](./interior-mutability.md)
--   [WASM](./wasm.md)
+-   [libcore and libstd](./libcore-and-libstd.md)
 -   [Send and Sync](./send-and-sync.md)
+-   [Standard Types](./standard-types.md)
+-   [Strings](./strings.md)
+-   [Testing](./testing.md)
+-   [The stdlib](./std-lib-tour.md)
+-   [Unsafe Rust](./unsafe.md)
+-   [WASM](./wasm.md)
+-   [Working with Nightly](./working-with-nighly.md)
+-   [Stack and Heap](./stack-and-heap.md)
