@@ -60,3 +60,4 @@
 -   [Documentation](./documentation.md)
 -   [Design Patterns](./design-patterns.md)
 -   [Deref Coercions](./deref-coercions.md)
+-   [Debugging Rust](./debugging-rust.md)
