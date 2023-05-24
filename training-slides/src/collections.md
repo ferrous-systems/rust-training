@@ -209,6 +209,43 @@ The index operation will panic if the key is not found, just like with slices an
 
 If you run it a few times, the result will change because it is un-ordered.
 
+## The Entry API
+
+What if you want to *update an existing value* __OR__ *add a new value if it's not there yet*?
+
+`HashMap` has the *Entry API*:
+
+```rust ignore
+enum Entry<K, V> {
+    Occupied(...),
+    Vacant(...),
+}
+
+fn entry(&mut self, key: K) -> Entry<K, V> {
+    ...
+}
+```
+
+## Entry API Example
+
+```rust []
+use std::collections::HashMap;
+
+fn award_points(name: &'static str, map: &mut HashMap<String, u64>) {
+    map.entry(name.to_string())
+        .and_modify(|v| *v += 1)
+        .or_insert(1);
+}
+
+fn main() {
+    let mut map = HashMap::new();
+    award_points("Sam", &mut map);
+    award_points("Bob", &mut map);
+    award_points("Sam", &mut map);
+    println!("{:?}", map);
+}
+```
+
 ## Features of HashMap
 
 * Growable (will re-allocate if needed)
