@@ -41,7 +41,6 @@
 -   [Crates](./crates.md)
 -   [Dynamic Dispatch](./dynamic-dispatch.md)
 -   [Foreign Function Interface](./ffi.md)
--   [Imports, Modules, and Visibility](./imports-modules-and-visibility.md)
 -   [libcore and libstd](./libcore-and-libstd.md)
 -   [Send and Sync](./send-and-sync.md)
 -   [Serde](./serde.md)
