@@ -27,7 +27,7 @@
 
 ## Cargo commands
 
-* `cargo new my_app`
+* `cargo new my-app`
 * `cargo run` - runs a debug build of your program, builds it if necessary
 * `cargo fmt` - formats your code
 * `cargo check` - only reports errors, doesn't actually compile your code
@@ -87,13 +87,13 @@ Most cargo commands accept a few common arguments:
     ```
 * when someone uses your dependency
     ```toml
-    my_lib = { version: "1.0.0", features = ["json"] }
+    my-lib = { version: "1.0.0", features = ["json"] }
     ```
 
 ## Anatomy of Rust crate
 
 ```shell
-cargo new hello_world
+cargo new hello-world
 ```
 
 ```text
@@ -135,7 +135,6 @@ cargo new hello_world
 [package]
 name = "tcp-mailbox"
 version = "0.1.0"
-authors = ["Florian Gilcher <florian.gilcher@ferrous-systems.com>"]
 
 [dependencies]
 async-std = "1" # would also choose 1.5
@@ -173,7 +172,7 @@ clap = "2.2" # would also choose 2.3
 ## Dependency resolution: Example
 
 ```text
-└── my_app                      May install:
+└── my-app                      May install:
     ├── A = "1"
     │   ├── X = "1"             A = "1.0.17"
     │   └── Y = "1.3"     =>    B = "1.5.0"
@@ -215,6 +214,7 @@ clap = "2.2" # would also choose 2.3
     * reuse existing code (SQLite, OpenSSL, libgit2, etc.)
 * Building a crate that relies on C libraries often requires customization
     * done using `build.rs` file
+
 ## `build.rs` file
 
 * compiled and executed before the rest of the crate
@@ -257,30 +257,30 @@ Allow you to split your project into several crates
 ## Anatomy of Rust Workspace
 
 ```text
-my_app/
+my-app/
 ├── Cargo.toml   # a special workspace file
 ├── Cargo.lock   # notice that Cargo produces a common lockfile for all crates
 ├── crates/      # can use any directory structure
-│   ├── main_app/
+│   ├── main-app/
 │   │   ├── Cargo.toml
 │   │   └── src/
 │   │       └── main.rs
-│   ├── admin_app/
+│   ├── admin-app/
 │   │   └── ...
-│   ├── common_data_model/
+│   ├── common-data-model/
 │   │   ├── Cargo.toml
 │   │   └── src/
 │   │       └── lib.rs
-│   ├── useful_macros
-│   ├── service_a
-│   ├── service_b
+│   ├── useful-macros
+│   ├── service-a
+│   ├── service-b
 │   └── ...
 └── tools/       # crates don't have to be in the same directory
-    ├── release_bot/
+    ├── release-bot/
     │   ├── Cargo.toml
     │   └── src/
     │       └── main.rs
-    ├── data_migration_scripts/
+    ├── data-migration-scripts/
     │   ├── Cargo.toml
     │   └── src/
     │       └── main.rs
@@ -304,18 +304,18 @@ using wildcards for members is very handy when you want to add new member crates
 
 ```toml
 [package]
-name = "main_app"
+name = "main-app"
 
 [dependencies]
 thiserror = { workspace = true }
-service_a = { path = "../service_a" }
+service-a = { path = "../service-a" }
 ...
 ```
 
 ## Cargo commands for workspaces
 
-* `cargo run --bin main_app`
-* `cargo test -p service_a`
+* `cargo run --bin main-app`
+* `cargo test -p service-a`
 
 ## Appendix: Rust projects build time
 
@@ -398,7 +398,7 @@ service_a = { path = "../service_a" }
 ├── src/
 │   └── ...
 └── tests/
-    ├── account_management.rs
+    ├── account-management.rs
     ├── billing.rs
     └── reporting.rs
 ```
@@ -407,9 +407,9 @@ service_a = { path = "../service_a" }
 ├── src/
 │   └── ...
 └── tests/
-    └── my_app_tests/
+    └── my-app-tests/
         ├── main.rs   # includes the rest as modules       .
-        ├── account_management.rs
+        ├── account-management.rs
         ├── billing.rs
         └── reporting.rs
 ```
