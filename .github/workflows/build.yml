@@ -21,6 +21,10 @@ jobs:
         run: |
           ./training-slides/build.sh
 
+      - name: Build example code
+        run: |
+          ./example-code/build.sh
+  
       - name: Assemble Artifacts
         run: |
           mkdir -p ./output
