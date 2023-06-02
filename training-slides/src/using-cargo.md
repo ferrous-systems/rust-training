@@ -1,12 +1,13 @@
 # Cargo Dependencies and Workspaces
 
-# Crates
+# Crates and Packages
 
-* Rust libraries are called `crates`
-* Crates are built using `cargo`
-* A crate can produce a single library and / or 1 or more executables
-* A single crate can contain multiple modules
-* Multiple crates can be combined into a single Cargo workspace
+* Rust code is arranged into packages
+* A package is described by a `Cargo.toml` file
+* Building a package can produce a single library, and 0 or more executables
+    * these build artifacts are called "crates"
+    * unlike C/C++ compilers that compile code file by file, `rustc` treat all files for a crate as a single compilation unit
+* Cargo calls `rustc` to build each crate in the package.
 
 ## Cargo
 
@@ -90,7 +91,7 @@ Most cargo commands accept a few common arguments:
     my-lib = { version: "1.0.0", features = ["json"] }
     ```
 
-## Anatomy of Rust crate
+## Anatomy of Rust package
 
 ```shell
 cargo new hello-world
@@ -103,7 +104,7 @@ cargo new hello-world
     └── main.rs
 ```
 
-## Anatomy of Rust crate
+## Anatomy of Rust package
 
 ```text
 ├── Cargo.lock
@@ -184,7 +185,7 @@ clap = "2.2" # would also choose 2.3
 ## Crates.io
 
 * default package registry
-    * 100k packages and counting
+    * 100k crates and counting
     * **every Rust Beta release is tested against all of them every week**
 * packages aren't deleted, but *yanked*
     * if you have a correct hash for a yanked version in your `Cargo.lock` your build won't break (you still get a warning)
@@ -194,7 +195,7 @@ clap = "2.2" # would also choose 2.3
 * **Complete API documentation for the whole Rust ecosystem**
 * Automatically publishes API documentation for every version of every crate on Crates.io
 * Documentation for old versions stays up, too. Easy to switch between versions.
-* Links across packages just work
+* Links across crates just work
 
 ## Other kinds of dependencies
 
@@ -217,7 +218,7 @@ clap = "2.2" # would also choose 2.3
 
 ## `build.rs` file
 
-* compiled and executed before the rest of the crate
+* compiled and executed before the rest of the package
 * can manipulate files, execute external programs, etc.
     * download / install custom SDKs
     * call `cc`, `cmake`, etc. to build C++ dependencies
@@ -246,7 +247,7 @@ clap = "2.2" # would also choose 2.3
 
 ## Cargo Workspaces
 
-Allow you to split your project into several crates
+Allow you to split your project into several packages
 
 * Further encourages modularity
 * Develop multiple applications and libraries in a single tree
@@ -259,8 +260,8 @@ Allow you to split your project into several crates
 ```text
 my-app/
 ├── Cargo.toml   # a special workspace file
-├── Cargo.lock   # notice that Cargo produces a common lockfile for all crates
-├── crates/      # can use any directory structure
+├── Cargo.lock   # notice that Cargo produces a common lockfile for all packages
+├── packages/      # can use any directory structure
 │   ├── main-app/
 │   │   ├── Cargo.toml
 │   │   └── src/
@@ -275,7 +276,7 @@ my-app/
 │   ├── service-a
 │   ├── service-b
 │   └── ...
-└── tools/       # crates don't have to be in the same directory
+└── tools/       # packages don't have to be in the same directory
     ├── release-bot/
     │   ├── Cargo.toml
     │   └── src/
@@ -291,14 +292,14 @@ my-app/
 
 ```toml
 [workspace]
-members = ["crates/*", "tools/*"]
+members = ["packages/*", "tools/*"]
 
 [dependencies]
 thiserror = "1.0.39"
 ...
 ```
 
-using wildcards for members is very handy when you want to add new member crates, split crates, etc.
+using wildcards for members is very handy when you want to add new member packages, split packages, etc.
 
 ## Cargo.toml for a workspace member
 
@@ -352,7 +353,7 @@ service-a = { path = "../service-a" }
     * Cargo only waits for `rustc` to produce an LLVM IR, further compilation by LLVM can run in background (purple)
 * A crate can't start building until its `build.rs` is built and finishes running (yellow)
 * If multiple crates depend on a single crate they often can start building in parallel
-* If a crate is both a binary and a library then the binary is built after a library
+* If a package is both a binary and a library then the binary is built after a library
     * Integration tests, examples, benchmarks, and documentation tests all produce binaries and thus take extra time to build.
 
 ## Actions you can take
@@ -417,8 +418,8 @@ service-a = { path = "../service-a" }
 
 ## Other tips
 
-* split your large crate into a few smaller ones to improve build parallelization
-* extract your binaries into separate crates
+* split your large package into a few smaller ones to improve build parallelization
+* extract your binaries into separate packages
 * remove unused dependencies
 
 ## Tools
