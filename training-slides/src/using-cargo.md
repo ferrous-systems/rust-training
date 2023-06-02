@@ -344,7 +344,7 @@ service_a = { path = "../service_a" }
 
 ## Timings Report
 
-![Cargo Build Report for Rust Analyzer](../book/images/rust-analyzer-cargo-build-timings.png)
+![Cargo Build Report for Rust Analyzer](./images/rust-analyzer-cargo-build-timings.png)
 
 ## Reading the report
 
