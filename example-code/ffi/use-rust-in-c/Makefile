@@ -4,6 +4,8 @@
 # Note: this project is in a workspace, two levels up.
 TARGET_DIR = ../../target
 
+CFLAGS = -pthread
+
 all: example
 
 rebuild: clean all
@@ -13,7 +15,7 @@ clean:
 
 # The `example` binary requires the Rust library and some C source 
 example: example.c example.h $(TARGET_DIR)/debug/libffi_use_rust_in_c.a
-	cc -o example example.c $(TARGET_DIR)/debug/libffi_use_rust_in_c.a
+	$(CC) -o example $(CFLAGS) example.c $(TARGET_DIR)/debug/libffi_use_rust_in_c.a
 
 # The Rust library is built by calling cargo
 $(TARGET_DIR)/debug/libffi_use_rust_in_c.a: src/lib.rs Cargo.toml
