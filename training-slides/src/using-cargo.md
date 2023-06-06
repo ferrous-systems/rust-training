@@ -5,7 +5,7 @@
 * Rust code is arranged into packages
 * A package is described by a `Cargo.toml` file
 * Building a package can produce a single library, and 0 or more executables
-    * these build artifacts are called "crates"
+    * these are called *crates*
     * unlike C/C++ compilers that compile code file by file, `rustc` treat all files for a crate as a single compilation unit
 * Cargo calls `rustc` to build each crate in the package.
 
