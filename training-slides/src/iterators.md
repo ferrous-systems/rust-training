@@ -218,7 +218,7 @@ Note:
 * `collect` will take every item from the iterator and stuff it into a new collection (e.g. a `Vec<T>`)
 * `max` and `min` find the largest/smallest item
 * `fold` will maintain an accumulator, and call `func` with each item and the current value of the accumulator
-* `collect` will take every item from the iterator and stuff it into one of two new collections
+* `partition` will create two new collections by taking every item from the iterator and stuffing it into one of two new collections
 
 ## Call chaining (1)
 
