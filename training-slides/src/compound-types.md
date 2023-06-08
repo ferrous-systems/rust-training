@@ -288,14 +288,25 @@ fn make_shape() -> Shape {
 ```rust
 enum Option<T> {
     Some(T),
-    None
+    None,
 }
 
-let mut iter = "Hello".chars().into_iter();
-while let Some(ch) = iter.next() {
-    println!("ch: {}", ch);
+fn main() {
+    let x = [1, 2, 3, 4];
+    match x.get(5) {
+        Some(value) => {
+            println!("I got {value} from x.get(5)?");
+        }
+        None => {
+            println!("I got None from x.get(5)");
+        }
+    }
 }
 ```
+
+Note:
+
+It's so important, it is special-cased within the compiler so you can say `None` instead of `Option::None`, as you would with any other enum.
 
 ## Very Important Enum #2 - Result
 
@@ -314,6 +325,10 @@ match std::fs::File::open("hello.txt") {
     }
 }
 ```
+
+Note:
+
+Also so important, it is special-cased within the compiler so you can say `Ok(...)` instead of `Result::Ok`, as you would with any other enum (except `Option`).
 
 ## [Option](https://doc.rust-lang.org/std/option/enum.Option.html) and [Result](https://doc.rust-lang.org/std/result/enum.Result.html) have lots of useful methods
 
