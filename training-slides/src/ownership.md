@@ -225,19 +225,18 @@ fn write_to_file(f: &mut std::fs::File) -> std::io::Result<()> {
 }
 ```
 
-## How does `write` work?
+## How does `write_all` work?
 
 * It's a method on `struct File`...
-* `&mut self` means `self: &mut File`
+* But method calls are just *syntactic sugar* for a function call
 
 ```rust []
-struct File();
+use std::io::prelude::*;
 
-impl File {
-    /// Write a buffer into this writer, returning how many bytes were written.
-    fn write(&mut self, buffer: &[u8]) -> std::io::Result<usize> {
-        todo!();
-    }
+fn write_to_file(f: &mut std::fs::File) -> std::io::Result<()> {
+    // These are equivalent
+    // f.write_all(b"Hello, world!")
+    std::fs::File::write_all(f, b"Hello, world!")
 }
 ```
 
@@ -252,6 +251,8 @@ use std::io::prelude::*;
 fn main() -> std::io::Result<()> {
     let mut f = std::fs::File::create("hello.txt")?;
     f.write_all(b"Hello, world!")?;
+    // Same as:
+    // std::fs::File::write_all(&mut f, b"Hello, world!")?;
     Ok(())
 }
 ```
