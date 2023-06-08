@@ -156,10 +156,9 @@ fn main() {
 fn main() {
     let mut iter = "Hello".chars().into_iter();
     loop {
-        if let Some(ch) = iter.next() {
-            println!("{}", ch);
-        } else {
-            break;
+        match iter.next() {
+            Some(ch) => println!("{}", ch),
+            None => break,
         }
     }
 }
