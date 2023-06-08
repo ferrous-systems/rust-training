@@ -74,5 +74,10 @@ For details, check the [Cargo Manifest docs](http://doc.crates.io/manifest.html)
 ## IDEs
 
 -   rust-analyzer: <https://rust-analyzer.github.io>
+    - Implements the *Language Server Protocol*
+    - Emacs, vim, Sublime, VS Code, Kate, etc...
+    - Now the official VS Code extension for Rust!
+    - Open Source, funded by donations
 -   IntelliJ Rust plugin for their IDEs (CLion, Idea, etc.):
     <https://www.jetbrains.com/rust/>
+
