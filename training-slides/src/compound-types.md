@@ -147,7 +147,7 @@ fn check_shape(shape: &Shape) {
     match shape {
         Shape::Circle(radius) => {
             println!("It's a circle, with radius {}", radius);
-        },
+        }
         _ => {
             println!("Try a circle instead");
         }
@@ -171,7 +171,7 @@ fn check_shape(shape: &Shape) {
     match shape {
         Shape::Circle(radius) => {
             println!("It's a circle, with radius {}", radius);
-        },
+        }
         _ => {
             println!("Try a circle instead");
         }
@@ -193,7 +193,7 @@ fn check_shape(shape: &Shape) {
     match shape {
         Shape::Circle(radius) if *radius > 10 => {
             println!("It's a BIG circle, with radius {}", radius);
-        },
+        }
         _ => {
             println!("Try a big circle instead");
         }
@@ -216,10 +216,10 @@ fn test_shape(shape: &Shape) {
     match shape {
         Shape::Circle(size) | Shape::Square(size) => {
             println!("Shape has single size field {}", size);
-        },
+        }
         _ => {
             println!("Not a circle, nor a square");
-        },
+        }
     }
 }
 ```

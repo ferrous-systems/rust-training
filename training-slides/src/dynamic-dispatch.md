@@ -19,9 +19,9 @@ enum Operation {
 
 fn execute(op: Operation) {
     match op {
-        Operation::Get => { },
-        Operation::Set(s) => { },
-        Operation::Count => { },
+        Operation::Get => { }
+        Operation::Set(s) => { }
+        Operation::Count => { }
     }
 }
 ```
@@ -38,9 +38,9 @@ enum Operation {
 impl Operation {
     fn execute(&self) {
         match &self {
-            &Operation::Get => { },
-            &Operation::Set(s) => { },
-            &Operation::Count => { },
+            &Operation::Get => { }
+            &Operation::Set(s) => { }
+            &Operation::Count => { }
         }
     }
 }
