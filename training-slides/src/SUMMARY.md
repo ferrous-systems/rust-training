@@ -38,7 +38,6 @@
 # Additional Material
 
 -   [Advanced Generics](./advanced-generics-bounds.md)
--   [Crates](./crates.md)
 -   [Dynamic Dispatch](./dynamic-dispatch.md)
 -   [Foreign Function Interface](./ffi.md)
 -   [libcore and libstd](./libcore-and-libstd.md)
