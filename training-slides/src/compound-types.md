@@ -266,12 +266,20 @@ fn test_shape(shape: &Shape) {
 
 -   Keep looping whilst the pattern still matches
 
-```rust []
+```rust should_panic []
+enum Shape {
+    Circle(i32),
+    Rectangle(i32, i32),
+}
+
 fn main() {
-    let mut numbers = vec![1, 2, 3];
-    while let Some(num) = numbers.pop() {
-        println!("popped number {}", num);
+    while let Shape::Circle(radius) = make_shape() {
+        println!("got circle, radius {}", radius);
     }
+}
+
+fn make_shape() -> Shape {
+    todo!()
 }
 ```
 
