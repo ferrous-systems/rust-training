@@ -307,9 +307,7 @@ match std::fs::File::open("hello.txt") {
 }
 ```
 
-## Option and Result have lots of useful methods
-
-Note: The `|x| ...` syntax indicates a *closure*
+## [Option](https://doc.rust-lang.org/std/option/enum.Option.html) and [Result](https://doc.rust-lang.org/std/result/enum.Result.html) have lots of useful methods
 
 ```rust
 fn main() {
@@ -320,3 +318,5 @@ fn main() {
     println!("File length is {}", file_length);
 }
 ```
+
+The `|x| ...` syntax indicates a *closure*
