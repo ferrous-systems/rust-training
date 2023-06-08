@@ -34,6 +34,10 @@ fn write_and_close(mut f: std::fs::File) {
 }
 ```
 
+Note:
+
+The statement `let f = ...;` introduces a *variable binding* called `f` and gives it a *value* which is of type `std::fs::File`. This distinction is important when it comes to transferring ownership.
+
 ## Does this compile?
 
 ```rust compile_fail []
@@ -68,13 +72,13 @@ error[E0382]: use of moved value: `f`
 
 ## Background
 
-* When calling `write_and_close` with `f`, the value in `f` is *transferred* into the arguments of `write_and_close`.
+* When calling `write_and_close` with `f`, the value *in* `f` is *transferred* into the arguments of `write_and_close`.
 * At that moment, ownership passes to `write_and_close`. We say the function *consumed* the value.
-* The value `f` ceases to exist, and thus `main` is not allowed to access it any more.
+* The *variable binding* `f` ceases to exist, and thus `main` is not allowed to access it any more.
 
 ## Mutability
 
-* The variable *binding* can be *immutable* (the default) or *mutable*.
+* The *variable binding* can be *immutable* (the default) or *mutable*.
 * If you own it, you can rebind it and change this.
 
 ```rust
@@ -135,6 +139,7 @@ fn main() -> std::io::Result<()> {
 }
 
 fn truncate_file(f: &std::fs::File) -> std::io::Result<()> {
+    // We don't need -> syntax here!
     f.set_len(0)
 }
 ```
@@ -142,22 +147,21 @@ fn truncate_file(f: &std::fs::File) -> std::io::Result<()> {
 ## How does `set_len` work?
 
 * It's a method on `struct File`...
-* `&self` means `self: &File`
+* But method calls are just *syntactic sugar* for a function call
 
-```rust
-struct File();
+```rust []
+use std::io::prelude::*;
 
-impl File {
-    fn set_len(&self, size: u64) -> std::io::Result<()> {
-        todo!();
-    }
+fn truncate_file(f: &std::fs::File) -> std::io::Result<()> {
+    // These are equivalent
+    // f.set_len(0)
+    std::fs::File::set_len(f, 0)
 }
 ```
 
 ## What if I own the `File`?
 
 * For method calls Rust does the borrow automatically if required.
-* There is no need for C's `ptr->field` syntax
 
 ```rust
 use std::io::prelude::*;
@@ -165,6 +169,8 @@ use std::io::prelude::*;
 fn main() -> std::io::Result<()> {
     let f = std::fs::File::create("hello.txt")?;
     f.set_len(0)?;
+    // Same as:
+    // std::fs::File::set_len(&f, 0)?;
     Ok(())
 }
 ```
