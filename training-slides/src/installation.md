@@ -8,24 +8,6 @@ Rustup installs and manages Rust compiler toolchains
 
 **It is not the Rust compiler!**
 
-## Hello, world! with Cargo
-
-```console
-$ cargo new hello-world
-$ cd hello-world
-$ cat src/main.rs
-    fn main() {
-        println!("Hello, world!");
-    }
-$ cargo build
-    Compiling hello-world v0.1.0 (file:///Users/skade/Code/rust/scratchpad/hello-world)
-    Finished debug [unoptimized + debuginfo] target(s) in 0.35 secs
-$ cargo run
-    Finished debug [unoptimized + debuginfo] target(s) in 0.0 secs
-    Running `target/debug/hello-world`
-Hello, world!
-```
-
 ## Important commands
 
 ```sh
@@ -62,6 +44,24 @@ graph TD;
     R --> S(libstd);
     R --> O(libcore);
     S --> O;
+```
+
+## Hello, world! with Cargo
+
+```console
+$ cargo new hello-world
+$ cd hello-world
+$ cat src/main.rs
+    fn main() {
+        println!("Hello, world!");
+    }
+$ cargo build
+    Compiling hello-world v0.1.0 (file:///Users/skade/Code/rust/scratchpad/hello-world)
+    Finished debug [unoptimized + debuginfo] target(s) in 0.35 secs
+$ cargo run
+    Finished debug [unoptimized + debuginfo] target(s) in 0.0 secs
+    Running `target/debug/hello-world`
+Hello, world!
 ```
 
 ## A Little Look Around
