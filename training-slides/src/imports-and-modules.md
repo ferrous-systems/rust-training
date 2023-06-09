@@ -57,7 +57,7 @@ Hello, world!
 ## Modules
 
 * A module is block of source code within a crate
-* It qualfies the names of everything in it
+* It qualifies the names of everything in it
 * It has a parent module (or it is the crate root)
 * It can have child modules
 * The crate is therefore a *tree*
