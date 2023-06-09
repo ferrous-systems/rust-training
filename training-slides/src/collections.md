@@ -52,7 +52,7 @@ If you don't how how much space you will need, a `Vec` is a growable, heap-alloc
 ```rust []
 fn process_data(input: &[u32]) {
     let mut vector = Vec::new();
-    for value in input.iter() {
+    for value in input {
         vector.push(value * 2);
     }
     println!("vector = {:?}, first = {}", vector, vector[0]);
