@@ -86,7 +86,7 @@ assert_eq!(p, Point(1, 2));
 
 ## `Debug`
 
-Allows printing of values in debug mode
+Allows printing of values with *debug formatting*
 
 ```rust
 #[derive(Debug)]
