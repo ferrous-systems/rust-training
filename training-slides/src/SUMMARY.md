@@ -22,17 +22,15 @@
 
 # Applied Rust
 
--   [Method Syntax](./method-syntax.md)
--   [Macros](./macros.md)
--   [Defining and Implementing Traits](./traits.md)
+-   [Methods and Traits](./methods-traits.md)
 -   [Cargo Dependencies and Workspaces](./using-cargo.md)
 -   [Rust I/O Traits](./io.md)
--   [Generic over Types](./generics.md)
--   [Generic over Lifetimes](./lifetimes.md)
--   [Closures and the Fn Traits](./closures.md)
--   [Heap Allocation (Box, Rc and Cow)](./heap.md)
+-   [Generics](./generics.md)
+-   [Lifetimes](./lifetimes.md)
+-   [Heap Allocation (Box and Rc)](./heap.md)
 -   [Shared Mutability (Cell, RefCell)](./shared-mutability.md)
 -   [Thread Safety (Send/Sync, Arc, Mutex)](./thread-safety.md)
+-   [Closures and the Fn/FnOnce/FnMut traits](./closures.md)
 -   [Spawning Threads and Scoped Threads](./spawning-threads.md)
 
 # Additional Material
@@ -46,6 +44,7 @@
 -   [Dynamic Dispatch](./dynamic-dispatch.md)
 -   [Foreign Function Interface](./ffi.md)
 -   [libcore and libstd](./libcore-and-libstd.md)
+-   [Macros](./macros.md)
 -   [Property Testing](./property-testing.md)
 -   [Send and Sync](./send-and-sync.md)
 -   [Serde](./serde.md)
