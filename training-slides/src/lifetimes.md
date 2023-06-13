@@ -28,6 +28,8 @@ fn producer() -> &str {
 
 ## Local Data
 
+Does this work?
+
 ```rust ignore
 fn producer() -> &str {
     let s = String::new();
@@ -35,7 +37,9 @@ fn producer() -> &str {
 }
 ```
 
-can't use local data
+## Local Data
+
+No, we can't return a reference to local data...
 
 ```text
 error[E0515]: cannot return reference to local variable `s`
@@ -48,10 +52,10 @@ error[E0515]: cannot return reference to local variable `s`
 ## Static Data
 
 ```rust ignore
-static HELLO: &'static str = "hello";
+static HELLO: &str = "hello";
 
 fn producer() -> &'static str {
-    &HELLO
+    HELLO
 }
 ```
 
@@ -60,9 +64,16 @@ fn producer() -> &'static str {
 * a slice pointing to these bytes will always be valid
 * **safe** to return from `producer` function
 
+Note:
+
+You didn't need to specify `'static` for the static variable - there's literally no other lifetime that can work here.
+
+How big is a `&'static str`? Do you think the length lives with the string data, or inside the str-reference itself?
+
+(It lives with the reference - so you can take sub-slices)
+
 ## `'static` annotation
 
-* Has to be explicit
 * Rust never assumes `'static` for function returns or fields in types
 * `&'static T` means this reference to `T` will never become invalid
 * `T: 'static` means that "if type `T` has any references inside they should be `'static`"
@@ -114,7 +125,7 @@ fn takes_many_and_returns<'a>(s1: &str, s2: &'a str) -> &'a str {
 ## `'a`
 
 * "Lifetime annotation"
-* often called "lifetime" for short, but it's a very bad term
+* often called "lifetime" for short, but that's a very bad term
     * every reference has a lifetime
     * annotation doesn't name a lifetime of a reference, but used to tie lifetimes of several references together
     * builds *"can't outlive"* and *"should stay valid for as long as"* relations
@@ -234,6 +245,34 @@ fn pick_one<'a>(s1: &'a str, s2: &'a str) -> &'a str {
 * returned reference *can't outlive* either `s1` or `s2`
 * potentially more restrictive
 
+Note:
+
+This function body does not *force* the two inputs to live for the same amount of time. Variables live for as long as they live and we can't change that here. This just says "I'm going to use the same label for the lifetimes these two references have, so pick whichever is the shorter".
+
+## What if multiple parameters can be sources?
+
+```rust []
+fn pick_one<'a>(s1: &'a str, s2: &'a str) -> &'a str {
+    if coin_flip() {
+        s1
+    } else {
+        s2
+    }
+}
+
+fn coin_flip() -> bool {
+    false
+}
+
+fn main() {
+    let a = String::from("a");
+    let b = "b";
+    let result = pick_one(&a, b);
+    // drop(a);
+    println!("{}", result);
+}
+```
+
 ## Lifetime annotations for types
 
 ```rust ignore
@@ -242,7 +281,7 @@ struct Configuration {
 }
 ```
 
-where does the string data come from?
+Where does the string data come from?
 
 ## Lifetime annotations are generic parameters
 
@@ -263,7 +302,7 @@ The string *can't be dropped<br> while* an instance of `Configuration` *still* r
 
 * Lifetime annotations act like generics from type system PoV.
 * Can be used to to add bounds to types: `where T: Debug + 'a`
-    * Type `T` has to be debuggable.
+    * Type `T` has to be printable with `:?`.
     * If `T` has references inside, they *have to stay valid for as long as* `'a` tag requires.
 * Can be used to match lifetime generics in `struct` or `enum` with the annotations used in function signatures and in turn with exact lifetimes of references.
 
