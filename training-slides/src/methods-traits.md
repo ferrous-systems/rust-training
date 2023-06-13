@@ -235,7 +235,7 @@ impl AreaCalculator {
 
 Note:
 
-The total function says "I will give you a value you can display (with println), but I am not telling you what it is". You can look up "RPIT" (return position impl trait) for the history of this feature. APIT (argument position impl trait) is probably the less useful of the two.
+The total function says "I will give you a value you can display (with `println`), but I am not telling you what it is". You can look up "RPIT" (return position impl trait) for the history of this feature. APIT (argument position impl trait) is probably the less useful of the two.
 
 ## Using Traits Dynamically
 
