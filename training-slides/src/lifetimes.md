@@ -1,259 +1,296 @@
 # Lifetimes
 
+## Rust Ownership
+
+* Every piece of memory in Rust program has exactly one owner at the time
+* Ownership changes ("moves")
+    * `fn takes_ownership(data: Data)`
+    * `fn producer() -> Data`
+    * `let people = [paul, john, emma];`
+
+## Producing owned data
+
+```rust ignore
+fn producer() -> String {
+    String::new()
+}
+```
+
+## Producing references?
+
+```rust ignore
+fn producer() -> &str {
+    // ???
+}
+```
+
+* `&str` "looks" at some string data. Where can this data come from?
+
+## Local Data
+
+```rust ignore
+fn producer() -> &str {
+    let s = String::new();
+    &s
+}
+```
+
+can't use local data
+
+```text
+error[E0515]: cannot return reference to local variable `s`
+ --> src/lib.rs:3:5
+  |
+3 |     &s
+  |     ^^ returns a reference to data owned by the current function
+```
+
+## Static Data
+
+```rust ignore
+static HELLO: &'static str = "hello";
+
+fn producer() -> &'static str {
+    &HELLO
+}
+```
+
+* bytes `h e l l o` are "baked" into your program
+* part of *static* memory (not heap or stack)
+* a slice pointing to these bytes will always be valid
+* **safe** to return from `producer` function
+
+## `'static` annotation
+
+* Has to be explicit
+* Rust never assumes `'static` for function returns or fields in types
+* `&'static T` means this reference to `T` will never become invalid
+* `T: 'static` means that "if type `T` has any references inside they should be `'static`"
+    * `T` may have no references inside at all!
+* string literals are always `&'static str`
+
 ---
 
 ```rust ignore
-struct Point {
-    x: i32,
-    y: i32,
-}
+fn takes_and_returns(s: &str) -> &str {
 
-// error[E0106]: missing lifetime specifier
-fn return_point() -> &Point {
-    let p = Point { x: 1, y: 2 };
-    &p
-}
-
-fn main() {
-    return_point();
 }
 ```
 
----
+Where can the returned <code>&str</code> come from?
 
-```rust
-struct Point {
-    x: i32,
-    y: i32
-}
+<ul>
+    <li class="fragment">can't be local data</li>
+    <li class="fragment">is not marked as <code>'static</code></li>
+    <li class="fragment"><strong>Conclusion: must come from <code>s</code>!</strong</li>
+</ul>
 
-fn return_point() -> Box<Point> {
-    let p = Point { x: 1, y: 2 };
-    Box::new(p)
-}
-```
-
----
-
-Rust's lifetimes are notorious for being hard to understand.
-
----
-
-That is not necessary.
-
-## Lifetimes
-
--   Lifetimes describe the time that values remain in memory
--   They describe - they cannot force or change anything
--   Lifetimes are types!
-
-## You have used them already
-
-```rust
-struct Point {
-    x: i32,
-    y: i32
-}
-
-impl Point {
-    fn x(&self) -> &i32 {
-        &self.x
-    }
-
-    fn y<'point>(&'point self) -> &'point i32 {
-        &self.y
-    }
-}
-```
-
-## Motivation
+## Multiple sources
 
 ```rust ignore
-struct Container<T> {
-    inner: &T,
-}
+fn takes_many_and_returns(s1: &str, s2: &str) -> &str {
 
-impl<T> Container<T> {
-    fn borrow_inner(&self) -> &T {
-        self.inner
-    }
-}
-
-fn inner_drops_before_container() {
-    let s = "hello".to_string();
-    let c = Container { inner: &s };
-    drop(s);
-}
-
-fn container_drops_with_active_borrow() {
-    let s = "hello".to_string();
-    let c = Container { inner: &s };
-    let borrowed_s = c.borrow_inner();
-    drop(c);
 }
 ```
 
----
+Where can the returned <code>&str</code> come from?
 
-This code would - if it compiled - violate memory safety.
+<ul>
+    <li class="fragment">is not marked as <code>'static</code></li>
+    <li class="fragment">should it be <code>s1</code> or <code>s2</code>?</li>
+    <li class="fragment"><strong>Ambiguous. Should ask programmer for help!</strong</li>
+</ul>
 
----
+## Tag system
 
-The correct struct definition is:
+```rust ignore
+fn takes_many_and_returns<'a>(s1: &str, s2: &'a str) -> &'a str {
 
-```rust
-struct Container<'container, T> {
-    inner: &'container T,
 }
 ```
 
----
+"Returned `&str` comes from `s2`"
 
-Container is now:
+## `'a`
 
-* Generic over the type parameter T
-* As well as a lifetime specified by `'container`
-* The borrowed values must live *at least equally long*
+* "Lifetime annotation"
+* often called "lifetime" for short, but it's a very bad term
+    * every reference has a lifetime
+    * annotation doesn't name a lifetime of a reference, but used to tie lifetimes of several references together
+    * builds *"can't outlive"* and *"should stay valid for as long as"* relations
+* arbitrary names: `'a`, `'b'`, `'c'`, `'whatever`
 
----
+## Lifetime annotations in action
 
-Takeaway:
-
-Lifetimes describe minimal conditions
-
-## Multiple lifetimes in one signature
-
-```rust
-// slice::split_at
-
-fn split_at<T>(slice: &[T], mid: usize) -> (&[T], &[T]) {
-    todo!()
-}
-
-fn split_at_explicit<'a, T>(slice: &'a [T], mid: usize) -> (&'a [T], &'a [T]) {
-    todo!()
-}
-```
-
-## Sublifetimes
-
-```rust
-use std::str::Split;
-
-struct Tokenizer<'input> {
-    input: Split<'input, char>,
-}
-
-impl<'input> Tokenizer<'input> {
-    fn next_token(&mut self) -> Option<&'input str> {
-        self.input.next()
-    }
-}
-
-struct Parser<'tokenizer, 'input: 'tokenizer> {
-    tokenizer: &'tokenizer mut Tokenizer<'input>,
-}
-
-impl<'tokenizer, 'input: 'tokenizer> Parser<'tokenizer, 'input> {
-    fn next_item(&mut self) -> Option<&'input str> {
-        self.tokenizer.next_token()
-    }
+```rust ignore
+fn first_three_of_each(s1: &str, s2: &str) -> (&str, &str) {
+    (&s1[0..3], &s1[0..3])
 }
 
 fn main() {
-    let mut tok = Tokenizer { input: "( foo bar )".split(' ') };
-    let mut parser = Parser { tokenizer: &mut tok };
+    let amsterdam = format!("AMS Amsterdam");
 
-    println!("{:?}", parser.next_item());
-    let content = parser.next_item();
-    let content2 = parser.next_item();
-    println!("{:?}", parser.next_item());
-    drop(parser);
+    let (amsterdam_code, denver_code) = {
+        let denver = format!("DEN Denver");
+        first_three_of_each(&amsterdam, &denver)
+    };
 
-    println!("{:?}", content);
-    println!("{:?}", content2);
-
+    println!("{} -> {}", amsterdam_code, denver_code);
 }
 ```
 
----
+## Annotate!
 
-Lingo: `Input outlives Tokenizer`
-
----
-
-Lifetimes cannot do _more_ than describe "this must live longer (or at least equally long) as the other".
-
----
-
-Common pitfall: you cannot "shorten a lifetime", as it just describes what's already there.
-
-## `'static`
-
-* as part of a reference, `'static` means "lives forever"
-* in trait bounds, the type does not contain any non-static references. That's not necessarily forever!  
-
----
-
-Examples of `'static` data are:
-
-* Data contained in the binary, for example static strings
-* Heap-allocated values (for example the contents of a `Box`)
-    - As long as they are not bound on values that live shorter!
-* Globals
-
----
-
-`'static` is not an escape hatch. In concurrent, especially evented, programs, `'static` is very common.
-
-This is due to most data having to live outside of the stack.
-
----
-
-Lifetimes describe all types, not only references, therefore they are also bounds in generic code.
-
-```rust
-fn inspect<'a, T: std::fmt::Debug + 'a>(t: T) {
-    println!("{:?}", t);
+```rust ignore
+fn first_three_of_each<'a, 'b>(s1: &'a str, s2: &'b str) -> (&'a str, &'b str) {
+    (&s1[0..3], &s1[0..3])
 }
 ```
 
-## Lifetime Elision
+## Annotations are used to validate function body
 
-For simple cases, lifetimes are automatically inserted into signatures.
+"The source you used in code doesn't match the tags"
+
+```text
+error: lifetime may not live long enough
+ --> src/lib.rs:2:5
+  |
+1 | fn first_three_of_each<'a, 'b>(s1: &'a str, s2: &'b str) -> (&'a str, &'b str) {
+  |                        --  -- lifetime `'b` defined here
+  |                        |
+  |                        lifetime `'a` defined here
+2 |     (&s1[0..3], &s1[0..3])
+  |     ^^^^^^^^^^^^^^^^^^^^^^ function was supposed to return data with lifetime `'b` but it is returning data with lifetime `'a`
+  |
+  = help: consider adding the following bound: `'a: 'b`
+```
+
+## Annotations are used to validate reference lifetimes at a call site
+
+"Produced reference *can't outlive* the source"
+
+```text
+error[E0597]: `denver` does not live long enough
+  --> src/main.rs:10:41
+   |
+8  |     let (amsterdam_code, denver_code) = {
+   |          -------------- borrow later used here
+9  |         let denver = format!("DEN Denver");
+   |             ------ binding `denver` declared here
+10 |         first_three_of_each(&amsterdam, &denver)
+   |                                         ^^^^^^^ borrowed value does not live long enough
+11 |     };
+   |     - `denver` dropped here while still borrowed
+
+For more information about this error, try `rustc --explain E0597`.
+```
+
+## Lifetime annotations help the compiler help you!
+
+* You give Rust hints
+* Rust checks memory access for correctness
 
 ```rust
-fn foo(bar: &str) -> &str {
-    todo!();
+fn first_three_of_each<'a, 'b>(s1: &'a str, s2: &'b str) -> (&'a str, &'b str) {
+    (&s1[0..3], &s2[0..3])
 }
 
-fn foo_explicit<'a>(bar: &'a str) -> &'a str {
-    todo!();
-}
-```
-
-## Lifetimes and Bindings
-
-```rust
-let mut sink = std::io::BufWriter::new(std::io::stdout().lock());
-```
-
-```rust
-let stdout = std::io::stdout();
-let mut sink = std::io::BufWriter::new(stdout.lock());
-```
-
-## Lifetimes and Boxes
-
-For boxes, the default lifetime bound of the contained value is `'static`. Sometimes, this is too long and can be overwritten:
-
-```rust
 fn main() {
-    let v = vec![1, 2, 3];
-    let i = make_iter(&v);
-}
+    let amsterdam = format!("AMS Amsterdam");
+    let denver = format!("DEN Denver");
 
-fn make_iter<'a>(v: &'a Vec<u8>) -> Box<impl Iterator<Item = &u8> + 'a> {
-    Box::new(v.iter())
+    let (amsterdam_code, denver_code) = {
+        first_three_of_each(&amsterdam, &denver)
+    };
+
+    println!("{} -> {}", amsterdam_code, denver_code);
 }
 ```
+
+## What if multiple parameters can be sources?
+
+```rust ignore
+fn pick_one(s1: &'? str, s2: &'? str) -> &'? str {
+    if coin_flip() {
+        s1
+    } else {
+        s2
+    }
+}
+```
+
+## What if multiple parameters can be sources?
+
+```rust ignore
+fn pick_one<'a>(s1: &'a str, s2: &'a str) -> &'a str {
+    if coin_flip() {
+        s1
+    } else {
+        s2
+    }
+}
+```
+
+* returned reference *can't outlive* either `s1` or `s2`
+* potentially more restrictive
+
+## Lifetime annotations for types
+
+```rust ignore
+struct Configuration {
+    database_url: &str;
+}
+```
+
+where does the string data come from?
+
+## Lifetime annotations are generic parameters
+
+```rust ignore
+struct Configuration<'a> {
+    database_url: &'a str;
+}
+```
+<p>&nbsp;<!-- spacer for "run" button --></p>
+
+An instance of `Configuration` *can't outlive* a string<br> that it refers to via `database_url`.
+
+or
+
+The string *can't be dropped<br> while* an instance of `Configuration` *still* refers to it.
+
+## Lifetimes and Generics
+
+* Lifetime annotations act like generics from type system PoV.
+* Can be used to to add bounds to types: `where T: Debug + 'a`
+    * Type `T` has to be debuggable.
+    * If `T` has references inside, they *have to stay valid for as long as* `'a` tag requires.
+* Can be used to match lifetime generics in `struct` or `enum` with the annotations used in function signatures and in turn with exact lifetimes of references.
+
+## Complex example
+
+```rust ignore
+fn select_peer<'a>(peers: &[&'a str]) -> Option<Cow<'a, str>> {
+    for p in peers {
+        if is_up(p) {
+            return Some(Cow::Borrowed(p))
+        }
+    }
+    None
+}
+
+fn main() {}
+```
+
+**Compiler concludes:**
+
+Returned value will not be allowed to outlive any reference in `peers` list
+
+`let selected = select_peer(&peers);`
+
+## Lifetime annotations in practice
+
+* Like generics, annotations make function signatures verbose and difficult to read
+    * they often can be glossed over when reading code
+* `T: 'static` means "Owned data or static references", owned data can be very short-lived
+* Using owned data in your types helps avoid borrow checker difficulties
