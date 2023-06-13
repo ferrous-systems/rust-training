@@ -13,6 +13,8 @@ Macros can be used to things such as:
 * Declarative
 * Procedural
 
+# Declarative Macros
+
 ## Declarative Macros
 
 * Defined using `macro_rules!`
@@ -63,7 +65,7 @@ macro_rules! vec {
 
 Note:
 
-The actual macro is more complicated as it sets the `Vec` to have the correct capacity up front, to avoid re-allocation during the pushing of the values.
+The actual macro is more complicated as it sets the `Vec` to have the correct capacity up front, to avoid re-allocation during the pushing of the values. Any new variables we introduce are given a *colour* to distinguish them from any the caller had created in the same scope.
 
 ## `println!` and friends
 
@@ -103,6 +105,8 @@ This is a simplified example - the real output is slightly more complicated, and
 
 * When there are no other good alternatives
 
+# Procedural macros
+
 ## Procedural macros
 
 * A procedural macro is a function that takes some code as input, and produces some code.
@@ -117,10 +121,12 @@ This is a simplified example - the real output is slightly more complicated, and
 
 ## Custom `#[derive]` macros
 
-Work like the built-in Rust derives:
+Work like the built-in Rust derives, once you've imported them:
 
 ```rust [] ignore
-#[derive(Debug, Clone, serde::Serialize)]
+use serde::Serialize;
+
+#[derive(Debug, Clone, Serialize)]
 struct Square {
     width: u32,
 }
@@ -159,3 +165,14 @@ Called like a function:
 ```rust ignore
 let query = sqlx::query!("SELECT * FROM `person`");
 ```
+
+## Downsides of Procedural Macros
+
+* Can be difficult to debug
+* Slows down compilation a lot
+* Have to be stored in a separate crate
+  * You're basically building compiler plug-ins at build time
+
+## When Should You Use Procedural Macros?
+
+* When it saves your users a sufficient amount of work

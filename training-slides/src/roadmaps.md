@@ -55,50 +55,56 @@ What follows here is the "default roadmap" for each *Training*. You may follow t
 
 ## Module: Applied Rust
 
-### Day 1, Session 1: Defining Methods
+### Day 1, Session 1:
 
-* [Method Syntax](./method-syntax.md)
+* [Methods and Traits](./methods-traits.md)
 * Exercise: Shapes, Part I - adding methods to structs
+* Learning Goals:
+  * Writing methods inside an `impl` block
+  * Talking about the difference between `&self`, `&mut self` and `self` (and when to use them)
 
-### Day 1, Session 2: Using Macros
-
-* [Macros](./macros.md) - The two kinds, and how to use them
-* Exercise: use `thiserror` in SimpleDB
-
-### Day 1, Session 3: Traits
-
-* [Defining and Implementing Traits](./traits.md)
-* Exercise: Shapes, Part II - The HasArea trait (or similar)
-
-### Day 2, Session 1: Building Bigger Systems
+### Day 1, Session 2:
 
 * [Cargo Dependencies and Workspaces](./using-cargo.md)
 * [Rust I/O Traits](./io.md)
 * Exercise: Connected Mailbox
+* Learning Goals:
+  * Writing a struct which is generic over `T`
+  * Writing a function which is generic over `T: where <some bound>`
+  * Knowing when you need to `use SomeTrait;`
 
-### Day 2, Session 2: Generics
+### Day 1, Session 3:
 
-* [Generic over Types](./generics.md)
-* [Generic over Lifetimes](./lifetimes.md)
-* Exercise: Shapes III - making your Shapes generic over some numeric type T
+* [Generics](./generics.md)
+* [Lifetimes](./lifetimes.md)
+* Learning Goals:
+  * Adding lifetime specifiers to fix the *needle in a haystack* function
+  * Talking about the difference between a *Lifetime* and a *Lifetime Specifier*
 
-### Day 2, Session 3: Closures
-
-* [Closures and the Fn/FnOnce/FnMut traits](./closures.md)
-* Exercise: TBD some closure exercise, filtering data to find large values
-
-### Day 3, Session 1: Heap Allocation and Shared Mutability
+### Day 2, Session 1:
 
 * [Heap Allocation (Box and Rc)](./heap.md)
 * [Shared Mutability (Cell, RefCell)](./shared-mutability.md)
-* Exercise: TBD
+* Learning Goals:
+  * Describe the stack vs the heap
+  * Use `Cell` to make a `Copy` type mutable though a shared reference
+  * Use `RefCell` to make a non-`Copy` type mutable though a shared reference
 
-### Day 3, Session 2: Multi-threading
+### Day 2, Session 2:
 
 * [Thread Safety (Send/Sync, Arc, Mutex)](./thread-safety.md)
+* [Closures and the Fn/FnOnce/FnMut traits](./closures.md)
+* Learning Goals:
+  * Understand why `Send` and `Sync` exist
+  * Write a closure which borrows from the environment
+
+### Day 2, Session 3:
+
 * [Spawning Threads and Scoped Threads](./spawning-threads.md)
 * Exercise: Multi-threaded Mailbox
+* Learning Goal:
+  * Able to write a program that spawns threads
 
-### Day 3, Session 3: Bonus Topics!
+### Day 3:
 
 * No scheduled content - the trainer will pick topics with the team
