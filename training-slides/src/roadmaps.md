@@ -69,9 +69,9 @@ What follows here is the "default roadmap" for each *Training*. You may follow t
 * [Rust I/O Traits](./io.md)
 * Exercise: Connected Mailbox
 * Learning Goals:
-  * Writing a struct which is generic over `T`
-  * Writing a function which is generic over `T: where <some bound>`
-  * Knowing when you need to `use SomeTrait;`
+  * Writing an application that uses a dependency
+  * Putting two crates in a workspace
+  * Opening TCP sockets and processing string data
 
 ### Day 1, Session 3:
 
