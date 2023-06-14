@@ -61,7 +61,7 @@ fn main() {
 
 ## Why no context?
 
-* There's no `void* p_context` argument, because *closures* can *close-over* local variables.
+There's no `void* p_context` argument, because *closures* can *close-over* local variables.
 
 ```rust []
 use std::thread;
