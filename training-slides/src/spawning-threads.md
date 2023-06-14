@@ -84,7 +84,7 @@ Try changing this *move* closure to a regular referencing closure.
 
 ## Context lifetimes
 
-* However, the thread might live forever...
+However, the thread might live forever...
 
 ```rust []
 use std::{sync::Mutex, thread};
