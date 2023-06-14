@@ -79,6 +79,8 @@ If you try and call `update()` after the `println!` you get a compile error.
 
 ## Capturing by transferring ownership
 
+This closure implements `FnOnce`.
+
 ```rust
 fn main() {
     let items = vec![1, 2, 3, 4];
