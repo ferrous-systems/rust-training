@@ -19,62 +19,60 @@ Ownership is the basis for the memory management of Rust.
 
 ## Example
 
-```rust [1-13|3|4|5|10-12|6]
-use std::io::prelude::*;
-
-fn main() -> std::io::Result<()> {
-    let f = std::fs::File::create("hello.txt")?;
-    write_and_close(f);
-    // f cannot be used any more - you gave it away
-    Ok(())
+```rust [1-9|2|3|7-9|4]
+fn main() {
+    let s = String::from("Hello 😀");
+    print_string(s);
+    // s cannot be used any more - you gave it away
 }
 
-fn write_and_close(mut f: std::fs::File) {
-    f.write_all(b"Hello, world!");
+fn print_string(s: String) {
+    println!("The string is {s}")
 }
 ```
 
 Note:
 
-The statement `let f = ...;` introduces a *variable binding* called `f` and gives it a *value* which is of type `std::fs::File`. This distinction is important when it comes to transferring ownership.
+The statement `let s = ...;` introduces a *variable binding* called `f` and gives it a *value* which is of type `String`. This distinction is important when it comes to transferring ownership.
+
+The function `String::from` is an associated function called `from` on the `String` type.
+
+The `println!` call is a macro, which is how we are able to do to Python-style `{}` string interpolation.
 
 ## Does this compile?
 
-```rust compile_fail []
-use std::io::prelude::*;
-
-fn main() -> std::io::Result<()> {
-    let f = std::fs::File::create("hello.txt")?;
-    write_and_close(f);
-    write_and_close(f);
-    Ok(())
+```rust compile_fail [1-9|2|3|7-9|4]
+fn main() {
+    let s = String::from("Hello 😀");
+    print_string(s);
+    print_string(s);
 }
 
-fn write_and_close(mut f: std::fs::File) {
-    f.write_all(b"Hello, world!");
+fn print_string(s: String) {
+    println!("The string is {s}")
 }
 ```
 
 ## It does not...
 
 ```text
-error[E0382]: use of moved value: `f`
-  -> src/main.rs:6:21
-   |
-4  |     let f = std::fs::File::create("hello.txt")?;
-   |         - move occurs because `f` has type `File`, which does not implement the `Copy` trait
-5  |     write_and_close(f);
-   |                     - value moved here
-6  |     write_and_close(f);
-   |                     ^ value used here after move
-   |
+error[E0382]: use of moved value: `s`
+ --> src/main.rs:4:18
+  |
+2 |     let s = String::from("Hello 😀");
+  |         - move occurs because `s` has type `String`, which does not implement the `Copy` trait
+3 |     print_string(s);
+  |                  - value moved here
+4 |     print_string(s);
+  |                  ^ value used here after move
+  |
 ```
 
 ## Background
 
-* When calling `write_and_close` with `f`, the value *in* `f` is *transferred* into the arguments of `write_and_close`.
-* At that moment, ownership passes to `write_and_close`. We say the function *consumed* the value.
-* The *variable binding* `f` ceases to exist, and thus `main` is not allowed to access it any more.
+* When calling `print_string` with `s`, the value *in* `s` is *transferred* into the arguments of `print_string`.
+* At that moment, ownership passes to `print_string`. We say the function *consumed* the value.
+* The *variable binding* `s` ceases to exist, and thus `main` is not allowed to access it any more.
 
 ## Mutability
 
@@ -102,19 +100,24 @@ fn main() {
 * Also called an *immutable reference*.
 * Use the `&` operator to borrow (i.e. to make a reference).
 * It's like a C pointer but with special compile-time checks.
+* Rust also allows type-conversion functions to be called when you take a reference.
 
 ## Making a Reference
 
-```rust [1-8|4|5|6]
-use std::io::prelude::*;
-
-fn main() -> std::io::Result<()> {
-    let f = std::fs::File::create("hello.txt")?;
-    let file_ref = &f;
-    let file_ref2 = &f;
-    Ok(())
+```rust []
+fn main() {
+    let s = String::from("Hello 😀");
+    // A reference to a String
+    let _string_ref: &String = &s;
+    // The special string-slice type (could also be a reference
+    // to a string literal)
+    let _string_slice: &str = &s;
 }
 ```
+
+Note:
+
+The `_` prefix just stops a warning about us not using the variable.
 
 ## Taking a Reference
 
@@ -122,56 +125,22 @@ fn main() -> std::io::Result<()> {
 * We use a type like `&SomeType`:
 
 ```rust
-fn truncate_file(f: &std::fs::File) -> std::io::Result<()> {
-    f.set_len(0)
+fn print_string(s: &String) {
+    println!("The string is {s}")
 }
 ```
 
 ## Full Example
 
 ```rust
-use std::io::prelude::*;
-
-fn main() -> std::io::Result<()> {
-    let f = std::fs::File::create("hello.txt")?;
-    truncate_file(&f)?;
-    Ok(())
+fn main() {
+    let s = String::from("Hello 😀");
+    print_string(&s);
+    print_string(&s);
 }
 
-fn truncate_file(f: &std::fs::File) -> std::io::Result<()> {
-    // We don't need -> syntax here!
-    f.set_len(0)
-}
-```
-
-## How does `set_len` work?
-
-* It's a method on `struct File`...
-* But method calls are just *syntactic sugar* for a function call
-
-```rust []
-use std::io::prelude::*;
-
-fn truncate_file(f: &std::fs::File) -> std::io::Result<()> {
-    // These are equivalent
-    // f.set_len(0)
-    std::fs::File::set_len(f, 0)
-}
-```
-
-## What if I own the `File`?
-
-* For method calls Rust does the borrow automatically if required.
-
-```rust
-use std::io::prelude::*;
-
-fn main() -> std::io::Result<()> {
-    let f = std::fs::File::create("hello.txt")?;
-    f.set_len(0)?;
-    // Same as:
-    // std::fs::File::set_len(&f, 0)?;
-    Ok(())
+fn print_string(s: &String) {
+    println!("The string is {s}")
 }
 ```
 
@@ -184,23 +153,24 @@ fn main() -> std::io::Result<()> {
 
 ## Exclusive Reference Rules
 
-* There can be only one exclusive reference to an object at any given moment
-* You also cannot have shared and exclusive references live at the same time
-* Therefore, the compiler knows an `&mut` reference cannot alias any other data
+* Must be only one exclusive reference to an object at any one time
+* Cannot have shared and exclusive references alive at the same time
+* => the compiler knows an `&mut` reference cannot alias anything
 
 # Rust forbids *shared mutability*
 
 ## Making an Exclusive Reference
 
-```rust [1-7|4|5]
-use std::io::prelude::*;
-
-fn main() -> std::io::Result<()> {
-    let mut f = std::fs::File::create("hello.txt")?;
-    let file_ref = &mut f;
-    Ok(())
+```rust []
+fn main() {
+    let mut s = String::from("Hello 😀");
+    let s_ref = &mut s;
 }
 ```
+
+Note:
+
+The binding for `s` now has to be mutable, otherwise we can't take a mutable reference to it.
 
 ## Taking an Exclusive Reference
 
@@ -208,84 +178,62 @@ fn main() -> std::io::Result<()> {
 * We use a type like `&mut SomeType`:
 
 ```rust
-use std::io::prelude::*;
-
-fn write_to_file(f: &mut std::fs::File) -> std::io::Result<()> {
-    f.write_all(b"Hello, world!")
+fn add_excitement(s: &mut String) {
+    s.push_str("!");
 }
 ```
 
 ## Full Example
 
 ```rust []
-use std::io::prelude::*;
-
-fn main() -> std::io::Result<()> {
-    let mut f = std::fs::File::create("hello.txt")?;
-    write_to_file(&mut f)?;
-    Ok(())
+fn main() {
+    let mut s = String::from("Hello 😀");
+    add_excitement(&mut s);
+    println!("The string is {s}");
 }
 
-fn write_to_file(f: &mut std::fs::File) -> std::io::Result<()> {
-    f.write_all(b"Hello, world!")
+fn add_excitement(s: &mut String) {
+    s.push_str("!");
 }
 ```
 
-## How does `write_all` work?
+Note:
 
-* It's a method on `struct File`...
-* But method calls are just *syntactic sugar* for a function call
-
-```rust []
-use std::io::prelude::*;
-
-fn write_to_file(f: &mut std::fs::File) -> std::io::Result<()> {
-    // These are equivalent
-    // f.write_all(b"Hello, world!")
-    std::fs::File::write_all(f, b"Hello, world!")
-}
-```
-
-## What if I own the `File`?
-
-* For method calls Rust does the borrow automatically if required.
-* Again, there is no need for C's `ptr->field` syntax
-
-```rust []
-use std::io::prelude::*;
-
-fn main() -> std::io::Result<()> {
-    let mut f = std::fs::File::create("hello.txt")?;
-    f.write_all(b"Hello, world!")?;
-    // Same as:
-    // std::fs::File::write_all(&mut f, b"Hello, world!")?;
-    Ok(())
-}
-```
-
-## Can methods take ownership?
-
-* We saw methods that take `&self` and `&mut self`
-* Is there a version that takes ownership?
-* Yes!
-
-```rust
-struct File();
-impl File {
-    fn into_raw_fd(self) -> i32 {
-        todo!();
-    }
-}
-```
+Try adding more excitement by calling `add_excitement` multiple times.
 
 ## A Summary
 
-|                  | Owned  | Borrowed | Mutably Borrowed |
-| ---------------- | ------ | -------- | ---------------- |
-| Types (e.g. i32) | `i32`  | `&i32`   | `&mut i32`       |
-| Methods          | `self` | `&self`  | `&mut self`      |
+|               | Borrowed            | Mutably Borrowed | Owned    |
+| ------------- | ------------------- | ---------------- | -------- |
+| Type `T`      | `&T`                | `&mut T`         | `T`      |
+| Type `i32`    | `&i32`              | `&mut i32`       | `i32`    |
+| Type `String` | `&String` or `&str` | `&mut String`    | `String` |
 
-## Are there any alternatives to borrowing?
+* *Mutably Borrowing* gives more permissions than *Borrowing*
+* *Owning* gives more permissions than *Mutably Borrowing*
+
+## An aside: Method Calls
+
+* Rust supports *Method Calls*
+* The first argument of the method is either `self`, `&self` or `&mut self`
+* They are converted to function calls by the compiler
+
+```rust []
+fn main() {
+    let mut s = String::from("Hello 😀");
+    // This method call...
+    s.push_str("!!");
+    // is the same as...
+    // String::push_str(&mut s, "!!");
+    println!("The string is {s}");
+}
+```
+
+Note:
+
+We use `Type::function()` for associated functions, and `variable.method()` for method calls, which are just `Type::method(&variable)` or `Type::method(&mut variable)`, or `Type::method(variable)`, depending on how the method was declared).
+
+## Avoiding Borrowing
 
 If you want to give a function their own object, and keeps yours separate, you have two choices:
 
@@ -294,22 +242,25 @@ If you want to give a function their own object, and keeps yours separate, you h
 
 ## Clone
 
-Some types have a `.clone()` method. It makes a new object, which looks just like the original object.
+Some types have a `.clone()` method.
+
+It makes a new object, which looks just like the original object.
 
 ```rust []
 fn main() {
-    let data = vec![1, 2, 3];
-    let mut data_clone = data.clone();
-    data_clone.push(4);
-    println!("data = {:?}", data);
-    println!("data_clone = {:?}", data_clone);
+    let s = String::from("Hello 😀");
+    let mut s_clone = s.clone();
+    s_clone.push_str("!!");
+    println!("s = {s}");
+    println!("s_clone = {s_clone}");
 }
 ```
 
 ## Making things Cloneable
 
-* You can mark your `struct` or `enum` with `#[derive(Clone)]`
-* (But only if every value in your `struct`/`enum` itself is `Clone`)
+You can mark your `struct` or `enum` with `#[derive(Clone)]`
+
+(But only if every value in your `struct`/`enum` itself is `Clone`)
 
 ```rust []
 #[derive(Clone)]
@@ -337,6 +288,37 @@ fn main() {
 }
 
 fn do_stuff(x: i32) {
-    println!("Do I own x, with value {}?", x);
+    println!("Do I own x, with value {x}?");
 }
 ```
+
+Note:
+
+If your type represents ownership of something, like a `File`, or a `DatabaseRecord`, you probably don't want to make it `Copy`!
+
+## Cleaning up
+
+A value is cleaned up when its owner goes out of scope.
+
+We call this *dropping* the value.
+
+## Custom Cleaning
+
+You can define a specific behaviour to happen on *drop* using the *Drop* trait.
+
+For example, the memory used by a `String` is freed when dropped:
+
+```rust []
+fn main() {
+    // String created here (some memory is allocated on the heap)
+    let s = String::from("Hello 😀");
+} // String `s` is dropped here and heap memory is freed
+```
+
+## More drop implementations:
+
+* `MutexGuard` unlocks the appropriate `Mutex` when dropped
+* `File` closes the file handle when dropped
+* `TcpStream` closes the connection when dropped
+* `Thread` detaches the thread when dropped
+* etc...
