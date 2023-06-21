@@ -93,7 +93,7 @@ Where can the returned <code>&str</code> come from?
 <ul>
     <li class="fragment">can't be local data</li>
     <li class="fragment">is not marked as <code>'static</code></li>
-    <li class="fragment"><strong>Conclusion: must come from <code>s</code>!</strong</li>
+    <li class="fragment"><strong>Conclusion: must come from <code>s</code>!</strong></li>
 </ul>
 
 ## Multiple sources
@@ -109,7 +109,7 @@ Where can the returned <code>&str</code> come from?
 <ul>
     <li class="fragment">is not marked as <code>'static</code></li>
     <li class="fragment">should it be <code>s1</code> or <code>s2</code>?</li>
-    <li class="fragment"><strong>Ambiguous. Should ask programmer for help!</strong</li>
+    <li class="fragment"><strong>Ambiguous. Should ask programmer for help!</strong></li>
 </ul>
 
 ## Tag system
