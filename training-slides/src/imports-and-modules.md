@@ -19,7 +19,7 @@
 ## Kinds of Crates
 
 * Library crates (has a `src/lib.rs`)
-* Binary crates (has e.g. a `src/bin.rs`)
+* Binary crates (has e.g. a `src/main.rs`)
 
 Note:
 
@@ -51,7 +51,7 @@ Hello, world!
 ## There's no build file
 
 * Have you noticed that `Cargo.toml` says nothing about which files to compile?
-* Cargo starts with `lib.rs` for a library or the relevant `bin.rs` for a binary
+* Cargo starts with `lib.rs` for a library or the relevant `main.rs` for a binary
 * It then finds all the *modules*
 
 ## Modules
