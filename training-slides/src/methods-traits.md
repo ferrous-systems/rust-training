@@ -289,7 +289,7 @@ trait Printable: std::fmt::Debug {
 
 ## Special Traits
 
-* Some traits have no functions (`Clone`, `Send`, `Sync`, etc)
+* Some traits have no functions (`Copy`, `Send`, `Sync`, etc)
   * But code can require that the trait is implemented
   * More in this in generics!
 * Traits can be marked `unsafe`
