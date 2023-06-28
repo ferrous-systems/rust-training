@@ -135,7 +135,7 @@ fn takes_many_and_returns<'a>(s1: &str, s2: &'a str) -> &'a str {
 
 ```rust ignore
 fn first_three_of_each(s1: &str, s2: &str) -> (&str, &str) {
-    (&s1[0..3], &s1[0..3])
+    (&s1[0..3], &s2[0..3])
 }
 
 fn main() {
