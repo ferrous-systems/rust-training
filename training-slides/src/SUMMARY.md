@@ -21,7 +21,6 @@
 # Applied Rust
 
 -   [Methods and Traits](./methods-traits.md)
--   [Cargo Dependencies and Workspaces](./using-cargo.md)
 -   [Rust I/O Traits](./io.md)
 -   [Generics](./generics.md)
 -   [Lifetimes](./lifetimes.md)
@@ -30,6 +29,13 @@
 -   [Thread Safety (Send/Sync, Arc, Mutex)](./thread-safety.md)
 -   [Closures and the Fn/FnOnce/FnMut traits](./closures.md)
 -   [Spawning Threads and Scoped Threads](./spawning-threads.md)
+
+# Cargo
+
+-   [Using Cargo](./using-cargo.md)
+-   [Dependency Management with Cargo](./dependency-management.md)
+-   [Cargo Workspaces](./cargo-workspaces.md)
+-   [Rust Projects Build Time](./rust-build-time.md)
 
 # Additional Material
 
