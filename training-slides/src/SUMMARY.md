@@ -21,7 +21,6 @@
 # Applied Rust
 
 -   [Methods and Traits](./methods-traits.md)
--   [Cargo Dependencies and Workspaces](./using-cargo.md)
 -   [Rust I/O Traits](./io.md)
 -   [Generics](./generics.md)
 -   [Lifetimes](./lifetimes.md)
@@ -53,3 +52,7 @@
 -   [Unsafe Rust](./unsafe.md)
 -   [WASM](./wasm.md)
 -   [Working with Nightly](./working-with-nighly.md)
+-   [Using Cargo](./using-cargo.md)
+-   [Dependency Management with Cargo](./dependency-management.md)
+-   [Cargo Workspaces](./cargo-workspaces.md)
+-   [Rust Projects Build Time](./rust-build-time.md)
