@@ -4,7 +4,7 @@
 
 * Cargo keeps track of changes you make and only rebuilds what is necessary
 * When building a crate `rustc` can do most of work in parallel, but some steps still require synchronization
-* Depending on type of a build times spent in different build phases may be vastly different.
+* Depending on the type of build, times spent in different build phases may be vastly different.
     * debug vs release
     * various flags for `rustc` and LLVM
     * a build from scratch vs an incremental build
