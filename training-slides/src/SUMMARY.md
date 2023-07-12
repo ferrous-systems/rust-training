@@ -33,7 +33,6 @@
 
 # Additional Material
 
--   [Advanced Generics](./advanced-generics-bounds.md)
 -   [Debugging Rust](./debugging-rust.md)
 -   [Deref Coercions](./deref-coercions.md)
 -   [Design Patterns](./design-patterns.md)
