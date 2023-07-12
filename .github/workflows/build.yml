@@ -5,12 +5,15 @@ on:
   pull_request:
 
 jobs:
-  deploy:
+  build:
     runs-on: ubuntu-20.04
     concurrency:
       group: ${{ github.workflow }}-${{ github.ref }}
     steps:
       - uses: actions/checkout@v3
+
+      - uses: gacts/github-slug@v1
+        id: slug
 
       - name: Install tools
         uses: taiki-e/install-action@v2
@@ -27,10 +30,12 @@ jobs:
   
       - name: Assemble Artifacts
         run: |
-          mkdir -p ./rust-training
-          mv ./training-slides/slides ./rust-training/training-slides-presentation
-          mv ./training-slides/book ./rust-training/training-slides-book
-          zip -r ./rust-training.zip ./rust-training
+          echo "Making ./rust-training-${{ steps.slug.outputs.version-semantic }}..."
+          mkdir -p ./rust-training-${{ steps.slug.outputs.version-semantic }}
+          mv ./training-slides/slides ./rust-training-${{ steps.slug.outputs.version-semantic }}/training-slides-presentation
+          mv ./training-slides/book ./rust-training-${{ steps.slug.outputs.version-semantic }}/training-slides-book
+          echo "Compressing ./rust-training-${{ steps.slug.outputs.version-semantic }}.zip..."
+          zip -r ./rust-training-${{ steps.slug.outputs.version-semantic }}.zip ./rust-training-${{ steps.slug.outputs.version-semantic }}
 
       - name: Upload Artifacts
         uses: actions/upload-artifact@v3
@@ -39,11 +44,11 @@ jobs:
           name: Artifacts
           if-no-files-found: error
           path: |
-            ./rust-training
+            ./rust-training-*/
 
       - name: Create and Upload Release
         if: github.event_name == 'push' && startswith(github.ref, 'refs/tags/')
         id: create_release
         uses: ncipollo/release-action@v1
         with:
-          artifacts: ./rust-training.zip
+          artifacts: ./rust-training-${{ steps.slug.outputs.version-semantic }}.zip
