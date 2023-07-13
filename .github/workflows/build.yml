@@ -12,14 +12,17 @@ jobs:
     steps:
       - uses: actions/checkout@v3
 
-      - uses: gacts/github-slug@v1
-        id: slug
-
       - name: Install tools
         uses: taiki-e/install-action@v2
         with:
           tool: mdslides@0.3,mdbook@0.4,mdbook-mermaid@0.12
     
+      - name: Find slug name
+        run: |
+          slug=$(./describe.sh "${GITHUB_REF}")
+          echo "Building with slug '${slug}'"
+          echo "slug=${slug}" >> "${GITHUB_ENV}"
+
       - name: Build book-and-slides
         run: |
           ./training-slides/build.sh
@@ -30,12 +33,12 @@ jobs:
   
       - name: Assemble Artifacts
         run: |
-          echo "Making ./rust-training-${{ steps.slug.outputs.version-semantic }}..."
-          mkdir -p ./rust-training-${{ steps.slug.outputs.version-semantic }}
-          mv ./training-slides/slides ./rust-training-${{ steps.slug.outputs.version-semantic }}/training-slides-presentation
-          mv ./training-slides/book ./rust-training-${{ steps.slug.outputs.version-semantic }}/training-slides-book
-          echo "Compressing ./rust-training-${{ steps.slug.outputs.version-semantic }}.zip..."
-          zip -r ./rust-training-${{ steps.slug.outputs.version-semantic }}.zip ./rust-training-${{ steps.slug.outputs.version-semantic }}
+          echo "Making ./rust-training-${{ env.slug }}..."
+          mkdir -p ./rust-training-${{ env.slug }}
+          mv ./training-slides/slides ./rust-training-${{ env.slug }}/training-slides-presentation
+          mv ./training-slides/book ./rust-training-${{ env.slug }}/training-slides-book
+          echo "Compressing ./rust-training-${{ env.slug }}.zip..."
+          zip -r ./rust-training-${{ env.slug }}.zip ./rust-training-${{ env.slug }}
 
       - name: Upload Artifacts
         uses: actions/upload-artifact@v3
@@ -51,4 +54,4 @@ jobs:
         id: create_release
         uses: ncipollo/release-action@v1
         with:
-          artifacts: ./rust-training-${{ steps.slug.outputs.version-semantic }}.zip
+          artifacts: ./rust-training-${{ env.slug }}.zip
