@@ -11,6 +11,13 @@ fn main() {
 }
 ```
 
+<br>
+
+```mermaid
+flowchart LR
+    array("[1, 2, 3, 4, 5]")
+```
+
 ## Building the array at runtime.
 
 How do you know how many 'slots' you've used?
@@ -25,11 +32,18 @@ fn main() {
 }
 ```
 
+<br>
+
+```mermaid
+flowchart LR
+    array("[0, 1, 2, 3, 4, 0, 0, 0, 0, 0]")
+```
+
 ## Slices
 
-We have a type, which is a view into *some other array*, plus a value to indicate *how many items*.
+A view into *some other data*, plus a value to indicate *how many items*.
 
-It's called a *slice*, and is of type `&[u8]` (or `&mut [u8]`).
+Written as `&[T]` (or `&mut [T]`).
 
 ```rust [1-8|6]
 fn main() {
@@ -40,6 +54,15 @@ fn main() {
     let data = &array[0..5];
     println!("data = {:?}", data);
 }
+```
+
+<br>
+
+```mermaid
+flowchart LR
+    array("[0, 1, 2, 3, 4, 0, 0, 0, 0, 0]")
+    data["&[u8] { ptr, len: 5 }"]
+    data -.-> array
 ```
 
 Note:
@@ -57,7 +80,23 @@ fn process_data(input: &[u32]) {
     }
     println!("vector = {:?}, first = {}", vector, vector[0]);
 }
+
+fn main() { process_data(&[1, 2, 3]); }
 ```
+
+<br>
+
+```mermaid
+flowchart LR
+    data("[2, 4, 6, 0]")
+    vector["Vec { ptr, cap: 4, len: 3 }"]
+    vector --> data
+    style data fill:#ccf
+```
+
+Note:
+
+The dark blue block of data is heap allocated.
 
 ## There's a macro short-cut too...
 
@@ -66,6 +105,8 @@ fn main() {
     let mut vector = vec![1, 2, 3, 4];
 }
 ```
+
+<br>
 
 Check out the [docs](https://doc.rust-lang.org/std/vec/struct.Vec.html)!
 
@@ -82,12 +123,87 @@ Check out the [docs](https://doc.rust-lang.org/std/vec/struct.Vec.html)!
 * Everything must be of the same type
 * Indices are always `usize`
 
+## String Slices
+
+The basic string types in Rust are all UTF-8.
+
+A *String Slice* (`&str`) is an immutable view on to some valid UTF-8 bytes
+
+```rust
+fn main() {
+    let bytes = [0xC2, 0xA3, 0x39, 0x39, 0x21];
+    let s = std::str::from_utf8(&bytes).unwrap();
+    println!("{}", s);
+}
+```
+
+<br>
+
+```mermaid
+flowchart LR
+    data("[0xC2, 0xA3, 0x39, 0x39, 0x21]")
+    s["&str { ptr, len: 5 }"]
+    s -.-> data
+```
+
+Note:
+
+A string slice is tied to the lifetime of the data that it refers to.
+
+## String Literals
+
+* String Literals produce a string slice "with static lifetime"
+* Points at some bytes that live in read-only memory with your code
+
+```rust []
+fn main() {
+    let s: &'static str = "Hello!";
+    println!("s = {}", s);
+}
+```
+
+<br>
+
+```mermaid
+flowchart LR
+    data1("[0x48, 0x65, 0x6c, 0x6c, 0x6f, 0x21")
+    str1["&str { ptr, len: 6 }"]
+    str1 -.-> data1
+
+    data2("[0x73, 0x20, 0x3d, 0x20")
+    str2["&str { ptr, len: 4 }"]
+    str2 -.-> data2
+
+    style data1 fill:#cfc
+    style data2 fill:#cfc
+```
+
+Note:
+
+The lifetime annotation of `'static` just means the string slice lives forever
+and never gets destroyed. We wrote out the type in full so you can see it - you
+can emit it on variable declarations.
+
+The second green object is the literal we gave to println - `s = `
+
 ## Strings ([docs](https://doc.rust-lang.org/std/string/struct.String.html))
 
-* A collections of `char`
+* A growable collection of `char`
 * Actually stored as a `Vec<u8>`, with UTF-8 encoding
 * You cannot acccess characters by index (only bytes)
   * But you never really want to anyway
+
+```mermaid
+flowchart LR
+    data("[0xc2, 0xa3, 0x31, 0x32, 0x00]")
+    string["String { ptr, cap: 5, len: 4 }"]
+    string --> data
+    style data fill:#ccf
+```
+
+Note:
+
+The dark blue block of data is heap allocated.
 
 ## Making a String
 
@@ -122,39 +238,6 @@ fn main() {
     println!("Rhyme = {}", rhyme);
 }
 ```
-
-## String Slices
-
-Slices are a view on to some other array.
-
-String Slices (`&str`) are a view on to some other String.
-
-```rust [1-5|2|3|4]
-fn main() {
-    let s = String::from("Hello, world!");
-    let hello = &s[0..5];
-    println!("hello = {}", hello);
-}
-```
-
-Note:
-A string slice is tied to the lifetime of the `String` (or other string slice) that
-it refers to.
-
-## Static String Slices
-
-* String literals are string slices, with a lifetime annotation of `'static`.
-
-```rust []
-fn main() {
-    let s: &'static str = "Hello, world!";
-    println!("s = {}", s);
-}
-```
-
-Note:
-The lifetime annotation of `'static` just means the string slice lives forever and
-never gets destroyed.
 
 ## VecDeque ([docs](https://doc.rust-lang.org/std/collections/struct.VecDeque.html))
 
@@ -297,12 +380,26 @@ Just sets the `V` type parameter to `()`!
 
 ## A Summary
 
-| Type     | Growable | Indexable       | Sliceable | Cheap Insertion |
-| -------- | -------- | --------------- | --------- | --------------- |
-| Array    | ❌        | `usize`         | ✅         | ❌               |
-| Slice    | ❌        | `usize`         | ✅         | ❌               |
-| Vec      | ✅        | `usize`         | ✅         | At End          |
-| String   | ✅        | `usize` (Bytes) | ✅         | At End          |
-| VecDeque | ✅        | `usize`         | Maybe     | Start and End   |
-| HashMap  | ✅        | `T`             | ❌         | Anywhere        |
-| BTreeMap | ✅        | `T`             | ❌         | Anywhere        |
+| Type         | Owns  | Grow  |  Index  | Slice | Cheap Insert |
+| ------------ | :---: | :---: | :-----: | :---: | :----------: |
+| Array        |   ✅   |   ❌   | `usize` |   ✅   |      ❌       |
+| Slice        |   ❌   |   ❌   | `usize` |   ✅   |      ❌       |
+| Vec          |   ✅   |   ✅   | `usize` |   ✅   |      ↩       |
+| String Slice |   ❌   |   ❌   |    🤔    |   ✅   |      ❌       |
+| String       |   ✅   |   ✅   |    🤔    |   ✅   |      ↩       |
+| VecDeque     |   ✅   |   ✅   | `usize` |   🤔   |    ↪ / ↩     |
+| HashMap      |   ✅   |   ✅   |   `T`   |   ❌   |      ✅       |
+| BTreeMap     |   ✅   |   ✅   |   `T`   |   ❌   |      ✅       |
+
+Note:
+
+The 🤔 for indexing string slices and Strings is because the index is a byte
+offset and the system will panic if you try and chop a UTF-8 encoded character
+in half.
+
+The 🤔 for indexing VecDeque is because you might have to get the contents in
+two pieces (i.e. as two disjoint slices) due to wrap-around.
+
+Tecnically you *can* insert into the middle of a Vec or a String, but we're
+talking about 'cheap' insertions that don't involve moving too much stuff
+around.

@@ -8,16 +8,46 @@ Most common are `String` and `&str`.
 
 ## `String`
 
--   *Owns* the data it stores, and can be mutated freely.
--   Exists as a pointer to some bytes, a length, and a capacity.
--   Exists on the *heap*.
--   Does not implement `Copy`, but implements `Clone`.
+-   *Owns* the data it stores, and can be mutated freely
+-   The bytes it points at exist on the *heap*
+-   Does not implement `Copy`, but implements `Clone`
+
+```mermaid
+flowchart LR
+    data("[0x31, 0x32, 0x33, 0x00, 0x00]")
+    string["String { ptr, cap: 5, len: 3 }"]
+    string --> data
+    style data fill:#ccf
+```
 
 ## `&str`
 
--   An immutable reference to a string slice.
--   Only seen as a borrowed value.
--   May be anywhere, on the heap, stack, or in program memory.
+-   A "string slice reference" (or just "string slice")
+-   Usually only seen as a borrowed value
+-   The bytes it points at may be anywhere: heap, stack, or in read-only memory
+
+```mermaid
+flowchart LR
+    data1("[0x31, 0x32, 0x33, 0x00, 0x00]")
+    string["String { ptr, cap: 5, len: 3 }"]
+    string --> data1
+
+    data2("[0x34, 0x35, 0x36, 0x37]")
+    str1["&str { ptr, len: 4 }"]
+    str1 -.-> data2
+
+    str2["&str { ptr, len: 3 }"]
+    str2 -.-> data1
+
+    style data1 fill:#ccf
+    style data2 fill:#cfc
+```
+
+Note:
+
+The dark blue block of data is heap allocated.
+
+The green block of data is a string literal in read-only memory (i.e. in the `.rodata` section).
 
 ## Creation
 
@@ -35,7 +65,7 @@ fn main() {
 ## When to Use What?
 
 -   `String` is the *easiest* to use when starting out. Refine later.
--   `String` owns its data, so works well as a field of a `struct` or Enum.
+-   `String` owns its data, so works well as a field of a `struct` or `enum`.
 -   `&str` is typically used in function arguments.
 
 ## `Deref` Coercion
@@ -67,11 +97,11 @@ These types represent *platform native* strings. This is necessary because Unix 
 
 ## Behind the `OsString` Scenes
 
--   Unix strings are often arbitrary non-zero sequences, usually interpreted as UTF-8.
--   Windows strings are often arbitrary non-zero sequences, usually interpreted as UTF-16.
--   Rust strings are always valid UTF-8, and may contain zeros.
+-   Unix strings are often arbitrary non-zero 8-bit sequences, usually interpreted as UTF-8.
+-   Windows strings are often arbitrary non-zero 16-bit sequences, usually interpreted as UTF-16.
+-   Rust strings are always valid UTF-8, and may contain `NUL` bytes.
 
-`OsString` and `OsStr` bridge this gap and allow for cheap conversion to and from `String` and `str`.
+`OsString` and `OsStr` bridge this gap and allow for conversion to and from `String` and `str`.
 
 ## `CString` & `CStr`
 
