@@ -117,14 +117,14 @@ println!("{:?}", tp);
 2. `a == b` means `b == a`
 3. `a == b` and `b == c` means `a == c`
 
-IEEE 754 floating point numbers (`f32` and `f64`) break the first rule (`NAN == NAN` is always false). They are `PartialEq` and not `Eq`.
+IEEE 754 floating point numbers (`f32` and `f64`) break the first rule (`NaN == NaN` is always false). They are `PartialEq` and not `Eq`.
 
 ## `PartialOrd` and `Ord`
 
 * Same as `PartialEq` and `Eq`, but they also allow other comparisons (`<`, `<=`, `>=`, `>`).
 * Generally, everything is `Ord`, except `f32` and `f64`.
 * Characters are compared by their code point numerical values
-* Arrays and slices are compared element by element. Length act as a tiebreaker.
+* Arrays and slices are compared element by element. Length acts as a tiebreaker.
     * `"aaa" < "b"`, but `"aaa" > "a"`
     * elements themselves have to be `PartialOrd` or `Ord`
 
