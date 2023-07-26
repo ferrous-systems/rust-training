@@ -21,10 +21,10 @@
 # Applied Rust
 
 -   [Methods and Traits](./methods-traits.md)
--   [Cargo Dependencies and Workspaces](./using-cargo.md)
 -   [Rust I/O Traits](./io.md)
 -   [Generics](./generics.md)
 -   [Lifetimes](./lifetimes.md)
+-   [Cargo Workspaces](./cargo-workspaces.md)
 -   [Heap Allocation (Box and Rc)](./heap.md)
 -   [Shared Mutability (Cell, RefCell)](./shared-mutability.md)
 -   [Thread Safety (Send/Sync, Arc, Mutex)](./thread-safety.md)
@@ -53,3 +53,6 @@
 -   [Unsafe Rust](./unsafe.md)
 -   [WASM](./wasm.md)
 -   [Working with Nightly](./working-with-nighly.md)
+-   [Using Cargo](./using-cargo.md)
+-   [Dependency Management with Cargo](./dependency-management.md)
+-   [Rust Projects Build Time](./rust-build-time.md)
