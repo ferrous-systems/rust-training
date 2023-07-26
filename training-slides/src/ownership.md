@@ -212,6 +212,10 @@ Try adding more excitement by calling `add_excitement` multiple times.
 * *Mutably Borrowing* gives more permissions than *Borrowing*
 * *Owning* gives more permissions than *Mutably Borrowing*
 
+Note:
+
+Why are there two types of Borrowed string types (`&String` and `&str`)?
+
 ## An aside: Method Calls
 
 * Rust supports *Method Calls*
