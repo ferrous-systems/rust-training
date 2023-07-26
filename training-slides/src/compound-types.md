@@ -201,6 +201,10 @@ fn check_shape(shape: &Shape) {
 }
 ```
 
+Note:
+
+Why is there a `*` in front of `radius` in `match`?
+
 ## Combining patterns
 
 -   You can use the `|` operator to join patterns together
