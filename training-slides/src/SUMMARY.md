@@ -24,6 +24,7 @@
 -   [Rust I/O Traits](./io.md)
 -   [Generics](./generics.md)
 -   [Lifetimes](./lifetimes.md)
+-   [Cargo Workspaces](./cargo-workspaces.md)
 -   [Heap Allocation (Box and Rc)](./heap.md)
 -   [Shared Mutability (Cell, RefCell)](./shared-mutability.md)
 -   [Thread Safety (Send/Sync, Arc, Mutex)](./thread-safety.md)
@@ -54,5 +55,4 @@
 -   [Working with Nightly](./working-with-nighly.md)
 -   [Using Cargo](./using-cargo.md)
 -   [Dependency Management with Cargo](./dependency-management.md)
--   [Cargo Workspaces](./cargo-workspaces.md)
 -   [Rust Projects Build Time](./rust-build-time.md)
