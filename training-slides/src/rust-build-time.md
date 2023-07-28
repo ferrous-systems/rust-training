@@ -66,7 +66,7 @@
 
 ## Prefer pure-Rust dependencies
 
-* crate cannot be build before `build.rs` is compiled and executed
+* crate cannot be built before `build.rs` is compiled and executed
     * crates using C-dependencies have to rely on `build.rs`
     * `build.rs` might trigger C/C++ compilation which in turn is often slow
 
