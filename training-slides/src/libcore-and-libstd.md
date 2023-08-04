@@ -1,1 +1,0 @@
-# libcore and libstd
