@@ -17,40 +17,46 @@ struct Point {
 
 -   there is no partial initialization
 
-```rust [1-4|6]
+```rust [1-4|6-8]
 struct Point {
     x: i32,
     y: i32,
 }
 
-let p = Point { x: 1, y: 2 };
+fn main() {
+    let p = Point { x: 1, y: 2 };
+}
 ```
 
 ## Construction
 
 -   but you can copy from an existing variable of the same type
 
-```rust [7]
+```rust [8]
 struct Point {
     x: i32,
     y: i32,
 }
 
-let p = Point { x: 1, y: 2 };
-let q = Point { x: 4, ..p };
+fn main() {
+    let p = Point { x: 1, y: 2 };
+    let q = Point { x: 4, ..p };
+}
 ```
 
 ## Field Access
 
-```rust [1-4|6|7-8]
+```rust [1-4|7|8-9]
 struct Point {
     x: i32,
     y: i32,
 }
 
-let p = Point { x: 1, y: 2 };
-println!("{}", p.x);
-println!("{}", p.y);
+fn main() {
+    let p = Point { x: 1, y: 2 };
+    println!("{}", p.x);
+    println!("{}", p.y);
+}
 ```
 
 ## Tuples
@@ -58,10 +64,12 @@ println!("{}", p.y);
 -   Holds values of different types together.
 -   Like an anonymous `struct`, with fields numbered 0, 1, etc.
 
-```rust [1|2-3]
-let p = (1, 2);
-println!("{}", p.0);
-println!("{}", p.1);
+```rust [2|3-4]
+fn main() {
+    let p = (1, 2);
+    println!("{}", p.0);
+    println!("{}", p.1);
+}
 ```
 
 ## `()`
@@ -80,12 +88,14 @@ fn prints_but_returns_nothing(data: &str) -> () {
 
 -   Like a `struct`, with fields numbered 0, 1, etc.
 
-```rust [1|3|4-5]
+```rust [1|4|5-6]
 struct Point(i32,i32);
 
-let p = Point(1, 2);
-println!("{}", p.0);
-println!("{}", p.1);
+fn main() {
+    let p = Point(1, 2);
+    println!("{}", p.0);
+    println!("{}", p.1);
+}
 ```
 
 ## Enums
@@ -102,7 +112,7 @@ println!("{}", p.1);
 
 ## enum: Definition and Construction
 
-```rust [1-6|8]
+```rust [1-6|9]
 enum Shape {
     Square,
     Circle,
@@ -110,12 +120,14 @@ enum Shape {
     Triangle,
 }
 
-let shape = Shape::Rectangle;
+fn main() {
+    let shape = Shape::Rectangle;
+}
 ```
 
 ## Enums with Values
 
-```rust [1-6|2-4|5|8|9]
+```rust [1-6|2-4|5|9|10]
 enum Movement {
     Right(i32),
     Left(i32),
@@ -123,8 +135,10 @@ enum Movement {
     Down { speed: i32, excitement: u8 },
 }
 
-let movement = Movement::Left(12);
-let movement = Movement::Down { speed: 12, excitement: 5 };
+fn main() {
+    let movement = Movement::Left(12);
+    let movement = Movement::Down { speed: 12, excitement: 5 };
+}
 ```
 
 ## Enums with Values
