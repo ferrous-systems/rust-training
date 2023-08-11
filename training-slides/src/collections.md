@@ -380,16 +380,16 @@ Just sets the `V` type parameter to `()`!
 
 ## A Summary
 
-| Type         | Owns  | Grow  |  Index  | Slice | Cheap Insert |
-| ------------ | :---: | :---: | :-----: | :---: | :----------: |
-| Array        |   ✅   |   ❌   | `usize` |   ✅   |      ❌       |
-| Slice        |   ❌   |   ❌   | `usize` |   ✅   |      ❌       |
-| Vec          |   ✅   |   ✅   | `usize` |   ✅   |      ↩       |
-| String Slice |   ❌   |   ❌   |    🤔    |   ✅   |      ❌       |
-| String       |   ✅   |   ✅   |    🤔    |   ✅   |      ↩       |
-| VecDeque     |   ✅   |   ✅   | `usize` |   🤔   |    ↪ / ↩     |
-| HashMap      |   ✅   |   ✅   |   `T`   |   ❌   |      ✅       |
-| BTreeMap     |   ✅   |   ✅   |   `T`   |   ❌   |      ✅       |
+| Type         | Owns | Grow |  Index  | Slice | Cheap Insert |
+| :----------- | :--: | :--: | :-----: | :---: | :----------: |
+| Array        |  ✅  |  ❌  | `usize` |  ✅   |      ❌      |
+| Slice        |  ❌  |  ❌  | `usize` |  ✅   |      ❌      |
+| Vec          |  ✅  |  ✅  | `usize` |  ✅   |      ↩       |
+| String Slice |  ❌  |  ❌  |   🤔   |  ✅   |      ❌      |
+| String       |  ✅  |  ✅  |   🤔   |  ✅   |      ↩       |
+| VecDeque     |  ✅  |  ✅  | `usize` |  🤔  |    ↪ / ↩     |
+| HashMap      |  ✅  |  ✅  |   `T`   |  ❌   |      ✅      |
+| BTreeMap     |  ✅  |  ✅  |   `T`   |  ❌   |      ✅      |
 
 Note:
 
