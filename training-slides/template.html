@@ -48,6 +48,19 @@
         .reveal blockquote p::after {
             content: close-quote;
         }
+
+        /* Footer */
+        .footer {
+            width:100%;
+            position: absolute;
+            bottom: 0;
+        }
+
+        .reveal .footer__logoimage {
+            height: 1em;
+            margin: 0;
+        }
+
     </style>
 </head>
 
@@ -59,6 +72,11 @@
 $CONTENT
                 </textarea>
             </section>
+            <footer class="footer">
+                <a class="footer__logo" href="/">
+                    <img class="footer__logoimage" src="./images/logo_ferrous-systems_rgb.png" alt="The Ferrous logo. A colorful stylised F looking to the left and the words Ferrous Systems.">
+                </a>
+            </footer>
         </div> <!-- class="slides" -->
     </div> <!-- class="reveal" -->
 
