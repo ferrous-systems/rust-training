@@ -1,3 +1,5 @@
+![Our cute logo!](images/logo_ferrous-systems_rgb.png)
+
 # Start Here
 
 Make sure to have `rustup`, `VSCode` and the `rust-analyzer` VSCode extension installed.
@@ -18,3 +20,4 @@ graph TD;
 * **Embedded Rust**: Rust in your micro-controllers. ~3 half days.
 * **FFI and Rust**: Bring Rust to your C, or C to your Rust. ~1.5 half days.
 * **Why Rust?**: A (stand-alone) half-day tour of Rust for decision-makers, technical leads and managers.
+
