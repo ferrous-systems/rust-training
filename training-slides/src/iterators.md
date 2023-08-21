@@ -156,6 +156,13 @@ fn main() {
 }
 ```
 
+Note:
+
+* `IntoIterator` is actually dependent on the context. Depending on the context it will produce an iterator with owned elements, with references to elements, with mutable references to elements.
+* e.g. `impl<T, A> IntoIterator for Vec<T, A>` for owned
+* `impl<'a, T, A> IntoIterator for &'a Vec<T, A>` for refs
+* `impl<'a, T, A> IntoIterator for &'a mut Vec<T, A>` for mut refs
+
 ## Things you can make iterators from
 
 * [Ranges](https://doc.rust-lang.org/std/ops/struct.Range.html) (`0..10` or `0..=9`)
@@ -240,6 +247,10 @@ fn main() {
     println!("result = {}", process_data(&data));
 }
 ```
+
+Note:
+
+* Point out the type inference where Rust figures out `data` is an array of `u32` and not the default `i32`s.
 
 ## Call chaining (2)
 
