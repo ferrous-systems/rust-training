@@ -32,9 +32,11 @@ You can put anything in for the `E` in `Result<T, E>`:
 fn literals() -> Result<(), &'static str> {
     Err("oh no")
 }
+
 fn strings() -> Result<(), String> {
     Err(String::from("oh no"))
 }
+
 fn enums() -> Result<(), Error> {
     Err(Error::BadThing)
 }
@@ -191,3 +193,8 @@ fn main() -> Result<(), anyhow::Error> {
     Ok(())
 }
 ```
+
+Note:
+
+* Use `anyhow` if you do not care what error type your function returns, just that it captures something.
+* Use `thiserror` if you must design your own error types but want easy `Error` trait impl.

@@ -116,3 +116,7 @@ fn main() {
     let sub: &[i32] = &slice[0..1];
 }
 ```
+
+Note:
+
+- Use `.get()` method on the slice to avoid panics instead of accessing via index.

@@ -64,8 +64,10 @@ mod tests {
 ```rust ignore
 struct Point(i32, i32);
 
-let p = Point (1, 2);
-assert_eq!(p, Point(1, 2));
+fn main() {
+    let p = Point (1, 2);
+    assert_eq!(p, Point(1, 2));
+}
 ```
 
 Errors:
@@ -80,8 +82,10 @@ Errors:
 #[derive(Debug, PartialEq)]
 struct Point(i32, i32);
 
-let p = Point (1, 2);
-assert_eq!(p, Point(1, 2));
+fn main() {
+    let p = Point (1, 2);
+    assert_eq!(p, Point(1, 2));
+}
 ```
 
 ## `Debug`
@@ -95,12 +99,12 @@ struct Point { x: i32, y: i32 }
 #[derive(Debug)]
 struct TuplePoint(i32, i32);
 
-let p = Point { y: 2, x: 1 };
-let tp = TuplePoint (1, 2);
-println!("{:?}", p);
-// Point { x: 1, y: 2 }
-println!("{:?}", tp);
-// TuplePoint (1, 2)
+fn main() {
+    let p = Point { y: 2, x: 1 };
+    let tp = TuplePoint (1, 2);
+    println!("{:?}", p);  // Point { x: 1, y: 2 }
+    println!("{:?}", tp); // TuplePoint (1, 2)
+}
 ```
 
 ## `PartialEq`

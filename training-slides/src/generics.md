@@ -59,6 +59,10 @@ fn print_stuff<X>(value: X) {
 }
 ```
 
+Note:
+
+Default bounds are `Sized`, so finding the size of the type is one thing that you can do. You can also take a reference or a pointer to the value.
+
 ## Generic Implementations
 
 ```rust []
@@ -227,6 +231,10 @@ impl AreaCalculator {
     }
 }
 ```
+
+Note:
+
+Some types that cannot be written out, like the closure, can be expressed as return types using `impl`. e.g. `fn score(y: i32) -> impl Fn(i32) -> i32`.
 
 ## Caution
 

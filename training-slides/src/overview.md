@@ -43,12 +43,17 @@ Rust is an empathic systems programming language that is determined to not let y
 ## Release Method
 
 -   Nightly releases
-
 -   experimental features are only present on nighly releases
 -   Every 6 weeks, the current nightly is promoted to beta
 -   After 6 weeks of testing, beta becomes stable
 -   Guaranteed backwards-compatibility
 -   Makes small iterations easier
+
+Note:
+
+- Cargo's "stabilization" section https://doc.crates.io/contrib/process/unstable.html#stabilization
+- Crater tool
+- Editions
 
 ## Goals
 
@@ -75,13 +80,19 @@ spend time discussing the impact of many features on large projects.
 -   Deallocation is automated
 -   Warning: memory leaks are **safe** by that definition!
 
+Note:
+
+- Memory safety: use-after-free, double-free
+- Type safety, Thread safety
+- Memory leaks: `Box::leak()`
+
 ## Concurrent
 
 -   "Concurrency without fear"
 -   The type system detects concurrent access to data and requires
     synchronisation
--   Also: Rust detects when unsynchronised access is safely possible!
--   Protection from data races!
+-   Also: Rust detects when unsynchronised access is safely possible
+-   Protection from data races
 
 ## Fast
 

@@ -11,7 +11,7 @@ Ownership is the basis for the memory management of Rust.
 -   The owner is responsible for removing the data from memory
 -   The owner always has full control over the data and can mutate it
 
-## These Rules are:
+## These Rules are
 
 -   fundamental to Rust’s type system
 -   enforced at compile time
@@ -33,7 +33,7 @@ fn print_string(s: String) {
 
 Note:
 
-The statement `let s = ...;` introduces a *variable binding* called `f` and gives it a *value* which is of type `String`. This distinction is important when it comes to transferring ownership.
+The statement `let s = ...;` introduces a *variable binding* called `s` and gives it a *value* which is of type `String`. This distinction is important when it comes to transferring ownership.
 
 The function `String::from` is an associated function called `from` on the `String` type.
 
@@ -211,6 +211,10 @@ Try adding more excitement by calling `add_excitement` multiple times.
 
 * *Mutably Borrowing* gives more permissions than *Borrowing*
 * *Owning* gives more permissions than *Mutably Borrowing*
+
+Note:
+
+Why are there two types of Borrowed string types (`&String` and `&str`)? The first is a reference to a `struct` (`std::string::String`, specifically), and the latter is a built-in slice type which points at some bytes in memory which are valid UTF-8 encoded characters.
 
 ## An aside: Method Calls
 
