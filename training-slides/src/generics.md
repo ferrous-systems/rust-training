@@ -61,7 +61,7 @@ fn print_stuff<X>(value: X) {
 
 Note:
 
-Default bounds are `Sized`, finding size is one thing that you can do.
+Default bounds are `Sized`, so finding the size of the type is one thing that you can do. You can also take a reference or a pointer to the value.
 
 ## Generic Implementations
 
