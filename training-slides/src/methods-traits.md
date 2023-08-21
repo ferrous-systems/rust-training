@@ -117,14 +117,12 @@ impl Square {
 
 ```rust []
 trait HasArea {
-    const M2_PER_ACRE: f64 = 4046.86;
-
     /// Get the area, in m².
     fn area_m2(&self) -> f64;
 
     /// Get the area, in acres.
     fn area_acres(&self) -> f64 {
-        self.area_m2() * Self::M2_PER_ACRE
+        self.area_m2() / 4046.86
     }
 }
 ```
@@ -147,6 +145,29 @@ impl HasArea for Square {
 fn main() {
     let sq = Square(5.0);
     println!("{}", sq.area_m2());
+}
+```
+
+## Associated Types
+
+A trait can also have some *associated types*, which are type aliases chosen when
+the trait is *implemented*.
+
+```rust
+trait Iterator {
+    type Item;
+
+    fn next(&mut self) -> Option<Self::Item>;
+}
+
+struct MyRange { start: u32, len: u32 }
+
+impl Iterator for MyRange {
+    type Item = u32;
+
+    fn next(&mut self) -> Option<Self::Item> {
+        todo!();
+    }
 }
 ```
 
