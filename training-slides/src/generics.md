@@ -61,7 +61,7 @@ fn print_stuff<X>(value: X) {
 
 Note:
 
-Default bounds are `Sized`, finding size is one thing that you can do.
+Default bounds are `Sized`, so finding the size of the type is one thing that you can do. You can also take a reference or a pointer to the value.
 
 ## Generic Implementations
 
@@ -115,60 +115,28 @@ error[E0599]: no method named `magnitude` found for struct `Vector<{integer}>` i
 For more information about this error, try `rustc --explain E0599`.
 ```
 
-## Generic Traits
-
-Traits can have type parameters.
-
-```rust []
-trait HasArea<T> {
-    fn area(&self) -> T;
-}
- 
-// Here we only accept a shape where the `T` in `HasArea<T>` is `f64`
-fn print_area(shape: &dyn HasArea<f64>) {
-    let area = shape.area();
-    println!("Area = {area:0.6}");
-}
-
-struct UnitSquare;
-
-impl HasArea<f64> for UnitSquare {
-    fn area(&self) -> f64 {
-        1.0
-    }
-}
-
-impl HasArea<u32> for UnitSquare {
-    fn area(&self) -> u32 {
-        1
-    }
-}
-
-fn main() {
-    let u = UnitSquare;
-    print_area(&u);
-}
-```
-
 ## Adding Bounds
 
 * Generics aren't much use without bounds.
-* You can apply the bounds on the type, or a function, or both.
+* A bound says which traits must be implemented on any type used for that type parameter
+* You can apply the bounds on the type, or a function/method, or both.
+
+## Adding Bounds - Example
 
 ```rust []
-trait HasArea<T> {
-    fn area(&self) -> T;
+trait HasArea {
+    fn area(&self) -> f32;
 }
 
-fn print_area<T>(shape: &dyn HasArea<T>) where T: std::fmt::Debug {
+fn print_area<T>(shape: &T) where T: HasArea {
     let area = shape.area();
     println!("Area = {area:?}");
 }
 
 struct UnitSquare;
 
-impl HasArea<f64> for UnitSquare {
-    fn area(&self) -> f64 {
+impl HasArea for UnitSquare {
+    fn area(&self) -> f32 {
         1.0
     }
 }
@@ -179,24 +147,37 @@ fn main() {
 }
 ```
 
-## Adding Bounds
-
-The bounds can also go here:
+## Adding Bounds - Alt. Example
 
 ```rust []
-trait HasArea<T> {
-    fn area(&self) -> T;
+trait HasArea {
+    fn area(&self) -> f32;
 }
 
-fn print_area<T: std::fmt::Debug>(shape: &dyn HasArea<T>) {
+fn print_area<T: HasArea>(shape: &T) {
     let area = shape.area();
     println!("Area = {area:?}");
+}
+
+struct UnitSquare;
+
+impl HasArea for UnitSquare {
+    fn area(&self) -> f32 {
+        1.0
+    }
+}
+
+fn main() {
+    let u = UnitSquare;
+    print_area(&u);
 }
 ```
 
 Note:
 
-This is exactly equivalent to the previous example, but shorter.
+This is exactly equivalent to the previous example, but shorter. However, if you
+end up with a large set of bounds, they are easier to format when at the end of
+the line.
 
 ## General Rule
 
@@ -208,41 +189,26 @@ This is exactly equivalent to the previous example, but shorter.
 You can specify multiple bounds.
 
 ```rust []
-trait HasArea<T> {
-    fn area(&self) -> T;
+trait HasArea {
+    fn area(&self) -> f32;
 }
 
-fn print_areas<T: std::fmt::Debug + std::cmp::PartialEq>(
-    shape1: &dyn HasArea<T>,
-    shape2: &dyn HasArea<T>,
-) {
-    let area1 = shape1.area();
-    let area2 = shape2.area();
-    if area1 == area2 {
-        println!("Both areas are {area1:?}");
-    } else {
-        println!("{area1:?}, {area2:?}");
-    }
+fn print_area<T: std::fmt::Debug + HasArea>(shape: &T) {
+    println!("Shape {:?} has area {}", shape, shape.area());
 }
 
+#[derive(Debug)]
 struct UnitSquare;
 
-impl HasArea<f64> for UnitSquare {
-    fn area(&self) -> f64 {
-        1.0
-    }
+impl HasArea for UnitSquare {
+    fn area(&self) -> f32 { 1.0 }
 }
 
 fn main() {
-    let u1 = UnitSquare;
-    let u2 = UnitSquare;
-    print_areas(&u1, &u2);
+    let u = UnitSquare;
+    print_area(&u);
 }
 ```
-
-Note:
-
-Try removing the `std::cmp::PartialEq` bound and see what it says about using the `==` operator on type `T`.
 
 ## impl Trait
 
@@ -275,6 +241,60 @@ Some types that cannot be written out, like the closure, can be expressed as ret
 * Using Generics is *Hard Mode Rust*
 * Don't reach for it in the first instance...
   * Try and just use concrete types?
+
+## Generic over Constants
+
+In Rust 1.51, we gained the ability to be generic over *constant values* too.
+
+```rust []
+struct Polygon<const SIDES: u8> {
+    colour: u32
+}
+
+impl<const SIDES: u8> Polygon<SIDES> {
+    fn new(colour: u32) -> Polygon<SIDES> { Polygon { colour } }
+    fn print(&self) { println!("{} sides, colour=0x{:06x}", SIDES, self.colour); }
+}
+
+fn main() {
+    let triangle: Polygon<3> = Polygon::new(0x00FF00);
+    triangle.print();
+}
+```
+
+Note:
+
+`SIDES` is a property of the type, and doesn't occupy any memory within any
+values of that type at run-time - the constant is pasted in wherever it is used.
+
+## Generic Traits
+
+Traits themselves can have type parameters too!
+
+```rust []
+trait HasArea<T> {
+    fn area(&self) -> T;
+}
+ 
+// Here we only accept a shape where the `U` in `HasArea<Y>` is printable
+fn print_area<T, U>(shape: &T) where T: HasArea<U>, U: std::fmt::Debug {
+    let area = shape.area();
+    println!("Area = {area:?}");
+}
+
+struct UnitSquare;
+
+impl HasArea<f64> for UnitSquare {
+    fn area(&self) -> f64 {
+        1.0
+    }
+}
+
+fn main() {
+    let u = UnitSquare;
+    print_area(&u);
+}
+```
 
 ## Special Bounds
 

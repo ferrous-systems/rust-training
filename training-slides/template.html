@@ -48,6 +48,19 @@
         .reveal blockquote p::after {
             content: close-quote;
         }
+
+        .branding {
+            height: 7%;
+            position: absolute;
+            margin-top: 1em;
+            margin-left: 1em;
+        }
+
+        .reveal .branding__logo {
+            height: auto;
+            margin: 0;
+        }
+
     </style>
 </head>
 
@@ -59,7 +72,11 @@
 $CONTENT
                 </textarea>
             </section>
+
         </div> <!-- class="slides" -->
+        <div class="branding">
+            <img class="branding__logo" src="./images/logo_ferrous-systems_rgb.png" alt="The Ferrous logo. A colorful stylised F looking to the left and the words Ferrous Systems.">
+        </div>
     </div> <!-- class="reveal" -->
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.5.0/reveal.js"></script>

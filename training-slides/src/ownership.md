@@ -214,7 +214,7 @@ Try adding more excitement by calling `add_excitement` multiple times.
 
 Note:
 
-Why are there two types of Borrowed string types (`&String` and `&str`)?
+Why are there two types of Borrowed string types (`&String` and `&str`)? The first is a reference to a `struct` (`std::string::String`, specifically), and the latter is a built-in slice type which points at some bytes in memory which are valid UTF-8 encoded characters.
 
 ## An aside: Method Calls
 
