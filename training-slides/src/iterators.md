@@ -22,6 +22,13 @@ To *iterate* in Rust is to produce a sequence of items, one at a time.
 * Some *Iterators* will calculate each item on-the-fly
 * Some *Iterators* will take data another iterator, and then calculate something new
 
+Note:
+
+Technically, all iterators calculate things on-the-fly. Some own another iterator and use that as input to their calculation, and some have an internal state that they can use for calculation. `fn next(&mut self) -> Self::Item` can only access `Self` so it is about what `Self` contains.
+
+* `struct SomeIter<T> where T: Iterator { inner: T }`
+* `struct SomeOtherIter { random_seed: u32 }`
+
 ## Important to note
 
 * Iterators are lazy

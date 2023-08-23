@@ -135,6 +135,10 @@ fn main() -> std::io::Result<()> {
 * When do you hit the end of a `TcpStream`?
   * When either side does a `shutdown`
 
+Note:
+
+* `Read` trait has a method `read_to_end()`
+
 ## Binding Ports
 
 * `TcpListener` needs to know which IP address and port to bind
@@ -155,6 +159,14 @@ fn main() -> Result<(), std::io::Error> {
 * [`IpAddr`](https://doc.rust-lang.org/std/net/enum.IpAddr.html) is an enum of [`Ipv4Addr`](https://doc.rust-lang.org/std/net/struct.Ipv4Addr.html) and [`Ipv6Addr`](https://doc.rust-lang.org/std/net/struct.Ipv6Addr.html)
 * [`SocketAddr`](https://doc.rust-lang.org/std/net/enum.SocketAddr.html) is an enum of [`SocketAddrV4`](https://doc.rust-lang.org/std/net/struct.SocketAddrV4.html) and [`SocketAddrV6`](https://doc.rust-lang.org/std/net/struct.SocketAddrV6.html)
 * But TLS, HTTP and QUIC are all third-party crates
+
+Note:
+
+Some current prominent examples of each -
+
+* TLS - [RusTLS](https://github.com/rustls/rustls)
+* HTTP - [hyperium/http](https://github.com/hyperium/http)
+* QUIC - [cloudflare/quiche](https://github.com/cloudflare/quiche)
 
 ## Failures
 
