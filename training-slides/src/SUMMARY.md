@@ -20,6 +20,8 @@
 
 # Applied Rust
 
+Using Rust on Windows/macOS/Linux. Requires [Rust Fundamentals](#rust-fundamentals).
+
 -   [Methods and Traits](./methods-traits.md)
 -   [Rust I/O Traits](./io.md)
 -   [Generics](./generics.md)
@@ -31,33 +33,54 @@
 -   [Closures and the Fn/FnOnce/FnMut traits](./closures.md)
 -   [Spawning Threads and Scoped Threads](./spawning-threads.md)
 
-# Additional Material
+# Advanced Rust
 
+Topics that go beyond [Applied Rust](#applied-rust).
+
+-   [Advanced Strings](./advanced-strings.md)
 -   [Debugging Rust](./debugging-rust.md)
+-   [Dependency Management with Cargo](./dependency-management.md)
 -   [Deref Coercions](./deref-coercions.md)
 -   [Design Patterns](./design-patterns.md)
 -   [Documentation](./documentation.md)
 -   [Drop, Panic and Abort](./drop-panic-abort.md)
 -   [Dynamic Dispatch](./dynamic-dispatch.md)
--   [Foreign Function Interface](./ffi.md)
 -   [Macros](./macros.md)
 -   [Property Testing](./property-testing.md)
+-   [Rust Projects Build Time](./rust-build-time.md)
 -   [Send and Sync](./send-and-sync.md)
 -   [Serde](./serde.md)
--   [Advanced Strings](./advanced-strings.md)
 -   [Testing](./testing.md)
 -   [The stdlib](./std-lib-tour.md)
--   [Unsafe Rust](./unsafe.md)
--   [WASM](./wasm.md)
--   [Working with Nightly](./working-with-nighly.md)
 -   [Using Cargo](./using-cargo.md)
--   [Dependency Management with Cargo](./dependency-management.md)
--   [Rust Projects Build Time](./rust-build-time.md)
 -   [Using Types to encode State (TBC)](./type-state.md)
--   [Overview of Embedded Rust (TBC)](./rust-embedded.md)
--   [Working with no-std (TBC)](./no-std.md)
--   [Booting a Cortex-M Microcontroller (TBC)](./cortex-m.md)
+-   [WASM](./wasm.md)
+
+# No-Std Rust
+
+Rust for the Linux Kernel and other no-std environments with an pre-existing C API. Requires [Applied Rust](#applied-rust).
+
+-   [Overview of no-std Rust (TBC)](./rust-no-std.md)
+-   [Unsafe Rust](./unsafe.md)
+-   [Foreign Function Interface](./ffi.md)
+-   [Working with Nightly](./working-with-nighly.md)
+-   [Rust in the Linux Kernel (TBC)](./rust-linux-kernel.md)
+-   [Rust on an RTOS (TBC)](./rust-rtos.md)
+-   [Writing a new target (TBC)](./custom-target.md)
+
+# Bare-Metal Rust
+
+Topics about using Rust on ARM Cortex-M Microcontrollers (and similar). Requires [Low-Level Rust](#low-level-rust).
+
+-   [Overview of Bare-Metal Rust (TBC)](./rust-bare-metal.md)
+-   [Booting a Cortex-M Microcontroller (TBC)](./cortex-m-booting.md)
+-   [Execptions and Interrupts on a Cortex-M Microcontroller (TBC)](./cortex-m-exceptions-interrupts.md)
 -   [PACs and svd2rust (TBC)](./pac-svd2rust.md)
 -   [The Embedded HAL and its implementations (TBC)](./embedded-hals.md)
 -   [Using RTIC v1 (TBC)](./rtic-v1.md)
--   [Writing a new target (TBC)](./custom-target.md)
+
+# Ferrocene
+
+Topics around [Ferrocene](https://ferrous-systems.com/ferrocene/), the qualified toolchain for writing safety-critical systems in Rust.
+
+-   [Installing and Using Ferrocene (TBC)](./installing-using-ferrocene.md)
