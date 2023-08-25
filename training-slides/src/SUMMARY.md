@@ -44,7 +44,7 @@
 -   [Property Testing](./property-testing.md)
 -   [Send and Sync](./send-and-sync.md)
 -   [Serde](./serde.md)
--   [Strings](./strings.md)
+-   [Advanced Strings](./advanced-strings.md)
 -   [Testing](./testing.md)
 -   [The stdlib](./std-lib-tour.md)
 -   [Unsafe Rust](./unsafe.md)

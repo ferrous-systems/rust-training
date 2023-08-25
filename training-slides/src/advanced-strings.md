@@ -1,4 +1,4 @@
-# Strings
+# Advanced Strings
 
 ---
 
