@@ -301,7 +301,9 @@ fn make_shape() -> Shape {
 }
 ```
 
-## Very Important Enum #1 - Option
+## Foreshadowing! 👻
+
+Two very important enums
 
 ```rust
 enum Option<T> {
@@ -309,55 +311,11 @@ enum Option<T> {
     None,
 }
 
-fn main() {
-    let x = [1, 2, 3, 4];
-    match x.get(5) {
-        Some(value) => {
-            println!("I got {value} from x.get(5)?");
-        }
-        None => {
-            println!("I got None from x.get(5)");
-        }
-    }
-}
-```
-
-Note:
-
-It's so important, it is special-cased within the compiler so you can say `None` instead of `Option::None`, as you would with any other enum.
-
-## Very Important Enum #2 - Result
-
-```rust
 enum Result<T, E> {
     Ok(T),
     Err(E)
 }
-
-match std::fs::File::open("hello.txt") {
-    Ok(_file_handle) => {
-        println!("I opened the file OK");
-    }
-    Err(error_value) => {
-        println!("Failed to open file due to error: {:?}", error_value);
-    }
-}
 ```
 
-Note:
+We'll come back to them after we know some error handling.
 
-Also so important, it is special-cased within the compiler so you can say `Ok(...)` instead of `Result::Ok`, as you would with any other enum (except `Option`).
-
-## [Option](https://doc.rust-lang.org/std/option/enum.Option.html) and [Result](https://doc.rust-lang.org/std/result/enum.Result.html) have lots of useful methods
-
-```rust
-fn main() {
-    let file_length = std::fs::File::open("hello.txt")
-        .and_then(|file| file.metadata())
-        .map(|metadata| metadata.len())
-        .unwrap_or(0);
-    println!("File length is {}", file_length);
-}
-```
-
-The `|x| ...` syntax indicates a *closure*
