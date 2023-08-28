@@ -207,7 +207,7 @@ fn check_shape(shape: &Shape) {
 Match guards allow further refining of a `match`
 
 ```rust [8]
-// 🚌🛑 8
+// 🚌🛑 1
 enum Shape {
     Circle(i32),
     Rectangle(i32, i32),
