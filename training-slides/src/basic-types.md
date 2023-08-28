@@ -72,6 +72,7 @@ Boolean in Rust is represented by either of two values: `true` or
 ## Character Literals
 
 ```rust [2-3|4-5|6-7|8-9]
+// 🚌🛑 4
 fn main() {
     // U+0072 LATIN SMALL LETTER R
     let ascii_char = 'r';
@@ -111,6 +112,7 @@ fn main() {
 * Slices cannot be resized but can be subsliced.
 
 ```rust [2|3]
+// 🚌🛑 4
 fn main() {
     let slice: &[i32] = &[1, 2, 3, 4];
     let sub: &[i32] = &slice[0..1];

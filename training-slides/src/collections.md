@@ -46,6 +46,7 @@ A view into *some other data*, plus a value to indicate *how many items*.
 Written as `&[T]` (or `&mut [T]`).
 
 ```rust [1-8|6]
+// 🚌🛑 2
 fn main() {
     let mut array = [0u8; 10];
     for idx in 0..5 {
@@ -208,6 +209,7 @@ The dark blue block of data is heap allocated.
 ## Making a String
 
 ```rust [1-7|2|3|4|5|6]
+// 🚌🛑 6
 fn main() {
     let s1 = "String literal up-conversion".to_string();
     let s2: String = "Into also works".into();
@@ -220,6 +222,7 @@ fn main() {
 ## Appending to a String
 
 ```rust [1-7|2|3|4|5-6]
+// 🚌🛑 6
 fn main() {
     let mut start = "Mary had a ".to_string();
     start.push_str("little");
@@ -232,6 +235,7 @@ fn main() {
 ## Joining pieces of String
 
 ```rust [1-5|2|3|4]
+// 🚌🛑 4
 fn main() {
     let pieces = ["Mary", "had", "a", "little", "lamb"];
     let rhyme = pieces.join(" ");

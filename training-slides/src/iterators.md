@@ -145,6 +145,7 @@ fn main() {
 The `&` is load-bearing...
 
 ```rust [1-9|2|3|4-5]
+// 🚌🛑 4
 fn main() {
     let data = vec![1, 2, 3, 4, 5];
     let temp = &data;
@@ -226,6 +227,7 @@ Note:
 This style of code is idiomatic in Rust:
 
 ```rust [1-13|1-8|3|4|5|6|7]
+// 🚌🛑 7
 /// Sum the squares of the even numbers given
 fn process_data(data: &[u32]) -> u32 {
     data.iter()
@@ -246,6 +248,7 @@ fn main() {
 What really happened:
 
 ```rust [1-13|1-8|3|4|5|6|7]
+// 🚌🛑 7
 /// Sum the squares of the even numbers given
 fn process_data(data: &[u32]) -> u32 {
     let ref_iter = data.iter();

@@ -20,6 +20,7 @@ Ownership is the basis for the memory management of Rust.
 ## Example
 
 ```rust [1-9|2|3|7-9|4]
+// 🚌🛑 5
 fn main() {
     let s = String::from("Hello 😀");
     print_string(s);

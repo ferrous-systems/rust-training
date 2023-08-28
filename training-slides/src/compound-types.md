@@ -18,6 +18,7 @@ struct Point {
 -   there is no partial initialization
 
 ```rust [1-4|6-8]
+// 🚌🛑 2
 struct Point {
     x: i32,
     y: i32,
@@ -33,6 +34,7 @@ fn main() {
 -   but you can copy from an existing variable of the same type
 
 ```rust [8]
+// 🚌🛑 1
 struct Point {
     x: i32,
     y: i32,
@@ -47,6 +49,7 @@ fn main() {
 ## Field Access
 
 ```rust [1-4|7|8-9]
+// 🚌🛑 3
 struct Point {
     x: i32,
     y: i32,
@@ -65,6 +68,7 @@ fn main() {
 -   Like an anonymous `struct`, with fields numbered 0, 1, etc.
 
 ```rust [2|3-4]
+// 🚌🛑 2
 fn main() {
     let p = (1, 2);
     println!("{}", p.0);
@@ -89,6 +93,7 @@ fn prints_but_returns_nothing(data: &str) -> () {
 -   Like a `struct`, with fields numbered 0, 1, etc.
 
 ```rust [1|4|5-6]
+// 🚌🛑 2
 struct Point(i32,i32);
 
 fn main() {
@@ -113,6 +118,7 @@ fn main() {
 ## enum: Definition and Construction
 
 ```rust [1-6|9]
+// 🚌🛑 2
 enum Shape {
     Square,
     Circle,
@@ -128,6 +134,7 @@ fn main() {
 ## Enums with Values
 
 ```rust [1-6|2-4|5|9|10]
+// 🚌🛑 5
 enum Movement {
     Right(i32),
     Left(i32),
@@ -152,6 +159,7 @@ fn main() {
 -   New variables are created from the *pattern* (e.g. `radius`)
 
 ```rust [1-4|7-14|8|11]
+// 🚌🛑 4
 enum Shape {
     Circle(i32),
     Rectangle(i32, i32),
@@ -175,6 +183,7 @@ fn check_shape(shape: &Shape) {
 -   The later one hides the earlier one
 
 ```rust [7|9]
+// 🚌🛑 2
 enum Shape {
     Circle(i32),
     Rectangle(i32, i32),
@@ -198,6 +207,7 @@ fn check_shape(shape: &Shape) {
 Match guards allow further refining of a `match`
 
 ```rust [8]
+// 🚌🛑 8
 enum Shape {
     Circle(i32),
     Rectangle(i32, i32),
@@ -224,6 +234,7 @@ You might ask "Why is there a `*` in front of `radius` in `match`?" - It's becau
 -   You can use the `|` operator to join patterns together
 
 ```rust [1-16|9]
+// 🚌🛑 2
 enum Shape {
     Circle(i32),
     Rectangle(i32, i32),

@@ -49,6 +49,7 @@ enum Error { BadThing, OtherThing }
 If you use `?` to return the error early, some extra conversion happens:
 
 ```rust [1-13|1|7|2] 
+// 🚌🛑 4
 fn main() -> Result<(), String> {
     let num = some_function(true)?;
     println!("num = {}", num);
@@ -67,6 +68,7 @@ fn some_function(works: bool) -> Result<u32, &'static str> {
 ## ? actually called .into() for you
 
 ```rust [2-7]
+// 🚌🛑 1
 fn main() -> Result<(), String> {
     let num = match some_function(true) {
         Ok(ok_value) => ok_value,
@@ -175,6 +177,7 @@ Exhaustively listing all the ways your dependencies can fail is hard.
 One solution:
 
 ```rust [1-5|1|2|3] should_panic
+// 🚌🛑 4
 fn main() -> Result<(), Box<dyn std::error::Error>> {
     let _f = std::fs::File::open("hello.txt")?; // IO Error
     let _s = std::str::from_utf8(&[0xFF, 0x65])?; // Unicode conversion error
@@ -187,6 +190,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
 The [`anyhow`](https://crates.io/crates/anyhow) crate gives you a nicer type:
 
 ```rust [1-5|1] ignore
+// 🚌🛑 2
 fn main() -> Result<(), anyhow::Error> {
     let _f = std::fs::File::open("hello.txt")?; // IO Error
     let _s = std::str::from_utf8(&[0xFF, 0x65])?; // Unicode conversion error
