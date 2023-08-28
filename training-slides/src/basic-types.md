@@ -112,7 +112,7 @@ fn main() {
 * Slices cannot be resized but can be subsliced.
 
 ```rust [2|3]
-// 🚌🛑 4
+// 🚌🛑 2
 fn main() {
     let slice: &[i32] = &[1, 2, 3, 4];
     let sub: &[i32] = &slice[0..1];
