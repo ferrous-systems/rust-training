@@ -317,5 +317,5 @@ enum Result<T, E> {
 }
 ```
 
-We'll come back to them after we know some error handling.
+We'll come back to them after we learn about error handling.
 
