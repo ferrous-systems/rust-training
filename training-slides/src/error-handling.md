@@ -105,7 +105,84 @@ Setting `E` to be `String` lets you make up text at run-time:
 * But it costs you a heap allocation to store the bytes for the `String`
 * And your program still can't tell what *kind* of error it was
 
-## Using enums
+## Foretold enums strike back! 🤯
+
+Remember these? They are *very important* in Rust.
+
+```rust
+enum Option<T> {
+    Some(T),
+    None,
+}
+
+enum Result<T, E> {
+    Ok(T),
+    Err(E)
+}
+```
+
+## Very Important Enum #1 - Option
+
+```rust
+enum Option<T> {
+    Some(T),
+    None,
+}
+
+fn main() {
+    let x = [1, 2, 3, 4];
+    match x.get(5) {
+        Some(value) => {
+            println!("I got {value} from x.get(5)?");
+        }
+        None => {
+            println!("I got None from x.get(5)");
+        }
+    }
+}
+```
+
+Note:
+
+It's so important, it is special-cased within the compiler so you can say `None` instead of `Option::None`, as you would with any other enum.
+
+## Very Important Enum #2 - Result
+
+```rust
+enum Result<T, E> {
+    Ok(T),
+    Err(E)
+}
+
+match std::fs::File::open("hello.txt") {
+    Ok(_file_handle) => {
+        println!("I opened the file OK");
+    }
+    Err(error_value) => {
+        println!("Failed to open file due to error: {:?}", error_value);
+    }
+}
+```
+
+Note:
+
+Also so important, it is special-cased within the compiler so you can say `Ok(...)` instead of `Result::Ok`, as you would with any other enum (except `Option`).
+
+## [Option](https://doc.rust-lang.org/std/option/enum.Option.html) and [Result](https://doc.rust-lang.org/std/result/enum.Result.html) have lots of useful methods
+
+```rust
+fn main() {
+    let file_length = std::fs::File::open("hello.txt")
+        .and_then(|file| file.metadata())
+        .map(|metadata| metadata.len())
+        .unwrap_or(0);
+    println!("File length is {}", file_length);
+}
+```
+
+The `|x| ...` syntax indicates a *closure*
+
+## Using enums to encode program state
 
 An `enum` is ideal to express *one* of a number of differerent *kinds* of thing:
 
@@ -123,7 +200,7 @@ enum Error {
 }
 ```
 
-## Using enums
+## Adding data payloads to encoded enums
 
 An `enum` can also hold data for each variant:
 
