@@ -129,7 +129,7 @@ fn takes_many_and_returns<'a>(s1: &str, s2: &'a str) -> &'a str {
     * every reference has a lifetime
     * annotation doesn't name a lifetime of a reference, but used to tie lifetimes of several references together
     * builds *"can't outlive"* and *"should stay valid for as long as"* relations
-* arbitrary names: `'a`, `'b'`, `'c'`, `'whatever`
+* arbitrary names: `'a`, `'b`, `'c`, `'whatever`
 
 ## Lifetime annotations in action
 
