@@ -93,7 +93,7 @@ fn prints_but_returns_nothing(data: &str) -> () {
 -   Like a `struct`, with fields numbered 0, 1, etc.
 
 ```rust [1|4|5-6]
-// 🚌🛑 2
+// 🚌🛑 3
 struct Point(i32,i32);
 
 fn main() {

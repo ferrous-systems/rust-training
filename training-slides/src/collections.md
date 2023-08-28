@@ -222,7 +222,7 @@ fn main() {
 ## Appending to a String
 
 ```rust [1-7|2|3|4|5-6]
-// 🚌🛑 6
+// 🚌🛑 5
 fn main() {
     let mut start = "Mary had a ".to_string();
     start.push_str("little");
