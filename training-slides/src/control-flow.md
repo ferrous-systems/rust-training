@@ -122,39 +122,6 @@ fn main() {
     }
 ```
 
-## Foreshadowing! Pattern Matching with bindings 👻
-
-`match` is extremely powerful, we'll come back to it.
-
-```rust ignore
-enum Pets {
-    Dog(String),
-    Cat(String),
-}
-
-fn test_pet(pet: Pets) {
-    match pet {
-        Pets::Cat(cat_name) => println!("Cat name is {}", cat_name),
-        Pets::Dog(dog_name) => println!("Dog name is {}", dog_name), 
-        //          👆 New binding `dog_name` now exists for this match arm!
-    }
-}
-
-```
-
-- If a `match` arm's succesfully matches (destructures) a pattern, it introduces a new binding in that scope
-
-## Foreshadowing! Pattern Matching with logic 👻
-
-We'll see a more ergonomic form to handle a single case of interest and discard the rest
-
-```rust ignore
-let x = match pet {
-    Pet::Dog(dog_name) => format!("My true love is {}", dog_name),
-    _ => format!("I only care about dogs, sorry"),
-}
-```
-
 ## `for` loops
 
 - `for` is used for iteration
