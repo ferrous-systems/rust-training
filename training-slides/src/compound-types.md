@@ -247,9 +247,9 @@ fn test_shape(shape: &Shape) {
 We can now use a new construct to handle this case...
 
 ```rust ignore
-let x = match pet {
+match pet {
     Pet::Dog(dog_name) => format!("My true love is {}", dog_name),
-    _ => format!("I only care about dogs, sorry"),
+    _ => println!("I only care about dogs, sorry"),
 }
 ```
 
