@@ -140,3 +140,4 @@ fn main() {
 Note:
 
 Use [`std::str::from_utf8`](https://doc.rust-lang.org/std/str/fn.from_utf8.html) to make an `&str` from a `&[u8]`
+Let trainees know that Strings are covered over many slides in the training and that an `Advanced Strings` slides exist for completeness' sake
