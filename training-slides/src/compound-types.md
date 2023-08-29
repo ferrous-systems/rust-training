@@ -242,6 +242,43 @@ fn test_shape(shape: &Shape) {
 }
 ```
 
+## Foretold Pattern Matching returns! 🧩
+
+We can now use a new construct to handle this case...
+
+```rust ignore
+let x = match pet {
+    Pet::Dog(dog_name) => format!("My true love is {}", dog_name),
+    _ => format!("I only care about dogs, sorry"),
+}
+```
+
+... with short hand conditionals!
+
+```rust ignore
+    if let Pet::Dog(dog_name) = pet {
+        format!("My ture love is {}", `dog_name`);
+    }
+```
+
+## Foretold Pattern Matching shorthands🧩
+
+We will see 3 shorthands with pattern matchings:
+
+```rust ignore
+if let /* pattern match to `Pet::Dog(dog_name)` here */ {
+    // use `dog_name`, discard the rest
+} 
+
+let /* try to pattern match to `Pet::Dog(dog_name)` */ else {
+    // handle errors if match fails
+}
+
+while let /* pattern match to `Pet::Dog(dog_name)` or break out of loop */ {
+    // do iteration with `dog_name`
+}
+```
+
 ## Shorthand: `if let` conditionals
 
 -   You can use `if let` if only one case is of interest.
