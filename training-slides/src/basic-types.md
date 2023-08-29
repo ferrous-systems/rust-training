@@ -120,3 +120,24 @@ fn main() {
 Note:
 
 - Use `.get()` method on the slice to avoid panics instead of accessing via index.
+- The range syntax include the first value but excludes the last value. Use `0..=1` to include both ends.
+
+## String Slices
+
+* Strings Slices (`&str`) are a special kind of `&[u8]`
+* They are *guaranteed* to be a valid UTF-8 encoded Unicode string
+* It is *undefined behaviour* to create one that isn't valid UTF-8
+* Slicing must be done on *character boundaries*
+
+```rust []
+fn main() {
+    let hello_world: &str = "Hello 😀";
+    println!("Start = {}", &hello_world[0..5]);
+    // println!("End = {}", &hello_world[7..]);
+}
+```
+
+Note:
+
+Use [`std::str::from_utf8`](https://doc.rust-lang.org/std/str/fn.from_utf8.html) to make an `&str` from a `&[u8]`
+Let trainees know that Strings are covered over many slides in the training and that an `Advanced Strings` slides exist for completeness' sake
