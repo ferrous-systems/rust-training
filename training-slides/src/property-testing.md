@@ -2,8 +2,8 @@
 
 ## This is your brain
 
--   Everything we know is subject to bias
--   Everything we build reflects these biases
+- Everything we know is subject to bias
+- Everything we build reflects these biases
 
 ## Problem:
 
@@ -13,14 +13,14 @@ Our code reflects our biases, our tests are often biased similarly
 
 Don't write tests
 
-## Solution:
+## Solution: 2
 
 Write expectations
 
 ---
 
--   Have the machine generate random test cases
--   Make beliefs explicit, force them to pay rent
+- Have the machine generate random test cases
+- Make beliefs explicit, force them to pay rent
 
 ---
 
@@ -40,7 +40,7 @@ proptest! {
 }
 ```
 
-## Crate: **proptest**
+## Crate: **proptest** 2
 
 ```console
 $ cargo test
@@ -50,7 +50,7 @@ minimal failing input: ref a = 3689348814741910324
 test result: FAILED. 0 passed; 1 failed
 ```
 
-## Crate: **proptest**
+## Crate: **proptest** 3
 
 ```console
 $ cat proptest-regressions/main.txt
@@ -110,7 +110,7 @@ proptest! {
 
 ## Miscellaneous Tips
 
--   Isolate business logic from IO concerns
--   Use `assert!` and `debug_assert!` on non-trivial things! this makes our "fuzzers" extremely effective
--   Try not to use `unwrap()` everywhere, at least use `expect("helpful message")` to speed up debugging
--   When propagating errors, include context that helps you get back to the root
+- Isolate business logic from IO concerns
+- Use `assert!` and `debug_assert!` on non-trivial things! this makes our "fuzzers" extremely effective
+- Try not to use `unwrap()` everywhere, at least use `expect("helpful message")` to speed up debugging
+- When propagating errors, include context that helps you get back to the root

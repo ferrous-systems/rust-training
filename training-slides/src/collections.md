@@ -18,7 +18,7 @@ flowchart LR
     array("[1, 2, 3, 4, 5]")
 ```
 
-## Building the array at runtime.
+## Building the array at runtime
 
 How do you know how many 'slots' you've used?
 
@@ -98,7 +98,7 @@ Note:
 
 The dark blue block of data is heap allocated.
 
-## There's a macro short-cut too...
+## There's a macro short-cut too!
 
 ```rust
 fn main() {
@@ -262,7 +262,7 @@ fn main() {
 * Can access any element (`queue[i]`) quickly
 * Can push/pop from the front or back easily
 
-## Downsides of Vec
+## Downsides of Vec 2
 
 * Cannot borrow it as a single `&[T]` slice without moving items around
 * Not great for insertion in the middle

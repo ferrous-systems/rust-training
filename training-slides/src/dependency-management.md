@@ -16,28 +16,28 @@ clap = "2.2" # would also choose 2.3
 
 * contains a list of all project dependencies, de-facto versions and hashes of downloaded dependencies
 * when a version is *yanked* from `Crates.io` but you have the correct hash for it in a lock file Cargo will still let you download it and use it
-    * still gives you warning about that version being problematic
+  * still gives you warning about that version being problematic
 * should be committed to your repository for applications
 
 ## Dependency resolution
 
 * uses "Zero-aware" SemVer for versioning
-    * `1.3.5` is compatible with versions `>= 1.3.5` and `< 2.0.0`
-    * `0.3.5` is compatible with versions `>= 0.3.5` and `< 0.4.0`
-    * `0.0.3` only allows `0.0.3`
+  * `1.3.5` is compatible with versions `>= 1.3.5` and `< 2.0.0`
+  * `0.3.5` is compatible with versions `>= 0.3.5` and `< 0.4.0`
+  * `0.0.3` only allows `0.0.3`
 * allows version-incompatible transitive dependencies
-    * except C/C++ dependencies
+  * except C/C++ dependencies
 * combines dependencies with compatible requirements as much as possible
 * allows path, git, and custom registry dependencies
 
 ## How a dependency version is selected
 
 * for every requirement Cargo selects acceptable version intervals
-    * `[1.1.0; 1.6.0)`, `[1.3.5, 2.0.0)`, `[2.0.0; 3.0.0)`
+  * `[1.1.0; 1.6.0)`, `[1.3.5, 2.0.0)`, `[2.0.0; 3.0.0)`
 * Cargo checks for interval intersections to reduce the number of unique intervals
-    * `[1.3.5; 1.6.0)`, `[2.0.0; 3.0.0)`
+  * `[1.3.5; 1.6.0)`, `[2.0.0; 3.0.0)`
 * for every unique interval it selects the most recent available version
-    * `=1.5.18`, `=2.7.11`
+  * `=1.5.18`, `=2.7.11`
 * selected versions and corresponding package hashes are written into `Cargo.lock`
 
 ## Dependency resolution: Example
@@ -62,19 +62,19 @@ clap = "2.2" # would also choose 2.3
 Notes:
 
 * private registries
-    * hosted: **Shipyard**, JFrog, CloudSmith
-    * self-hosted: **Kellnr**
-    * open-source: [Ktra](https://github.com/moriturus/ktra) - pronounced `['KO-to-ra]`, [Meuse](https://github.com/mcorbin/meuse) - `[Møs]`
+  * hosted: **Shipyard**, JFrog, CloudSmith
+  * self-hosted: **Kellnr**
+  * open-source: [Ktra](https://github.com/moriturus/ktra) - pronounced `['KO-to-ra]`, [Meuse](https://github.com/mcorbin/meuse) - `[Møs]`
 
-*Shipyard and Kellnr will also generate API docs for you*
+Notice! *Shipyard and Kellnr will also generate API docs for you*
 
 ## Crates.io
 
 * default package registry
-    * 100k crates and counting
-    * **every Rust Beta release is tested against all of them every week**
+  * 100k crates and counting
+  * **every Rust Beta release is tested against all of them every week**
 * packages aren't deleted, but *yanked*
-    * if you have a correct hash for a yanked version in your `Cargo.lock` your build won't break (you still get a warning)
+  * if you have a correct hash for a yanked version in your `Cargo.lock` your build won't break (you still get a warning)
 
 ## Docs.rs
 
@@ -86,30 +86,31 @@ Notes:
 ## Other kinds of dependencies
 
 * git dependencies
-    * both `git+https` and `git+ssh` are allowed
-    * can specify branch, tag, commit hash
-    * when downloaded by Cargo exact commit hash used is written into `Cargo.lock`
+  * both `git+https` and `git+ssh` are allowed
+  * can specify branch, tag, commit hash
+  * when downloaded by Cargo exact commit hash used is written into `Cargo.lock`
 * path dependencies
-    * both relative and absolute paths are allowed
-    * common in workspaces
+  * both relative and absolute paths are allowed
+  * common in workspaces
 
 ## C Libraries as dependencies
 
 * Rust can call functions from C libraries using `unsafe` code
-    * integrate with operating system APIs, frameworks, SDKs, etc.
-    * talk to custom hardware
-    * reuse existing code (SQLite, OpenSSL, libgit2, etc.)
+  * integrate with operating system APIs, frameworks, SDKs, etc.
+  * talk to custom hardware
+  * reuse existing code (SQLite, OpenSSL, libgit2, etc.)
 * building a crate that relies on C libraries often requires customization
-    * done using `build.rs` file
+  * done using `build.rs` file
 
 ## `build.rs` file
 
 * compiled and executed before the rest of the package
 * can manipulate files, execute external programs, etc.
-    * download / install custom SDKs
-    * call `cc`, `cmake`, etc. to build C++ dependencies
-    * execute `bindgen` to generate Rust bindings to C libraries
+  * download / install custom SDKs
+  * call `cc`, `cmake`, etc. to build C++ dependencies
+  * execute `bindgen` to generate Rust bindings to C libraries
 * output can be used to set Cargo options dynamically
+
     ```rust ignore
     println!("cargo:rustc-link-lib=gizmo");
     println!("cargo:rustc-link-search=native={}/gizmo/", library_path);
@@ -118,13 +119,13 @@ Notes:
 ## `-sys` crates
 
 * often Rust libraries that integrate with C are split into a pair of crates:
-    * `library-name-sys`
-        * thin wrapper around C functions
-        * often all code is autogenerated by `bindgen`
-    *  `library-name`
-        * depends on `library-name-sys`
-        * exposes convenient and idiomatic Rust API to users
+  * `library-name-sys`
+    * thin wrapper around C functions
+    * often all code is autogenerated by `bindgen`
+  * `library-name`
+    * depends on `library-name-sys`
+    * exposes convenient and idiomatic Rust API to users
 * examples:
-    * `openssl` and `openssl-sys`
-    * `zstd` and `zstd-sys`
-    * `rusqlite` and `libsqlite3-sys`
+  * `openssl` and `openssl-sys`
+  * `zstd` and `zstd-sys`
+  * `rusqlite` and `libsqlite3-sys`

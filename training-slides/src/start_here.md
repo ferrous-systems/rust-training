@@ -28,4 +28,3 @@ graph TD;
 * **Bare-Metal Rust**: Rust on a micro-controller.
 * **Using Embassy**: Async-Rust on a micro-controller.
 * **Why Rust?**: A (stand-alone) half-day tour of Rust for decision-makers, technical leads and managers.
-

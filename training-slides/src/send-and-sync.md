@@ -4,9 +4,9 @@
 
 There are two special traits in Rust for concurrency semantics.
 
--   `Send` marks a structure safe to *send* between threads.
--   `Sync` marks a structure safe to *share* between threads.
-    -   (`&T` is `Send`)
+- `Send` marks a structure safe to *send* between threads.
+- `Sync` marks a structure safe to *share* between threads.
+  - (`&T` is `Send`)
 
 ---
 
@@ -53,7 +53,7 @@ fn main() {
 }
 ```
 
-## Example: `Rc`
+## Example: `Rc` 2
 
 ```text
 error[E0277]: the trait bound `std::rc::Rc<bool>: std::marker::Send` is not satisfied
@@ -88,7 +88,7 @@ A type `&T` can implement `Send` if the type `T` also implements `Sync`.
 unsafe impl<'a, T: Sync + ?Sized> Send for &'a T {}
 ```
 
-## Relationships
+## Relationships 2
 
 A type `&mut T` can implement `Send` if the type `T` also implements `Send`.
 
@@ -100,7 +100,7 @@ unsafe impl<'a, T: Send + ?Sized> Send for &'a mut T {}
 
 What are the consequences of having `Send` and `Sync`?
 
-## Consequences
+## Consequences 2
 
 Carrying this information at the type system level allows driving data race bugs down to a *compile time* level.
 

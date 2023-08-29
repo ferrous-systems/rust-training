@@ -5,7 +5,7 @@
 * A namespace is simply a way to distinguish two things that have the same name.
 * It provides a *scope* to the identifiers within it.
 
-## Rust supports namespacing in two ways:
+## Rust supports namespacing in 2 ways
 
 1. Crates for re-usable software libraries
 2. Modules for breaking up your crates
@@ -136,7 +136,7 @@ use std::collections::VecDeque;
 use std::io::prelude::*;
 ```
 
-## Standard Library
+## Standard Library 2
 
 There's also a more compact syntax for imports.
 

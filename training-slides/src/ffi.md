@@ -47,7 +47,7 @@ fn hello(param1: i32, param2: f64) -> SomeStruct { todo!() }
 
 Your Rust code might want to interact with shared/static libraries.
 
-Or _be_ one.
+Or *be* one.
 
 ## Efficient bindings
 
@@ -59,36 +59,36 @@ We have this amazing Rust library, we want to use in our existing C project.
 
 ```rust []
 struct MagicAdder {
-	amount: u32
+    amount: u32
 }
 
 impl MagicAdder {
-	fn new(amount: u32) -> MagicAdder {
-		MagicAdder {
-			amount
-		}
-	}
+    fn new(amount: u32) -> MagicAdder {
+        MagicAdder {
+            amount
+        }
+    }
 
-	fn process_value(&self, value: u32) -> u32 {
-		self.amount + value
-	}
+fn process_value(&self, value: u32) -> u32 {
+    self.amount + value
+    }
 }
 ```
 
 ## Things TODO
 
-- Tell C these functions exist
-- Tell Rust to use C-compatible types and functions
-- Link the external code as a library
-- Provide some C types that match the Rust types
-- Call our Rust functions
+* Tell C these functions exist
+* Tell Rust to use C-compatible types and functions
+* Link the external code as a library
+* Provide some C types that match the Rust types
+* Call our Rust functions
 
 ## C-flavoured Rust Code
 
 ```rust []
 #[repr(C)]
 struct MagicAdder {
-	amount: u32
+ amount: u32
 }
 
 impl MagicAdder {
@@ -98,16 +98,16 @@ impl MagicAdder {
 
 #[no_mangle]
 extern "C" fn magicadder_new(amount: u32) -> MagicAdder {
-	MagicAdder::new(amount)
+ MagicAdder::new(amount)
 }
 
 #[no_mangle]
 extern "C" fn magicadder_process_value(adder: *const MagicAdder, value: u32) -> u32 {
-	if let Some(ma) = unsafe { adder.as_ref() } {
-		ma.process_value(value)
-	} else {
-		0
-	}
+ if let Some(ma) = unsafe { adder.as_ref() } {
+  ma.process_value(value)
+ } else {
+  0
+ }
 }
 ```
 
@@ -120,7 +120,7 @@ The `.as_ref()` method on pointers *requires* that the pointer either be null, o
 ```c []
 /// Designed to have the exact same shape as the Rust version
 typedef struct magic_adder_t {
-	uint32_t amount;
+ uint32_t amount;
 } magic_adder_t;
 
 /// Wraps MagicAdder::new
@@ -136,11 +136,10 @@ You can tell `rustc` to make:
 
 * binaries (bin)
 * libraries (lib)
-    - rlib
-    - dylib
-    - staticlib
-    - cdylib
-
+  * rlib
+  * dylib
+  * staticlib
+  * cdylib
 
 Note:
 
@@ -169,6 +168,7 @@ See ./examples/ffi_use_rust_in_c for a working example.
 We have this amazing C library, we want to use as-is in our Rust project.
 
 `cool_library.h`:
+
 ```c []
 #include <stdint.h>
 
@@ -177,6 +177,7 @@ uint32_t cool_library_function(uint32_t x, uint32_t y);
 ```
 
 `cool_library.c`:
+
 ```c []
 #include <stdio.h>
 #include "hello.h"
@@ -188,12 +189,12 @@ uint32_t cool_library_function(uint32_t x, uint32_t y)
 }
 ```
 
-## Things TODO
+## Things TODO 2
 
-- Tell Rust these functions exist
-- Link the external code as a library
-- Call those with `unsafe { ... }`
-- Transmute data for C functions
+* Tell Rust these functions exist
+* Link the external code as a library
+* Call those with `unsafe { ... }`
+* Transmute data for C functions
 
 ## Naming things is hard
 
@@ -221,7 +222,6 @@ extern "C" {
     fn cool_library_function(x: c_uint, y: c_uint) -> c_uint;
 }
 ```
-
 
 Note:
 
@@ -262,12 +262,12 @@ fn main() {
 }
 ```
 
-## Some more specific details...
+## Some more specific details
 
 ## Cargo (build-system) support
 
 * Build native code via build-dependency crates:
-    - [cc](https://crates.io/crates/cc), [cmake](https://crates.io/crates/cmake), ...
+  * [cc](https://crates.io/crates/cc), [cmake](https://crates.io/crates/cmake), ...
 * `build.rs` can give linker extra arguments
 
 ## Opaque types
@@ -280,9 +280,9 @@ When not knowing (or caring) about internal layout, [opaque structs](https://doc
 pub struct FoobarContext { _priv: [i32; 0] }
 
 extern "C" {
-	fn foobar_init() -> *mut FoobarContext;
-	fn foobar_do(ctx: *mut FoobarContext, foo: i32);
-	fn foobar_destroy(ctx: *mut FoobarContext);
+ fn foobar_init() -> *mut FoobarContext;
+ fn foobar_do(ctx: *mut FoobarContext, foo: i32);
+ fn foobar_destroy(ctx: *mut FoobarContext);
 }
 
 /// Use this in your Rust code

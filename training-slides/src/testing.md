@@ -10,21 +10,21 @@ Unit, integration, and documentation tests all come built-in.
 
 Tests typically end up in 1 of 4 possible locations:
 
--   Immediately beside the functionality tested or in a `tests` submodule (Unit Tests)
--   In documentation. (Documentation Test)
--   In the `tests/` directory. (Integration Tests)
+- Immediately beside the functionality tested or in a `tests` submodule (Unit Tests)
+- In documentation. (Documentation Test)
+- In the `tests/` directory. (Integration Tests)
 
 ## Unit Tests
 
--   Allows testing functionality in the same module and environment.
--   Typically exist immediately near the functionality.
--   Good for testing to make sure a single action *works*.
+- Allows testing functionality in the same module and environment.
+- Typically exist immediately near the functionality.
+- Good for testing to make sure a single action *works*.
 
-## Unit Tests
+## Unit Tests 2
 
--   Allows testing as if the functionality is being used elsewhere in the project.
--   For testing private APIs and functionality.
--   Good for testing expected processes and use cases.
+- Allows testing as if the functionality is being used elsewhere in the project.
+- For testing private APIs and functionality.
+- Good for testing expected processes and use cases.
 
 ## `tests` Submodule
 
@@ -50,7 +50,7 @@ mod tests {
 }
 ```
 
-## `tests` Submodule
+## `tests` Submodule 2
 
 ```console
 $ cargo test
@@ -62,11 +62,11 @@ test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured
 
 ## Documentation Tests
 
--   Allows testing public functionality.
--   Is displayed in `rustdoc` output.
--   For demonstrating expected use cases and examples.
+- Allows testing public functionality.
+- Is displayed in `rustdoc` output.
+- For demonstrating expected use cases and examples.
 
-## Documentation Tests
+## Documentation Tests 2
 
 ```rust []
 /// ```rust
@@ -76,7 +76,7 @@ test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured
 pub enum Direction { North, South, East, West }
 ```
 
-## Documentation Tests
+## Documentation Tests 3
 
 ```console
 $ cargo test
@@ -94,12 +94,13 @@ test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured
 
 ## Integration Tests
 
--   Tests as if the crate is an external dependency.
--   Intended for longer or full-function tests.
+- Tests as if the crate is an external dependency.
+- Intended for longer or full-function tests.
 
-## Integration Tests
+## Integration Tests 2
 
 .`/tests/basic.rs`
+
 ```rust ignore []
 use example::{is_north, Direction};
 
@@ -110,7 +111,7 @@ fn is_north_works() {
 }
 ```
 
-## Integration Tests
+## Integration Tests 3
 
 ```console
 $ cargo test

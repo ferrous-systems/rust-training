@@ -247,4 +247,3 @@ fn main() {
     println!("value = {}", value.load(Ordering::Relaxed));
 }
 ```
-

@@ -41,7 +41,7 @@ For motivation for something that takes `self`, imagine an embedded device with 
 * `self` means `self: Self`
 * `Self` means whatever type this `impl` block is for
 
-## Method Receivers
+## Method Receivers 2
 
 * Other, fancier, *method receivers* [are available](https://doc.rust-lang.org/reference/items/associated-items.html)!
 
@@ -191,7 +191,7 @@ You can only *use* the trait methods provided by a *Trait* on a *Type* if:
 * The trait is in scope
 * (e.g. you add `use Trait;` in that module)
 
-## Traits
+## Traits 2
 
 * The standard library provides lots of traits, such as:
   * [std::cmp::PartialEq] and [std::cmp::Eq]

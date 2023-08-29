@@ -13,7 +13,6 @@ These rules can be ... *bent*
 
 (but not broken)
 
-
 ## Why the rules exist...
 
 * Optimisations!
@@ -120,7 +119,7 @@ impl Post {
 }
 ```
 
-## Without `Cell`
+## Without `Cell` 2
 
 ```rust []
 fn main() {

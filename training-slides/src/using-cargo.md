@@ -5,8 +5,8 @@
 * Rust code is arranged into packages
 * a package is described by a `Cargo.toml` file
 * building a package can produce a single library, and 0 or more executables
-    * these are called *crates*
-    * unlike C/C++ compilers that compile code file by file, `rustc` treat all files for a crate as a single compilation unit
+  * these are called *crates*
+  * unlike C/C++ compilers that compile code file by file, `rustc` treat all files for a crate as a single compilation unit
 * Cargo calls `rustc` to build each crate in the package.
 
 ## Cargo
@@ -34,8 +34,8 @@
 * `cargo check` - only reports errors, doesn't actually compile your code
 * `cargo clippy` - runs a linter
 * `cargo test` - builds your project if necessary and runs tests
-    * by default runs unit tests, integration tests, and documentation tests
-    * you can select which tests to run
+  * by default runs unit tests, integration tests, and documentation tests
+  * you can select which tests to run
 * `cargo build --release` - produces an optimized version of your application or library
 
 ## Cargo commands (cont)
@@ -69,25 +69,30 @@ Most cargo commands accept a few common arguments:
 ## Features
 
 * allows conditional compilation
-    * support for different operating systems
-    * adapters for different libraries
-    * optional extensions
+  * support for different operating systems
+  * adapters for different libraries
+  * optional extensions
 * can expose features from transitive dependencies
 
 ## Using Features
 
 * in code:
+
     ```text
     #[cfg(feature = "json")]
     mod json_support;
     ```
+
 * in `Cargo.toml`
+
     ```toml
     [features]
     json = [] # list of features that this feature depends on
     default = [] # "json" feature is not enabled by default
     ```
+
 * when someone uses your dependency
+
     ```toml
     my-lib = { version: "1.0.0", features = ["json"] }
     ```
@@ -105,7 +110,7 @@ cargo new hello-world
     └── main.rs
 ```
 
-## Anatomy of Rust package
+## Anatomy of Rust package 2
 
 ```text
 ├── Cargo.lock

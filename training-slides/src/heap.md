@@ -21,7 +21,7 @@ Note:
 * The variable `y` is a 4-byte value, and also lives on the stack.
 * The variable `z` is a 3x4-byte value on 32-bit platforms, and a 3x8-byte value on 64-bit platforms. The `String` itself is a struct, and the bytes contained within the struct live on the heap.
 
-## Let's see some addresses...
+## Let's see some addresses
 
 ```rust []
 struct Square {
@@ -165,7 +165,7 @@ because each will always have at least one owner (the other).
 ## Thread-safety
 
 * `Rc` cannot be sent into a thread (or through any API that requires the type to be `Send`).
-    * If in doubt, try it! Rust will save you from yourself.
+  * If in doubt, try it! Rust will save you from yourself.
 * The trade-off is that `Rc` is really fast!
 * There is an *Atomic Reference Counted* type, `Arc` if you need it.
 

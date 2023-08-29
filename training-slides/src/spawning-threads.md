@@ -141,7 +141,7 @@ let thread_handle = thread::spawn(
 );
 ```
 
-## Tidying up the handle
+## Tidying up the handle 2
 
 * In Rust, functions take *expressions*
 * Blocks are expressions...

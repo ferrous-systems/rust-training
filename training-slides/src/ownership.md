@@ -6,16 +6,16 @@ Ownership is the basis for the memory management of Rust.
 
 ## Rules
 
--   Every value has exactly one owner
--   Ownership can be passed on, both to functions and other types
--   The owner is responsible for removing the data from memory
--   The owner always has full control over the data and can mutate it
+- Every value has exactly one owner
+- Ownership can be passed on, both to functions and other types
+- The owner is responsible for removing the data from memory
+- The owner always has full control over the data and can mutate it
 
 ## These Rules are
 
--   fundamental to Rust’s type system
--   enforced at compile time
--   important for optimisations
+- fundamental to Rust’s type system
+- enforced at compile time
+- important for optimisations
 
 ## Example
 
@@ -70,14 +70,14 @@ error[E0382]: use of moved value: `s`
 
 ## Background
 
-* When calling `print_string` with `s`, the value *in* `s` is *transferred* into the arguments of `print_string`.
-* At that moment, ownership passes to `print_string`. We say the function *consumed* the value.
-* The *variable binding* `s` ceases to exist, and thus `main` is not allowed to access it any more.
+- When calling `print_string` with `s`, the value *in* `s` is *transferred* into the arguments of `print_string`.
+- At that moment, ownership passes to `print_string`. We say the function *consumed* the value.
+- The *variable binding* `s` ceases to exist, and thus `main` is not allowed to access it any more.
 
 ## Mutability
 
-* The *variable binding* can be *immutable* (the default) or *mutable*.
-* If you own it, you can rebind it and change this.
+- The *variable binding* can be *immutable* (the default) or *mutable*.
+- If you own it, you can rebind it and change this.
 
 ```rust
 fn main() {
@@ -90,17 +90,17 @@ fn main() {
 
 ## Borrowing
 
-* Transferring ownership back and forth would get tiresome.
-* We can let other functions *borrow* the values we own.
-* The outcome of a *borrow* is a *reference*
-* There are two kinds of *reference* - *Shared/Immutable* and *Exclusive/Mutable*
+- Transferring ownership back and forth would get tiresome.
+- We can let other functions *borrow* the values we own.
+- The outcome of a *borrow* is a *reference*
+- There are two kinds of *reference* - *Shared/Immutable* and *Exclusive/Mutable*
 
 ## Shared References
 
-* Also called an *immutable reference*.
-* Use the `&` operator to borrow (i.e. to make a reference).
-* It's like a C pointer but with special compile-time checks.
-* Rust also allows type-conversion functions to be called when you take a reference.
+- Also called an *immutable reference*.
+- Use the `&` operator to borrow (i.e. to make a reference).
+- It's like a C pointer but with special compile-time checks.
+- Rust also allows type-conversion functions to be called when you take a reference.
 
 ## Making a Reference
 
@@ -121,8 +121,8 @@ The `_` prefix just stops a warning about us not using the variable.
 
 ## Taking a Reference
 
-* We can also say a function takes a reference
-* We use a type like `&SomeType`:
+- We can also say a function takes a reference
+- We use a type like `&SomeType`:
 
 ```rust
 fn print_string(s: &String) {
@@ -146,16 +146,16 @@ fn print_string(s: &String) {
 
 ## Exclusive References
 
-* Also called a *mutable reference*
-* Use the `&mut` operator to borrow (i.e. to make a reference)
-* Even stricter rules than the `&` references
-* Only a *mutable binding* can make a *mutable reference*
+- Also called a *mutable reference*
+- Use the `&mut` operator to borrow (i.e. to make a reference)
+- Even stricter rules than the `&` references
+- Only a *mutable binding* can make a *mutable reference*
 
 ## Exclusive Reference Rules
 
-* Must be only one exclusive reference to an object at any one time
-* Cannot have shared and exclusive references alive at the same time
-* => the compiler knows an `&mut` reference cannot alias anything
+- Must be only one exclusive reference to an object at any one time
+- Cannot have shared and exclusive references alive at the same time
+- => the compiler knows an `&mut` reference cannot alias anything
 
 # Rust forbids *shared mutability*
 
@@ -174,8 +174,8 @@ The binding for `s` now has to be mutable, otherwise we can't take a mutable ref
 
 ## Taking an Exclusive Reference
 
-* We can also say a function takes an exclusive reference
-* We use a type like `&mut SomeType`:
+- We can also say a function takes an exclusive reference
+- We use a type like `&mut SomeType`:
 
 ```rust
 fn add_excitement(s: &mut String) {
@@ -183,7 +183,7 @@ fn add_excitement(s: &mut String) {
 }
 ```
 
-## Full Example
+## Full Example 2
 
 ```rust []
 fn main() {
@@ -209,8 +209,8 @@ Try adding more excitement by calling `add_excitement` multiple times.
 | Type `i32`    | `&i32`              | `&mut i32`       | `i32`    |
 | Type `String` | `&String` or `&str` | `&mut String`    | `String` |
 
-* *Mutably Borrowing* gives more permissions than *Borrowing*
-* *Owning* gives more permissions than *Mutably Borrowing*
+- *Mutably Borrowing* gives more permissions than *Borrowing*
+- *Owning* gives more permissions than *Mutably Borrowing*
 
 Note:
 
@@ -218,9 +218,9 @@ Why are there two types of Borrowed string types (`&String` and `&str`)? The fir
 
 ## An aside: Method Calls
 
-* Rust supports *Method Calls*
-* The first argument of the method is either `self`, `&self` or `&mut self`
-* They are converted to function calls by the compiler
+- Rust supports *Method Calls*
+- The first argument of the method is either `self`, `&self` or `&mut self`
+- They are converted to function calls by the compiler
 
 ```rust []
 fn main() {
@@ -241,8 +241,8 @@ We use `Type::function()` for associated functions, and `variable.method()` for 
 
 If you want to give a function their own object, and keeps yours separate, you have two choices:
 
-* Clone
-* Copy
+- Clone
+- Copy
 
 ## Clone
 
@@ -280,9 +280,9 @@ fn main() {
 
 ## Copy
 
-* Some types, like integers and floats, are `Copy`
-* Compiler copies these objects automatically
-* If cloning is very cheap, you could make your type `Copy`
+- Some types, like integers and floats, are `Copy`
+- Compiler copies these objects automatically
+- If cloning is very cheap, you could make your type `Copy`
 
 ```rust []
 fn main() {
@@ -321,8 +321,8 @@ fn main() {
 
 ## More drop implementations:
 
-* `MutexGuard` unlocks the appropriate `Mutex` when dropped
-* `File` closes the file handle when dropped
-* `TcpStream` closes the connection when dropped
-* `Thread` detaches the thread when dropped
-* etc...
+- `MutexGuard` unlocks the appropriate `Mutex` when dropped
+- `File` closes the file handle when dropped
+- `TcpStream` closes the connection when dropped
+- `Thread` detaches the thread when dropped
+- etc...

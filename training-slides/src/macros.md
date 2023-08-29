@@ -15,6 +15,8 @@ Macros can be used to things such as:
 
 # Declarative Macros
 
+Compile time copy/pasting 👿
+
 ## Declarative Macros
 
 * Defined using `macro_rules!`

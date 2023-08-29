@@ -1,6 +1,6 @@
 # Rust I/O Traits
 
-## There are two kinds of computer:
+## There are two kinds of computers:
 
 * Windows NT based
 * POSIX based (macOS, Linux, QNX, etc)

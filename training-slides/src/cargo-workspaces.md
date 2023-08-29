@@ -1,6 +1,6 @@
 # Cargo Workspaces
 
-## Cargo Workspaces
+## Cargo Workspaces 🚚
 
 Allow you to split your project into several packages
 
@@ -96,6 +96,7 @@ EOF
 ```
 
 Example:
+
 ```bash
 nw spaceship
 cargo new --lib spaceship/packages/fuel-control

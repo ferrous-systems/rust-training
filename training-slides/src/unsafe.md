@@ -10,18 +10,18 @@ For that reason, Rust has the concept of "unsafe code".
 
 Unsafe code is allowed to:
 
--   freely access memory
--   dereference raw pointers
--   call external functions
--   declare values `Send` and `Sync`
--   write to unsynced global variables
+- freely access memory
+- dereference raw pointers
+- call external functions
+- declare values `Send` and `Sync`
+- write to unsynced global variables
 
 ---
 
 Not unsafe are:
 
--   conversion to raw pointers
--   memory leaks
+- conversion to raw pointers
+- memory leaks
 
 ---
 
@@ -56,10 +56,10 @@ unsafe fn deref_pointer<T: Debug>(p: *mut T) {
 
 ## Traps of `unsafe`
 
--   Not all examples are that simple. `unsafe` *must* guarantee the invariants that Rust expects.
--   This *especially* applies to ownership and mutable borrowing
--   `unsafe` can lead to a value having 2 owners -&gt; double free
--   `unsafe` can make immutable data temporarily mutable, which will lead to broken promises and tears.
+- Not all examples are that simple. `unsafe` *must* guarantee the invariants that Rust expects.
+- This *especially* applies to ownership and mutable borrowing
+- `unsafe` can lead to a value having 2 owners -&gt; double free
+- `unsafe` can make immutable data temporarily mutable, which will lead to broken promises and tears.
 
 ---
 
@@ -84,8 +84,8 @@ fn split_at_mut<T>(value: &mut [T], mid: usize) -> (&mut [T], &mut [T]) {
 
 ## Highlight unsafe code in VSCode
 
-* Will highlight which function calls are `unsafe` inside an `unsafe` block
-* Helpful for longer `unsafe` blocks
+- Will highlight which function calls are `unsafe` inside an `unsafe` block
+- Helpful for longer `unsafe` blocks
 
 ```json
 {

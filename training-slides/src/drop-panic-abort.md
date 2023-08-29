@@ -8,7 +8,7 @@ What happens in detail when values drop?
 
 Rust generally guarantees drop order ([RFC1857](https://github.com/rust-lang/rfcs/issues/1857))
 
-## Drop-Order
+## Drop-Order 2
 
 - Values are dropped at the end of their scope
 - The order is *the reverse introduction order*
@@ -63,9 +63,9 @@ fn panicking_function() {
 
 In case of a panic, the following happens:
 
-* The current thread immediately halts
-* The stack is unwound
-* All affected values are dropped and their destructors run
+- The current thread immediately halts
+- The stack is unwound
+- All affected values are dropped and their destructors run
 
 ---
 
@@ -76,7 +76,7 @@ The affected thread dies.
 ## Catching Panics
 
 Panicking across FFI-boundaries is undefined behaviour.
-In these cases, panics _must_ be caught.
+In these cases, panics *must_ be caught.
 For cases like this, there are [std::panic::catch-unwind](https://doc.rust-lang.org/std/panic/fn.catch_unwind.html) and [std::panic::resume-unwind](https://doc.rust-lang.org/std/panic/fn.resume_unwind.html).
 
 ## Hooks

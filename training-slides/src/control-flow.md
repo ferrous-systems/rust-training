@@ -2,18 +2,18 @@
 
 ## Control Flow primitives
 
--   `if` expressions
--   `loop` and `while` loops
--   `match` expressions
--   `for` loops
--   `break` and `continue`
--   `return` and `?`
+- `if` expressions
+- `loop` and `while` loops
+- `match` expressions
+- `for` loops
+- `break` and `continue`
+- `return` and `?`
 
 ## Using `if` as a statement
 
--   Tests if a boolean expression is `true` 
--   Parentheses around the conditional are not necessary
--   Blocks need brackets, no shorthand
+- Tests if a boolean expression is `true`
+- Parentheses around the conditional are not necessary
+- Blocks need brackets, no shorthand
 
 ```rust []
 fn main() {
@@ -29,8 +29,8 @@ fn main() {
 
 ## Using `if` as an expression
 
--   Every block is an expression
--   Note the final `;` to terminate the `let` statement.
+- Every block is an expression
+- Note the final `;` to terminate the `let` statement.
 
 ```rust []
 fn main() {
@@ -74,7 +74,7 @@ fn main() {
 }
 ```
 
-## Looping with `loop`
+## Looping with `loop` 2
 
 `loop` blocks are also expressions...
 
@@ -92,8 +92,8 @@ fn main() {
 
 ## `while`
 
--   `while` is used for conditional loops.
--   Loops while the boolean expression is `true`
+- `while` is used for conditional loops.
+- Loops while the boolean expression is `true`
 
 ```rust []
 fn main() {
@@ -107,10 +107,10 @@ fn main() {
 
 ## Control Flow with `match`
 
--   The `match` keyword does *pattern matching*
--   You can use it a bit like an `if/else if/else` expression
--   The first arm to match, wins
--   `_` means *match anything*
+- The `match` keyword does *pattern matching*
+- You can use it a bit like an `if/else if/else` expression
+- The first arm to match, wins
+- `_` means *match anything*
 
 ```rust []
     fn main() {
@@ -122,10 +122,43 @@ fn main() {
     }
 ```
 
+## Foreshadowing! Pattern Matching with bindings 👻
+
+`match` is extremely powerful, we'll come back to it.
+
+```rust ignore
+enum Pets {
+    Dog(String),
+    Cat(String),
+}
+
+fn test_pet(pet: Pets) {
+    match pet {
+        Pets::Cat(cat_name) => println!("Cat name is {}", cat_name),
+        Pets::Dog(dog_name) => println!("Dog name is {}", dog_name), 
+        //          👆 New binding `dog_name` now exists for this match arm!
+    }
+}
+
+```
+
+- If a `match` arm's succesfully matches (destructures) a pattern, it introduces a new binding in that scope
+
+## Foreshadowing! Pattern Matching with logic 👻
+
+We'll see a more ergonomic form to handle a single case of interest and discard the rest
+
+```rust ignore
+let x = match pet {
+    Pet::Dog(dog_name) => format!("My true love is {}", dog_name),
+    _ => format!("I only care about dogs, sorry"),
+}
+```
+
 ## `for` loops
 
--   `for` is used for iteration
--   Here `0..10` creates a `Range`, which you can iterate
+- `for` is used for iteration
+- Here `0..10` creates a `Range`, which you can iterate
 
 ```rust []
 fn main() {
@@ -135,7 +168,7 @@ fn main() {
 }
 ```
 
-## `for` loops
+## `for` loops 2
 
 Lots of things are *iterable*
 
@@ -149,8 +182,8 @@ fn main() {
 
 ## `for` under the hood
 
--    What Rust actually does is more like...
--    (More on this in the section on *Iterators*)
+- What Rust actually does is more like...
+- (More on this in the section on *Iterators*)
 
 ```rust []
 fn main() {
@@ -200,8 +233,8 @@ fn main() {
 
 ## `return`
 
--   `return` can be used for early returns
--   The result of the last expression of a function is always returned
+- `return` can be used for early returns
+- The result of the last expression of a function is always returned
 
 ```rust []
 fn get_number(x: bool) -> i32 {

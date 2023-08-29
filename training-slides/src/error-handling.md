@@ -48,7 +48,7 @@ enum Error { BadThing, OtherThing }
 
 If you use `?` to return the error early, some extra conversion happens:
 
-```rust [1-13|1|7|2] 
+```rust [1-13|1|7|2]
 fn main() -> Result<(), String> {
     let num = some_function(true)?;
     println!("num = {}", num);

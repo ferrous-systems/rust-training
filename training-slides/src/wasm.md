@@ -53,25 +53,25 @@ This can be added through the host system in various ways.
 Rust ships 3 WASM targets:
 
 * wasm32-unknown-emscripten (legacy)
-    * ships with an implementation of libc for WASM
+  * ships with an implementation of libc for WASM
 * wasm32-unknown-unknown (stable)
-    * direct compilation to WASM, with no additional tooling
+  * direct compilation to WASM, with no additional tooling
 * wasm32-wasi (in development)
-    * WASM with support for _interface types_, a structured way of adding capabilities
+  * WASM with support for _interface types_, a structured way of adding capabilities
 
 ## Installation: `rustup` Target
 
 `rustup` allows installing multiple compilation targets.
 
 ```console
-$ rustup target install wasm32-unknown-unknown
-$ rustup target install wasm32-wasi
+rustup target install wasm32-unknown-unknown
+rustup target install wasm32-wasi
 ```
 
 ## Installing a host runtime
 
 ```console
-$ curl --proto '=https' --tlsv1.2 -sSf https://wasmtime.dev/install.sh | bash
+curl --proto '=https' --tlsv1.2 -sSf https://wasmtime.dev/install.sh | bash
 ```
 
 * Currently need building from git: https://github.com/bytecodealliance/wasmtime
@@ -90,4 +90,3 @@ Hello, world!
 ## A Rust & WASM Tutorial
 
 <https://ferrous-systems.github.io/wasm-training-2022/>
-

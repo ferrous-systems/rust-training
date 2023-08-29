@@ -22,10 +22,10 @@ Box doesn't have a field named "x"!
 
 Rust automatically dereferences in certain cases. Like everything else, it must be explicitly requested:
 
--   Through a call or field access using the `.` operator
--   By explicitly dereferencing through `*`
--   When borrowing through `&`
--   This sometimes leads to the ugly `&*`-Pattern
+- Through a call or field access using the `.` operator
+- By explicitly dereferencing through `*`
+- When borrowing through `&`
+- This sometimes leads to the ugly `&*`-Pattern
 
 ---
 
@@ -49,8 +49,8 @@ This call is introduced when dereferencing is requested.
 
 ## Important deref behaviours
 
--   String -&gt; &str
--   Vec<T> -&gt; &[T]
+- `String --> &str`
+- `Vec<T> --> &[T]`
 
 Functions that don't modify the lengths of a String or a Vector should accept a slice instead. The memory layout is chosen so that this is *cost free*.
 

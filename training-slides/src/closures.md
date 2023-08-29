@@ -13,7 +13,7 @@ Note:
 * Instances of Fn can be called repeatedly without mutating state.
 * `Fn` (a trait) and `fn` (a function pointer) are different!
 
-## These traits are implemented by:
+## These traits are implemented by
 
 * Function Pointers
 * Closures
@@ -31,7 +31,7 @@ fn main() {
 }
 ```
 
-## Closures
+## Closures 2
 
 * Defined with `|<args>|`
 * Most basic kind, are just function pointers
@@ -127,7 +127,7 @@ fn setup_teardown<F, T>(f: F) -> T where F: FnOnce(&mut Vec<u32>) -> T {
 }
 ```
 
-## Cleaning up
+## Cleaning up 2
 
 ```rust []
 fn setup_teardown<F, T>(f: F) -> T where F: FnOnce(&mut Vec<u32>) -> T {

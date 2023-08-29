@@ -13,7 +13,7 @@ The standard library documentation is hosted at https://doc.rust-lang.org/std/.
 A local, offline version can be opened with:
 
 ```console
-$ rustup doc --std
+rustup doc --std
 ```
 
 ## Crate Documentation
@@ -89,7 +89,7 @@ The sidebar on the left offers quick navigate to other parts of the module.
 This command builds and opens the docs to your current project:
 
 ```sh
-$ cargo doc --open
+cargo doc --open
 ```
 
 ---
@@ -97,5 +97,5 @@ $ cargo doc --open
 Normally only `pub` items are documented. You can change this:
 
 ```sh
-$ cargo doc --document-private-items --open
+cargo doc --document-private-items --open
 ```

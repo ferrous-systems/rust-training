@@ -4,11 +4,11 @@
 
 Rust comes with all standard int types, with and without sign
 
--   `i8`, `u8`
--   `i16`, `u16`
--   `i32`, `u32`
--   `i64`, `u64`
--   `i128`, `u128`
+- `i8`, `u8`
+- `i16`, `u16`
+- `i32`, `u32`
+- `i64`, `u64`
+- `i128`, `u128`
 
 ## Syntactic clarity in specifying numbers
 
@@ -24,7 +24,7 @@ let x = b'a';      // A single u8
 
 Rust comes with two architecture-dependent number types:
 
--   `isize`, `usize`
+- `isize`, `usize`
 
 ## Casts
 
@@ -65,9 +65,9 @@ Boolean in Rust is represented by either of two values: `true` or
 
 `char` is a [Unicode Scalar Value](https://www.unicode.org/glossary/#unicode_scalar_value) being represented as a "single character"
 
--   A literal in single quotes: `'r'`
--   Four (4) bytes in size
--   More than just ASCII: glyphs, emoji, accented characters, etc.
+- A literal in single quotes: `'r'`
+- Four (4) bytes in size
+- More than just ASCII: glyphs, emoji, accented characters, etc.
 
 ## Character Literals
 
@@ -84,7 +84,7 @@ fn main() {
 }
 ```
 
-## Character Literals
+## Character Literals 2
 
 ```rust,ignore
 fn main() {
@@ -95,8 +95,8 @@ fn main() {
 
 ## Arrays
 
-* Arrays have multiple elements of the same type.
-* They are of fixed size (it's part of the type).
+- Arrays have multiple elements of the same type.
+- They are of fixed size (it's part of the type).
 
 ```rust
 fn main() {
@@ -106,9 +106,9 @@ fn main() {
 
 ## Slices
 
-* Slices are like arrays, but with a run-time specified size.
-* Slices carry a pointer to some other array, and a length.
-* Slices cannot be resized but can be subsliced.
+- Slices are like arrays, but with a run-time specified size.
+- Slices carry a pointer to some other array, and a length.
+- Slices cannot be resized but can be subsliced.
 
 ```rust [2|3]
 fn main() {
@@ -124,10 +124,10 @@ Note:
 
 ## String Slices
 
-* Strings Slices (`&str`) are a special kind of `&[u8]`
-* They are *guaranteed* to be a valid UTF-8 encoded Unicode string
-* It is *undefined behaviour* to create one that isn't valid UTF-8
-* Slicing must be done on *character boundaries*
+- Strings Slices (`&str`) are a special kind of `&[u8]`
+- They are *guaranteed* to be a valid UTF-8 encoded Unicode string
+- It is *undefined behaviour* to create one that isn't valid UTF-8
+- Slicing must be done on *character boundaries*
 
 ```rust []
 fn main() {

@@ -315,4 +315,3 @@ Things that don't have sizes known at compile time (but which may or may not imp
 
 * String Slices
 * Closures
-

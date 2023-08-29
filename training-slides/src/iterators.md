@@ -4,7 +4,6 @@
 
 > iterate (verb): to repeat a process, especially as part of a computer program ([Cambridge English Dictionary](https://dictionary.cambridge.org/dictionary/english/iterate?q=Iterate))
 
-
 To *iterate* in Rust is to produce a sequence of items, one at a time.
 
 ## How do you Iterate?
@@ -49,7 +48,7 @@ fn main() {
 }
 ```
 
-## Basic usage
+## Basic usage 2
 
 Same thing, but with `while let`.
 
@@ -63,7 +62,7 @@ fn main() {
 }
 ```
 
-## Basic usage
+## Basic usage 3
 
 Same thing, but with `for`
 
@@ -77,7 +76,7 @@ fn main() {
 }
 ```
 
-## Basic usage
+## Basic usage 4
 
 Same thing, but we let `for` call `.into_iter()` for us.
 
@@ -120,7 +119,7 @@ classDiagram
     }
 ```
 
-## Three kinds of Iterator
+## Three kinds of Iterator 2
 
 * Borrowed (`data.iter()`)
 * Mutably Borrowed (`data.iter_mut()`)
@@ -140,7 +139,7 @@ fn main() {
 }
 ```
 
-## But how did that for-loop work?
+## But how did that for-loop work? 2
 
 The `&` is load-bearing...
 
@@ -177,7 +176,7 @@ Especially as `Range<T> where T: Copy` is not itself `Copy`.
 * Rust has some `traits` which describe how iterators work.
 * We'll talk more about traits later!
 
-# You can still enjoy it without knowing how it works
+## You can still enjoy it without knowing how it works
 
 ## Useful Iterator methods (1)
 

@@ -4,9 +4,9 @@
 
 * Every piece of memory in Rust program has exactly one owner at the time
 * Ownership changes ("moves")
-    * `fn takes_ownership(data: Data)`
-    * `fn producer() -> Data`
-    * `let people = [paul, john, emma];`
+  * `fn takes_ownership(data: Data)`
+  * `fn producer() -> Data`
+  * `let people = [paul, john, emma];`
 
 ## Producing owned data
 
@@ -37,7 +37,7 @@ fn producer() -> &str {
 }
 ```
 
-## Local Data
+## Local Data 2
 
 No, we can't return a reference to local data...
 
@@ -77,7 +77,7 @@ How big is a `&'static str`? Do you think the length lives with the string data,
 * Rust never assumes `'static` for function returns or fields in types
 * `&'static T` means this reference to `T` will never become invalid
 * `T: 'static` means that "if type `T` has any references inside they should be `'static`"
-    * `T` may have no references inside at all!
+  * `T` may have no references inside at all!
 * string literals are always `&'static str`
 
 ---
@@ -126,9 +126,9 @@ fn takes_many_and_returns<'a>(s1: &str, s2: &'a str) -> &'a str {
 
 * "Lifetime annotation"
 * often called "lifetime" for short, but that's a very bad term
-    * every reference has a lifetime
-    * annotation doesn't name a lifetime of a reference, but used to tie lifetimes of several references together
-    * builds *"can't outlive"* and *"should stay valid for as long as"* relations
+  * every reference has a lifetime
+  * annotation doesn't name a lifetime of a reference, but used to tie lifetimes of several references together
+  * builds *"can't outlive"* and *"should stay valid for as long as"* relations
 * arbitrary names: `'a`, `'b`, `'c`, `'whatever`
 
 ## Lifetime annotations in action
@@ -230,7 +230,7 @@ fn pick_one(s1: &'? str, s2: &'? str) -> &'? str {
 }
 ```
 
-## What if multiple parameters can be sources?
+## What if multiple parameters can be sources? 2
 
 ```rust ignore
 fn pick_one<'a>(s1: &'a str, s2: &'a str) -> &'a str {
@@ -249,7 +249,7 @@ Note:
 
 This function body does not *force* the two inputs to live for the same amount of time. Variables live for as long as they live and we can't change that here. This just says "I'm going to use the same label for the lifetimes these two references have, so pick whichever is the shorter".
 
-## What if multiple parameters can be sources?
+## What if multiple parameters can be sources? 3
 
 ```rust []
 fn pick_one<'a>(s1: &'a str, s2: &'a str) -> &'a str {
@@ -290,6 +290,7 @@ struct Configuration<'a> {
     database_url: &'a str;
 }
 ```
+
 <p>&nbsp;<!-- spacer for "run" button --></p>
 
 An instance of `Configuration` *can't outlive* a string<br> that it refers to via `database_url`.
@@ -302,8 +303,8 @@ The string *can't be dropped<br> while* an instance of `Configuration` *still* r
 
 * Lifetime annotations act like generics from type system PoV.
 * Can be used to to add bounds to types: `where T: Debug + 'a`
-    * Type `T` has to be printable with `:?`.
-    * If `T` has references inside, they *have to stay valid for as long as* `'a` tag requires.
+  * Type `T` has to be printable with `:?`.
+  * If `T` has references inside, they *have to stay valid for as long as* `'a` tag requires.
 * Can be used to match lifetime generics in `struct` or `enum` with the annotations used in function signatures and in turn with exact lifetimes of references.
 
 ## Complex example
@@ -330,6 +331,6 @@ Returned value will not be allowed to outlive any reference in `peers` list
 ## Lifetime annotations in practice
 
 * Like generics, annotations make function signatures verbose and difficult to read
-    * they often can be glossed over when reading code
+  * they often can be glossed over when reading code
 * `T: 'static` means "Owned data or static references", owned data can be very short-lived
 * Using owned data in your types helps avoid borrow checker difficulties

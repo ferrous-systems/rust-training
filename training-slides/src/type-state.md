@@ -143,7 +143,7 @@ impl Pin<Input> {
 }
 ```
 
-## Preventing mis-use.
+## Preventing mis-use
 
 Who can `impl PinMode for Type`? Turns out anyone can...
 

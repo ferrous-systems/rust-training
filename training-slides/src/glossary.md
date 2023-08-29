@@ -16,4 +16,3 @@ These are some of the terms we will be using throughout our training.
 |                                Quizzes                                | Mini-tests of the training material                                                           |
 |                             Ice Breakers                              | Brief warm-up activities to get the training started, usually short Questions                 |
 | [Training Material](https://github.com/ferrous-systems/rust-training) | These training materials                                                                      |
-

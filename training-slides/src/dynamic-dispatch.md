@@ -65,8 +65,8 @@ Trait objects are a pair of pointers to a virtual function table and the data.
 
 - Object-safe traits are *not* allowed to require `Self: Sized`
 - All methods are object-safe
-    * They have no type parameters
-    * They don't use `Self`
+  - They have no type parameters
+  - They don't use `Self`
 
 ## Trait Objects and Closures
 

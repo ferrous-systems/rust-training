@@ -8,9 +8,9 @@ Most common are `String` and `&str`.
 
 ## `String`
 
--   *Owns* the data it stores, and can be mutated freely
--   The bytes it points at exist on the *heap*
--   Does not implement `Copy`, but implements `Clone`
+- *Owns* the data it stores, and can be mutated freely
+- The bytes it points at exist on the *heap*
+- Does not implement `Copy`, but implements `Clone`
 
 ```mermaid
 flowchart LR
@@ -22,9 +22,8 @@ flowchart LR
 
 ## `&str`
 
--   A "string slice reference" (or just "string slice")
--   Usually only seen as a borrowed value
--   The bytes it points at may be anywhere: heap, stack, or in read-only memory
+- A "string slice reference" (or just "string slice")
+- The bytes it points at may be anywhere: heap, stack, or in read-only memory
 
 ```mermaid
 flowchart LR
@@ -64,9 +63,9 @@ fn main() {
 
 ## When to Use What?
 
--   `String` is the *easiest* to use when starting out. Refine later.
--   `String` owns its data, so works well as a field of a `struct` or `enum`.
--   `&str` is typically used in function arguments.
+- `String` is the *easiest* to use when starting out. Refine later.
+- `String` owns its data, so works well as a field of a `struct` or `enum`.
+- `&str` is typically used in function arguments.
 
 ## `Deref` Coercion
 
@@ -85,9 +84,8 @@ This is because `String` s implement `Deref<Target=str>` .
 
 ## Exotic String types
 
--   `OsStr` and `OsString` may show up when working with file systems or system calls.
-
--   `CStr` and `CString` may show up when working with FFI.
+- `OsStr` and `OsString` may show up when working with file systems or system calls.
+- `CStr` and `CString` may show up when working with FFI.
 
 The differences between `[Os|C]Str` and `[Os|C]String` are generally the same as the normal types.
 
@@ -97,9 +95,9 @@ These types represent *platform native* strings. This is necessary because Unix 
 
 ## Behind the `OsString` Scenes
 
--   Unix strings are often arbitrary non-zero 8-bit sequences, usually interpreted as UTF-8.
--   Windows strings are often arbitrary non-zero 16-bit sequences, usually interpreted as UTF-16.
--   Rust strings are always valid UTF-8, and may contain `NUL` bytes.
+- Unix strings are often arbitrary non-zero 8-bit sequences, usually interpreted as UTF-8.
+- Windows strings are often arbitrary non-zero 16-bit sequences, usually interpreted as UTF-16.
+- Rust strings are always valid UTF-8, and may contain `NUL` bytes.
 
 `OsString` and `OsStr` bridge this gap and allow for conversion to and from `String` and `str`.
 
@@ -123,7 +121,7 @@ fn main() {
 }
 ```
 
-## Common String Tasks
+## Common String Tasks 2
 
 Concatenation:
 
@@ -136,7 +134,7 @@ fn main() {
 }
 ```
 
-## Common String Tasks
+## Common String Tasks 3
 
 Replacing:
 
@@ -166,10 +164,10 @@ fn main() {
 
 ## Raw String Literals
 
--   Starts with `r` followed by zero or more `#` followed by `"`
--   Ends with `"` followed by the same number of `#`
--   Can span multiple lines, leading spaces become part of the line
--   Escape sequences are not processed
+- Starts with `r` followed by zero or more `#` followed by `"`
+- Ends with `"` followed by the same number of `#`
+- Can span multiple lines, leading spaces become part of the line
+- Escape sequences are not processed
 
 ```rust []
 fn main () {
@@ -185,8 +183,8 @@ fn main () {
 
 ## Byte String Literals
 
-* not really strings
-* used to declare static byte slices (have a `&[u8]` type)
+- not really strings
+- used to declare static byte slices (have a `&[u8]` type)
 
 ```rust []
 fn main() {
