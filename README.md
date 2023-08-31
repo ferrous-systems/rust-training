@@ -22,7 +22,7 @@ You can:
 
 * Browse [the chapters of the book on Github](./training-slides/src/SUMMARY.md)
 * Clone the repo, and build the book (see [Building the material locally](#building-the-material-locally))
-* Download the slides in both slide-deck and book format, from the [releases area](https://github.com/ferrous-systems/rust-exercises/releases)
+* Download the slides in both slide-deck and book format, from the [releases area](https://github.com/ferrous-systems/rust-training/releases)
 
 # Building the material locally
 
