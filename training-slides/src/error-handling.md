@@ -7,22 +7,117 @@ Rust has two ways of indicating errors:
 * Returning a value
 * Panicking
 
-## Returning Values
+## Returning a value
 
-When the result of a function is *either* __Ok__, or some __Error__ value, we use `Result<T, E>`:
+```rust ignore
+fn parse_header(data: &str) -> bool {
+    if !data.starts_with("HEADER: ") {
+        return false;
+    }
 
-```rust []
-enum Error {}
-
-fn calculate_sum(numbers: &[i32]) -> Result<i32, Error> {
-    todo!();
+    true
 }
 ```
 
-*Why might this function fail?*
+It would be nice if we could return *data* as well as *ok, or error*...
+
+## Foretold enums strike back! 🤯
+
+Remember these? They are *very important* in Rust.
+
+```rust
+enum Option<T> {
+    Some(T),
+    None,
+}
+
+enum Result<T, E> {
+    Ok(T),
+    Err(E)
+}
+```
+
+## I can't find it
+
+If you have an function where one outcome is "can't find it", we use `Option`:
+
+```rust
+fn parse_header(data: &str) -> Option<&str> {
+    if !data.starts_with("HEADER: ") {
+        return None;
+    }
+    Some(&data[8..])
+}
+```
 
 Note:
-What happens if all the numbers add up to more than fits in an `i32`?
+
+It's so important, it is special-cased within the compiler so you can say `None` instead of `Option::None`, as you would with any other enum.
+
+## That's gone a bit wrong
+
+When the result of a function is *either* __Ok__, or some __Error__ value, we use `Result`:
+
+```rust []
+enum MyError {
+    BadHeader
+}
+
+// Need to describe both the Ok type and the Err type here:
+fn parse_header(data: &str) -> Result<&str, MyError> {
+    if !data.starts_with("HEADER: ") {
+        return Err(MyError::BadHeader);
+    }
+    Ok(&data[8..])
+}
+```
+
+Note:
+
+It's so important, it is special-cased within the compiler so you can say `Ok` and `Err` instead of `Result::Ok` and `Result::Err`, as you would with any other enum.
+
+## Handling Results by hand
+
+You can handle `Result` like any other `enum`:
+
+```rust
+use std::io::prelude::*;
+
+fn read_file(filename: &str) -> Result<String, std::io::Error> {
+    let mut file = match std::fs::File::open("data.txt") {
+        Ok(f) => f,
+        Err(e) => {
+            return Err(e);
+        }
+    };
+    let mut contents = String::new();
+    if let Err(e) = file.read_to_string(&mut contents) {
+        return Err(e);
+    }
+    Ok(contents)
+}
+```
+
+## Handling Results with ?
+
+It is idiomatic Rust to use `?` to handle errors.
+
+```rust
+use std::io::prelude::*;
+
+fn read_file(filename: &str) -> Result<String, std::io::Error> {
+    let mut file = std::fs::File::open("data.txt")?;
+    let mut contents = String::new();
+    file.read_to_string(&mut contents)?;
+    Ok(contents)
+}
+```
+
+Note:
+
+This was added in Rust 1.39.
+
+The ? operator will evalulate to the `Ok` value if the `Result` is `Ok`, and it will cause an early return with the error value if it is `Err`. It will also call `.into()` to perform a type conversion if necessary (and if possible).
 
 ## What kind of Error?
 
@@ -44,50 +139,7 @@ fn enums() -> Result<(), Error> {
 enum Error { BadThing, OtherThing }
 ```
 
-## Some magic happens
-
-If you use `?` to return the error early, some extra conversion happens:
-
-```rust [1-13|1|7|2] 
-fn main() -> Result<(), String> {
-    let num = some_function(true)?;
-    println!("num = {}", num);
-    Ok(())
-}
-
-fn some_function(works: bool) -> Result<u32, &'static str> {
-    if works {
-        Ok(42)
-    } else {
-        Err("I'm not working today")
-    }
-}
-```
-
-## ? actually called .into() for you
-
-```rust [2-7]
-fn main() -> Result<(), String> {
-    let num = match some_function(true) {
-        Ok(ok_value) => ok_value,
-        Err(error_value) => {
-            return Err(error_value.into());
-        }
-    };
-    println!("num = {}", num);
-    Ok(())
-}
-
-fn some_function(works: bool) -> Result<u32, &'static str> {
-    if works {
-        Ok(42)
-    } else {
-        Err("I'm not working today")
-    }
-}
-```
-
-## Using String Literals
+## Using String Literals as the Err Type
 
 Setting `E` to be `&'static str` lets you use `"String literals"`
 
@@ -96,7 +148,7 @@ Setting `E` to be `&'static str` lets you use `"String literals"`
 * But you can't change the text to include some specific value
 * And your program can't tell what *kind* of error it was
 
-## Using Strings
+## Using Strings as the Err Type
 
 Setting `E` to be `String` lets you make up text at run-time:
 
@@ -105,84 +157,7 @@ Setting `E` to be `String` lets you make up text at run-time:
 * But it costs you a heap allocation to store the bytes for the `String`
 * And your program still can't tell what *kind* of error it was
 
-## Foretold enums strike back! 🤯
-
-Remember these? They are *very important* in Rust.
-
-```rust
-enum Option<T> {
-    Some(T),
-    None,
-}
-
-enum Result<T, E> {
-    Ok(T),
-    Err(E)
-}
-```
-
-## Very Important Enum #1 - Option
-
-```rust
-enum Option<T> {
-    Some(T),
-    None,
-}
-
-fn main() {
-    let x = [1, 2, 3, 4];
-    match x.get(5) {
-        Some(value) => {
-            println!("I got {value} from x.get(5)?");
-        }
-        None => {
-            println!("I got None from x.get(5)");
-        }
-    }
-}
-```
-
-Note:
-
-It's so important, it is special-cased within the compiler so you can say `None` instead of `Option::None`, as you would with any other enum.
-
-## Very Important Enum #2 - Result
-
-```rust
-enum Result<T, E> {
-    Ok(T),
-    Err(E)
-}
-
-match std::fs::File::open("hello.txt") {
-    Ok(_file_handle) => {
-        println!("I opened the file OK");
-    }
-    Err(error_value) => {
-        println!("Failed to open file due to error: {:?}", error_value);
-    }
-}
-```
-
-Note:
-
-Also so important, it is special-cased within the compiler so you can say `Ok(...)` instead of `Result::Ok`, as you would with any other enum (except `Option`).
-
-## [Option](https://doc.rust-lang.org/std/option/enum.Option.html) and [Result](https://doc.rust-lang.org/std/result/enum.Result.html) have lots of useful methods
-
-```rust
-fn main() {
-    let file_length = std::fs::File::open("hello.txt")
-        .and_then(|file| file.metadata())
-        .map(|metadata| metadata.len())
-        .unwrap_or(0);
-    println!("File length is {}", file_length);
-}
-```
-
-The `|x| ...` syntax indicates a *closure*
-
-## Using enums to encode program state
+## Using enums as the Err Type
 
 An `enum` is ideal to express *one* of a number of differerent *kinds* of thing:
 
@@ -200,7 +175,7 @@ enum Error {
 }
 ```
 
-## Adding data payloads to encoded enums
+## Enum errors with extra context
 
 An `enum` can also hold data for each variant:
 
@@ -209,11 +184,12 @@ An `enum` can also hold data for each variant:
 enum Error {
     /// An error came from the underlying transport
     Io(std::io::Error),
-    /// During an arithmetic operation a result was produced that could not be stored
+    /// During an arithmetic operation a result was produced that could not
+    /// be stored
     NumericOverflow,
-    /// etc
+    /// Ran out of disk space
     DiskFull,
-    /// etc
+    /// Remote system did not respond in time
     NetworkTimeout(std::time::Duration),
 }
 ```
@@ -251,7 +227,7 @@ Exhaustively listing all the ways your dependencies can fail is hard.
 
 One solution:
 
-```rust [1-5|1|2|3] should_panic
+```rust should_panic
 fn main() -> Result<(), Box<dyn std::error::Error>> {
     let _f = std::fs::File::open("hello.txt")?; // IO Error
     let _s = std::str::from_utf8(&[0xFF, 0x65])?; // Unicode conversion error
@@ -263,7 +239,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
 
 The [`anyhow`](https://crates.io/crates/anyhow) crate gives you a nicer type:
 
-```rust [1-5|1] ignore
+```rust ignore
 fn main() -> Result<(), anyhow::Error> {
     let _f = std::fs::File::open("hello.txt")?; // IO Error
     let _s = std::str::from_utf8(&[0xFF, 0x65])?; // Unicode conversion error
@@ -275,3 +251,11 @@ Note:
 
 * Use `anyhow` if you do not care what error type your function returns, just that it captures something.
 * Use `thiserror` if you must design your own error types but want easy `Error` trait impl.
+
+## Panicking
+
+The other way to handle errors is to generate a controlled, program-ending, failure.
+
+* You can `panic!("x too large ({})", x);`
+* You can call an API that panics on error (like indexing, e.g. `s[99]`)
+* You can convert a `Result::Err` into a panic with `.unwrap()` or `.expect("Oh no")`
