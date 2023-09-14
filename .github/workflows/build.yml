@@ -25,11 +25,11 @@ jobs:
 
       - name: Build book-and-slides
         run: |
-          ./training-slides/build.sh
+          cd ./training-slides && ./build.sh
 
       - name: Build example code
         run: |
-          ./example-code/build.sh
+          cd ./example-code && ./build.sh
   
       - name: Assemble Artifacts
         run: |
@@ -37,6 +37,7 @@ jobs:
           mkdir -p ./rust-training-${{ env.slug }}
           mv ./training-slides/slides ./rust-training-${{ env.slug }}/training-slides-presentation
           mv ./training-slides/book ./rust-training-${{ env.slug }}/training-slides-book
+          cp -r ./example-code ./rust-training-${{ env.slug }}
           echo "Compressing ./rust-training-${{ env.slug }}.zip..."
           zip -r ./rust-training-${{ env.slug }}.zip ./rust-training-${{ env.slug }}
 

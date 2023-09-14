@@ -78,6 +78,7 @@ Topics about using Rust on ARM Cortex-M Microcontrollers (and similar). Requires
 * [PACs and svd2rust](./pac-svd2rust.md)
 * [Writing Drivers](./writing-drivers.md)
 * [The Embedded HAL and its implementations](./embedded-hals.md)
+* [Board Support Crates](./board-support.md)
 * [Using RTIC v1 (TBC)](./rtic-v1.md)
 
 # Ferrocene
