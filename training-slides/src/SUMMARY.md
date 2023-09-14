@@ -72,11 +72,12 @@ Rust for the Linux Kernel and other no-std environments with an pre-existing C A
 
 Topics about using Rust on ARM Cortex-M Microcontrollers (and similar). Requires [Low-Level Rust](#low-level-rust).
 
-* [Overview of Bare-Metal Rust (TBC)](./rust-bare-metal.md)
+* [Overview of Bare-Metal Rust](./rust-bare-metal.md)
 * [Booting a Cortex-M Microcontroller (TBC)](./cortex-m-booting.md)
 * [Execptions and Interrupts on a Cortex-M Microcontroller (TBC)](./cortex-m-exceptions-interrupts.md)
-* [PACs and svd2rust (TBC)](./pac-svd2rust.md)
-* [The Embedded HAL and its implementations (TBC)](./embedded-hals.md)
+* [PACs and svd2rust](./pac-svd2rust.md)
+* [Writing Drivers](./writing-drivers.md)
+* [The Embedded HAL and its implementations](./embedded-hals.md)
 * [Using RTIC v1 (TBC)](./rtic-v1.md)
 
 # Ferrocene
