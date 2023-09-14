@@ -2,7 +2,7 @@
 
 This is free workshop material produced by Ferrous Systems for trainings. See our [ferrous-systems.com/training](https://ferrous-systems.com/training) for more details or a custom quote.
 
-The material is created for people with zero Rust experience, but with a programming background.
+The material is created for people with anywhere from zero Rust experience (but with a programming background) to advanced Rust knowledge.
 
 Ferrous Systems offers a large Rust curriculum for both beginner and advanced Rust developers.
 
