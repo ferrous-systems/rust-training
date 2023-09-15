@@ -17,6 +17,10 @@ jobs:
         with:
           tool: mdslides@0.3,mdbook@0.4,mdbook-mermaid@0.12
     
+      - name: Add Rust Targets
+        run: |
+          rustup target add thumbv7em-none-eabihf
+
       - name: Find slug name
         run: |
           slug=$(./describe.sh "${GITHUB_REF}")
