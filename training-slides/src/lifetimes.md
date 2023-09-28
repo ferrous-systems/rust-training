@@ -277,7 +277,7 @@ fn main() {
 
 ```rust ignore
 struct Configuration {
-    database_url: &str;
+    database_url: &str,
 }
 ```
 
@@ -287,7 +287,7 @@ Where does the string data come from?
 
 ```rust ignore
 struct Configuration<'a> {
-    database_url: &'a str;
+    database_url: &'a str,
 }
 ```
 <p>&nbsp;<!-- spacer for "run" button --></p>
