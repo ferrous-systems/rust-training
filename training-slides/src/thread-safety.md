@@ -140,7 +140,7 @@ pub unsafe auto trait Send { }
 pub unsafe auto trait Sync { }
 ```
 
-## Is there a `Send` version of `RefCell`?
+## Is there a `Sync` version of `RefCell`?
 
 Yes, several - and the error message suggested one: [`std::sync::RwLock`](https://doc.rust-lang.org/std/sync/struct.RwLock.html).
 
