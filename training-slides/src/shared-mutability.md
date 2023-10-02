@@ -278,7 +278,7 @@ To get *shared ownership* and *mutability* you need two things:
 
 ## `OnceCell` for special cases
 
-If you only need to modify a field *once*, a `OnceCell` can help you retain the ownership at compile-time
+If you only need to modify a field *once*, a `OnceCell` can help you keep the ownership system checks at compile-time
 
 ```rust
 fn main() {
