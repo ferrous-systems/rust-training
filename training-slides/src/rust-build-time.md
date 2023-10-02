@@ -44,7 +44,7 @@
     ```text
     D -> C -> B -> A -> App
     ```
-* Good dependency graph (A, B, and C can be built in parallel):
+* Good dependency graph (A, B, and C can be built in parallel and with greater incrementality):
     ```text
       /-> A  \
     D ->  B  -> App
