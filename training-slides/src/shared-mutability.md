@@ -200,7 +200,7 @@ let c2 = &x.c;
 println!("{} {} {} {}", a, b, c, c2);
 ```
 
-Which does work but doesn't solve the problem of declaring `x mut` to begin with.
+Which does work but doesn't solve the problem of declaring `let mut x` to begin with.
 
 ## `RefCell`
 
