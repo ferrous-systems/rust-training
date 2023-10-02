@@ -50,6 +50,11 @@
     D ->  B  -> App
       \-> C  /
     ```
+Note:
+To clarify
+
+* more parallelism -> the compiler can do more work at the same time
+* more incrementality -> the compiler can avoid doing work it's done before
 
 ## Turn off unused features
 
