@@ -179,6 +179,29 @@ impl Post {
 }
 ```
 
+Note:
+
+An advanced trainee may ask about the use of `Splitting Borrows` which would allow one to borrow different fields with different mutability semantics, such as
+
+```rust
+struct Foo {
+    a: i32,
+    b: i32,
+    c: i32,
+}
+
+let mut x = Foo {a: 0, b: 0, c: 0};
+let a = &mut x.a;
+let b = &mut x.b;
+let c = &x.c;
+*b += 1;
+let c2 = &x.c;
+*a += 10;
+println!("{} {} {} {}", a, b, c, c2);
+```
+
+Which does work but doesn't solve the problem of declaring `x mut` to begin with.
+
 ## `RefCell`
 
 A `RefCell` is also safe, but lets you *borrow* or *mutably borrow* the contents.
@@ -252,3 +275,31 @@ To get *shared ownership* and *mutability* you need two things:
 
 * `Rc<RefCell<T>>`
 * (Multi-threaded programs might use `Arc<Mutex<T>>`)
+
+## `OnceCell` for special cases
+
+If you only need to modify a field *once*, a `OnceCell` can help you retain the ownership at compile-time
+
+```rust
+fn main() {
+    let post = Post {
+        content: String::from("Blah"),
+        ..Post::default()
+    };
+    assert!(post.days_on_hn_front_page.get().is_none());
+    println!("{:?}", post.hn_ranking());
+    assert!(post.days_on_hn_front_page.get().is_some());
+}
+
+#[derive(Debug, Default)]
+struct Post {
+    content: String,
+    days_on_hn_front_page: std::cell::OnceCell<u64>,
+}
+
+impl Post {
+    fn hn_ranking(&self) -> u64 {
+        self.days_on_hn_front_page.get_or_init(|| {7})
+    }
+}
+```
