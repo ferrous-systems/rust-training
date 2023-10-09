@@ -15,7 +15,7 @@ Ownership is the basis for the memory management of Rust.
 
 -   fundamental to Rust’s type system
 -   enforced at compile time
--   important for optimisations
+-   important for optimizations
 
 ## Example
 

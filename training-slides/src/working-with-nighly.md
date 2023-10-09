@@ -23,7 +23,7 @@ Features are gated behind "Feature Flags" which are enabled project wide.
 Some examples:
 
 -   `asm` which provides inline assembly support
--   `no_std` which disables implict `extern crate std`
+-   `no_std` which disables implicit `extern crate std`
 -   `inclusive_range`, similar to the stable `exclusive_range`
 
 ## Enabling Features
@@ -52,8 +52,8 @@ To enable a compiler plugin add the following line into `src/main.rs` (for execu
 
 ## Warning
 
-It is unknown, when and if ever compiler-plugins will be stabilised.
+It is unknown, when and if ever compiler-plugins will be stabilized.
 
 ## Stable development on nightly
 
-It is recommendable to use a nighly compiler close to the release version used.
+It is recommendable to use a nightly compiler close to the release version used.

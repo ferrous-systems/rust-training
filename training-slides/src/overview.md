@@ -43,7 +43,7 @@ Rust is an empathic systems programming language that is determined to not let y
 ## Release Method
 
 -   Nightly releases
--   experimental features are only present on nighly releases
+-   experimental features are only present on nightly releases
 -   Every 6 weeks, the current nightly is promoted to beta
 -   After 6 weeks of testing, beta becomes stable
 -   Guaranteed backwards-compatibility
@@ -90,8 +90,8 @@ Note:
 
 -   "Concurrency without fear"
 -   The type system detects concurrent access to data and requires
-    synchronisation
--   Also: Rust detects when unsynchronised access is safely possible
+    synchronization
+-   Also: Rust detects when unsynchronized access is safely possible
 -   Protection from data races
 
 ## Fast

@@ -29,7 +29,7 @@ Clearly these two compilers must agree, otherwise the callee will not receive th
 
 x86 is ~40 years old and many standards exist on how to do this. See https://en.wikipedia.org/wiki/X86_calling_conventions#Historical_background.
 
-AMD64 is only ~15 years old, and there are two standards - the Microsoft one for Windows, and the Linux one (which is based on System V UNIX).  
+AMD64 is only ~15 years old, and there are two standards - the Microsoft one for Windows, and the Linux one (which is based on System V UNIX).
 
 ---
 
@@ -113,7 +113,7 @@ extern "C" fn magicadder_process_value(adder: *const MagicAdder, value: u32) -> 
 
 Note:
 
-The `.as_ref()` method on pointers *requires* that the pointer either be null, or that it point at a valid, aligned, fully initialised object. If they just feed you a random integer, bad things will happen, and we can't tell if they've done that!
+The `.as_ref()` method on pointers *requires* that the pointer either be null, or that it point at a valid, aligned, fully initialized object. If they just feed you a random integer, bad things will happen, and we can't tell if they've done that!
 
 ## Matching C header
 
@@ -233,7 +233,7 @@ You cannot do `extern "C" fn some_function();` with no function body - you must 
 
 ## Primitive types
 
-Some type conversions can be infered by the compiler.
+Some type conversions can be inferred by the compiler.
 
 * `c_uint` ↔ `u32`
 * `c_int` ↔ `i32`
