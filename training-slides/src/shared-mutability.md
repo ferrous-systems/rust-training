@@ -299,7 +299,7 @@ struct Post {
 
 impl Post {
     fn hn_ranking(&self) -> u64 {
-        self.days_on_hn_front_page.get_or_init(|| {7})
+        *self.days_on_hn_front_page.get_or_init(|| {7})
     }
 }
 ```
