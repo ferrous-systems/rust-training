@@ -53,7 +53,7 @@ z @ 0x555829f269d0
 
 The first `z @` line is the `struct String { ... }` itself. The second `z @` line are the bytes the `String` contains. They have a different addresses because they are in the heap and not on the stack.
 
-If you run it multiple times, you will get different results. This is due to the Operating System randomising the virtual addresses used for the stack and the heap, to make security vulnerabilities harder to exploit.
+If you run it multiple times, you will get different results. This is due to the Operating System randomizing the virtual addresses used for the stack and the heap, to make security vulnerabilities harder to exploit.
 
 On macOS, you can run `vmmap <pid>` to print the addresses for each region. On Linux you can use `pmap <pid>`, or you could add something like:
 

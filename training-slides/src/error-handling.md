@@ -117,7 +117,7 @@ Note:
 
 This was added in Rust 1.39.
 
-The ? operator will evalulate to the `Ok` value if the `Result` is `Ok`, and it will cause an early return with the error value if it is `Err`. It will also call `.into()` to perform a type conversion if necessary (and if possible).
+The ? operator will evaluate to the `Ok` value if the `Result` is `Ok`, and it will cause an early return with the error value if it is `Err`. It will also call `.into()` to perform a type conversion if necessary (and if possible).
 
 ## What kind of Error?
 
@@ -159,7 +159,7 @@ Setting `E` to be `String` lets you make up text at run-time:
 
 ## Using enums as the Err Type
 
-An `enum` is ideal to express *one* of a number of differerent *kinds* of thing:
+An `enum` is ideal to express *one* of a number of different *kinds* of thing:
 
 ```rust
 /// Represents the ways this module can fail

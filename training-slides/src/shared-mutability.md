@@ -16,7 +16,7 @@ These rules can be ... *bent*
 
 ## Why the rules exist...
 
-* Optimisations!
+* Optimizations!
 * It is *undefined behaviour* (UB) to have multiple `&mut` references to the *same* object at the *same* time
 * You *must* avoid UB
 
@@ -52,7 +52,7 @@ fn main() {
 
 Note:
 
-The `UnsafeCell::get(&self) -> *mut T` method is safe, but deferencing the pointer (or converting it to a `&mut` reference) is unsafe because a human must verify there is no aliasing.
+The `UnsafeCell::get(&self) -> *mut T` method is safe, but dereferencing the pointer (or converting it to a `&mut` reference) is unsafe because a human must verify there is no aliasing.
 
 ## Can we be safer?
 

@@ -23,7 +23,7 @@ graph TD;
 * **Applied Rust**: Using Rust with Windows, macOS or Linux.
 * **Advanced Rust**: Deep-dives into specific topics.
 * **Async Rust**: Futures, Polling, Tokio, and all that jazz.
-* **Ferrocene**: Working with our qualfied toolchain
+* **Ferrocene**: Working with our qualified toolchain
 * **No-Std Rust**: Rust without the Standard Library.
 * **Bare-Metal Rust**: Rust on a micro-controller.
 * **Using Embassy**: Async-Rust on a micro-controller.

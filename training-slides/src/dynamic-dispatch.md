@@ -48,7 +48,7 @@ impl Operation {
 
 ## Recommendation
 
-Try to minimise repeated matches on the Enum, if not strictly necessary.
+Try to minimize repeated matches on the Enum, if not strictly necessary.
 
 ## Trait Objects
 

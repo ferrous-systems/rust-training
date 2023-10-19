@@ -190,7 +190,7 @@ The second green object is the literal we gave to println - `s = `
 
 * A growable collection of `char`
 * Actually stored as a `Vec<u8>`, with UTF-8 encoding
-* You cannot acccess characters by index (only bytes)
+* You cannot access characters by index (only bytes)
   * But you never really want to anyway
 
 ```mermaid
@@ -267,7 +267,7 @@ fn main() {
 * Cannot borrow it as a single `&[T]` slice without moving items around
 * Not great for insertion in the middle
 * Everything must be of the same type
-* Indicies are always `usize`
+* Indices are always `usize`
 
 ## HashMap ([docs](https://doc.rust-lang.org/std/collections/struct.HashMap.html))
 
@@ -400,6 +400,6 @@ in half.
 The 🤔 for indexing VecDeque is because you might have to get the contents in
 two pieces (i.e. as two disjoint slices) due to wrap-around.
 
-Tecnically you *can* insert into the middle of a Vec or a String, but we're
+Technically you *can* insert into the middle of a Vec or a String, but we're
 talking about 'cheap' insertions that don't involve moving too much stuff
 around.
