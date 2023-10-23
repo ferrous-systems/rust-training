@@ -281,25 +281,27 @@ To get *shared ownership* and *mutability* you need two things:
 If you only need to modify a field *once*, a `OnceCell` can help you keep the ownership system checks at compile-time
 
 ```rust
+use std::time::Instant;
+
 fn main() {
     let post = Post {
         content: String::from("Blah"),
         ..Post::default()
     };
-    assert!(post.days_on_hn_front_page.get().is_none());
+    assert!(post.first_viewed_at.get().is_none());
     println!("{:?}", post.hn_ranking());
-    assert!(post.days_on_hn_front_page.get().is_some());
+    assert!(post.first_viewed_at.get().is_some());
 }
 
 #[derive(Debug, Default)]
 struct Post {
     content: String,
-    days_on_hn_front_page: std::cell::OnceCell<u64>,
+    first_viewed_at: std::cell::OnceCell<Instant>,
 }
 
 impl Post {
-    fn hn_ranking(&self) -> u64 {
-        *self.days_on_hn_front_page.get_or_init(|| {7})
+    fn hn_ranking(&self) -> Instant {
+        *self.first_viewed_at.get_or_init(|| {Instant::now()})
     }
 }
 ```
