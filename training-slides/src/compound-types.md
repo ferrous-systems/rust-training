@@ -157,7 +157,7 @@ enum Shape {
     Rectangle(i32, i32),
 }
 
-fn check_shape(shape: &Shape) {
+fn check_shape(shape: Shape) {
     match shape {
         Shape::Circle(radius) => {
             println!("It's a circle, with radius {}", radius);
@@ -171,8 +171,8 @@ fn check_shape(shape: &Shape) {
 
 ## Doing a `match` on an `enum`
 
--   There are two variables called `radius`
--   The later one hides the earlier one
+- There are two variables called `radius`
+- The later one hides the earlier one
 
 ```rust [7|9]
 enum Shape {
@@ -180,7 +180,7 @@ enum Shape {
     Rectangle(i32, i32),
 }
 
-fn check_shape(shape: &Shape) {
+fn check_shape(shape: Shape) {
     let radius = 10;
     match shape {
         Shape::Circle(radius) => {
@@ -203,9 +203,9 @@ enum Shape {
     Rectangle(i32, i32),
 }
 
-fn check_shape(shape: &Shape) {
+fn check_shape(shape: Shape) {
     match shape {
-        Shape::Circle(radius) if *radius > 10 => {
+        Shape::Circle(radius) if radius > 10 => {
             println!("It's a BIG circle, with radius {}", radius);
         }
         _ => {
@@ -221,7 +221,7 @@ You might ask "Why is there a `*` in front of `radius` in `match`?" - It's becau
 
 ## Combining patterns
 
--   You can use the `|` operator to join patterns together
+- You can use the `|` operator to join patterns together
 
 ```rust [1-16|9]
 enum Shape {
@@ -230,7 +230,7 @@ enum Shape {
     Square(i32),
 }
 
-fn test_shape(shape: &Shape) {
+fn test_shape(shape: Shape) {
     match shape {
         Shape::Circle(size) | Shape::Square(size) => {
             println!("Shape has single size field {}", size);
@@ -253,7 +253,7 @@ enum Shape {
     Rectangle(i32, i32),
 }
 
-fn test_shape(shape: &Shape) {
+fn test_shape(shape: Shape) {
     if let Shape::Circle(radius) = shape {
         println!("Shape is a Circle with radius {}", radius);
     }
@@ -271,7 +271,7 @@ enum Shape {
     Rectangle(i32, i32),
 }
 
-fn test_shape(shape: &Shape) {
+fn test_shape(shape: Shape) {
     let Shape::Circle(radius) = shape else {
         println!("I only like circles");
         return;
