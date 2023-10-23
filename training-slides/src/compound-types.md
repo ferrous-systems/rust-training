@@ -15,7 +15,7 @@ struct Point {
 
 ## Construction
 
--   there is no partial initialization
+- there is no partial initialization
 
 ```rust [1-4|6-8]
 struct Point {
@@ -30,7 +30,7 @@ fn main() {
 
 ## Construction
 
--   but you can copy from an existing variable of the same type
+- but you can copy from an existing variable of the same type
 
 ```rust [8]
 struct Point {
@@ -61,8 +61,8 @@ fn main() {
 
 ## Tuples
 
--   Holds values of different types together.
--   Like an anonymous `struct`, with fields numbered 0, 1, etc.
+- Holds values of different types together.
+- Like an anonymous `struct`, with fields numbered 0, 1, etc.
 
 ```rust [2|3-4]
 fn main() {
@@ -74,9 +74,9 @@ fn main() {
 
 ## `()`
 
--   the *empty tuple*
--   represents the absence of data
--   we often use this similarly to how you’d use `void` in C
+- the *empty tuple*
+- represents the absence of data
+- we often use this similarly to how you’d use `void` in C
 
 ```rust
 fn prints_but_returns_nothing(data: &str) -> () {
@@ -86,7 +86,7 @@ fn prints_but_returns_nothing(data: &str) -> () {
 
 ## Tuple Structs
 
--   Like a `struct`, with fields numbered 0, 1, etc.
+- Like a `struct`, with fields numbered 0, 1, etc.
 
 ```rust [1|4|5-6]
 struct Point(i32,i32);
@@ -100,8 +100,8 @@ fn main() {
 
 ## Enums
 
--   An `enum` represents different variations of the same subject.
--   The different choices in an enum are called *variants*
+- An `enum` represents different variations of the same subject.
+- The different choices in an enum are called *variants*
 
 <!--
 -   stress that enums are an "either or" type: you can only have one
@@ -143,13 +143,13 @@ fn main() {
 
 ## Enums with Values
 
--   An enum is the same size, no matter which variant is picked
--   It will be the size of the largest variant
+- An enum is the same size, no matter which variant is picked
+- It will be the size of the largest variant
 
 ## Doing a `match` on an `enum`
 
--   When an `enum` has variants, you use `match` to extract the data
--   New variables are created from the *pattern* (e.g. `radius`)
+- When an `enum` has variants, you use `match` to extract the data
+- New variables are created from the *pattern* (e.g. `radius`)
 
 ```rust [1-4|7-14|8|11]
 enum Shape {
@@ -244,8 +244,8 @@ fn test_shape(shape: Shape) {
 
 ## Shorthand: `if let` conditionals
 
--   You can use `if let` if only one case is of interest.
--   Still *pattern matching*
+- You can use `if let` if only one case is of interest.
+- Still *pattern matching*
 
 ```rust []
 enum Shape {
@@ -262,8 +262,8 @@ fn test_shape(shape: Shape) {
 
 ## Shorthand: `let else` conditionals
 
--   If you expect it to match, but want to handle the error...
--   The `else` block must *diverge*
+- If you expect it to match, but want to handle the error...
+- The `else` block must *diverge*
 
 ```rust []
 enum Shape {
@@ -282,7 +282,7 @@ fn test_shape(shape: Shape) {
 
 ## Shorthand: `while let` conditionals
 
--   Keep looping whilst the pattern still matches
+- Keep looping whilst the pattern still matches
 
 ```rust should_panic []
 enum Shape {
@@ -318,4 +318,3 @@ enum Result<T, E> {
 ```
 
 We'll come back to them after we learn about error handling.
-
