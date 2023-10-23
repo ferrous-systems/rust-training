@@ -2,18 +2,18 @@
 
 ## Control Flow primitives
 
--   `if` expressions
--   `loop` and `while` loops
--   `match` expressions
--   `for` loops
--   `break` and `continue`
--   `return` and `?`
+- `if` expressions
+- `loop` and `while` loops
+- `match` expressions
+- `for` loops
+- `break` and `continue`
+- `return` and `?`
 
 ## Using `if` as a statement
 
--   Tests if a boolean expression is `true` 
--   Parentheses around the conditional are not necessary
--   Blocks need brackets, no shorthand
+- Tests if a boolean expression is `true`
+- Parentheses around the conditional are not necessary
+- Blocks need brackets, no shorthand
 
 ```rust []
 fn main() {
@@ -29,8 +29,8 @@ fn main() {
 
 ## Using `if` as an expression
 
--   Every block is an expression
--   Note the final `;` to terminate the `let` statement.
+- Every block is an expression
+- Note the final `;` to terminate the `let` statement.
 
 ```rust []
 fn main() {
@@ -92,8 +92,8 @@ fn main() {
 
 ## `while`
 
--   `while` is used for conditional loops.
--   Loops while the boolean expression is `true`
+- `while` is used for conditional loops.
+- Loops while the boolean expression is `true`
 
 ```rust []
 fn main() {
@@ -107,10 +107,10 @@ fn main() {
 
 ## Control Flow with `match`
 
--   The `match` keyword does *pattern matching*
--   You can use it a bit like an `if/else if/else` expression
--   The first arm to match, wins
--   `_` means *match anything*
+- The `match` keyword does *pattern matching*
+- You can use it a bit like an `if/else if/else` expression
+- The first arm to match, wins
+- `_` means *match anything*
 
 ```rust []
     fn main() {
@@ -124,8 +124,8 @@ fn main() {
 
 ## `for` loops
 
--   `for` is used for iteration
--   Here `0..10` creates a `Range`, which you can iterate
+- `for` is used for iteration
+- Here `0..10` creates a `Range`, which you can iterate
 
 ```rust []
 fn main() {
@@ -149,8 +149,8 @@ fn main() {
 
 ## `for` under the hood
 
--    What Rust actually does is more like...
--    (More on this in the section on *Iterators*)
+- What Rust actually does is more like...
+- (More on this in the section on *Iterators*)
 
 ```rust []
 fn main() {
@@ -170,11 +170,11 @@ If you have nested loops, you can label them to indicate which one you want to b
 
 ```rust []
 fn main() {
-    'rows: for x in 0..5 {
-        'cols: for y in 0..5 {
+    'cols: for x in 0..5 {
+        'rows: for y in 0..5 {
             println!("x = {}, y = {}", x, y);
             if x + y >= 6 {
-                break 'rows;
+                break 'cols;
             }
         }
     }
@@ -200,8 +200,8 @@ fn main() {
 
 ## `return`
 
--   `return` can be used for early returns
--   The result of the last expression of a function is always returned
+- `return` can be used for early returns
+- The result of the last expression of a function is always returned
 
 ```rust []
 fn get_number(x: bool) -> i32 {
