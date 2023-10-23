@@ -289,7 +289,7 @@ fn main() {
         ..Post::default()
     };
     assert!(post.first_viewed_at.get().is_none());
-    println!("{:?}", post.hn_ranking());
+    println!("{:?}", post.date_of_first_view());
     assert!(post.first_viewed_at.get().is_some());
 }
 
@@ -300,7 +300,7 @@ struct Post {
 }
 
 impl Post {
-    fn hn_ranking(&self) -> Instant {
+    fn date_of_first_view(&self) -> Instant {
         *self.first_viewed_at.get_or_init(|| {Instant::now()})
     }
 }
