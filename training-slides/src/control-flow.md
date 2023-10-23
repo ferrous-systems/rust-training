@@ -170,11 +170,11 @@ If you have nested loops, you can label them to indicate which one you want to b
 
 ```rust []
 fn main() {
-    'rows: for x in 0..5 {
-        'cols: for y in 0..5 {
+    'cols: for x in 0..5 {
+        'rows: for y in 0..5 {
             println!("x = {}, y = {}", x, y);
             if x + y >= 6 {
-                break 'rows;
+                break 'cols;
             }
         }
     }
