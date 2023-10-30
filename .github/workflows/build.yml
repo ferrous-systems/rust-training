@@ -15,8 +15,12 @@ jobs:
       - name: Install tools
         uses: taiki-e/install-action@v2
         with:
-          tool: mdslides@0.3,mdbook@0.4,mdbook-mermaid@0.12
-    
+          tool: mdbook@0.4,mdbook-mermaid@0.12
+
+      - name: Add mdslides
+        run: |
+          curl --proto '=https' --tlsv1.2 -LsSf https://github.com/ferrous-systems/mdslides/releases/download/v0.4.0/mdslides-installer.sh | sh
+      
       - name: Add Rust Targets
         run: |
           rustup target add thumbv7em-none-eabihf

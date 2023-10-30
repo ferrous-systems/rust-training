@@ -4,7 +4,7 @@
 
 Make sure to have `rustup`, `VSCode` and the `rust-analyzer` VSCode extension installed.
 
-Our various Rust training courses fit together as follows:
+Our various Rust training courses are planned to fit together as follows. Some of these courses are available now, and some are in development and will be available in the future.
 
 ```mermaid
 graph TD;
@@ -12,11 +12,12 @@ graph TD;
     Applied-->Advanced(Advanced Rust);
     Applied-->NoStd(No-Std Rust);
     NoStd-->Ferrocene(Using Ferrocene);
-    NoStd-->BareMetal(Bare-Metal Rust);
+    Applied-->BareMetal(Bare-Metal Rust);
     Applied-->Async(Async Rust);
     BareMetal-->Embassy(Using Embassy);
     Async-->Embassy;
-    Why(Why Rust?);
+    WhyRust(Why Rust?);
+    WhyFerrocene(Why Ferrocene?);
 ```
 
 * **Rust Fundamentals**: Covers the basics - types, writing functions, using iterators.
@@ -28,4 +29,4 @@ graph TD;
 * **Bare-Metal Rust**: Rust on a micro-controller.
 * **Using Embassy**: Async-Rust on a micro-controller.
 * **Why Rust?**: A (stand-alone) half-day tour of Rust for decision-makers, technical leads and managers.
-
+* **Why Ferrocene?**: A (stand-alone) 90 minute tour of Ferrocene.
