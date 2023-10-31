@@ -76,6 +76,7 @@ Rust for the Linux Kernel and other no-std environments with an pre-existing C A
 Topics about using Rust on ARM Cortex-M Microcontrollers (and similar). Requires [Applied Rust](#applied-rust).
 
 * [Overview of Bare-Metal Rust](./rust-bare-metal.md)
+* [Booting a Cortex-M Microcontroller](./booting-cortex-m.md)
 * [PACs and svd2rust](./pac-svd2rust.md)
 * [Writing Drivers](./writing-drivers.md)
 * [The Embedded HAL and its implementations](./embedded-hals.md)
@@ -83,7 +84,6 @@ Topics about using Rust on ARM Cortex-M Microcontrollers (and similar). Requires
 
 ## Under development
 
-* [Booting a Cortex-M Microcontroller]()
 * [Exceptions and Interrupts on a Cortex-M Microcontroller]()
 * [Using RTIC v1]()
 
