@@ -60,6 +60,7 @@ Topics that go beyond [Applied Rust](#applied-rust).
 
 * [Strategies for organizing application memory in Rust](./memory-strategies.md)
 * [Deconstructing Send, Arc, and Mutex](./deconstructing-send-arc-mutex.md)
+* [Deconstructing thread::scope](./deconstructing-thread-scope.md)
 
 # No-Std Rust
 
