@@ -56,6 +56,10 @@ Topics that go beyond [Applied Rust](#applied-rust).
 * [Using Types to encode State](./type-state.md)
 * [WASM](./wasm.md)
 
+## Under development
+
+* [Strategies for organizing application memory in Rust](./memory-strategies.md)
+
 # No-Std Rust
 
 Rust for the Linux Kernel and other no-std environments with an pre-existing C API. Requires [Applied Rust](#applied-rust).
