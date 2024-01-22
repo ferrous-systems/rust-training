@@ -60,6 +60,8 @@ Topics that go beyond [Applied Rust](#applied-rust).
 ## Under development
 
 * [Deconstructing Send, Arc, and Mutex](./deconstructing-send-arc-mutex.md)
+* [Deconstructing thread::scope](./deconstructing-thread-scope.md)
+
 # No-Std Rust
 
 Rust for the Linux Kernel and other no-std environments with an pre-existing C API. Requires [Applied Rust](#applied-rust).
