@@ -81,6 +81,7 @@ Topics about using Rust on ARM Cortex-M Microcontrollers (and similar). Requires
 * [Writing Drivers](./writing-drivers.md)
 * [The Embedded HAL and its implementations](./embedded-hals.md)
 * [Board Support Crates](./board-support.md)
+* [Using defmt](./defmt.md)
 
 ## Under development
 
