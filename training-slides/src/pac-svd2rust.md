@@ -15,15 +15,15 @@ provides access to the memory-mapped peripherals in your MCU.
 
 ## Registers
 
-* *Registers* are comprised of one or more *fields*.
-* Each field is at least 1 bit in length.
-* Sometimes fields can only take from a limited set of values
+* *Registers* are comprised of one or more *bitfields*.
+* Each bitfield is at least 1 bit in length.
+* Sometimes bitfields can only take from a limited set of values
 * This is all in your datasheet!
 
 ## C Code
 
-Embedded Code in C often uses shifts and bitwise-AND to make up registers from
-fields.
+Embedded Code in C often uses shifts and bitwise-AND to extract bitfields from
+registers.
 
 ```c []
 #define UARTE_INTEN_CTS_SHIFT (0)
@@ -55,7 +55,7 @@ at the wrong address.
 
 ## Adding structure
 
-In C, the various registers for a peripheral can also be grouped into a `struct`
+In C, the various registers for a peripheral can also be grouped into a `struct`:
 
 ```c []
 typedef volatile struct uart0_reg_t {
@@ -72,10 +72,8 @@ uart0_reg_t* const p_uart = (uart0_reg_t*) 0x40002000;
 
 ## Structures in Rust
 
-We can do that too (and this is how our PAC works under the hood).
-
 ```rust [] ignore
-pub struct RegisterBlock {
+pub struct Uart0 {
     pub tasks_startrx: VolatileCell<u32>, // @ 0x000
     pub tasks_stoprx: VolatileCell<u32>, // @ 0x004
     // ...
@@ -84,43 +82,81 @@ pub struct RegisterBlock {
     pub baudrate: VolatileCell<u32>, // @ 0x500
 }
 
-let p_uart: &RegisterBlock = unsafe { &*(0x40002000 as *const RegisterBlock) };    
+let p_uart: &Uart0 = unsafe { &*(0x40002000 as *const Uart0) };    
 ```
 
-We use the
-[`VolatileCell`](https://docs.rs/vcell/0.1.3/vcell/struct.VolatileCell.html) to
-ensure reads/writes on the structure fields are always performed with volatile
-pointer read/writes.
-
-## Other approaches
-
-This is shown to work in practice, but some developers prefer to generate a
-pointer for each peripheral register.
-
-```rust [] ignore
-pub struct Uart { base: *mut u32 }
-
-impl Uart {
-    fn write_tasks_stoprx(&mut self, value: u32) {
-        let ptr = base.offset(1);
-        unsafe { ptr.volatile_write(value) }
-    }
-
-    fn read_baudrate(&self) -> u32 {
-        let ptr = base.offset(0x140);
-        unsafe { ptr.volatile_read() }
-    }
-}
-
-let uart = Uart { base: 0x40002000 as *mut u32 };
-```
+The
+[`vcell::VolatileCell`](https://docs.rs/vcell/0.1.3/vcell/struct.VolatileCell.html)
+type ensures the compiler emits volatile pointer read/writes.
 
 Note:
 
 There is some discussion about whether `VolatileCell` technically breaks Rust's
-rules around references.
+rules around references. It works in practice, but it might be technically
+unsound.
+
+## Other approaches
+
+Some developers prefer to generate a pointer for each peripheral register:
+
+```rust []
+pub struct Uart { base: *mut u32 } // now has no fields
+
+impl Uart {
+    fn write_tasks_stoprx(&mut self, value: u32) {
+        unsafe {
+            let ptr = self.base.offset(1);
+            ptr.write_volatile(value)
+        }
+    }
+
+    fn read_baudrate(&self) -> u32 {
+        unsafe {
+            let ptr = self.base.offset(0x140);
+            ptr.read_volatile()
+        }
+    }
+}
+
+let uart = Uart { base: unsafe { 0x40002000 as *mut u32 } };
+```
+
+Note:
 
 The pointer is a `*mut u32` so the offsets are all in 32-bit words, not bytes.
+
+## Zero Sized Types
+
+We could handle the address as part of the type instead...
+
+```rust []
+pub struct Uart<const ADDR: usize> {}
+
+impl<const ADDR: usize> Uart<ADDR> {
+    fn write_tasks_stoprx(&mut self, value: u32) {
+        unsafe {
+            let ptr = (ADDR as *mut u32).offset(1);
+            ptr.write_volatile(value)
+        }
+    }
+
+    fn read_baudrate(&self) -> u32 {
+        unsafe {
+            let ptr = (ADDR as *mut u32).offset(0x140);
+            ptr.read_volatile()
+        }
+    }
+}
+
+
+let uart: Uart::<0x40002000> = Uart {};
+```
+
+Note:
+
+By itself this seems a small change, but imagine a struct which represents 75
+individual peripherals. That's not impossible for a modern microcontroller.
+Holding one word for each now takes up valuable RAM!
 
 ## CMSIS-SVD Files
 
@@ -133,6 +169,16 @@ We can use `svd2rust` to turn this into a Peripheral Access Crate.
 graph LR
     svd[(SVD XML)] --> svd2rust[<tt>svd2rust</tt>] --> rust[(Rust Source)]
 ```
+
+Note:
+
+Although it is an Arm standard, there are examples of RISC-V based
+microcontrollers which use the same format SVD files and hence can use svd2rust.
+
+Also be aware that manufacturers often assume you will only use the SVD file to
+inspect the microcontrollers state whilst debugging, and so accuracy has been
+known to vary somewhat. Rust groups often have to maintain a set of patches to
+fix known bugs in the SVD files.
 
 ## The `svd2rust` generated API
 
@@ -153,6 +199,8 @@ graph TB
 * Each *Peripheral* `struct` has members for each *Register*
 * Each *Register* gets a `struct`, like `BAUDRATE`, `INTEN`, etc.
 * Each *Register* `struct` has `read()`, `write()` and `modify()` methods
+* Each *Register* also has a Read Type (`R`) and a Write Type (`W`)
+  * Those Read/Write Types give you access to the *Bitfields*
 
 ## The `svd2rust` generated API (2)
 
@@ -166,10 +214,10 @@ graph TB
 ## Using a PAC
 
 ```rust [] ignore
-// nrf52840 is the PAC
-let p = nrf52840::Peripherals::take().unwrap();
+let p = nrf52840_pac::Peripherals::take().unwrap();
 // Reading the 'baudrate' field
-let current_baud_rate = p.UARTE1.baudrate.read().baudrate();
+let contents = p.UARTE1.baudrate.read();
+let current_baud_rate = contents.baudrate();
 // Modifying multiple fields in one go
 p.UARTE1.inten.modify(|_r, w| {
     w.cts().enabled();
@@ -220,7 +268,12 @@ Note:
 
 Docs can be generated from the source code.
 
-See <https://docs.rs/nrf52840>
+See <https://docs.rs/nrf52840-pac>
 
 Note that `uarte0` is a *module* and `UARTE0` could mean either a `struct` type,
 or a field on the `Peripherals` struct.
+
+## UPPER_CASE and TitleCase
+
+* Is it weird that it produces `UPPER_CASE` fields and types?
+* There's now [a config file for that](https://github.com/rust-embedded/svd2rust/pull/794)
