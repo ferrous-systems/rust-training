@@ -13,6 +13,14 @@ provides access to the memory-mapped peripherals in your MCU.
 * Peripherals can have instances (same layout of registers, different start address)
   * UART0, UART1, etc
 
+Note:
+
+The *Universal Asynchronous Receiver Transmitter* is an IP block implementing a
+logic-level RS-232 interface, and one is fitted to basically every
+microcontroller. Also known as a *serial port*.
+
+Nordic calls their peripheral *UARTE*, with the E standing for *Easy DMA*.
+
 ## Registers
 
 * *Registers* are comprised of one or more *bitfields*.
