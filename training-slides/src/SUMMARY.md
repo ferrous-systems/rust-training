@@ -62,7 +62,7 @@ Rust for the Linux Kernel and other no-std environments with an pre-existing C A
 
 * [Unsafe Rust](./unsafe.md)
 * [Foreign Function Interface](./ffi.md)
-* [Working with Nightly](./working-with-nighly.md)
+* [Working with Nightly](./working-with-nightly.md)
 
 ## Under development
 
