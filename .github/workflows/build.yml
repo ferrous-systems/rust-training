@@ -15,7 +15,7 @@ jobs:
       - name: Install tools
         uses: taiki-e/install-action@v2
         with:
-          tool: mdbook@0.4,mdbook-mermaid@0.12
+          tool: mdbook@0.4.36,mdbook-mermaid@0.13.0
 
       - name: Add mdslides
         run: |
