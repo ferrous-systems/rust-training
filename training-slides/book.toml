@@ -8,5 +8,8 @@ title = "Rust Training Slides by Ferrous Systems"
 [preprocessor.mermaid]
 command = "mdbook-mermaid"
 
+[output.html]
+additional-js = ["mermaid.min.js", "mermaid-init.js"]
+
 [output.html.playground]
 copyable = true          # include the copy button for copying code snippets
