@@ -39,6 +39,7 @@ Topics that go beyond [Applied Rust](#applied-rust).
 
 * [Advanced Strings](./advanced-strings.md)
 * [Debugging Rust](./debugging-rust.md)
+* [Deconstructing Send, Arc, and Mutex](./deconstructing-send-arc-mutex.md)
 * [Dependency Management with Cargo](./dependency-management.md)
 * [Deref Coercions](./deref-coercions.md)
 * [Design Patterns](./design-patterns.md)
@@ -56,9 +57,6 @@ Topics that go beyond [Applied Rust](#applied-rust).
 * [Using Types to encode State](./type-state.md)
 * [WASM](./wasm.md)
 
-## Under development
-
-* [Deconstructing Send, Arc, and Mutex](./deconstructing-send-arc-mutex.md)
 # No-Std Rust
 
 Rust for the Linux Kernel and other no-std environments with an pre-existing C API. Requires [Applied Rust](#applied-rust).
