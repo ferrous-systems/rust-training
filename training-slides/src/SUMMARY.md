@@ -1,3 +1,4 @@
+<!-- markdownlint-disable MD025 -->
 # Summary
 
 [Start Here](./start_here.md)
@@ -56,6 +57,9 @@ Topics that go beyond [Applied Rust](#applied-rust).
 * [Using Types to encode State](./type-state.md)
 * [WASM](./wasm.md)
 
+## Under development
+
+* [Deconstructing Send, Arc, and Mutex](./deconstructing-send-arc-mutex.md)
 # No-Std Rust
 
 Rust for the Linux Kernel and other no-std environments with an pre-existing C API. Requires [Applied Rust](#applied-rust).
@@ -64,12 +68,14 @@ Rust for the Linux Kernel and other no-std environments with an pre-existing C A
 * [Foreign Function Interface](./ffi.md)
 * [Working with Nightly](./working-with-nightly.md)
 
+<!--
 ## Under development
 
 * [Overview of no-std Rust]()
 * [Rust in the Linux Kernel]()
 * [Rust on an RTOS]()
 * [Writing a new target]()
+-->
 
 # Bare-Metal Rust
 
@@ -83,15 +89,19 @@ Topics about using Rust on ARM Cortex-M Microcontrollers (and similar). Requires
 * [Board Support Crates](./board-support.md)
 * [Using defmt](./defmt.md)
 
+<!--
 ## Under development
 
 * [Exceptions and Interrupts on a Cortex-M Microcontroller]()
 * [Using RTIC v1]()
+-->
 
 # Ferrocene
 
 Topics around [Ferrocene](https://ferrous-systems.com/ferrocene/), the qualified toolchain for writing safety-critical systems in Rust.
 
+<!--
 ## Under development
 
 * [Installing and Using Ferrocene]()
+-->
