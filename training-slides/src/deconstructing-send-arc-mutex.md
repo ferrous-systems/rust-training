@@ -1,7 +1,7 @@
 <!-- markdownlint-disable MD031 MD033 MD037 -->
 # Deconstructing Send, Arc, and Mutex
 
-## `tread::spawn` Function
+## `thread::spawn` Function
 
 ```rust ignore
 pub fn spawn<F, T>(f: F) -> JoinHandle<T>
@@ -43,7 +43,7 @@ let outliers: Vec<_> = data.iter().copied().filter(|n| -> bool {
 
 ## `T: 'static`
 
-One of two cases:
+Two allowable options:
 
 * the type doesn't have any references inside ("Owned data")
   * `struct User { name: String }`
@@ -52,10 +52,10 @@ One of two cases:
 
 ## Why `F: 'static` and `T: 'static`?
 
-* applies to data passed from parent thread to child thread or vise versa
+* applies to data passed from parent thread to child thread or vice-versa
 * prevents passing references to local variables
   * one thread can finish before the other and such references may become invalid
-  * `+ 'static` lets borrow checker detect these situations at compile time
+  * `+ 'static` avoids this by ensuring any references point to data that has the static lifetime (i.e. that lives forever)
 
 ## `T: Send`
 
@@ -65,7 +65,7 @@ One of two cases:
   * opt-out instead of opt-in
 * various types in standard library implement `Send` or `!Send`
 * `unsafe` means you have to put `unsafe` keyword in front of `impl` when implementing `Send` or `!Send`
-  * precaution measure
+  * precautionary measure
 
 ## Why would one implement `Send` or `!Send`
 
@@ -78,7 +78,7 @@ One of two cases:
 
 `F: Send` and `T: Send` means that all data traveling from the parent thread to child thread has to be marked as `Send`
 
-* Rust compiler has to inherent knowledge of threads, but the use of marker traits and lifetime annotations let the type / borrow checker prevent data race errors
+* Rust compiler has no inherent knowledge of threads, but the use of marker traits and lifetime annotations let the type / borrow checker prevent data race errors
 
 ## Sharing data between threads
 
@@ -224,7 +224,7 @@ struct ArcInner<T: ?Sized> {
 * `Arc` uses `AtomicUsize` for reference counting
   * slower
   * safe to increment / decrement from multiple threads
-* With the help of marker trait `Send` and trait bounds on `thread::spawn` Rust compiler *forces* you to use the correct type
+* With the help of marker trait `Send` and trait bounds on `thread::spawn`, the compiler *forces* you to use the correct type
 
 ## `Arc` / `Rc` "transparency"
 
@@ -354,7 +354,7 @@ fn handle_client(..., log: &Mutex<Vec<usize>>) -> ... {
 
 ## Lessons Learned
 
-* careful use of traits and trait boundaries lets Rust compiler detect problematic multithreading code at compile time
+* careful use of traits and trait boundaries lets the compiler detect problematic multi-threading code at compile time
 * `Arc` and `Mutex` let the program ensure data availability and exclusive mutability at runtime where the compiler can't predict the behavior of the program
 * `Deref` coercions make concurrency primitives virtually invisible and transparent to use
 * **Make invalid state unrepresentable**
