@@ -262,7 +262,7 @@ fn main() {
 * Can access any element (`queue[i]`) quickly
 * Can push/pop from the front or back easily
 
-## Downsides of Vec
+## Downsides of VecDeque
 
 * Cannot borrow it as a single `&[T]` slice without moving items around
 * Not great for insertion in the middle
