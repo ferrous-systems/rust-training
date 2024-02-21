@@ -135,7 +135,7 @@ fn takes_many_and_returns<'a>(s1: &str, s2: &'a str) -> &'a str {
 
 ```rust ignore
 fn first_three_of_each(s1: &str, s2: &str) -> (&str, &str) {
-    (&s1[0..3], &s1[0..3])
+    (&s1[0..3], &s2[0..3])
 }
 
 fn main() {
@@ -154,7 +154,7 @@ fn main() {
 
 ```rust ignore
 fn first_three_of_each<'a, 'b>(s1: &'a str, s2: &'b str) -> (&'a str, &'b str) {
-    (&s1[0..3], &s1[0..3])
+    (&s1[0..3], &s2[0..3])
 }
 ```
 
@@ -170,7 +170,7 @@ error: lifetime may not live long enough
   |                        --  -- lifetime `'b` defined here
   |                        |
   |                        lifetime `'a` defined here
-2 |     (&s1[0..3], &s1[0..3])
+2 |     (&s1[0..3], &s2[0..3])
   |     ^^^^^^^^^^^^^^^^^^^^^^ function was supposed to return data with lifetime `'b` but it is returning data with lifetime `'a`
   |
   = help: consider adding the following bound: `'a: 'b`
