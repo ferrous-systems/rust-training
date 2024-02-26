@@ -215,10 +215,6 @@ fn check_shape(shape: Shape) {
 }
 ```
 
-Note:
-
-You might ask "Why is there a `*` in front of `radius` in `match`?" - It's because you only have an `&Shape` and so if you pattern match on a value of that type, you can only get a `&` reference to its contents. Unfortunately, the Rust operator `>` (or rather, the trait `std::cmp::PartialOrd` is implemented to compare two `i32` values, but not to compare an `i32` with an `&i32`.
-
 ## Combining patterns
 
 - You can use the `|` operator to join patterns together
