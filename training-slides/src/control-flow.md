@@ -191,7 +191,7 @@ fn main() {
         'rows: for y in 0..5 {
             println!("x = {}, y = {}", x, y);
             if x + y >= 4 {
-                continue 'rows;
+                continue 'cols;
             }
         }
     }
