@@ -187,11 +187,11 @@ Means go around the loop again, rather than break out of the loop
 
 ```rust []
 fn main() {
-    'rows: for x in 0..5 {
-        'cols: for y in 0..5 {
+    'cols: for x in 0..5 {
+        'rows: for y in 0..5 {
             println!("x = {}, y = {}", x, y);
             if x + y >= 4 {
-                continue 'rows;
+                continue 'cols;
             }
         }
     }
