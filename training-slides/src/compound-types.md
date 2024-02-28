@@ -157,7 +157,7 @@ The tag in an enum specifies which variant is currently valid, and is stored as 
 smallest integer the compiler can get away with - it depends how many variants you
 have. Of course, if none of the variants have any data, the enum is *just* the tag.
 
-If you have a C background, you can this of this as being a `struct` containing an `int`
+If you have a C background, you can think of this as being a `struct` containing an `int`
 and a `union`.
 
 ## Doing a `match` on an `enum`
