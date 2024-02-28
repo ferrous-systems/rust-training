@@ -313,18 +313,18 @@ fn entry(&mut self, key: K) -> Entry<K, V> {
 
 ```rust []
 use std::collections::HashMap;
-
-fn award_points(name: &'static str, map: &mut HashMap<String, u64>) {
-    map.entry(name.to_string())
-        .and_modify(|v| *v += 1)
+ 
+fn update_connection(map: &mut HashMap<i32, u64>, id: i32) {
+    map.entry(id)
+        .and_modify(|v| *v = *v + 1)
         .or_insert(1);
 }
-
+ 
 fn main() {
     let mut map = HashMap::new();
-    award_points("Sam", &mut map);
-    award_points("Bob", &mut map);
-    award_points("Sam", &mut map);
+    update_connection(&mut map, 100);
+    update_connection(&mut map, 200);
+    update_connection(&mut map, 100);
     println!("{:?}", map);
 }
 ```
