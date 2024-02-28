@@ -13,6 +13,11 @@ struct Point {
 }
 ```
 
+Note:
+
+The fields may not be laid out in memory in the order they are written (unless
+you ask the compiler to ensure that they are).
+
 ## Construction
 
 - there is no partial initialization
@@ -143,8 +148,17 @@ fn main() {
 
 ## Enums with Values
 
-- An enum is the same size, no matter which variant is picked
-- It will be the size of the largest variant
+- An enum value is the same size, no matter which variant is picked
+- It will be the size of the largest variant (plus a tag)
+
+Note:
+
+The tag in an enum specifies which variant is currently valid, and is stored the
+smallest integer the compiler can get away with - it depends how many variants you
+have. Of course, if none of the variants have any data, the enum is *just* the tag.
+
+If you have a C background, you can this of this as being a `struct` containing an `int`
+and a `union`.
 
 ## Doing a `match` on an `enum`
 
