@@ -71,7 +71,7 @@ mod animals {
 
 fn main() {
     let c = animals::Cat::new("Mittens");
-    // let c = animals::Cat { name: "Mittens" };
+    // let c = animals::Cat { name: "Mittens".to_string() };
 }
 ```
 
@@ -86,7 +86,7 @@ mod animals;
 
 fn main() {
     let c = animals::Cat::new("Mittens");
-    // let c = animals::Cat { name: "Mittens" };
+    // let c = animals::Cat { name: "Mittens".to_string() };
 }
 ```
 
