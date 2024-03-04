@@ -81,6 +81,7 @@ uart0_reg_t* const p_uart = (uart0_reg_t*) 0x40002000;
 ## Structures in Rust
 
 ```rust [] ignore
+#[repr(C)]
 pub struct Uart0 {
     pub tasks_startrx: VolatileCell<u32>, // @ 0x000
     pub tasks_stoprx: VolatileCell<u32>, // @ 0x004
