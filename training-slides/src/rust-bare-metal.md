@@ -33,7 +33,7 @@ graph TB
     hal[MCU HAL Implementation<br/><tt>nrf52480_hal</tt>]
     lcd_driver[SPI LCD Driver<br/><tt>ssd1306</tt>]
     hal_traits[[HAL Traits<br/><tt>embedded_hal</tt>]]
-    pac[MCU PAC<br/><tt>nrf52840</tt>]
+    pac[MCU PAC<br/><tt>nrf52840-pac</tt>]
     rt[Core Runtime<br/><tt>cortex_m_rt</tt>]
     cp[Core Peripherals<br/><tt>cortex_m</tt>]
 
