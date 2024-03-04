@@ -57,6 +57,9 @@ fn main() {
 }
 ```
 
+The variable `increase_by` that is captured by the closure here is called an `upvar`
+or a [free variable](https://rustc-dev-guide.rust-lang.org/closure.html#:~:text=An%20upvar%20is%20a%20variable,the%20context%20of%20the%20closure).
+
 ## Capturing Mutably
 
 * Closures can capture their environment by mutable reference
