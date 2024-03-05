@@ -301,7 +301,7 @@ struct Post {
 
 impl Post {
     fn date_of_first_view(&self) -> Instant {
-        *self.first_viewed_at.get_or_init(|| {Instant::now()})
+        *self.first_viewed_at.get_or_init(Instant::now)
     }
 }
 ```
