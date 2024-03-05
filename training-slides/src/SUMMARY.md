@@ -28,7 +28,7 @@ Using Rust on Windows/macOS/Linux. Requires [Rust Fundamentals](#rust-fundamenta
 * [Lifetimes](./lifetimes.md)
 * [Cargo Workspaces](./cargo-workspaces.md)
 * [Heap Allocation (Box and Rc)](./heap.md)
-* [Shared Mutability (Cell, RefCell)](./shared-mutability.md)
+* [Shared Mutability (Cell, RefCell, OnceCell)](./shared-mutability.md)
 * [Thread Safety (Send/Sync, Arc, Mutex)](./thread-safety.md)
 * [Closures and the Fn/FnOnce/FnMut traits](./closures.md)
 * [Spawning Threads and Scoped Threads](./spawning-threads.md)
