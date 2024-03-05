@@ -181,7 +181,7 @@ impl Post {
 
 Note:
 
-An advanced trainee may ask about the use of `Splitting Borrows` which would allow one to borrow different fields with different mutability semantics, such as
+As an in-depth example of the borrowchecker's limitations, consider the [Splitting Borrows](https://doc.rust-lang.org/nomicon/borrow-splitting.html) idiom, which allows one to borrow different fields of the same struct with different mutability semantics:
 
 ```rust
 struct Foo {
@@ -200,7 +200,7 @@ let c2 = &x.c;
 println!("{} {} {} {}", a, b, c, c2);
 ```
 
-Which does work but doesn't solve the problem of declaring `let mut x` to begin with.
+The code works, but you *have* to use shadowing with `let a = &mut x.a;` or else the compiler will error. The borrowchecker is particularly frail here - replacing `Foo` with `x = [1,2,3]` and trying to borrow indexes will make it error out.
 
 ## `RefCell`
 
