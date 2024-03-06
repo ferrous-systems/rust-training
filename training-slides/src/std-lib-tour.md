@@ -36,7 +36,7 @@ Used for interacting with other executables.
 ```rust []
 use std::process::Command;
 
-fn main() {
+fn example() {
     Command::new("ls")
             .args(&["-l", "-a"])
             .spawn()

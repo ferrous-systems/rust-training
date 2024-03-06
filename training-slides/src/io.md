@@ -93,7 +93,7 @@ See the [std::io::File docs](https://doc.rust-lang.org/std/fs/struct.File.html#i
 ```rust []
 use std::io::BufRead;
 
-fn main() -> std::io::Result<()> {
+fn print_file() -> std::io::Result<()> {
     let f = std::fs::File::open("/etc/hosts")?;
     let reader = std::io::BufReader::new(f);
     for line in reader.lines() {
