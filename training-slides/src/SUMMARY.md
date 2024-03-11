@@ -71,6 +71,11 @@ Rust for the Linux Kernel and other no-std environments with an pre-existing C A
 * [Rust on an RTOS]()
 * [Writing a new target]()
 
+## Noteworthy Differences with other languages
+
+* [Coming from Python](./coming-from-python.md)
+* [Coming from C++](./coming-from-cpp.md)
+
 # Bare-Metal Rust
 
 Topics about using Rust on ARM Cortex-M Microcontrollers (and similar). Requires [Applied Rust](#applied-rust).
