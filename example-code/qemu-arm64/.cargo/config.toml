@@ -1,0 +1,12 @@
+[target.aarch64-unknown-none]
+linker = "aarch64-linux-gnu-gcc"
+rustflags = [
+    "-Clinker-flavor=gcc",
+	"-Clink-arg=-ffreestanding",
+	"-Clink-arg=-nostdlib",
+    "-Clink-arg=-Wl,-Tlinker.ld",
+]
+runner = "qemu-system-aarch64 -machine virt -cpu cortex-a57 -semihosting -nographic -kernel"
+
+[build]
+target = ["aarch64-unknown-none"]
