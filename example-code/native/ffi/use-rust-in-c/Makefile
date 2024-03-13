@@ -1,8 +1,7 @@
 # Example Makefile to build a Rust library as part of a C program.
 # Copyright (c) Ferrous Systems 2023
 
-# Note: this project is in a workspace, two levels up.
-TARGET_DIR = ../../target
+TARGET_DIR = ./target
 
 # Turn on errors-as-warnings, and enable some debug output
 CFLAGS = -Wall -Werror -g

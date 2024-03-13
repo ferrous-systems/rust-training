@@ -3,7 +3,11 @@
 set -euo pipefail
 
 # Check the example code
-pushd ./native
+pushd ./native/ffi/use-c-in-rust
+cargo build --all
+cargo clean
+popd
+pushd ./native/stdout
 cargo build --all
 cargo clean
 popd
