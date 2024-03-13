@@ -92,6 +92,5 @@ Topics about using Rust on ARM Cortex-M Microcontrollers (and similar). Requires
 
 Topics around [Ferrocene](https://ferrous-systems.com/ferrocene/), the qualified toolchain for writing safety-critical systems in Rust.
 
-## Under development
-
-* [Installing and Using Ferrocene]()
+* [What is Ferrocene](./ferrocene-what-it-is.md)
+* [Installing and Using Ferrocene](./ferrocene-installing.md)
