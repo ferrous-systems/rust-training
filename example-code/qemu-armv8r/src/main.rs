@@ -90,8 +90,8 @@ fn main() -> Result<(), core::fmt::Error> {
     writeln!(uart0, "Hello, this is Rust!")?;
     for x in 1..=10 {
         for y in 1..=10 {
-            let z = x * y;
-            write!(uart0, "{z:4}")?;
+            let z = f64::from(x) * f64::from(y);
+            write!(uart0, "{z:4.1} ")?;
         }
         writeln!(uart0)?;
     }
