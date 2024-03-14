@@ -7,16 +7,11 @@ OUTPUT_BINARY=${TARGET_DIR}/basic-rust
 OUTPUT_MAP=${TARGET_DIR}/basic-rust.map
 OUTPUT_ASM=${TARGET_DIR}/basic-rust.asm
 OUR_PREFIX="${PREFIX:=arm-none-eabi}"
-CC=${OUR_PREFIX}-gcc
 AS=${OUR_PREFIX}-as
 AR=${OUR_PREFIX}-ar
 OBJDUMP=${OUR_PREFIX}-objdump
-RUSTC="rustc +nightly\
+RUSTC="rustc\
 	--target armv8r-none-eabihf \
-	-Clinker=${CC} \
-	-Clinker-flavor=gcc \
-	-Clink-arg=-ffreestanding \
-	-Clink-arg=-nostdlib \
 	-L ${TARGET_DIR}"
 
 rm -rf ${TARGET_DIR}

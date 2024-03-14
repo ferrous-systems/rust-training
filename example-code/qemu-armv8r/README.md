@@ -22,17 +22,17 @@ Once you have built the demo, and built QEMU 9 from source (it's not out yet), t
 ```console
 $ qemu-system-arm -machine mps3-an536 -cpu cortex-r52 -semihosting -nographic -kernel target/production/kernel.elf
 Hello, this is Rust!
-   1   2   3   4   5   6   7   8   9  10
-   2   4   6   8  10  12  14  16  18  20
-   3   6   9  12  15  18  21  24  27  30
-   4   8  12  16  20  24  28  32  36  40
-   5  10  15  20  25  30  35  40  45  50
-   6  12  18  24  30  36  42  48  54  60
-   7  14  21  28  35  42  49  56  63  70
-   8  16  24  32  40  48  56  64  72  80
-   9  18  27  36  45  54  63  72  81  90
-  10  20  30  40  50  60  70  80  90 100
-PANIC: PanicInfo { payload: Any { .. }, message: Some(I am a panic), location: Location { file: "src/main.rs", line: 114, col: 5 }, can_unwind: true, force_no_backtrace: false }
+ 1.0  2.0  3.0  4.0  5.0  6.0  7.0  8.0  9.0 10.0
+ 2.0  4.0  6.0  8.0 10.0 12.0 14.0 16.0 18.0 20.0
+ 3.0  6.0  9.0 12.0 15.0 18.0 21.0 24.0 27.0 30.0
+ 4.0  8.0 12.0 16.0 20.0 24.0 28.0 32.0 36.0 40.0
+ 5.0 10.0 15.0 20.0 25.0 30.0 35.0 40.0 45.0 50.0
+ 6.0 12.0 18.0 24.0 30.0 36.0 42.0 48.0 54.0 60.0
+ 7.0 14.0 21.0 28.0 35.0 42.0 49.0 56.0 63.0 70.0
+ 8.0 16.0 24.0 32.0 40.0 48.0 56.0 64.0 72.0 80.0
+ 9.0 18.0 27.0 36.0 45.0 54.0 63.0 72.0 81.0 90.0
+10.0 20.0 30.0 40.0 50.0 60.0 70.0 80.0 90.0 100.0
+PANIC: PanicInfo { payload: Any { .. }, message: Some(I am a panic), location: Location { file: "src/main.rs", line: 98, col: 5 }, can_unwind: true, force_no_backtrace: false }
 ```
 
 See [`qemu.sh`](./qemu.sh).
@@ -61,7 +61,7 @@ The compiled outputs will go into `./target/armv8r-none-eabihf/<profile>`, where
 that's the name given in the `Cargo.toml` file.
 
 ```console
-$ cargo +nightly build --release
+$ cargo +nightly build --release -Zbuild-std=core
     Finished release [optimized] target(s) in 0.00s
 $ arm-none-eabi-size target/armv8r-none-eabihf/release/basic-rust
    text    data     bss     dec     hex filename
@@ -71,17 +71,17 @@ $ cargo +nightly run --release
     Finished release [optimized] target(s) in 0.16s
      Running `qemu-system-arm -machine mps3-an536 -cpu cortex-r52 -semihosting -nographic -kernel target/armv8r-none-eabihf/release/basic-rust`
 Hello, this is Rust!
-   1   2   3   4   5   6   7   8   9  10
-   2   4   6   8  10  12  14  16  18  20
-   3   6   9  12  15  18  21  24  27  30
-   4   8  12  16  20  24  28  32  36  40
-   5  10  15  20  25  30  35  40  45  50
-   6  12  18  24  30  36  42  48  54  60
-   7  14  21  28  35  42  49  56  63  70
-   8  16  24  32  40  48  56  64  72  80
-   9  18  27  36  45  54  63  72  81  90
-  10  20  30  40  50  60  70  80  90 100
-PANIC: PanicInfo { payload: Any { .. }, message: Some(I am a panic), location: Location { file: "src/main.rs", line: 114, col: 5 }, can_unwind: true, force_no_backtrace: false }
+ 1.0  2.0  3.0  4.0  5.0  6.0  7.0  8.0  9.0 10.0
+ 2.0  4.0  6.0  8.0 10.0 12.0 14.0 16.0 18.0 20.0
+ 3.0  6.0  9.0 12.0 15.0 18.0 21.0 24.0 27.0 30.0
+ 4.0  8.0 12.0 16.0 20.0 24.0 28.0 32.0 36.0 40.0
+ 5.0 10.0 15.0 20.0 25.0 30.0 35.0 40.0 45.0 50.0
+ 6.0 12.0 18.0 24.0 30.0 36.0 42.0 48.0 54.0 60.0
+ 7.0 14.0 21.0 28.0 35.0 42.0 49.0 56.0 63.0 70.0
+ 8.0 16.0 24.0 32.0 40.0 48.0 56.0 64.0 72.0 80.0
+ 9.0 18.0 27.0 36.0 45.0 54.0 63.0 72.0 81.0 90.0
+10.0 20.0 30.0 40.0 50.0 60.0 70.0 80.0 90.0 100.0
+PANIC: PanicInfo { payload: Any { .. }, message: Some(I am a panic), location: Location { file: "src/main.rs", line: 98, col: 5 }, can_unwind: true, force_no_backtrace: false }
 ```
 
 ## Building with Ferrocene
@@ -102,7 +102,7 @@ substitute it with an unsupported linker, you can set the C toolchain prefix
 with:
 
 ```console
-PREFIX=aarch64-elf ./build.sh"
+./build.sh"
 ```
 
 The outputs will go into `./target/production` and the binary is called
@@ -116,22 +116,22 @@ Running ar..
 Running rustc...
 Generating asm...
 Generating map...
-$ arm-none-eabi-size target/armv8r-none-eabihf/release/basic-rust
+$ arm-none-eabi-size target/production/basic-rust
    text    data     bss     dec     hex filename
-  16680       0       0   16680    4128 target/armv8r-none-eabihf/release/basic-rust
+  16680       0       0   16680    4128 target/production/basic-rust
 $ qemu-system-arm -machine mps3-an536 -cpu cortex-r52 -semihosting -nographic -kernel target/production/kernel.elf
 Hello, this is Rust!
-   1   2   3   4   5   6   7   8   9  10
-   2   4   6   8  10  12  14  16  18  20
-   3   6   9  12  15  18  21  24  27  30
-   4   8  12  16  20  24  28  32  36  40
-   5  10  15  20  25  30  35  40  45  50
-   6  12  18  24  30  36  42  48  54  60
-   7  14  21  28  35  42  49  56  63  70
-   8  16  24  32  40  48  56  64  72  80
-   9  18  27  36  45  54  63  72  81  90
-  10  20  30  40  50  60  70  80  90 100
-PANIC: PanicInfo { payload: Any { .. }, message: Some(I am a panic), location: Location { file: "src/main.rs", line: 114, col: 5 }, can_unwind: true, force_no_backtrace: false }
+ 1.0  2.0  3.0  4.0  5.0  6.0  7.0  8.0  9.0 10.0
+ 2.0  4.0  6.0  8.0 10.0 12.0 14.0 16.0 18.0 20.0
+ 3.0  6.0  9.0 12.0 15.0 18.0 21.0 24.0 27.0 30.0
+ 4.0  8.0 12.0 16.0 20.0 24.0 28.0 32.0 36.0 40.0
+ 5.0 10.0 15.0 20.0 25.0 30.0 35.0 40.0 45.0 50.0
+ 6.0 12.0 18.0 24.0 30.0 36.0 42.0 48.0 54.0 60.0
+ 7.0 14.0 21.0 28.0 35.0 42.0 49.0 56.0 63.0 70.0
+ 8.0 16.0 24.0 32.0 40.0 48.0 56.0 64.0 72.0 80.0
+ 9.0 18.0 27.0 36.0 45.0 54.0 63.0 72.0 81.0 90.0
+10.0 20.0 30.0 40.0 50.0 60.0 70.0 80.0 90.0 100.0
+PANIC: PanicInfo { payload: Any { .. }, message: Some(I am a panic), location: Location { file: "src/main.rs", line: 98, col: 5 }, can_unwind: true, force_no_backtrace: false }
 ```
 
 ## License

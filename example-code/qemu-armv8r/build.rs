@@ -24,6 +24,8 @@ fn main() {
     let boot_object = out.join("boot.o");
     let output = std::process::Command::new(&arm_as)
         .arg("src/boot.S")
+        .arg("-march=armv8-r")
+        .arg("-mfpu=fp-armv8")
         .arg("-o")
         .arg(&boot_object)
         .output()

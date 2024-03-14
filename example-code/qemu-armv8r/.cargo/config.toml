@@ -6,7 +6,3 @@ runner = "/Users/jonathan/Documents/open-source/qemu/build/qemu-system-arm -mach
 
 [build]
 target = ["armv8r-none-eabihf"]
-
-[unstable]
-# armv8r-none-eabihf is a tier 3 and so we have to build libcore from source
-build-std = ["core"]
