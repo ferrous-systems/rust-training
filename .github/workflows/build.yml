@@ -23,7 +23,9 @@ jobs:
       
       - name: Add Rust Targets
         run: |
+          # NB armv8r-unknown-none-eabihf is not yet available
           rustup target add thumbv7em-none-eabihf
+          rustup target add aarch64-unknown-none
 
       - name: Add C tools
         run: |
