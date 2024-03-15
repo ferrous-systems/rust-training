@@ -6,7 +6,8 @@ use std::io::Write;
 
 fn main() {
     // Find the right tools.
-    let linker = std::env::var("RUSTC_LINKER").unwrap();
+    let linker = std::env::var("RUSTC_LINKER");
+    let linker = linker.as_deref().unwrap_or("aarch64-elf-gcc");
     let aarch64_as = linker.replace("gcc", "as");
     let aarch64_ar = linker.replace("gcc", "ar");
 
