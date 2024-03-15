@@ -23,9 +23,11 @@ jobs:
       
       - name: Add Rust Targets
         run: |
-          # NB armv8r-unknown-none-eabihf is not yet available
           rustup target add thumbv7em-none-eabihf
           rustup target add aarch64-unknown-none
+          # NB armv8r-unknown-none-eabihf is not yet available so we build core from source with nightly
+          rustup toolchain add nightly
+          rustup component add rust-src --toolchain=nightly
 
       - name: Add C tools
         run: |
