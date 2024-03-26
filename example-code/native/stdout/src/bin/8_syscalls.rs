@@ -1,6 +1,6 @@
 //! Hello world, as a no-std binary
 //!
-//! Requires `RUSTFLAGS="-C panic=abort"` (and nightly Rust for Linux targets).
+//! Requires `RUSTFLAGS="-C panic=abort -lc"` (and nightly Rust for Linux targets).
 //!
 //! Runs on Aarch64 macOS, Aarch64 Linux and x86-64 Linux.
 
