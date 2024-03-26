@@ -1,3 +1,0 @@
-[workspace]
-members = ["ffi/use-c-in-rust", "ffi/use-rust-in-c"]
-resolver = "2"

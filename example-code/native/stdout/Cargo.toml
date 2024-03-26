@@ -1,0 +1,6 @@
+[package]
+edition = "2021"
+name = "stdout"
+version = "0.1.0"
+
+[dependencies]
