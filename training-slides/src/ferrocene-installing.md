@@ -85,7 +85,7 @@ info: downloading component 'cargo-x86_64-unknown-linux-gnu' for 'ferrocene' (be
 ...
 info: downloading component 'rustc-x86_64-unknown-linux-gnu' for 'ferrocene' (beta-24.05-2024-03-21)
 info: installing component 'rustc-x86_64-unknown-linux-gnu' for 'ferrocene' (beta-24.05-2024-03-21)
-# export PATH=$HOME/.local/share/criticalup/bin:$PATH
-# rustc --version
+$ export PATH=$HOME/.local/share/criticalup/bin:$PATH
+$ rustc --version
 rustc 1.76.0 (28b06b23f 2024-03-20) (Ferrocene by Ferrous Systems)
 ```
