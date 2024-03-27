@@ -10,12 +10,13 @@ SECTIONS {
         *(.text.startup)
     } > RAM
     .text : { *(.text .text*) } > RAM
+    .rodata : { *(.rodata .rodata*) } > RAM
     .data : { *(.data .data*) } > RAM
     .bss : { *(.bss .bss* COMMON) } > RAM
     /DISCARD/ : {
         *(.note .note*)
     }
     . = ALIGN(8);
-    . += 0x1000; /* 4kB of stack memory */
+    . += 0x10000; /* 64kB of stack memory */
     stack_top = .;
 }

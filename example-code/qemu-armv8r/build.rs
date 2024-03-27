@@ -6,9 +6,10 @@ use std::io::Write;
 
 fn main() {
     // Find the right tools.
-    let linker = std::env::var("RUSTC_LINKER").unwrap();
-    let aarch64_as = linker.replace("gcc", "as");
-    let aarch64_ar = linker.replace("gcc", "ar");
+    let linker = std::env::var("RUSTC_LINKER");
+    let linker = linker.as_deref().unwrap_or("arm-none-eabi-gcc");
+    let arm_as = linker.replace("gcc", "as");
+    let arm_ar = linker.replace("gcc", "ar");
 
     // Put `linker.ld` file in our output directory and ensure it's on the
     // linker search path.
@@ -21,8 +22,10 @@ fn main() {
 
     // Assembly src/boot.S
     let boot_object = out.join("boot.o");
-    let output = std::process::Command::new(&aarch64_as)
+    let output = std::process::Command::new(&arm_as)
         .arg("src/boot.S")
+        .arg("-march=armv8-r")
+        .arg("-mfpu=fp-armv8")
         .arg("-o")
         .arg(&boot_object)
         .output()
@@ -33,15 +36,15 @@ fn main() {
         }
         Ok(false) => {
             // Didn't launch
-            panic!("Failed to launch {aarch64_as}");
+            panic!("Failed to launch {arm_as}");
         }
         Err(e) => {
             // Failed to run
-            panic!("Failed to run {aarch64_as}: {e:?}");
+            panic!("Failed to run {arm_as}: {e:?}");
         }
     }
     let libboot_file = out.join("libboot.a");
-    let output = std::process::Command::new(&aarch64_ar)
+    let output = std::process::Command::new(&arm_ar)
         .arg("rcs")
         .arg(&libboot_file)
         .arg(&boot_object)
@@ -53,11 +56,11 @@ fn main() {
         }
         Ok(false) => {
             // Didn't launch
-            panic!("Failed to launch {aarch64_ar}");
+            panic!("Failed to launch {arm_ar}");
         }
         Err(e) => {
             // Failed to run
-            panic!("Failed to run {aarch64_ar}: {e:?}");
+            panic!("Failed to run {arm_ar}: {e:?}");
         }
     }
     // Link against our libboot.a library
