@@ -2,7 +2,8 @@
 rustflags = [
     "-Clink-arg=-Tlinker.ld",
 ]
-runner = "/Users/jonathan/Documents/open-source/qemu/build/qemu-system-arm -machine mps3-an536 -cpu cortex-r52 -semihosting -nographic -kernel"
+# Note, this requires QEMU 9 or higher
+runner = "qemu-system-arm -machine mps3-an536 -cpu cortex-r52 -semihosting -nographic -kernel"
 
 [build]
 target = ["armv8r-none-eabihf"]
