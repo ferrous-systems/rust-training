@@ -94,3 +94,10 @@ Topics around [Ferrocene](https://ferrous-systems.com/ferrocene/), the qualified
 
 * [What is Ferrocene](./ferrocene-what-it-is.md)
 * [Installing and Using Ferrocene](./ferrocene-installing.md)
+
+# Rust for Decision Makers
+
+* [What is Rust?](./what-is-rust.md)
+* [Safety, Performance, and Productivity](./safety-performance-productivity.md)
+* [Tradeoffs](./tradeoffs.md)
+* [Where Next](./where-next.md)
