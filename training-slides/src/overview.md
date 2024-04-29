@@ -66,53 +66,36 @@ Note:
 Many examples in this course are very small, which is why we will also
 spend time discussing the impact of many features on large projects.
 
-## The Four Words
+## The Three Words
 
--   Safe
--   Concurrent
--   Fast
--   Pragmatic
+-   Safety
+-   Performance
+-   Productivity
 
-## Safe
+## Safety
 
--   Rust is memory-safe
--   No illegal memory access
--   Deallocation is automated
--   Warning: memory leaks are **safe** by that definition!
+-   Rust is memory-safe and thread-safe
+    - Buffer overflows, use-after-free: all impossible
+    - Unless you tell the compiler you know what you're doing
+-   De-allocation is automated
+    - Great for files, mutexes, sockets, etc
 
-Note:
-
-- Memory safety: use-after-free, double-free
-- Type safety, Thread safety
-- Memory leaks: `Box::leak()`
-
-## Concurrent
-
--   "Concurrency without fear"
--   The type system detects concurrent access to data and requires
-    synchronization
--   Also: Rust detects when unsynchronized access is safely possible
--   Protection from data races
-
-## Fast
+## Performance
 
 -   These properties are guaranteed at compile time and have no runtime
     cost!
 -   Optimizing compiler based on LLVM
 -   Features with runtime cost are explicit and hard to activate "by
     accident"
--   No reflection
 -   Zero-cost abstractions
--   "Pay what you use": Rust has features with a runtime cost in an
-    explicit and visible way. Unused features do not come with an
-    associated cost.
+-   Use threads with *confidence*
 
-## Pragmatic
+## Productive
 
 -   User-focused tooling
--   Sublanguage for unsafe memory access and techniques to handle these
--   FFI support to interface with existing systems
+-   Comes with a build-system, dependency manager, formatter, etc
 -   Compiler gives helpful error messages
+-   FFI support to interface with existing systems
 
 ## Where do Rustaceans come from?
 
