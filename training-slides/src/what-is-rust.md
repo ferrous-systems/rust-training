@@ -319,7 +319,7 @@ For more information about this error, try `rustc --explain E0502`.
 
 ## Some terminology
 
-* a *system* is *certify* as being sufficiently safe/correct
+* a *system* is *certified* as being sufficiently safe/correct
 * that *system* is often built using *qualified* tools
 * *quality* is the result of an ongoing process
 
