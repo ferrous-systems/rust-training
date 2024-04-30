@@ -16,7 +16,7 @@ SECTIONS {
     /DISCARD/ : {
         *(.note .note*)
     }
-    . = ALIGN(8);
-    . += 0x10000; /* 64kB of stack memory */
+    . = ALIGN(16);
+    . += 0x100000; /* 1024kB of stack memory */
     stack_top = .;
 }

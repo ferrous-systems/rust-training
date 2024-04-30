@@ -1,74 +1,20 @@
-//! An example program for QEMU's Aarch64 Virtual Machine
+//! An example program for QEMU's Armv8-R Virtual Machine
 //!
 //! Written by Jonathan Pallant at Ferrous Systems
 //!
-//! Copyright (c) Ferrous Systems, 2023
-//!
-//! To
+//! Copyright (c) Ferrous Systems, 2024
 
 #![no_std]
 #![no_main]
 
 use core::fmt::Write;
 
+mod cmsdk_uart;
+
 /// The clock speed of the peripheral subsystem on an SSE-300 SoC an on MPS3 board.
 ///
 /// Probably right for an MPS3-
 const PERIPHERAL_CLOCK: u32 = 25_000_000;
-
-/// A driver for CMSDK Uart
-struct Uart<const ADDR: usize>();
-
-impl<const ADDR: usize> Uart<ADDR> {
-    const STATUS_TX_FULL: u32 = 1 << 0;
-
-    /// Turn on TX and RX
-    fn enable(&mut self, baudrate: u32, system_clock: u32) {
-        let divider = system_clock / baudrate;
-        self.set_bauddiv(divider);
-        self.set_control(0b0000_0011);
-    }
-
-    /// Write a byte (blocking if there's no space)
-    fn write(&mut self, byte: u8) {
-        // Check the Buffer Full bit
-        while (self.get_status() & Self::STATUS_TX_FULL) != 0 {}
-        self.set_data(byte as u32);
-    }
-
-    /// Write the data register
-    fn set_data(&mut self, data: u32) {
-        let ptr = ADDR as *mut u32;
-        unsafe { ptr.write_volatile(data) }
-    }
-
-    /// Read the status register
-    fn get_status(&self) -> u32 {
-        let ptr = (ADDR + 4) as *mut u32;
-        unsafe { ptr.read_volatile() }
-    }
-
-    /// Set the control register
-    fn set_control(&mut self, data: u32) {
-        let ptr = (ADDR + 8) as *mut u32;
-        unsafe { ptr.write_volatile(data) }
-    }
-
-    /// Set the baud rate divider register
-    fn set_bauddiv(&mut self, data: u32) {
-        let ptr = (ADDR + 16) as *mut u32;
-        unsafe { ptr.write_volatile(data) }
-    }
-}
-
-impl<const N: usize> core::fmt::Write for Uart<N> {
-    fn write_str(&mut self, s: &str) -> core::fmt::Result {
-        for b in s.bytes() {
-            self.write(b);
-        }
-        Ok(())
-    }
-}
 
 /// The entry-point to the Rust application.
 ///
@@ -85,13 +31,13 @@ pub extern "C" fn kmain() {
 ///
 /// Called by [`kmain`].
 fn main() -> Result<(), core::fmt::Error> {
-    let mut uart0: Uart<0xe7c00000> = Uart();
+    let mut uart0 = unsafe { cmsdk_uart::Uart::new_uart0() };
     uart0.enable(115200, PERIPHERAL_CLOCK);
     writeln!(uart0, "Hello, this is Rust!")?;
     for x in 1..=10 {
         for y in 1..=10 {
             let z = f64::from(x) * f64::from(y);
-            write!(uart0, "{z:4.1} ")?;
+            write!(uart0, "{z:>8.2} ")?;
         }
         writeln!(uart0)?;
     }
@@ -106,7 +52,7 @@ fn main() -> Result<(), core::fmt::Error> {
 fn panic(info: &core::panic::PanicInfo) -> ! {
     const SYS_REPORTEXC: u32 = 0x18;
     // We assume it is already enabled
-    let mut uart0: Uart<0xe7c00000> = Uart();
+    let mut uart0 = unsafe { cmsdk_uart::Uart::new_uart0() };
     let _ = writeln!(uart0, "PANIC: {:?}", info);
     loop {
         // Exit, using semihosting

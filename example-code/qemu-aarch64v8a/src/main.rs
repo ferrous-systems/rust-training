@@ -2,7 +2,7 @@
 //!
 //! Written by Jonathan Pallant at Ferrous Systems
 //!
-//! Copyright (c) Ferrous Systems, 2023
+//! Copyright (c) Ferrous Systems, 2024
 //!
 //! To
 
@@ -11,39 +11,7 @@
 
 use core::fmt::Write;
 
-/// Represents an emulated QEMU UART.
-struct Uart {
-    base: *mut u32,
-}
-
-impl Uart {
-    /// Create a handle to the first UART
-    pub fn uart0() -> Uart {
-        const UART0_ADDR: usize = 0x0000_0000_0900_0000;
-        Uart {
-            base: UART0_ADDR as *mut u32,
-        }
-    }
-
-    /// Write one byte to the QEMU virtual UART.
-    ///
-    /// We don't have to check for FIFO space as the emulated FIFO never runs
-    /// out of space.
-    pub fn putchar(&mut self, byte: u8) {
-        unsafe {
-            self.base.write_volatile(u32::from(byte));
-        }
-    }
-}
-
-impl core::fmt::Write for Uart {
-    fn write_str(&mut self, s: &str) -> core::fmt::Result {
-        for b in s.bytes() {
-            self.putchar(b);
-        }
-        Ok(())
-    }
-}
+mod virt_uart;
 
 /// The entry-point to the Rust application.
 ///
@@ -60,14 +28,14 @@ pub extern "C" fn kmain() {
 ///
 /// Called by [`kmain`].
 fn main() -> Result<(), core::fmt::Error> {
-    let mut c = Uart::uart0();
-    writeln!(c, "Hello, this is Rust!")?;
+    let mut uart0 = unsafe { virt_uart::Uart::new_uart0() };
+    writeln!(uart0, "Hello, this is Rust!")?;
     for x in 1..=10 {
         for y in 1..=10 {
-            let z = x * y;
-            write!(c, "{z:4}")?;
+            let z = f64::from(x) * f64::from(y);
+            write!(uart0, "{z:>8.2} ")?;
         }
-        writeln!(c)?;
+        writeln!(uart0)?;
     }
     panic!("I am a panic");
 }
@@ -79,7 +47,7 @@ fn main() -> Result<(), core::fmt::Error> {
 #[panic_handler]
 fn panic(info: &core::panic::PanicInfo) -> ! {
     const SYS_REPORTEXC: u64 = 0x18;
-    let mut c = Uart::uart0();
+    let mut c = unsafe { virt_uart::Uart::new_uart0() };
     let _ = writeln!(c, "PANIC: {:?}", info);
     loop {
         // Exit, using semihosting
