@@ -17,8 +17,6 @@ fn main() -> color_eyre::Result<()> {
         _ => {
             eprintln!(
                 "cargo xtask
-Setup a programming language cheatsheet with the `training-slides` files structure.
-Test all entries are in sync with `SUMMARY.md`.
 
 USAGE:
     cargo xtask [COMMAND]
