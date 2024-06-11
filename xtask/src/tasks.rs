@@ -72,11 +72,9 @@ Using Rust on Windows/macOS/Linux. Requires [Rust Fundamentals](#rust-fundamenta
 fn get_slide_name(line: &str) -> String {
     // SAFETY
     // This file should be a well formed mdbook entries
-    line.strip_suffix("](./")
-        .unwrap()
-        .strip_prefix("* [")
-        .unwrap()
-        .into()
+    let top = line.rfind(']').unwrap();
+    let bot = line.find('[').unwrap();
+    String::from(&line[bot + 1..top])
 }
 
 #[test]
