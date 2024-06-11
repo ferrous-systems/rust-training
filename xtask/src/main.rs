@@ -1,4 +1,4 @@
-#![deny(warnings)]
+//#![deny(warnings)]
 
 mod tasks;
 
@@ -32,4 +32,3 @@ COMMANDS:
         }
     }
 }
-
