@@ -10,24 +10,6 @@ struct SlidesSection {
     slide_titles: Vec<String>,
 }
 
-// fn is_valid_slide_line(line: &str) -> bool {
-//     !line.starts_with('#') && !line.is_empty() && line.starts_with('*') && line.ends_with(".md)")
-// }
-
-// #[test]
-// fn test_valid_slide_lines() {
-//     let test1 = "# Applied Rust";
-//     let test2 = "";
-//     let test3 =
-//         "Using Rust on Windows/macOS/Linux. Requires [Rust Fundamentals](#rust-fundamentals).";
-//     let test4 = "* [Methods and Traits](./methods-traits.md)";
-
-//     assert!(!is_valid_slide_line(test1));
-//     assert!(!is_valid_slide_line(test2));
-//     assert!(!is_valid_slide_line(test3));
-//     assert!(is_valid_slide_line(test4));
-// }
-
 const INITIAL_HEADER: &str = "# Rust Fundamentals";
 const LAST_HEADER: &str = "# No-Std Rust";
 
@@ -184,17 +166,15 @@ pub fn make_cheatsheet(lang: &str) -> Result<(), eyre::Report>{
 
     // If so, just check if headers any headers are missing
     // otherwise, create the new file, then write new file into summary.md
-    eprintln!("file is {file_str}");
     match File::create_new(new_file) {
         Ok(mut f) => {
-            eprintln!("File {file_str} just created");
             let result_text = write_cheatsheet(slide_sections);
             let _ = f.write_all(&result_text.as_bytes());
-            //.error!("Could not write slide headers to file");
             eprintln!("Cheatsheat for {lang} written at {file_str}");
         }
         Err(_) => {
             eprintln!("File {lang}-cheatsheet.md already exists - checking it's in sync");
+            todo!();
         }
     }
     Ok(())
