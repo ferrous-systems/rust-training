@@ -1,4 +1,8 @@
-use std::fs::read_to_string;
+use std::{
+    fs::{read_to_string, File},
+    io::Write,
+    path::Path,
+};
 
 #[derive(Debug, Eq, PartialEq)]
 struct SlidesSection {
@@ -6,28 +10,23 @@ struct SlidesSection {
     slide_titles: Vec<String>,
 }
 
-fn is_valid_slide_line(line: &str) -> bool {
-    if line.starts_with('#') || line.is_empty() || !line.starts_with('*') || !line.ends_with(".md)")
-    {
-        false
-    } else {
-        true
-    }
-}
+// fn is_valid_slide_line(line: &str) -> bool {
+//     !line.starts_with('#') && !line.is_empty() && line.starts_with('*') && line.ends_with(".md)")
+// }
 
-#[test]
-fn test_valid_slide_lines() {
-    let test1 = "# Applied Rust";
-    let test2 = "";
-    let test3 =
-        "Using Rust on Windows/macOS/Linux. Requires [Rust Fundamentals](#rust-fundamentals).";
-    let test4 = "* [Methods and Traits](./methods-traits.md)";
+// #[test]
+// fn test_valid_slide_lines() {
+//     let test1 = "# Applied Rust";
+//     let test2 = "";
+//     let test3 =
+//         "Using Rust on Windows/macOS/Linux. Requires [Rust Fundamentals](#rust-fundamentals).";
+//     let test4 = "* [Methods and Traits](./methods-traits.md)";
 
-    assert!(!is_valid_slide_line(test1));
-    assert!(!is_valid_slide_line(test2));
-    assert!(!is_valid_slide_line(test3));
-    assert!(is_valid_slide_line(test4));
-}
+//     assert!(!is_valid_slide_line(test1));
+//     assert!(!is_valid_slide_line(test2));
+//     assert!(!is_valid_slide_line(test3));
+//     assert!(is_valid_slide_line(test4));
+// }
 
 const INITIAL_HEADER: &str = "# Rust Fundamentals";
 const LAST_HEADER: &str = "# No-Std Rust";
@@ -56,7 +55,6 @@ fn test_get_slide_name() {
 }
 
 fn focus_regions(text: &str) -> Vec<Vec<String>> {
-    //let stream = read_to_string("./slides/book/src/SUMMARY.md").expect("SUMMARY.md not found");
     let mut result: Vec<Vec<String>> = Vec::new();
     let mut current_section: Vec<String> = Vec::new();
 
@@ -80,11 +78,9 @@ fn focus_regions(text: &str) -> Vec<Vec<String>> {
             continue;
         }
 
-        if trimmed_line.starts_with("# ") {
-            if !current_section.is_empty() {
-                result.push(current_section);
-                current_section = Vec::new();
-            }
+        if trimmed_line.starts_with("# ") && !current_section.is_empty() {
+            result.push(current_section);
+            current_section = Vec::new();
         }
         current_section.push(trimmed_line.to_string());
     }
@@ -140,14 +136,13 @@ Rust for the Linux Kernel and other no-std environments with an pre-existing C A
 }
 
 fn extract_slides(chunk: Vec<String>) -> SlidesSection {
-    dbg!(chunk.clone());
     assert!(chunk.len() > 2);
     // # Rust Fundamentals
-    // ^ 3rd character in title
+    //   ^ 3rd character in title
     let header = String::from(&chunk[0][2..]);
 
     let slide_titles = chunk[1..]
-        .into_iter()
+        .iter()
         .map(|l| get_slide_name(l))
         .collect::<Vec<String>>();
 
@@ -170,17 +165,63 @@ fn test_extract_slides() {
         slide_titles,
     };
     let region = focus_regions(test);
-    //dbg!(region.clone());
     assert_eq!(extract_slides(region[0].clone()), res);
     assert!(true);
 }
 
-pub fn make_cheatsheet(lang: &str) -> color_eyre::Result<()> {
-    println!("make_cheatsheet for {lang}");
+pub fn make_cheatsheet(lang: &str) -> Result<(), eyre::Report>{
+    // Collect headers
+    let text = read_to_string("./training-slides/src/SUMMARY.md").expect("SUMMARY.md not found");
+    let slide_texts = focus_regions(&text);
+    let slide_sections: Vec<SlidesSection> = slide_texts
+        .iter()
+        .map(|l| extract_slides(l.clone()))
+        .collect();
+
+    // Check to see if a file exists
+    let file_str = format!("./training-slides/src/{lang}-cheatsheet.md");
+    let new_file = Path::new(&file_str);
+
+    // If so, just check if headers any headers are missing
+    // otherwise, create the new file, then write new file into summary.md
+    eprintln!("file is {file_str}");
+    match File::create_new(new_file) {
+        Ok(mut f) => {
+            eprintln!("File {file_str} just created");
+            let result_text = write_cheatsheet(slide_sections);
+            let _ = f.write_all(&result_text.as_bytes());
+            //.error!("Could not write slide headers to file");
+            eprintln!("Cheatsheat for {lang} written at {file_str}");
+        }
+        Err(_) => {
+            eprintln!("File {lang}-cheatsheet.md already exists - checking it's in sync");
+        }
+    }
     Ok(())
 }
 
-pub fn test_cheatsheet(lang: &str) -> color_eyre::Result<()> {
+pub fn test_cheatsheet(lang: &str) -> Result<(), eyre::Report> {
     println!("make_cheatsheet for {lang}");
+    let text = read_to_string("./training-slides/src/SUMMARY.md").expect("SUMMARY.md not found");
+    let slide_texts = focus_regions(&text);
+    let slide_sections: Vec<SlidesSection> = slide_texts
+        .iter()
+        .map(|l| extract_slides(l.clone()))
+        .collect();
+    println!("test-cheatsheet {lang} {slide_sections:?}");
     Ok(())
+}
+
+fn write_cheatsheet(slide_sections: Vec<SlidesSection>) -> String {
+    let mut res = String::new();
+    for slide in slide_sections.iter() {
+        let mut section_str_buf = format!("# {}\n", slide.header);
+        for entry in slide.slide_titles.iter() {
+            let slide_title = format!("## {entry}\n");
+            section_str_buf.push_str(&slide_title);
+        }
+        section_str_buf.push_str("\n");
+        res.push_str(&section_str_buf);
+    }
+    res
 }
