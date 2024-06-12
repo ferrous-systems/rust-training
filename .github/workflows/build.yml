@@ -24,16 +24,8 @@ jobs:
       - name: Add Rust Targets
         run: |
           rustup target add thumbv7em-none-eabihf
-          rustup target add aarch64-unknown-none
-          # NB armv8r-unknown-none-eabihf is not yet available so we build core from source with nightly
-          rustup toolchain add nightly
-          rustup component add rust-src --toolchain=nightly
+          curl --proto '=https' --tlsv1.2 -LsSf https://github.com/ferrocene/criticalup/releases/download/v1.0.1/criticalup-installer.sh | sh
 
-      - name: Add C tools
-        run: |
-          sudo apt-get -y update
-          sudo apt-get -y install binutils-aarch64-linux-gnu gcc-aarch64-linux-gnu binutils-arm-none-eabi gcc-arm-none-eabi
-  
       - name: Find slug name
         run: |
           slug=$(./describe.sh "${GITHUB_REF}")
@@ -41,10 +33,14 @@ jobs:
           echo "slug=${slug}" >> "${GITHUB_ENV}"
 
       - name: Build book-and-slides
+        env:
+          CRITICALUP_TOKEN: ${{ secrets.CRITICALUP_TOKEN }}
         run: |
           cd ./training-slides && ./build.sh
 
       - name: Build example code
+        env:
+          CRITICALUP_TOKEN: ${{ secrets.CRITICALUP_TOKEN }}
         run: |
           cd ./example-code && ./build.sh
   

@@ -23,12 +23,15 @@ cargo clean
 popd
 # And the qemu Aarch64 Armv8-A example
 pushd ./qemu-aarch64v8a
-cargo build
-cargo clean
+criticalup install
+./build.sh
+criticalup run cargo build
+criticalup run cargo clean
 popd
 # And the qemu Aarch32 Armv8-R example
 pushd ./qemu-armv8r
-cargo +nightly build -Zbuild-std=core
-cargo clean
+criticalup install
+./build.sh
+criticalup run cargo build
+criticalup run cargo clean
 popd
-
