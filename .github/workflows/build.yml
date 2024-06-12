@@ -38,10 +38,14 @@ jobs:
           echo "slug=${slug}" >> "${GITHUB_ENV}"
 
       - name: Build book-and-slides
+        env:
+          CRITICALUP_TOKEN: ${{ secrets.CRITICALUP_TOKEN }}
         run: |
           cd ./training-slides && ./build.sh
 
       - name: Build example code
+        env:
+          CRITICALUP_TOKEN: ${{ secrets.CRITICALUP_TOKEN }}
         run: |
           cd ./example-code && ./build.sh
   
