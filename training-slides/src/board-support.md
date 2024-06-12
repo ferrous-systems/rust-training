@@ -26,7 +26,7 @@
 
 ## Using a Board Support Crate
 
-[Link](../../example-code/nrf52/bsp_demo/)
+See `example-code/nrf52/bsp_demo`
 
 ```rust [] ignore
 #[entry]
