@@ -24,10 +24,7 @@ jobs:
       - name: Add Rust Targets
         run: |
           rustup target add thumbv7em-none-eabihf
-          rustup target add aarch64-unknown-none
-          # NB armv8r-unknown-none-eabihf is not yet available so we build core from source with nightly
-          rustup toolchain add nightly
-          rustup component add rust-src --toolchain=nightly
+          curl --proto '=https' --tlsv1.2 -LsSf https://github.com/ferrocene/criticalup/releases/download/v1.0.1/criticalup-installer.sh | sh
 
       - name: Add C tools
         run: |

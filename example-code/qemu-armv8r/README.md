@@ -1,10 +1,21 @@
-# Ferrocene 24.05 on QEMU Arm Cortex-R52 Demo
+# Ferrocene for 32-bit Arm Cortex-R bare-metal Demo
 
 This repository contains a small example application that can be built using the
-[Ferrocene] 24.05 toolchain from [Ferrous Systems].
+[Ferrocene] toolchain from [Ferrous Systems].
 
 [Ferrocene]: https://ferrocene.dev
 [Ferrous Systems]: https://ferrous-systems.com
+
+## Supported Platforms
+
+Ferrocene 24.05 is supported on *x86-64 Linux (glibc)*
+(`x86_64-unknown-linux-gnu`) as the host platform, and *Armv8-A bare-metal*
+(`aarch64-unknown-none`) as a cross-compilation target. This demo uses the
+early-access 'experimental' *Armv8-R bare-metal* (`armv8r-none-eabihf`) target.
+
+You must first install Ferrocene by executing `criticalup install` inside this
+folder. This will require a valid CriticalUp token - please see the [CriticalUp
+documentation](https://criticalup.ferrocene.dev).
 
 ## Demo contents
 
@@ -17,74 +28,44 @@ This demo is a simple application designed to run inside a QEMU 9 virtual machin
 4. The panic handler exits QEMU using a semihosting operation that QEMU
    understands to mean "exit QEMU".
 
-Once you have built the demo, and built QEMU 9 from source (it's not out yet), the QEMU command line is something like:
-
-```console
-$ qemu-system-arm -machine mps3-an536 -cpu cortex-r52 -semihosting -nographic -kernel target/production/kernel.elf
-Hello, this is Rust!
- 1.0  2.0  3.0  4.0  5.0  6.0  7.0  8.0  9.0 10.0
- 2.0  4.0  6.0  8.0 10.0 12.0 14.0 16.0 18.0 20.0
- 3.0  6.0  9.0 12.0 15.0 18.0 21.0 24.0 27.0 30.0
- 4.0  8.0 12.0 16.0 20.0 24.0 28.0 32.0 36.0 40.0
- 5.0 10.0 15.0 20.0 25.0 30.0 35.0 40.0 45.0 50.0
- 6.0 12.0 18.0 24.0 30.0 36.0 42.0 48.0 54.0 60.0
- 7.0 14.0 21.0 28.0 35.0 42.0 49.0 56.0 63.0 70.0
- 8.0 16.0 24.0 32.0 40.0 48.0 56.0 64.0 72.0 80.0
- 9.0 18.0 27.0 36.0 45.0 54.0 63.0 72.0 81.0 90.0
-10.0 20.0 30.0 40.0 50.0 60.0 70.0 80.0 90.0 100.0
-PANIC: PanicInfo { payload: Any { .. }, message: Some(I am a panic), location: Location { file: "src/main.rs", line: 98, col: 5 }, can_unwind: true, force_no_backtrace: false }
-```
-
-See [`qemu.sh`](./qemu.sh).
-
-## Building with `cargo` and Rust
+## Building and Running with `cargo`
 
 Ferrocene compiles standard Rust source code, and so this project has also been
 set up as a valid Rust project. The [`.cargo/config.toml`](./.cargo/config.toml)
 file configures the default target as `armv8r-none-eabihf`. It also sets up the
 linker arguments to ensure that [`./linker.ld`](./linker.ld) is used as the
-linker script. Note that this target is Tier 3 and so will only compile with
-Nightly Rust.
+linker script.
 
-Before the build, `cargo` will compile and execute `build.rs`, which will:
-
-1. Generate the name of AS (the assembler) and AR (the archiver) by taking the
-   current linker name and changing `gcc` for `as` and `ar` respectively.
-2. Copy the linker script to the `cargo` temporary output directory where the
-   linker will look for it.
-3. Assemble `src/boot.S` as `<output>/boot.o`
-4. Add the assembled `<output>/` file to `<output>/libboot.a`
-5. Tell `cargo` to link against `libboot.a`
+Before the build, `cargo` will compile and execute `build.rs`, which will copy
+the linker script to the `cargo` temporary output directory where the linker
+will look for it.
 
 The compiled outputs will go into `./target/armv8r-none-eabihf/<profile>`, where
 `<profile>` is `debug` or `release`. The binary is called `basic-rust`, because
 that's the name given in the `Cargo.toml` file.
 
 ```console
-$ cargo +nightly build --release -Zbuild-std=core
+$ criticalup run cargo build --release
     Finished release [optimized] target(s) in 0.00s
-$ arm-none-eabi-size target/armv8r-none-eabihf/release/basic-rust
-   text    data     bss     dec     hex filename
-  16680       0       0   16680    4128 target/armv8r-none-eabihf/release/basic-rust
-$ cargo +nightly run --release
+$ criticalup run cargo run --release
    Compiling basic-rust v0.1.0 (/Users/jonathan/work/basic-rust)
     Finished release [optimized] target(s) in 0.16s
      Running `qemu-system-arm -machine mps3-an536 -cpu cortex-r52 -semihosting -nographic -kernel target/armv8r-none-eabihf/release/basic-rust`
 Hello, this is Rust!
- 1.0  2.0  3.0  4.0  5.0  6.0  7.0  8.0  9.0 10.0
- 2.0  4.0  6.0  8.0 10.0 12.0 14.0 16.0 18.0 20.0
- 3.0  6.0  9.0 12.0 15.0 18.0 21.0 24.0 27.0 30.0
- 4.0  8.0 12.0 16.0 20.0 24.0 28.0 32.0 36.0 40.0
- 5.0 10.0 15.0 20.0 25.0 30.0 35.0 40.0 45.0 50.0
- 6.0 12.0 18.0 24.0 30.0 36.0 42.0 48.0 54.0 60.0
- 7.0 14.0 21.0 28.0 35.0 42.0 49.0 56.0 63.0 70.0
- 8.0 16.0 24.0 32.0 40.0 48.0 56.0 64.0 72.0 80.0
- 9.0 18.0 27.0 36.0 45.0 54.0 63.0 72.0 81.0 90.0
-10.0 20.0 30.0 40.0 50.0 60.0 70.0 80.0 90.0 100.0
-PANIC: PanicInfo { payload: Any { .. }, message: Some(I am a panic), location: Location { file: "src/main.rs", line: 98, col: 5 }, can_unwind: true, force_no_backtrace: false }
+    1.00     2.00     3.00     4.00     5.00     6.00     7.00     8.00     9.00    10.00 
+    2.00     4.00     6.00     8.00    10.00    12.00    14.00    16.00    18.00    20.00 
+    3.00     6.00     9.00    12.00    15.00    18.00    21.00    24.00    27.00    30.00 
+    4.00     8.00    12.00    16.00    20.00    24.00    28.00    32.00    36.00    40.00 
+    5.00    10.00    15.00    20.00    25.00    30.00    35.00    40.00    45.00    50.00 
+    6.00    12.00    18.00    24.00    30.00    36.00    42.00    48.00    54.00    60.00 
+    7.00    14.00    21.00    28.00    35.00    42.00    49.00    56.00    63.00    70.00 
+    8.00    16.00    24.00    32.00    40.00    48.00    56.00    64.00    72.00    80.00 
+    9.00    18.00    27.00    36.00    45.00    54.00    63.00    72.00    81.00    90.00 
+   10.00    20.00    30.00    40.00    50.00    60.00    70.00    80.00    90.00   100.00 
+PANIC: PanicInfo { payload: Any { .. }, message: Some(I am a panic), location: Location { file: "src/main.rs", line: 44, col: 5 }, can_unwind: true, force_no_backtrace: false }
 ```
 
-## Building with Ferrocene
+## Building and Running without `cargo`
 
 Because the `cargo` binary shipped with Ferrocene is not qualified, you may
 prefer to use your own build system, or call `rustc` directly.
@@ -92,18 +73,10 @@ prefer to use your own build system, or call `rustc` directly.
 This demo includes a [`build.sh`](./build.sh) shell script to build our binary
 by calling `rustc` directly. This script will:
 
-1. Assemble `src/boot.S` as `<output>/boot.o`
-2. Add the assembled `<output>/` file to `<output>/libboot.a`
-3. Call `rustc` to compile `src/main.rs` into `<output>/basic-rust`
-4. Generate `asm` and `map` files from the `<output>/basic-rust`
-
-If you don't have the supported linker `arm-none-eabi-gcc` and wish to
-substitute it with an unsupported linker, you can set the C toolchain prefix
-with:
-
-```console
-./build.sh"
-```
+1. Find the location of the tools it needs
+2. Call `criticalup run rustc` to compile `src/main.rs` into `<output>/basic-rust`
+3. Generate `asm` and `map` files from the `<output>/basic-rust` using LLVM
+   tools shipped with Ferrocene
 
 The outputs will go into `./target/production` and the binary is called
 `basic-rust`. You can choose any suitable directory, but avoid clashing with
@@ -111,27 +84,27 @@ anything you do using `cargo`.
 
 ```console
 $ ./build.sh
-Running as...
-Running ar..
 Running rustc...
 Generating asm...
 Generating map...
-$ arm-none-eabi-size target/production/basic-rust
-   text    data     bss     dec     hex filename
-  16680       0       0   16680    4128 target/production/basic-rust
-$ qemu-system-arm -machine mps3-an536 -cpu cortex-r52 -semihosting -nographic -kernel target/production/kernel.elf
+$ qemu-system-arm \
+   -machine mps3-an536 \
+   -cpu cortex-r52 \
+   -semihosting \
+   -nographic \
+   -kernel target/production/kernel.elf
 Hello, this is Rust!
- 1.0  2.0  3.0  4.0  5.0  6.0  7.0  8.0  9.0 10.0
- 2.0  4.0  6.0  8.0 10.0 12.0 14.0 16.0 18.0 20.0
- 3.0  6.0  9.0 12.0 15.0 18.0 21.0 24.0 27.0 30.0
- 4.0  8.0 12.0 16.0 20.0 24.0 28.0 32.0 36.0 40.0
- 5.0 10.0 15.0 20.0 25.0 30.0 35.0 40.0 45.0 50.0
- 6.0 12.0 18.0 24.0 30.0 36.0 42.0 48.0 54.0 60.0
- 7.0 14.0 21.0 28.0 35.0 42.0 49.0 56.0 63.0 70.0
- 8.0 16.0 24.0 32.0 40.0 48.0 56.0 64.0 72.0 80.0
- 9.0 18.0 27.0 36.0 45.0 54.0 63.0 72.0 81.0 90.0
-10.0 20.0 30.0 40.0 50.0 60.0 70.0 80.0 90.0 100.0
-PANIC: PanicInfo { payload: Any { .. }, message: Some(I am a panic), location: Location { file: "src/main.rs", line: 98, col: 5 }, can_unwind: true, force_no_backtrace: false }
+    1.00     2.00     3.00     4.00     5.00     6.00     7.00     8.00     9.00    10.00 
+    2.00     4.00     6.00     8.00    10.00    12.00    14.00    16.00    18.00    20.00 
+    3.00     6.00     9.00    12.00    15.00    18.00    21.00    24.00    27.00    30.00 
+    4.00     8.00    12.00    16.00    20.00    24.00    28.00    32.00    36.00    40.00 
+    5.00    10.00    15.00    20.00    25.00    30.00    35.00    40.00    45.00    50.00 
+    6.00    12.00    18.00    24.00    30.00    36.00    42.00    48.00    54.00    60.00 
+    7.00    14.00    21.00    28.00    35.00    42.00    49.00    56.00    63.00    70.00 
+    8.00    16.00    24.00    32.00    40.00    48.00    56.00    64.00    72.00    80.00 
+    9.00    18.00    27.00    36.00    45.00    54.00    63.00    72.00    81.00    90.00 
+   10.00    20.00    30.00    40.00    50.00    60.00    70.00    80.00    90.00   100.00 
+PANIC: PanicInfo { payload: Any { .. }, message: Some(I am a panic), location: Location { file: "src/main.rs", line: 44, col: 5 }, can_unwind: true, force_no_backtrace: false }
 ```
 
 ## License

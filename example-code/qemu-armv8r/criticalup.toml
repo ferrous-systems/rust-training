@@ -1,5 +1,11 @@
 manifest-version = 1
 
 [products.ferrocene]
-release = "nightly-2024-04-24"
-packages = ["rustc-${rustc-host}", "rust-std-${rustc-host}", "cargo-${rustc-host}", "rustfmt-${rustc-host}", "rust-src", "rust-std-armv8r-none-eabihf",]
+release = "rolling-2024-06-12"
+packages = [
+    "rustc-${rustc-host}",
+    "rust-std-${rustc-host}",
+    "cargo-${rustc-host}",
+    "llvm-tools-${rustc-host}",
+    "rust-std-armv8r-none-eabihf",
+]
