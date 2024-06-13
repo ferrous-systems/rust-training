@@ -176,34 +176,60 @@ pub fn make_cheatsheet(lang: &str) -> Result<(), eyre::Report> {
         }
         Err(_) => {
             println!("File {lang}-cheatsheet.md already exists - checking it's in sync");
-            todo!();
+            let _ = test_cheatsheet(lang);
         }
     }
     Ok(())
 }
 
 pub fn test_cheatsheet(lang: &str) -> Result<(), eyre::Report> {
-    let text = read_to_string("./training-slides/src/SUMMARY.md").expect("SUMMARY.md not found");
+    let text = read_to_string("./training-slides/src/SUMMARY.md").expect("could not read_to_string - SUMMARY.md not found");
     let slide_texts = focus_regions(&text);
     let slide_sections: Vec<SlidesSection> = slide_texts
         .iter()
         .map(|l| extract_slides(l.clone()))
         .collect();
 
-    println!("test-cheatsheet {lang} {slide_sections:?}");
-    // TODO
-    todo!();
-    // 1. Get headers as # Header 
-    // 2. Bunch slide_titles as ## Sections
-    // 3. Put them into SlideSections
-    // let file_name = format!("./training-slices/src/{lang}-cheatsheet.md");
-    // let cheatsheet_text = read_to_string(file_name).expect("SUMMARY.md not found");
-    // let cheatsheet_slide_texts = focus_regions(&cheatsheet_text);
-    // let cheatsheet_slide_sections: Vec<SlidesSection> = cheatsheet_slide_texts
-    //     .iter()
-    //     .map(|l| extract_slides(l.clone()))
-    //     .collect();
-    // Ok(())
+    let file_name = format!("./training-slides/src/{lang}-cheatsheet.md");
+    let cheatsheet_text = read_to_string(file_name).expect("lang-cheatsheet.md not found");
+    let cheatsheet_lines = cheatsheet_text
+        .lines()
+        .filter(|l| l.starts_with("#"))
+        .map(|l| l.to_string())
+        .collect::<Vec<String>>();
+
+    let mut missing_files = false;
+    let mut idx = 0;
+    for line in cheatsheet_lines.iter() {
+        if line.starts_with("# ") {
+            if line != cheatsheet_lines.first().unwrap() {
+                idx += 1;
+            }
+            let header = line.strip_prefix("# ").unwrap();
+            if header != slide_sections[idx].header {
+                eprintln!("{} header should be {}", line, slide_sections[idx].header);
+                missing_files = true;
+            }
+        }
+        if line.starts_with("## ") {
+            let slide_title = line
+                .strip_prefix("## ")
+                .expect("Expected the line to start with `## `");
+            if !(slide_sections[idx].slide_titles).contains(&slide_title.to_string()) {
+                //println!("{:?}", &slide_sections[idx][1..]);
+                eprintln!(
+                    "{} is not in {lang}-cheathseet.md under expected header {}",
+                    slide_title, slide_sections[idx].header
+                );
+            }
+        }
+    }
+    if missing_files {
+        panic!("You have missing slides");
+    } else {
+        eprintln!("Neat! {lang}-cheatsheet.md is in sync");
+        Ok(())
+    }
 }
 
 fn write_cheatsheet(slide_sections: Vec<SlidesSection>) -> String {
