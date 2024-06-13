@@ -5,6 +5,7 @@ set -euo pipefail
 # Check the example code
 pushd ./native/ffi/use-c-in-rust
 cargo build --all
+cargo test
 cargo clean
 popd
 pushd ./native/stdout

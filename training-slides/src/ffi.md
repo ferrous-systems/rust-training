@@ -141,7 +141,6 @@ You can tell `rustc` to make:
     - staticlib
     - cdylib
 
-
 Note:
 
 See https://doc.rust-lang.org/reference/linkage.html
@@ -169,22 +168,25 @@ See ./examples/ffi_use_rust_in_c for a working example.
 We have this amazing C library, we want to use as-is in our Rust project.
 
 `cool_library.h`:
-```c []
-#include <stdint.h>
 
-/** Do some amazing maths */
-uint32_t cool_library_function(uint32_t x, uint32_t y);
+```c []
+/** Parse a null-terminated string */
+unsigned int cool_library_function(const unsigned char* p);
 ```
 
 `cool_library.c`:
+
 ```c []
-#include <stdio.h>
 #include "hello.h"
 
-uint32_t cool_library_function(uint32_t x, uint32_t y)
-{
-    // I know, right? Amazing.
-    return x + y;
+unsigned int cool_library_function(const unsigned char* s) {
+    unsigned int result = 0;
+    for(const char* p = s; *p; p++) {
+        result *= 10;
+        if ((*p < '0') || (*p > '9')) { return 0; }
+        result += (*p - '0');
+    }
+    return result;
 }
 ```
 
@@ -201,64 +203,65 @@ uint32_t cool_library_function(uint32_t x, uint32_t y)
 #![allow(non_camel_case_types, non_upper_case_globals, non_snake_case)]
 ```
 
+<p>&nbsp;<!-- spacer for "run" button --></p>
+
 Disables some Rust naming lints
 
 ## Binding functions
 
 ```c
-#include <stdint.h>
-
-/** Do some amazing maths */
-uint32_t cool_library_function(uint32_t x, uint32_t y);
+/** Parse a null-terminated string */
+unsigned int cool_library_function(const char* p);
 ```
 
 ```rust []
-use std::os::raw::{c_uint, c_char};
+use std::ffi::{c_char, c_uint}; // also in core::ffi
 
 extern "C" {
     // We state that this function exists, but there's no definition.
     // The linker looks for this 'symbol name' in the other objects
-    fn cool_library_function(x: c_uint, y: c_uint) -> c_uint;
+    fn cool_library_function(p: *const c_char) -> c_uint;
 }
 ```
 
-
 Note:
-
-Note that `uint32_t` doesn't really exist to the C compiler. It is a typedef for either `unsigned int` or `unsigned long int` - depending on the platform - which is provided by `stdint.h`.
-
-See https://doc.rust-lang.org/std/os/raw/index.html for the c_uint type.
 
 You cannot do `extern "C" fn some_function();` with no function body - you must use the block.
 
 ## Primitive types
 
-Some type conversions can be inferred by the compiler.
+Some C types have direct Rust equivalents.
 
-* `c_uint` ↔ `u32`
-* `c_int` ↔ `i32`
-* `c_char` ↔ `u8` (not `char`!)
-* `c_void` ↔ `()`
-* ...etc...
+The [`core::ffi`](https://doc.rust-lang.org/stable/core/ffi/index.html) module
+also defines a bunch of useful types and aliases.
+
+| C             | Rust                   |
+| ------------- | ---------------------- |
+| int32_t       | i32                    |
+| unsigned int  | c_uint                 |
+| unsigned char | u8 (not char!)         |
+| void          | ()                     |
+| char\*        | CStr or \*const c_char |
 
 Note:
 
-These C types were in `std`, but are moving to `core`.
+On some systems, a C `char` is not 8 bits in size. Rust does not support those
+platforms, and likely never will. Rust does support platforms where `int` is
+only 16-bits in size.
 
 ## Calling this
 
 ```rust [] ignore
-use std::os::raw::c_uint;
+use std::ffi::{c_char, c_uint};
 
 extern "C" {
-    fn cool_library_function(x: c_uint, y: c_uint) -> c_uint;
+    fn cool_library_function(p: *const c_char) -> c_uint;
 }
 
 fn main() {
-    let result: u32 = unsafe {
-        cool_library_function(6, 7)
-    };
-    println!("{} should be 13", result);
+    let s = c"123"; // <-- a null-terminated string!
+    let result: u32 = unsafe { cool_library_function(s.as_ptr()) };
+    println!("cool_library_function({s:?}) => {result}");
 }
 ```
 
@@ -294,7 +297,7 @@ pub struct FoobarHandle(*mut FoobarContext);
 `extern "C"` applies to function pointers given to extern functions too.
 
 ```rust [] ignore
-use std::os::raw::c_void;
+use std::ffi::c_void;
 
 pub type FooCallback = extern "C" fn(state: *mut c_void);
 
