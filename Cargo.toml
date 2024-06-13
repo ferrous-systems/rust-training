@@ -2,4 +2,7 @@
 members = [
     "xtask",
 ]
+exclude = ["example-code/*"]
+
 resolver = "2"
+	
