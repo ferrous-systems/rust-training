@@ -179,6 +179,29 @@ impl Post {
 }
 ```
 
+Note:
+
+As an in-depth example of the borrowchecker's limitations, consider the [Splitting Borrows](https://doc.rust-lang.org/nomicon/borrow-splitting.html) idiom, which allows one to borrow different fields of the same struct with different mutability semantics:
+
+```rust
+struct Foo {
+    a: i32,
+    b: i32,
+    c: i32,
+}
+
+let mut x = Foo {a: 0, b: 0, c: 0};
+let a = &mut x.a;
+let b = &mut x.b;
+let c = &x.c;
+*b += 1;
+let c2 = &x.c;
+*a += 10;
+println!("{} {} {} {}", a, b, c, c2);
+```
+
+The code works, but you *have* to use shadowing with `let a = &mut x.a;` or else the compiler will error. The borrowchecker is particularly frail here - replacing `Foo` with `x = [1,2,3]` and trying to borrow indexes will make it error out.
+
 ## `RefCell`
 
 A `RefCell` is also safe, but lets you *borrow* or *mutably borrow* the contents.
@@ -252,3 +275,33 @@ To get *shared ownership* and *mutability* you need two things:
 
 * `Rc<RefCell<T>>`
 * (Multi-threaded programs might use `Arc<Mutex<T>>`)
+
+## `OnceCell` for special cases
+
+If you only need to modify a field *once*, a `OnceCell` can help you keep the ownership system checks at compile-time
+
+```rust
+use std::time::Instant;
+
+fn main() {
+    let post = Post {
+        content: String::from("Blah"),
+        ..Post::default()
+    };
+    assert!(post.first_viewed_at.get().is_none());
+    println!("{:?}", post.date_of_first_view());
+    assert!(post.first_viewed_at.get().is_some());
+}
+
+#[derive(Debug, Default)]
+struct Post {
+    content: String,
+    first_viewed_at: std::cell::OnceCell<Instant>,
+}
+
+impl Post {
+    fn date_of_first_view(&self) -> Instant {
+        *self.first_viewed_at.get_or_init(Instant::now)
+    }
+}
+```
