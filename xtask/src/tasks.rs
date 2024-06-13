@@ -10,10 +10,9 @@ struct SlidesSection {
     slide_titles: Vec<String>,
 }
 
-const INITIAL_HEADER: &str = "# Rust Fundamentals";
-const LAST_HEADER: &str = "# No-Std Rust";
-
 fn get_slide_name(line: &str) -> String {
+    assert!(line.starts_with("* ["));
+    assert!(line.ends_with(".md)"));
     // SAFETY
     // This line should be a well formed mdbook entries: `* [TEXT](./foo.md)`
     let top = line
@@ -35,6 +34,9 @@ fn test_get_slide_name() {
     let res2 = "Shared Mutability (Cell, RefCell)";
     assert_eq!(res2, get_slide_name(test2));
 }
+
+const INITIAL_HEADER: &str = "# Rust Fundamentals";
+const LAST_HEADER: &str = "# No-Std Rust";
 
 fn focus_regions(text: &str) -> Vec<Vec<String>> {
     let mut result: Vec<Vec<String>> = Vec::new();
@@ -151,8 +153,8 @@ fn test_extract_slides() {
     assert!(true);
 }
 
-pub fn make_cheatsheet(lang: &str) -> Result<(), eyre::Report>{
-    // Collect headers
+pub fn make_cheatsheet(lang: &str) -> Result<(), eyre::Report> {
+    // Collect slide sections, chunked by header
     let text = read_to_string("./training-slides/src/SUMMARY.md").expect("SUMMARY.md not found");
     let slide_texts = focus_regions(&text);
     let slide_sections: Vec<SlidesSection> = slide_texts
@@ -165,15 +167,15 @@ pub fn make_cheatsheet(lang: &str) -> Result<(), eyre::Report>{
     let new_file = Path::new(&file_str);
 
     // If so, just check if headers any headers are missing
-    // otherwise, create the new file, then write new file into summary.md
+    // Otherwise, create the new file, then write new file into `SUMMARY.md`
     match File::create_new(new_file) {
         Ok(mut f) => {
             let result_text = write_cheatsheet(slide_sections);
-            let _ = f.write_all(&result_text.as_bytes());
-            eprintln!("Cheatsheat for {lang} written at {file_str}");
+            let _ = f.write_all(result_text.as_bytes());
+            println!("Cheatsheat for {lang} written at {file_str}");
         }
         Err(_) => {
-            eprintln!("File {lang}-cheatsheet.md already exists - checking it's in sync");
+            println!("File {lang}-cheatsheet.md already exists - checking it's in sync");
             todo!();
         }
     }
@@ -181,15 +183,27 @@ pub fn make_cheatsheet(lang: &str) -> Result<(), eyre::Report>{
 }
 
 pub fn test_cheatsheet(lang: &str) -> Result<(), eyre::Report> {
-    println!("make_cheatsheet for {lang}");
     let text = read_to_string("./training-slides/src/SUMMARY.md").expect("SUMMARY.md not found");
     let slide_texts = focus_regions(&text);
     let slide_sections: Vec<SlidesSection> = slide_texts
         .iter()
         .map(|l| extract_slides(l.clone()))
         .collect();
+
     println!("test-cheatsheet {lang} {slide_sections:?}");
-    Ok(())
+    // TODO
+    todo!();
+    // 1. Get headers as # Header 
+    // 2. Bunch slide_titles as ## Sections
+    // 3. Put them into SlideSections
+    // let file_name = format!("./training-slices/src/{lang}-cheatsheet.md");
+    // let cheatsheet_text = read_to_string(file_name).expect("SUMMARY.md not found");
+    // let cheatsheet_slide_texts = focus_regions(&cheatsheet_text);
+    // let cheatsheet_slide_sections: Vec<SlidesSection> = cheatsheet_slide_texts
+    //     .iter()
+    //     .map(|l| extract_slides(l.clone()))
+    //     .collect();
+    // Ok(())
 }
 
 fn write_cheatsheet(slide_sections: Vec<SlidesSection>) -> String {
@@ -200,7 +214,7 @@ fn write_cheatsheet(slide_sections: Vec<SlidesSection>) -> String {
             let slide_title = format!("## {entry}\n");
             section_str_buf.push_str(&slide_title);
         }
-        section_str_buf.push_str("\n");
+        section_str_buf.push('\n');
         res.push_str(&section_str_buf);
     }
     res
