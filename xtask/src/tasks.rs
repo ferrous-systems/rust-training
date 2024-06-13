@@ -210,6 +210,13 @@ pub fn test_cheatsheet(lang: &str) -> Result<(), eyre::Report> {
         if line.starts_with("# ") {
             if line != cheatsheet_lines.first().unwrap() {
                 idx += 1;
+                // Check if people have added extra headers - leave them alone
+                // so that lang - specific advice doesn't have to correlate to slides 
+                // if it goes at the end
+                if idx == slide_sections.len() {
+                    eprintln!("Neat! {lang}-cheatsheet.md is in sync AND contains some extra info at the end");
+                    return Ok(());
+                }
             }
             let header = line.strip_prefix("# ").unwrap();
             if header != slide_sections[idx].header {

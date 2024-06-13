@@ -46,15 +46,34 @@ Specifically, `make-cheatsheet` and `test-cheatsheet` are defined in `xtask/src/
 
 and convert it into a `Vec<SlidesSection>`:
 
-```
+```rust
     vec![SlideSection {header: "Rust Fundamentals",
             slide_titles: vec!["Overview", "Installation", "Basic Types"]},
          SlideSection {header: "Applied Rust",
             slide_titles: vec!["Methods and Traits", "Rust I/O Traits", "Generics"]}]
 ```
 
-From there we can 
+From there we can
 
-* create the cheatsheet for Python and have it written out to `training-slides/src/python-cheatsheet.md` by just iterating over `Vec<SlideSection>` and prefixing with the appropriate header level before printing 
+* create the cheatsheet for Python and have it written out to `training-slides/src/python-cheatsheet.md` by just iterating over `Vec<SlideSection>` and prefixing with the appropriate header level before printing
 * test that the cheathseet is in sync by scraping for all the lines that start with `#` in `python-cheatsheet.md` and check that they match, in order, those we scraped from `SUMMARY.md`.
 
+Note: some languages will warrant some special entries - any headers after the last `SlideSection` header will be ignored,
+so that we can add additional relevant information without having to conform to the slides.
+
+Concretely, this is allowed:
+
+```md
+
+# Applied Rust 
+## Methods and Traits
+## Rust I/O Traits
+## Generics
+# FAQ
+## How to do...
+# Syntax Clashes
+## Operator overloading
+...
+```
+
+but the code will signal if `# FAQ` or `# Syntax Clashes` appear before `# Applied Rust`.
