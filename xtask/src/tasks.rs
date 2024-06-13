@@ -14,7 +14,7 @@ fn get_slide_name(line: &str) -> String {
     assert!(line.starts_with("* ["));
     assert!(line.ends_with(".md)"));
     // SAFETY
-    // This line should be a well formed mdbook entries: `* [TEXT](./foo.md)`
+    // This line should be a well formed mdbook entry: `* [TEXT](./foo.md)`
     let top = line
         .rfind(']')
         .expect("the markdown file entry did not have a ']'");
@@ -166,23 +166,26 @@ pub fn make_cheatsheet(lang: &str) -> Result<(), eyre::Report> {
     let file_str = format!("./training-slides/src/{lang}-cheatsheet.md");
     let new_file = Path::new(&file_str);
 
-    // If so, just check if headers any headers are missing
-    // Otherwise, create the new file, then write new file into `SUMMARY.md`
+    // If lang-cheatsheet.md exists, check if any headers are missing
+    // Otherwise, create the lang-cheatsheet.md
     match File::create_new(new_file) {
         Ok(mut f) => {
             let result_text = write_cheatsheet(slide_sections);
-            let _ = f.write_all(result_text.as_bytes());
-            println!("Cheatsheat for {lang} written at {file_str}");
+            drop(f.write_all(result_text.as_bytes()));
+            eprintln!("Cheatsheat for {lang} written at {file_str}");
+            eprintln!("Make sure to add it to SUMMARY.md!")
+
         }
         Err(_) => {
-            println!("File {lang}-cheatsheet.md already exists - checking it's in sync");
-            let _ = test_cheatsheet(lang);
+            eprintln!("File {lang}-cheatsheet.md already exists - checking it's in sync");
+            drop(test_cheatsheet(lang));
         }
     }
     Ok(())
 }
 
 pub fn test_cheatsheet(lang: &str) -> Result<(), eyre::Report> {
+    // Collect Vec<SlideSection>
     let text = read_to_string("./training-slides/src/SUMMARY.md").expect("could not read_to_string - SUMMARY.md not found");
     let slide_texts = focus_regions(&text);
     let slide_sections: Vec<SlidesSection> = slide_texts
@@ -190,10 +193,13 @@ pub fn test_cheatsheet(lang: &str) -> Result<(), eyre::Report> {
         .map(|l| extract_slides(l.clone()))
         .collect();
 
+    // Collect SlideSections and slide titles
     let file_name = format!("./training-slides/src/{lang}-cheatsheet.md");
     let cheatsheet_text = read_to_string(file_name).expect("lang-cheatsheet.md not found");
     let cheatsheet_lines = cheatsheet_text
         .lines()
+        // Tricky: We only care about entries that start with '#', so filtering for them is enough to get only the 
+        // interesting lines!
         .filter(|l| l.starts_with("#"))
         .map(|l| l.to_string())
         .collect::<Vec<String>>();
@@ -216,11 +222,11 @@ pub fn test_cheatsheet(lang: &str) -> Result<(), eyre::Report> {
                 .strip_prefix("## ")
                 .expect("Expected the line to start with `## `");
             if !(slide_sections[idx].slide_titles).contains(&slide_title.to_string()) {
-                //println!("{:?}", &slide_sections[idx][1..]);
                 eprintln!(
                     "{} is not in {lang}-cheathseet.md under expected header {}",
                     slide_title, slide_sections[idx].header
                 );
+                missing_files = true;
             }
         }
     }
