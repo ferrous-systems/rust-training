@@ -65,9 +65,8 @@ There are a growing number of Rust-based consultancies.
 
 Ferrous Systems offer professional training for small teams:
 
-* €3,150 per person
 * Just for you - groups of 5 to 12 people
 * Spread over six half-days (6 x 4 hrs = 24 hrs)
 * Our material is open-source: <https://github.com/ferrous-systems/rust-training>
 * Tailored to your needs and experience
-* Attending this seminar gets you a 5% discount
+* Talk to the team via <https://ferrous-systems.com/contact/>
