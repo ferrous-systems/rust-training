@@ -67,6 +67,6 @@ Ferrous Systems offer professional training for small teams:
 
 * Just for you - groups of 5 to 12 people
 * Spread over six half-days (6 x 4 hrs = 24 hrs)
-* Our material is open-source: <https://github.com/ferrous-systems/rust-training>
+* Our material is [open-source](https://github.com/ferrous-systems/rust-training)
 * Tailored to your needs and experience
 * Talk to the team via <https://ferrous-systems.com/contact/>
