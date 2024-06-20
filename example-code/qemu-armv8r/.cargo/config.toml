@@ -7,3 +7,9 @@ runner = "qemu-system-arm -machine mps3-an536 -cpu cortex-r52 -semihosting -nogr
 
 [build]
 target = ["armv8r-none-eabihf"]
+
+[source.crates-io]
+replace-with = "vendored-sources"
+
+[source.vendored-sources]
+directory = "vendor"
