@@ -74,6 +74,7 @@ echo Running rustc for lib...
 echo Running rustc for no_heap...
 # ############################################################################
 "${RUSTC}" ${RUSTC_FLAGS} \
+	--crate-type=bin \
 	-Clink-arg=-Tlinker.ld \
 	--edition 2021 \
 	-L ${TARGET_DIR} \

@@ -7,5 +7,6 @@ packages = [
     "rust-std-${rustc-host}",
     "cargo-${rustc-host}",
     "llvm-tools-${rustc-host}",
+    "rust-src",
     "rust-std-armv8r-none-eabihf",
 ]

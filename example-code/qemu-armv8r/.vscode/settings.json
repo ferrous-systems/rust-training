@@ -1,19 +1,3 @@
 {
-    "rust-analyzer.cargo.buildScripts.overrideCommand": [
-        "criticalup",
-        "run",
-        "cargo",
-        "check",
-        "--quiet",
-        "--workspace",
-        "--message-format=json",
-        "--all-targets"
-      ],
-      "rust-analyzer.check.overrideCommand": [
-        "criticalup",
-        "run",
-        "cargo",
-        "check",
-        "--message-format=json"
-      ]
+    "rust-analyzer.procMacro.enable": false
 }
