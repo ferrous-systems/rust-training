@@ -41,16 +41,16 @@ the linker script to the `cargo` temporary output directory where the linker
 will look for it.
 
 The compiled outputs will go into `./target/armv8r-none-eabihf/<profile>`, where
-`<profile>` is `debug` or `release`. The binary is called `basic-rust`, because
+`<profile>` is `debug` or `release`. The binary is called `qemu-demo`, because
 that's the name given in the `Cargo.toml` file.
 
 ```console
 $ criticalup run cargo build --release
     Finished release [optimized] target(s) in 0.00s
 $ criticalup run cargo run --release
-   Compiling basic-rust v0.1.0 (/Users/jonathan/work/basic-rust)
+   Compiling qemu-demo v0.1.0 (/Users/jonathan/work/qemu-demo)
     Finished release [optimized] target(s) in 0.16s
-     Running `qemu-system-arm -machine mps3-an536 -cpu cortex-r52 -semihosting -nographic -kernel target/armv8r-none-eabihf/release/basic-rust`
+     Running `qemu-system-arm -machine mps3-an536 -cpu cortex-r52 -semihosting -nographic -kernel target/armv8r-none-eabihf/release/qemu-demo`
 Hello, this is Rust!
     1.00     2.00     3.00     4.00     5.00     6.00     7.00     8.00     9.00    10.00 
     2.00     4.00     6.00     8.00    10.00    12.00    14.00    16.00    18.00    20.00 
@@ -74,12 +74,12 @@ This demo includes a [`build.sh`](./build.sh) shell script to build our binary
 by calling `rustc` directly. This script will:
 
 1. Find the location of the tools it needs
-2. Call `criticalup run rustc` to compile `src/main.rs` into `<output>/basic-rust`
-3. Generate `asm` and `map` files from the `<output>/basic-rust` using LLVM
+2. Call `criticalup run rustc` to compile `src/main.rs` into `<output>/qemu-demo`
+3. Generate `asm` and `map` files from the `<output>/qemu-demo` using LLVM
    tools shipped with Ferrocene
 
 The outputs will go into `./target/production` and the binary is called
-`basic-rust`. You can choose any suitable directory, but avoid clashing with
+`qemu-demo`. You can choose any suitable directory, but avoid clashing with
 anything you do using `cargo`.
 
 ```console

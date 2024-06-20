@@ -3,12 +3,12 @@
 set -euo pipefail
 
 TARGET_DIR=target/production
-OUTPUT_BINARY=${TARGET_DIR}/basic-rust
+OUTPUT_BINARY=${TARGET_DIR}/qemu-demo
 RUSTC=$(criticalup which rustc)
 SYSROOT=$(criticalup run rustc --print sysroot)
 OBJDUMP=$(ls "${SYSROOT}"/lib/rustlib/*/bin/llvm-objdump)
-OUTPUT_MAP=${TARGET_DIR}/basic-rust.map
-OUTPUT_ASM=${TARGET_DIR}/basic-rust.asm
+OUTPUT_MAP=${TARGET_DIR}/qemu-demo.map
+OUTPUT_ASM=${TARGET_DIR}/qemu-demo.asm
 
 rm -rf ${TARGET_DIR}
 mkdir -p ${TARGET_DIR}
