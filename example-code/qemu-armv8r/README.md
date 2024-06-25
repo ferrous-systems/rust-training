@@ -58,12 +58,12 @@ the linker script to the `cargo` temporary output directory where the linker
 will look for it.
 
 The compiled outputs will go into `./target/armv8r-none-eabihf/<profile>`, where
-`<profile>` is `debug` or `release`. The binary is called `qemu-demo`, because
+`<profile>` is `debug` or `release`. The binary is called `qemu-armv8r`, because
 that's the name given in the `Cargo.toml` file.
 
 ```console
 $ criticalup run cargo run --release -bin no_heap
-   Compiling qemu-demo v0.1.0 (/Users/jonathan/work/qemu-demo)
+   Compiling qemu-armv8r v0.1.0 (/Users/jonathan/work/qemu-armv8r)
     Finished release [optimized] target(s) in 0.16s
      Running `qemu-system-arm -machine mps3-an536 -cpu cortex-r52 -semihosting -nographic -kernel target/armv8r-none-eabihf/release/no_heap`
 Hello, this is Rust!

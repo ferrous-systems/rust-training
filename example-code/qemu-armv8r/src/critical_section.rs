@@ -19,7 +19,6 @@ pub fn interrupts_enabled() -> bool {
 unsafe impl critical_section::Impl for SingleCoreCriticalSection {
     unsafe fn acquire() -> critical_section::RawRestoreState {
         let was_active = interrupts_enabled();
-        // NOTE: Fence guarantees are provided by interrupt::disable(), which performs a `compiler_fence(SeqCst)`.
         core::arch::asm!("cpsid i", options(nomem, nostack, preserves_flags));
         core::sync::atomic::compiler_fence(core::sync::atomic::Ordering::SeqCst);
         was_active
