@@ -1,25 +1,26 @@
-//! Code that implements the `critical-section` traits on Cortex-R.
+//! Code that implements the `critical-section` traits on 64-bit Aarch64.
 
 struct SingleCoreCriticalSection;
 critical_section::set_impl!(SingleCoreCriticalSection);
 
-/// Reads the CPU interrupt status bit from CPSR
+/// Reads the CPU interrupt status bit from DAIF
 ///
 /// Returns true if interrupts enabled.
 #[inline]
 pub fn interrupts_enabled() -> bool {
-    const CPSR_I_BIT: u32 = 1 << 7;
+    const DAIF_I_BIT: u32 = 1 << 7;
     let r: u32;
     unsafe {
-        core::arch::asm!("mrs {}, CPSR", out(reg) r, options(nomem, nostack, preserves_flags))
+        core::arch::asm!("mrs {0:x}, DAIF", out(reg) r, options(nomem, nostack, preserves_flags))
     };
-    r & CPSR_I_BIT != 0
+    r & DAIF_I_BIT != 0
 }
 
 unsafe impl critical_section::Impl for SingleCoreCriticalSection {
     unsafe fn acquire() -> critical_section::RawRestoreState {
         let was_active = interrupts_enabled();
-        core::arch::asm!("cpsid i", options(nomem, nostack, preserves_flags));
+        // Disable interrupts by masking IRQs (leave FIQ enabled)
+        core::arch::asm!("msr DAIFset, #7", options(nomem, nostack, preserves_flags));
         core::sync::atomic::compiler_fence(core::sync::atomic::Ordering::SeqCst);
         was_active
     }
@@ -28,7 +29,8 @@ unsafe impl critical_section::Impl for SingleCoreCriticalSection {
         // Only re-enable interrupts if they were enabled before the critical section.
         if was_active {
             core::sync::atomic::compiler_fence(core::sync::atomic::Ordering::SeqCst);
-            core::arch::asm!("cpsie i", options(nomem, nostack, preserves_flags));
+            // Enable interrupts by unmasking IRQs
+            core::arch::asm!("msr DAIFclr, #7", options(nomem, nostack, preserves_flags));
         }
     }
 }

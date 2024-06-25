@@ -3,22 +3,34 @@
 //! Written by Jonathan Pallant at Ferrous Systems
 //!
 //! Copyright (c) Ferrous Systems, 2024
-//!
-//! To
 
 #![no_std]
 #![no_main]
 
-use core::fmt::Write;
+extern crate alloc;
 
-mod virt_uart;
+use core::{fmt::Write, ptr::addr_of_mut};
+use embedded_alloc::Heap;
+use qemu_aarch64v8a::{exception_level, virt_uart};
+
+#[global_allocator]
+static HEAP: Heap = Heap::empty();
 
 /// The entry-point to the Rust application.
 ///
-/// It is called by the start-up code in [`boot.S`](./boot.S) and thus exported
-/// as a C-compatible symbol.
+/// It is called by the start-up code in `lib.rs`.
 #[no_mangle]
 pub extern "C" fn kmain() {
+    // Initialize the allocator BEFORE you use it
+    {
+        const HEAP_SIZE: usize = 1024;
+        static mut HEAP_MEM: [u8; HEAP_SIZE] = [0u8; HEAP_SIZE];
+        unsafe {
+            let heap_start = addr_of_mut!(HEAP_MEM);
+            HEAP.init(heap_start as usize, HEAP_SIZE);
+        }
+    }
+
     if let Err(e) = main() {
         panic!("main returned {:?}", e);
     }
@@ -29,11 +41,12 @@ pub extern "C" fn kmain() {
 /// Called by [`kmain`].
 fn main() -> Result<(), core::fmt::Error> {
     let mut uart0 = unsafe { virt_uart::Uart::new_uart0() };
-    writeln!(uart0, "Hello, this is Rust!")?;
+    writeln!(uart0, "Hello, this is Rust @ {:?}", exception_level())?;
     for x in 1..=10 {
         for y in 1..=10 {
             let z = f64::from(x) * f64::from(y);
-            write!(uart0, "{z:>8.2} ")?;
+            let msg = alloc::format!("{z:>8.2} ");
+            write!(uart0, "{}", msg)?;
         }
         writeln!(uart0)?;
     }
@@ -59,30 +72,5 @@ fn panic(info: &core::panic::PanicInfo) -> ! {
         }
     }
 }
-
-core::arch::global_asm!(
-    r#"
-
-.section .text.startup
-.global _start
-
-// Assumes we are in EL1
-
-_start:
-    // Set stack pointer
-    ldr x30, =stack_top
-    mov sp, x30
-    // Set FPEN bits [21:20] to 0b11 to prevent trapping.
-    mov x0, #3 << 20
-    msr cpacr_el1, x0   
-    // Clear interrupt bit
-    msr daifclr, #0x4   
-    // Jump to application
-    bl kmain
-    // In case the application returns, loop forever
-    b .
-
-"#
-);
 
 // End of file

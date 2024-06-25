@@ -25,7 +25,7 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "9afa463f5405ee81cdb9cc2baf37e08ec7e4c8209442b5d72c04cfb2cd6e6286"
 
 [[package]]
-name = "qemu-demo"
+name = "qemu-armv8r"
 version = "0.1.0"
 dependencies = [
  "critical-section",

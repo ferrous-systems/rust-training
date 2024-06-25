@@ -1,19 +1,16 @@
-//! An example program for QEMU's Armv8-R Virtual Machine
+//! An example program for QEMU's Aarch64 Virtual Machine
 //!
 //! Written by Jonathan Pallant at Ferrous Systems
 //!
 //! Copyright (c) Ferrous Systems, 2024
+//!
+//! To
 
 #![no_std]
 #![no_main]
 
 use core::fmt::Write;
-use qemu_armv8r::cmsdk_uart;
-
-/// The clock speed of the peripheral subsystem on an SSE-300 SoC an on MPS3 board.
-///
-/// Probably right for an MPS3-
-const PERIPHERAL_CLOCK: u32 = 25_000_000;
+use qemu_aarch64v8a::{exception_level, virt_uart};
 
 /// The entry-point to the Rust application.
 ///
@@ -29,9 +26,8 @@ pub extern "C" fn kmain() {
 ///
 /// Called by [`kmain`].
 fn main() -> Result<(), core::fmt::Error> {
-    let mut uart0 = unsafe { cmsdk_uart::Uart::new_uart0() };
-    uart0.enable(115200, PERIPHERAL_CLOCK);
-    writeln!(uart0, "Hello, this is Rust!")?;
+    let mut uart0 = unsafe { virt_uart::Uart::new_uart0() };
+    writeln!(uart0, "Hello, this is Rust @ {:?}", exception_level())?;
     for x in 1..=10 {
         for y in 1..=10 {
             let z = f64::from(x) * f64::from(y);
@@ -48,17 +44,15 @@ fn main() -> Result<(), core::fmt::Error> {
 /// breakpoint.
 #[panic_handler]
 fn panic(info: &core::panic::PanicInfo) -> ! {
-    const SYS_REPORTEXC: u32 = 0x18;
-    // We assume it is already enabled
-    let mut uart0 = unsafe { cmsdk_uart::Uart::new_uart0() };
-    let _ = writeln!(uart0, "PANIC: {:?}", info);
+    const SYS_REPORTEXC: u64 = 0x18;
+    let mut c = unsafe { virt_uart::Uart::new_uart0() };
+    let _ = writeln!(c, "PANIC: {:?}", info);
     loop {
         // Exit, using semihosting
         unsafe {
             core::arch::asm!(
-                "svc 0x123456",
-                in("r0") SYS_REPORTEXC,
-                in("r1") 0x20026
+                "hlt 0xf000",
+                in("x0") SYS_REPORTEXC
             )
         }
     }

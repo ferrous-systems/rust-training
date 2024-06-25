@@ -1,5 +1,5 @@
 [package]
-name = "basic-rust"
+name = "qemu-aarch64v8a"
 version = "0.1.0"
 edition = "2021"
 authors = ["Ferrous Systems"]
@@ -7,6 +7,14 @@ license = "MIT OR Apache-2.0"
 description = "A simple Aarch64 demo application that runs in QEMU and compiles with Ferrocene"
 
 [dependencies]
+critical-section = { version = "1.1.2", features = ["restore-state-bool"] }
+embedded-alloc = "0.5.1"
 
 [profile.release]
 opt-level = "s"
+
+[source.crates-io]
+replace-with = "vendored-sources"
+
+[source.vendored-sources]
+directory = "vendor"
