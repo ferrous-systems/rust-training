@@ -61,7 +61,7 @@ The compiled outputs will go into `./target/aarch64-none-eabi/<profile>`, where
 that's the name given in the `Cargo.toml` file.
 
 ```console
-$ criticalup run cargo run --release
+$ criticalup run cargo run --release --bin no_heap
    Compiling qemu-aarch64v8a v0.1.0 (/Users/jonathan/work/qemu-aarch64v8a)
     Finished release [optimized] target(s) in 0.16s
      Running `qemu-system-aarch64 -machine virt -cpu cortex-a57 -semihosting -nographic -kernel target/aarch64-unknown-none/release/qemu-aarch64v8a`
