@@ -1,0 +1,14 @@
+[target.armv7r-none-eabihf]
+rustflags = [
+    "-Clink-arg=-Tlinker.ld",
+]
+runner = "qemu-system-arm -machine versatileab -cpu cortex-r5f -semihosting -nographic -kernel"
+
+[build]
+target = ["armv7r-none-eabihf"]
+
+[source.crates-io]
+replace-with = "vendored-sources"
+
+[source.vendored-sources]
+directory = "vendor"
