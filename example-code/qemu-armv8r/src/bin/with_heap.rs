@@ -18,7 +18,7 @@ static HEAP: Heap = Heap::empty();
 
 /// The clock speed of the peripheral subsystem on an SSE-300 SoC an on MPS3 board.
 ///
-/// Probably right for an MPS3-
+/// Probably right for an MPS3-AN536
 const PERIPHERAL_CLOCK: u32 = 25_000_000;
 
 /// The entry-point to the Rust application.
