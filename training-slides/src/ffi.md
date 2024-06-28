@@ -235,13 +235,14 @@ Some C types have direct Rust equivalents.
 The [`core::ffi`](https://doc.rust-lang.org/stable/core/ffi/index.html) module
 also defines a bunch of useful types and aliases.
 
-| C             | Rust                   |
-| ------------- | ---------------------- |
-| int32_t       | i32                    |
-| unsigned int  | c_uint                 |
-| unsigned char | u8 (not char!)         |
-| void          | ()                     |
-| char\*        | CStr or \*const c_char |
+| C               | Rust                       |
+| --------------- | -------------------------- |
+| `int32_t`       | `i32`                      |
+| `unsigned int`  | `c_uint`                   |
+| `unsigned char` | `u8` (not `char`!)         |
+| `void`          | `()`                       |
+| `char*`         | `CStr` or `*const c_char`  |
+| `T*`            | `Box<T>` (if `T` is sized) |
 
 Note:
 
