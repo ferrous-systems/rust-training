@@ -262,7 +262,7 @@ The total function says "I will give you a value you can display (with `println`
 
 * Rust also supports *trait references*
 * The types are given at run-time through a *vtable*
-* The reference is now a *fat pointer*
+* The reference is now a *wide pointer*
 
 ## Using Traits Dynamically: Example
 
