@@ -17,7 +17,10 @@ The Rust ABI is *not* stable.
 
 Rust also supports your platform's ABI(s).
 
-(Windows has two...)
+(There [might] be [several]...)
+
+[might]: https://learn.microsoft.com/en-us/cpp/cpp/argument-passing-and-naming-conventions?view=msvc-170
+[several]: https://github.com/rust-lang/rust/blob/99f77a2eda555b50b518f74823ab636a20efb87f/compiler/rustc_target/src/spec/abi/mod.rs#L12
 
 Note:
 
@@ -29,7 +32,9 @@ Clearly these two compilers must agree, otherwise the callee will not receive th
 
 x86 is ~40 years old and many standards exist on how to do this. See https://en.wikipedia.org/wiki/X86_calling_conventions#Historical_background.
 
-AMD64 is only ~15 years old, and there are two standards - the Microsoft one for Windows, and the Linux one (which is based on System V UNIX).
+AMD64 is only ~20 years old, and there are two standards - the Microsoft one for Windows, and the Linux one (which is based on System V UNIX).
+
+ARM64 has one main standard (the Arm Architecture Procedure Call Standard, or AAPCS), plus one Microsoft invented which works much more like AMD64 and lets ARM64 call emulated AMD64 much more easily. That's called [ARM64EC](https://learn.microsoft.com/en-us/windows/arm/arm64ec).
 
 ---
 
