@@ -77,6 +77,10 @@ On three levels:
 * The *value* is the size of a pointer
 * The *contents* of the Box can be any T (including *unsized* things)
 
+Note:
+
+Pointers can be 'thin' (one word in length) or 'wide' (two words in length). In a wide pointer, the second word holds the length of the thing being pointed to, or a pointer to the vtable if it's a dyn-trait pointer. The same applies to Boxes.
+
 ## Why not raw pointers?
 
 Because `Box<T>`:
