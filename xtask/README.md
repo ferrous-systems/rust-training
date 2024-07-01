@@ -23,7 +23,7 @@ per programming language that match each slide we have in our normal syllabus wi
 
 ## How
 
-As `training-material` grows and changes, maintenance could be a nightmare. We basically don't want to be in the business of remember that a certain slide got reordered or moved from one section to another and thus needs changing in all the cheathseets as well. Therefore, this tool seeks to alleviate that with the following workflow:
+As `training-material` grows and changes, maintenance could be a nightmare. We basically don't want to be in the business of remembering that a certain slide got reordered or moved from one section to another and thus needs changing in all the cheatsheets as well. Therefore, this tool seeks to alleviate that with the following workflow:
 
 * call `cargo xtask make-cheatsheet python` at the root folder
 * scrape Markdown headers in `SUMMARY.md` and segment topics by `Rust Fundamentals`, `Applied Rust` and `Advanced Rust`
