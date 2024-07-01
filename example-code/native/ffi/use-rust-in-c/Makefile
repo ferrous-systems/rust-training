@@ -1,5 +1,5 @@
 # Example Makefile to build a Rust library as part of a C program.
-# Copyright (c) Ferrous Systems 2023
+# Copyright (c) Ferrous Systems 2024
 
 TARGET_DIR = ./target
 
