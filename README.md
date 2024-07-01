@@ -1,6 +1,6 @@
 # Ferrous Systems' Rust Training
 
-This is free workshop material produced by Ferrous Systems for trainings. See our [ferrous-systems.com/training](https://ferrous-systems.com/training) for more details or a custom quote. You can view this material on-line at <https://rust-training.ferrous-systems.com>.
+This is free workshop material produced by Ferrous Systems for trainings. See [ferrous-systems.com/training](https://ferrous-systems.com/training) for more details or a custom quote. You can view this material on-line at <https://rust-training.ferrous-systems.com>.
 
 The material is created for people with anywhere from zero Rust experience (but with a programming background) to advanced Rust knowledge.
 
