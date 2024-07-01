@@ -1,6 +1,6 @@
 # Ferrous Systems' Rust Training
 
-This is free workshop material produced by Ferrous Systems for trainings. See our [ferrous-systems.com/training](https://ferrous-systems.com/training) for more details or a custom quote.
+This is free workshop material produced by Ferrous Systems for trainings. See our [ferrous-systems.com/training](https://ferrous-systems.com/training) for more details or a custom quote. You can view this material on-line at <https://rust-training.ferrous-systems.com>.
 
 The material is created for people with anywhere from zero Rust experience (but with a programming background) to advanced Rust knowledge.
 
@@ -20,9 +20,12 @@ This material is organised as an [`mdbook`](https://crates.io/crates/mdbook), wh
 
 You can:
 
+* View the `main` branch in slide form at <https://rust-training.ferrous-systems.com/latest/slides>
+* View the `main` branch in book form at <https://rust-training.ferrous-systems.com/latest/book>
+* View a specific tag like `v1.10.0` at <https://rust-training.ferrous-systems.com/v1.10.0/slides> or <https://rust-training.ferrous-systems.com/v1.10.0/book>
 * Browse [the chapters of the book on Github](./training-slides/src/SUMMARY.md)
 * Clone the repo, and build the book (see [Building the material locally](#building-the-material-locally))
-* Download the slides in both slide-deck and book format, from the [releases area](https://github.com/ferrous-systems/rust-training/releases)
+* Download the slides for off-line use in both slide-deck and book format, from the [releases area](https://github.com/ferrous-systems/rust-training/releases)
 
 ## Building the material locally
 
