@@ -84,6 +84,7 @@ function nw() {
   git init -q "$work_dir/$name"
   cat > "$work_dir/$name/Cargo.toml" << EOF
 [workspace]
+resolver = "2"
 members = ["packages/*"]
 
 [workspace.dependencies]
