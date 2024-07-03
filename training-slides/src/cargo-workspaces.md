@@ -47,6 +47,7 @@ my-app/
 
 ```toml
 [workspace]
+resolver = "2"
 members = ["packages/*", "tools/*"]
 
 [dependencies]
