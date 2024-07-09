@@ -61,7 +61,7 @@ echo Running rustc for lib...
 # ############################################################################
 "${RUSTC}" ${RUSTC_FLAGS} \
 	--crate-type=lib \
-	--crate-name=qemu_armv8r \
+	--crate-name=qemu_aarch32v78r \
 	--emit=dep-info,metadata,link \
 	--out-dir ${TARGET_DIR} \
 	-L ${TARGET_DIR} \
@@ -78,7 +78,7 @@ echo Running rustc for no_heap...
 	-Clink-arg=-Tlinker.ld \
 	--edition 2021 \
 	-L ${TARGET_DIR} \
-	--extern qemu_armv8r=${TARGET_DIR}/libqemu_armv8r.rlib \
+	--extern qemu_aarch32v78r=${TARGET_DIR}/libqemu_aarch32v78r.rlib \
 	-o ${NO_HEAP_OUTPUT_BINARY} \
 	src/bin/no_heap.rs
 echo Generating asm for no_heap...
@@ -93,7 +93,7 @@ echo Running rustc for with_heap...
 	-Clink-arg=-Tlinker.ld \
 	--edition 2021 \
 	-L ${TARGET_DIR} \
-	--extern qemu_armv8r=${TARGET_DIR}/libqemu_armv8r.rlib \
+	--extern qemu_aarch32v78r=${TARGET_DIR}/libqemu_aarch32v78r.rlib \
 	--extern embedded_alloc=${TARGET_DIR}/libembedded_alloc.rlib \
 	-o ${WITH_HEAP_OUTPUT_BINARY} \
 	src/bin/with_heap.rs

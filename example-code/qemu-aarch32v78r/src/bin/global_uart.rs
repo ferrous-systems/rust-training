@@ -9,7 +9,7 @@
 
 use core::{cell::RefCell, fmt::Write};
 use critical_section::Mutex;
-use qemu_armv8r::cmsdk_uart::Uart;
+use qemu_aarch32v78r::cmsdk_uart::Uart;
 
 /// The clock speed of the peripheral subsystem on an SSE-300 SoC an on MPS3 board.
 ///

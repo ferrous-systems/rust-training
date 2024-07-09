@@ -9,4 +9,5 @@ packages = [
     "llvm-tools-${rustc-host}",
     "rust-src",
     "rust-std-armv8r-none-eabihf",
+    "rust-std-armv7r-none-eabihf",
 ]

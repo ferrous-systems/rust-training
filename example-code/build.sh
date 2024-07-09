@@ -29,10 +29,11 @@ criticalup install
 criticalup run cargo build
 criticalup run cargo clean
 popd
-# And the qemu Aarch32 Armv8-R example
-pushd ./qemu-armv8r
+# And the qemu Aarch32 Armv8-R/Armv7-R example
+pushd ./qemu-aarch32v78r
 criticalup install
 ./build.sh
 criticalup run cargo build
+criticalup run cargo build --target=armv7r-none-eabihf
 criticalup run cargo clean
 popd
