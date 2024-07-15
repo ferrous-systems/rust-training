@@ -10,11 +10,12 @@ core::arch::global_asm!(
 .global _start
 .code 32
 .align 0
+// Work around https://github.com/rust-lang/rust/issues/127269
+.fpu vfp3-d16
 
 _start:
     // Set stack pointer
-    ldr r3, =stack_top
-    mov sp, r3
+    ldr sp, =stack_top
     // Allow VFP coprocessor access
     mrc p15, 0, r0, c1, c0, 2
     orr r0, r0, #0xF00000
