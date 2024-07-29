@@ -305,3 +305,5 @@ impl Post {
     }
 }
 ```
+
+A [LazyCell](https://doc.rust-lang.org/std/cell/struct.LazyCell.html) will do this initialization lazily, and a [LazyLock](https://doc.rust-lang.org/std/sync/struct.LazyLock.html) will do it in a threadsafe way.
