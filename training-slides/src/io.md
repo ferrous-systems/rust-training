@@ -122,7 +122,7 @@ fn main() -> std::io::Result<()> {
 
 ## Networking
 
-* In Rust, a [`TcpStream`](https://doc.rust-lang.org/std/io/struct.TcpStream.html) also implements the `Read` and `Write` traits.
+* In Rust, a [`TcpStream`](https://doc.rust-lang.org/std/net/struct.TcpStream.html) also implements the `Read` and `Write` traits.
 * You create a `TcpStream` with either:
   * [`TcpStream::connect`](https://doc.rust-lang.org/std/net/struct.TcpStream.html#method.connect) - for outbound connections
   * [`TcpListener::accept`](https://doc.rust-lang.org/std/net/struct.TcpListener.html#method.accept) - for incoming connections
