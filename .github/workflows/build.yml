@@ -24,7 +24,7 @@ jobs:
       - name: Add Rust Targets
         run: |
           rustup target add thumbv7em-none-eabihf
-          curl --proto '=https' --tlsv1.2 -LsSf https://github.com/ferrocene/criticalup/releases/download/v1.0.1/criticalup-installer.sh | sh
+          curl --proto '=https' --tlsv1.2 -LsSf https://github.com/ferrocene/criticalup/releases/download/v1.1.0/criticalup-installer.sh | sh
 
       - name: Find slug name
         run: |
