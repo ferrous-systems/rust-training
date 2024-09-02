@@ -18,7 +18,7 @@ A GPIO pin on a microcontroller. It typically has:
 
 Is this program correct?
 
-```rust [] ignore
+```rust ignore []
 let p = GpioPin::new(7);
 if p.is_low() {
     println!("Button is pressed");
@@ -41,7 +41,7 @@ types.
 
 We've got a type system with traits and a powerful static analysis engine...
 
-```rust [] ignore
+```rust ignore []
 let p = OutputPin::new(7);
 if p.is_low() {
     println!("Button is pressed");
@@ -60,7 +60,7 @@ if p.is_low() {
 
 With a method that takes ownership:
 
-```rust [] ignore
+```rust ignore []
 impl OutputPin {
     fn into_input(self) -> InputPin {
         poke_hardware_registers();
@@ -147,7 +147,7 @@ impl Pin<Input> {
 
 Who can `impl PinMode for Type`? Turns out anyone can...
 
-```rust [] ignore
+```rust ignore []
 use my_driver_crate::{Pin, PinMode};
 
 struct OnFire {}

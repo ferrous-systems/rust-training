@@ -8,7 +8,7 @@
 
 ## Typical driver interface
 
-```rust [] ignore
+```rust ignore []
 let p = pac::Peripherals.take().unwrap();
 let mut uarte0 = hal::uarte::Uarte::new(
     // Our singleton representing exclusive access to
@@ -46,7 +46,7 @@ uarte0.write_all(b"Hey, I'm using a UART!").unwrap();
 
 ## Handling GPIO pins with code
 
-```rust [] ignore
+```rust ignore []
 // Get the singletons
 let p = pac::Peripherals.take().unwrap();
 // Make a driver for GPIO port P0
@@ -69,7 +69,7 @@ restrictive!
 
 ## Giving the pins to the driver
 
-```rust [] ignore
+```rust ignore []
 // 'degrade()' converts a P0_08 type into a generic Pin type.
 let pins =  hal::uarte::Pins {
     rxd: pins.p0_08.degrade().into_floating_input(),

@@ -23,7 +23,7 @@ For this, the `Drop` trait can be implemented.
 
 ---
 
-```rust [] ignore
+```rust ignore []
 struct LevelDB {
     handle: *mut leveldb_database_t
 }
@@ -49,7 +49,7 @@ Implementing a `Drop`-bomb (a failing destructor) can make sure this error is ca
 
 Rust also has another error mechanism: `panic!`
 
-```rust [] should_panic
+```rust should_panic []
 fn main() {
     panicking_function();
 }

@@ -205,7 +205,7 @@ enum Error {
 
 So, people created helper crates like [`thiserror`](https://crates.io/crates/thiserror)
 
-```rust [] ignore
+```rust ignore []
 use thiserror::Error;
 
 #[derive(Error, Debug)]

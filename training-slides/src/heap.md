@@ -234,7 +234,7 @@ fn main() {
 
 Why is this function less than ideal?
 
-```rust [] should_panic
+```rust should_panic []
 /// Replaces all the ` ` characters with `_`
 fn replace_spaces(input: &str) -> String {
     todo!()
@@ -254,7 +254,7 @@ Did the second call replace anything? Did you have to allocate a `String` and co
 
 Rust has the [`Cow`](https://doc.rust-lang.org/std/borrow/enum.Cow.html) type to handle this.
 
-```rust [] should_panic
+```rust should_panic []
 /// Replaces all the ` ` characters with `_`
 fn replace_spaces(input: &str) -> std::borrow::Cow<str> {
     todo!()
