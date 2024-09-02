@@ -257,7 +257,7 @@ only 16-bits in size.
 
 ## Calling this
 
-```rust [] ignore
+```rust ignore []
 use std::ffi::{c_char, c_uint};
 
 extern "C" {
@@ -302,7 +302,7 @@ pub struct FoobarHandle(*mut FoobarContext);
 
 `extern "C"` applies to function pointers given to extern functions too.
 
-```rust [] ignore
+```rust ignore []
 use std::ffi::c_void;
 
 pub type FooCallback = extern "C" fn(state: *mut c_void);

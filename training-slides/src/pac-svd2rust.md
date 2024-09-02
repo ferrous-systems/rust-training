@@ -80,7 +80,7 @@ uart0_reg_t* const p_uart = (uart0_reg_t*) 0x40002000;
 
 ## Structures in Rust
 
-```rust [] ignore
+```rust ignore []
 #[repr(C)]
 pub struct Uart0 {
     pub tasks_startrx: VolatileCell<u32>, // @ 0x000
@@ -222,7 +222,7 @@ graph TB
 
 ## Using a PAC
 
-```rust [] ignore
+```rust ignore []
 let p = nrf52840_pac::Peripherals::take().unwrap();
 // Reading the 'baudrate' field
 let contents = p.UARTE1.baudrate.read();
@@ -258,7 +258,7 @@ function. We see this used [all
 
 What are the three steps here?
 
-```rust [] ignore
+```rust ignore []
 p.UARTE1.inten.modify(|_r, w| {
     w.cts().enabled();
     w.ncts().enabled();

@@ -28,7 +28,7 @@
 
 See `example-code/nrf52/bsp_demo`
 
-```rust [] ignore
+```rust ignore []
 #[entry]
 fn main() -> ! {
     let mut nrf52 = Board::take().unwrap();
@@ -48,7 +48,7 @@ the UART pins. The Board Support Crate did it all for us.
 
 ## Making a Board Support Crate
 
-```rust [] ignore
+```rust ignore []
 pub struct Board {
     /// The nRF52's pins which are not otherwise occupied on the nRF52840-DK
     pub pins: Pins,

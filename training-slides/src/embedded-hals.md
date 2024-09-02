@@ -26,7 +26,7 @@ trait GenericSerial {
 
 ## My Library
 
-```rust [] ignore
+```rust ignore []
 struct AtCommandParser<T> {
     uart: T,
     ...
@@ -42,7 +42,7 @@ Note how `AtCommandParser` *owns* the object which meets the `GenericSerial` tra
 
 ## My Application
 
-```rust [] ignore
+```rust ignore []
 let uart = stm32_hal::Uart::new(...);
 let at_parser = at_library::AtCommandParser::new(uart);
 while let Some(cmd) = at_parser.get_command().unwrap() {
@@ -52,7 +52,7 @@ while let Some(cmd) = at_parser.get_command().unwrap() {
 
 ## My Application (2)
 
-```rust [] ignore
+```rust ignore []
 let uart = nrf52_hal::Uart::new(...);
 let at_parser = at_library::AtCommandParser::new(uart);
 while let Some(cmd) = at_parser.get_command().unwrap() {

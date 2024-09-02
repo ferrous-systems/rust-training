@@ -45,7 +45,7 @@ For motivation for something that takes `self`, imagine an embedded device with 
 
 * Other, fancier, *method receivers* [are available](https://doc.rust-lang.org/reference/items/associated-items.html)!
 
-```rust [] ignore
+```rust ignore []
 struct Square(f64);
 
 impl Square {
@@ -216,7 +216,7 @@ We walk the attendees through each of these examples. They are only listed in pa
 
 If a trait method uses `&mut self` and you really want it to work on some `&SomeType` reference, you can:
 
-```rust [] ignore
+```rust ignore []
 impl SomeTrait for &SomeType {
     // ...
 }
