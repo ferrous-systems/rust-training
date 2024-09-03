@@ -48,14 +48,13 @@
 
 ## Long-term Stable
 
-As of 11 March 2024, the Ferrocene releases are:
+As of 3 September 2024, the Ferrocene releases are:
 
 * *nightly* (upstream *nightly*)
 * *pre-rolling* (upstream *beta*)
 * *rolling* (upstream *stable*)
-* beta-23.06 (upstream *1.68.2*)
-* stable-23.06 (upstream *1.68.2*)
-* beta-24.05 (upstream *1.76.0*)
+* stable-24.05 (upstream *1.76*)
+* stable-24.08 (upstream *1.79*)
 
 Note:
 
