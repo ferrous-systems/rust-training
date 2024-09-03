@@ -43,7 +43,7 @@ let outliers: Vec<_> = data.iter().copied().filter(|n| -> bool {
 
 ## `T: 'static`
 
-Two allowable options:
+Two options allowed:
 
 * the type doesn't have any references inside ("Owned data")
   * `struct User { name: String }`
@@ -160,7 +160,7 @@ which is owned by the current function
 note: function requires argument type to outlive `'static`
 </pre>
 
-## Life-time problem
+## Lifetime problem
 
 Problem:
 
@@ -168,13 +168,13 @@ Problem:
 
 Solution:
 
-* move the decision when to clean the data from compile-time to runtime
+* move the decision when to clean the data from *compile-time* to *run-time*
   * use reference-counting
 
 ## Attempt 1: `Rc`
 
 * `let mut log = Rc::new(vec![]);`
-* `let mut thread_log = log.clone()` now does't clone the data, but simply increases the reference count
+* `let mut thread_log = log.clone()` now doesn't clone the data, but simply increases the reference count
   * both variables now have *owned* type, and satisfy `F: 'static` requirement
 
 ```text
@@ -257,7 +257,7 @@ pub trait DerefMut: Deref {
   * deref functions can be inlined
 * `Target` is an associated type
   * can't `deref()` into multiple different types
-* `DerefMut: Deref` allows the later to reuse the same `Target` type
+* `DerefMut: Deref` allows the `DerefMut` trait to reuse the same `Target` type
   * read-only and read-write references coerce to the references of the same type
 
 ## `Arc` / `Rc` "transparency" with `Deref`
@@ -286,10 +286,10 @@ let log = Arc::new(Mutex::new(Vec::new()));
 ```
 <p>&nbsp<!-- run-button placeholder --></p>
 
-* `Arc` guarantees availability of data in memory
+* `Arc` guarantees *availability* of data in memory
   * prevents memory form being cleaned up prematurely
-* `Mutex` guarantees exclusivity of mutable access
-  * provides a single `&mut` to underlying data simultaneously
+* `Mutex` guarantees *exclusivity of mutable access*
+  * provides *only one* `&mut` to underlying data simultaneously
 
 ## `Mutex` in Action
 
@@ -325,16 +325,15 @@ fn handle_client(..., log: &Mutex<Vec<usize>>) -> ... {
   * in later case sets a poison flag on the mutex
 * calling `lock().unwrap()` on a poisoned Mutex causes `panic`
   * if the mutex is *"popular"* poisoning can cause many application threads to panic, too.
-* poisoning API is *problematic*
-  * `PoisonError` doesn't provide information about the panic that caused the poisoning
-  * no way to recover and revive the mutex (stays poisoned forever)
-    * `PoisonError::into_inner` *can* produce a guard even for poisoned mutexes
+* `PoisonError` doesn't provide information about the panic that caused the poisoning
 
 ## Critical Section "Hygiene"
 
 * keep it short to reduce the window when mutex is locked
 * avoid calling functions that can panic
 * using a named variable for Mutex guard helps avoiding unexpected temporary lifetime behavior
+
+## Critical Section Example
 
 ```rust ignore
 fn handle_client(..., log: &Mutex<Vec<usize>>) -> ... {
