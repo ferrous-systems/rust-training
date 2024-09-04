@@ -18,13 +18,13 @@
 
 ![Portal](./images/portal.png)
 
-<https://customers.ferrocene.dev>
+<https://releases.ferrocene.dev>
 
-## Toolchain Versions
+Note:
 
 *channels* contain *releases*
 
-## Channels
+Examples of channels include:
 
 * nightly
 * pre-rolling
@@ -35,7 +35,7 @@
 * stable-24.08
 * etc
 
-## Releases
+Examples of releases include:
 
 * nightly-2024-08-29
 * pre-rolling-2024-08-28
@@ -45,6 +45,12 @@
 * stable-24.05.0
 * stable-24.08.0
 * etc
+
+---
+
+![Portal](./images/portal-docs.png)
+
+<https://docs.ferrocene.dev>
 
 ## Targets
 
