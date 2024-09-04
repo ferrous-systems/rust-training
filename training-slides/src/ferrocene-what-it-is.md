@@ -9,6 +9,7 @@
 * Qualified per ISO 26262 / IEC 61508
 * Supplied with a warranty
 * Available with support
+* Tested differently
 
 ## Rust, not a subset
 
@@ -94,3 +95,12 @@ If you find a bug in the compiler, we will fix it or give you details on how to 
 * A subscription gets you binary downloads and access to the Known Problems list
 * Signed Qualification Documents are available (call us)
 * If you need additional support with your Rust development, we can help
+
+## Tested Differently
+
+* The Rust Project only tests *Tier 1* targets
+* We have developed our own CI
+  * Separate and parallel to that used by The Rust Project
+  * They have different goals!
+* Having multiple independent, parallel, rock solid CI pipelines can only benefit Rust
+* Our CI produces the artefacts we need for qualification
