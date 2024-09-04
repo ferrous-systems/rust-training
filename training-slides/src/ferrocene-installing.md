@@ -144,10 +144,11 @@ packages = [
 
 ## Installing Ferrocene
 
+1. Install [criticalup](https://criticalup.ferrocene.dev)
 1. Make a [token](https://customers.ferrocene.dev/users/tokens)
-2. Store your token with `criticalup auth set`
-3. Go to your project dir
-4. Run `criticalup install`
+1. Store your token with `criticalup auth set`
+1. Go to your project dir
+1. Run `criticalup install`
 
 ## Example
 
@@ -162,45 +163,70 @@ info: installing component 'rustc-x86_64-unknown-linux-gnu' for 'ferrocene' (sta
 $ criticalup run rustc --version
 ```
 
-## Where was it installed?
+## Local State
 
-Linux:
+Criticalup maintains local state in one of the following locations:
 
-```text
-/home/jonathan/.local/share/criticalup/toolchains/<hash>/bin/rustc
-```
-
-macOS:
-
-```text
-/Users/jonathan/Library/Application Support/criticalup/toolchains/<hash>/bin/rustc
-```
-
-Windows:
-
-```text
-C:\Users\jonathan\AppData\Local\criticalup\toolchains\<hash>\bin\rustc.exe
-```
+* Linux: `~/.local/share/criticalup`
+* macOS: `~/Library/Application Support/criticalup`
+* Windows: `%APPDATA%\criticalup`
 
 ## Running Ferrocene
 
-* You can execute `rustc` or `cargo` directly
-* You can use the `rustc` proxy
-* You can point `rustup` at a Ferrocene install
-* You can point `rustup` at the `criticalup` proxy
+---
 
-## Example
+You can execute the tool directly from the install dir
 
 ```console
-$ criticalup auth set
-$ criticalup install
-info: installing product 'ferrocene' (stable-24.08.0)
-info: downloading component 'cargo-x86_64-unknown-linux-gnu' for 'ferrocene' (stable-24.08.0)
-...
-info: downloading component 'rustc-x86_64-unknown-linux-gnu' for 'ferrocene' (stable-24.08.0)
-info: installing component 'rustc-x86_64-unknown-linux-gnu' for 'ferrocene' (stable-24.08.0)
+$ criticalup which rustc
+/home/user/.local/criticalup/toolchains/cbfe2b...21e8b/bin/rustc
+
+$ /home/user/.local/criticalup/toolchains/cbfe2b...21e8b/bin/rustc --version
+rustc 1.79.0 (02baf75fd 2024-08-23) (Ferrocene by Ferrous Systems)
+```
+
+NB: `cargo` uses whichever `rustc` is in your PATH.
+
+---
+
+You can use the tool proxies:
+
+```console
+$ ls /home/user/.local/criticalup/bin
+cargo       rust-gdb    rust-gdbgui rust-lldb   rustc       rustdoc
+
+$ /home/user/.local/criticalup/bin/rustc --version
+rustc 1.79.0 (02baf75fd 2024-08-23) (Ferrocene by Ferrous Systems)
+```
+
+NB: `cargo` uses the corresponding `rustc`
+
+---
+
+You can use criticalup as a proxy:
+
+```console
 $ criticalup run rustc --version
 rustc 1.79.0 (02baf75fd 2024-08-23) (Ferrocene by Ferrous Systems)
-$ criticalup run cargo build --release
-...
 ```
+
+NB: `cargo` uses the corresponding `rustc`
+
+## rust-analyzer in VS Code
+
+Set `RUSTC` to tell it which `rustc` to use
+
+```text
+$ RUSTC=$(criticalup which rustc) code .
+
+PS D:\project> $Env:RUSTC=$(criticalup which rustc)
+PS D:\project> code .
+```
+
+Ensure you have the `rust-src` package installed.
+
+---
+
+Our Rust Training has both 32-bit and 64-bit Arm bare-metal examples:
+
+<https://github.com/ferrous-systems/rust-training/tree/main/example-code>
