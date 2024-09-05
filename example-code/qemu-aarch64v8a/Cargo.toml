@@ -5,6 +5,7 @@ edition = "2021"
 authors = ["Ferrous Systems"]
 license = "MIT OR Apache-2.0"
 description = "A simple Aarch64 demo application that runs in QEMU and compiles with Ferrocene"
+default-run = "global_uart"
 
 [dependencies]
 critical-section = { version = "1.1.2", features = ["restore-state-bool"] }
