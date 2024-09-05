@@ -3,8 +3,9 @@
 ## What's in the box?
 
 * `rustc` - a compiler (★)
-* `lld` - the LLVM linker (★)
-* `cargo`/`rustdoc`/`rustfmt`/`clippy` - our usual friends
+  * `lld` - the LLVM linker (★)
+  * `rustdoc` - the docs generator
+* `cargo`/`rustfmt`/`clippy` - our usual friends
 * `llvm-tools` - objcopy, size, etc
 * `rust-analyzer` - for IDE integration
 * `rust-src` - libstd source code
@@ -13,6 +14,10 @@
 * `ferrocene-docs-xxx` - documentation
 
 ★: qualified tool ☆: certification in progress
+
+Note:
+
+The lld linker and rustdoc come with the `rustc-${rustc-host}` package.
 
 ---
 
