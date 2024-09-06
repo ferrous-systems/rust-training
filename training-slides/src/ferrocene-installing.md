@@ -121,7 +121,7 @@ be fair, plenty of people use upstream Rust in production.
 ## Cross-Compilation Targets
 
 * Compiling for a machine that is not the current host
-* The list of targets from release to release
+* The list of targets may change from release to release
 * See [the public docs](https://public-docs.ferrocene.dev/main/user-manual/targets/index.html)
 * Or [the customer portal](https://customers.ferrocene.dev)
 
