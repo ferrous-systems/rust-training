@@ -10,7 +10,8 @@ Unit, integration, and documentation tests all come built-in.
 
 Tests typically end up in 1 of 4 possible locations:
 
--   Immediately beside the functionality tested or in a `tests` submodule (Unit Tests)
+-   Immediately beside the functionality tested (Unit Tests)
+-   In a `tests` submodule (Unit Tests)
 -   In documentation. (Documentation Test)
 -   In the `tests/` directory. (Integration Tests)
 
