@@ -9,7 +9,7 @@
 
 ## Using an Embedded System
 
-* There is (almost always) no plug-and-play
+* Plug-and-play is extremely rare
 * Your MCU can put different functions (UART, SPI, etc) on different pins
 * The choice of which function goes on which pin was decided by the PCB designer
 * You now have to tell the software how the PCB was laid out
