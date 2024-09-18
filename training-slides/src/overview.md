@@ -75,7 +75,7 @@ spend time discussing the impact of many features on large projects.
 ## Safety
 
 -   Rust is memory-safe and thread-safe
-    - Buffer overflows, use-after-free: all impossible
+    - Buffer overflows, use-after-free, double free: all impossible
     - Unless you tell the compiler you know what you're doing
 -   De-allocation is automated
     - Great for files, mutexes, sockets, etc
