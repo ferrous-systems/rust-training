@@ -186,7 +186,7 @@ fn check_shape(shape: Shape) {
 ## Doing a `match` on an `enum`
 
 - There are two variables called `radius`
-- The later one hides the earlier one
+- The `radius` in the `match` arm body hides the `radius` in the earlier scope
 
 ```rust [7|9]
 enum Shape {
