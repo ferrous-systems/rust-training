@@ -16,7 +16,7 @@ struct Point {
 Note:
 
 The fields may not be laid out in memory in the order they are written (unless
-you ask the compiler to ensure that they are).
+you ask the compiler to [ensure that they are](https://doc.rust-lang.org/nomicon/other-reprs.html#reprc)).
 
 ## Construction
 
