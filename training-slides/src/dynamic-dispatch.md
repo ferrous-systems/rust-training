@@ -50,6 +50,12 @@ impl Operation {
 
 Try to minimize repeated matches on the Enum, if not strictly necessary.
 
+This reduces overhead from the virtual table lookups.
+
+Note:
+
+These may be optimized away by LLVM in devirtualization passes.
+
 ## Trait Objects
 
 References or raw pointers on traits, also boxes, describe so-called *trait objects*.
