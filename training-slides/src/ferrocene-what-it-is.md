@@ -98,7 +98,7 @@ If you find a bug in the compiler, we will fix it or give you details on how to 
 
 ## Tested Differently
 
-* The Rust Project only tests *Tier 1* targets
+* The Rust Project only tests [*Tier 1* targets](https://doc.rust-lang.org/rustc/platform-support.html#tier-1-with-host-tools)
 * We have developed our own CI
   * Separate and parallel to that used by The Rust Project
   * They have different goals!
