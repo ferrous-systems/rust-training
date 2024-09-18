@@ -1,4 +1,4 @@
-# `serde`
+# Serialization and Deserialization (`serde`)
 
 ## **Ser**ialization and **De**serialization
 
