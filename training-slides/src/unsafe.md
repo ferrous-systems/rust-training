@@ -18,7 +18,7 @@ Unsafe code is allowed to:
 
 ---
 
-Not unsafe are:
+By definition, these are not unsafe:
 
 -   conversion to raw pointers
 -   memory leaks
