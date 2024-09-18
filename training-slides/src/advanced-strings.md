@@ -109,7 +109,7 @@ These types represent valid C compatible strings.
 
 They are predominantly used when doing FFI with external code.
 
-It is strongly recommended you read *all* of the [documentation](https://doc.rust-lang.org/std/ffi/struct.CString.html) on these types before using them.
+It is strongly recommended you read *all* of the [documentation](https://doc.rust-lang.org/std/ffi/index.html) on these types before using them.
 
 ## Common String Tasks
 
