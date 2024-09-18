@@ -313,7 +313,7 @@ We call this *dropping* the value.
 
 ## Custom Cleaning
 
-You can define a specific behaviour to happen on *drop* using the *Drop* trait.
+You can define a specific behaviour to happen on *drop* using the *Drop* trait (cf. [std::ops::Drop](https://doc.rust-lang.org/stable/std/ops/trait.Drop.html)).
 
 For example, the memory used by a `String` is freed when dropped:
 
