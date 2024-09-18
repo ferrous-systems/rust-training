@@ -186,7 +186,7 @@ fn check_shape(shape: Shape) {
 ## Doing a `match` on an `enum`
 
 - There are two variables called `radius`
-- The binding of `radius` in the pattern body hides the `radius` variable on line 7
+- The binding of `radius` in the pattern body on line 9 hides the `radius` variable on line 7
 
 ```rust [7|9]
 enum Shape {
