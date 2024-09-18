@@ -220,12 +220,12 @@ unsigned int cool_library_function(const char* p);
 ```
 
 ```rust []
-use std::ffi::{c_char, c_uint}; // also in core::ffi
+use std::ffi::c_char; // also in core::ffi
 
 extern "C" {
     // We state that this function exists, but there's no definition.
     // The linker looks for this 'symbol name' in the other objects
-    fn cool_library_function(p: *const c_char) -> c_uint;
+    fn cool_library_function(p: *const c_char) -> u32;
 }
 ```
 
