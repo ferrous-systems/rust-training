@@ -6,7 +6,7 @@
 * A downstream of The Rust Project
 * Long-term stable
 * Open Source
-* Qualified per ISO 26262 / IEC 61508
+* Qualified per ISO 26262 (ASIL D) / IEC 61508 (SIL 4)
 * Supplied with a warranty
 * Available with support
 * Tested differently
@@ -68,7 +68,7 @@ tracking of Known Problems.
 * The source code is MIT || Apache-2.0
 * The docs are published at <https://public-docs.ferrocene.dev>
 
-## Qualified per ISO 26262 / IEC 61508
+## Qualified per ISO 26262 (ASIL D) / IEC 61508 (SIL 4)
 
 We're in [the TÜV SÜD database](https://www.tuvsud.com/en/services/product-certification/ps-cert?q=Z10+123030+0001+Rev.+00)
 
