@@ -21,7 +21,7 @@ Rust is an empathic systems programming language that is determined to not let y
 
 ## A Little Bit of History
 
--   Rust began around 2008
+-   Rust began around 2006
 -   An experimental project by Graydon Hoare
 -   Adopted by Mozilla
 -   Presented to the general public as version 0.4 in 2012
