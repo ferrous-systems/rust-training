@@ -29,10 +29,11 @@ Rust is an empathic systems programming language that is determined to not let y
 
 ## Focus
 
--   Rust has lost many features from 2012 to 2014
+-   Rust lost many features leading up to 1.0:
     -   Garbage collector
     -   evented runtime
     -   complex error handling
+    -   `~T` syntax
 -   Orientation towards a usable systems programming language
 
 ## Development
