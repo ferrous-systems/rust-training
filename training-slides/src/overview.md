@@ -29,7 +29,7 @@ Rust is an empathic systems programming language that is determined to not let y
 
 ## Focus
 
--   Rust has lost many features from since its inception:
+-   Rust lost many features leading up to 1.0:
     -   Garbage collector
     -   evented runtime
     -   complex error handling
