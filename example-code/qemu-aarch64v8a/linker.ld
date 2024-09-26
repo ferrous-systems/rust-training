@@ -1,7 +1,11 @@
-/* RAM starts at 0x40000000 but if we ask to load the kernel there, QEMU will not load a DTB */
+/*
+RAM starts at 0x40000000.
+
+See https://github.com/qemu/qemu/blob/master/hw/arm/virt.c
+*/
 
 MEMORY {
-    RAM : ORIGIN = 0x40100000, LENGTH = 128M
+    RAM : ORIGIN = 0x40000000, LENGTH = 128M
 }
 
 ENTRY(_start)
