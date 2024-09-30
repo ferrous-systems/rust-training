@@ -2,7 +2,7 @@
 
 ## What?
 
-WebAssembly(WASM) enables running Rust (among others) in a sandbox environment, including the browser.
+WebAssembly (WASM) enables running Rust (among others) in a sandbox environment, including the browser.
 
 WebAssembly is supported as a _compile target_.
 

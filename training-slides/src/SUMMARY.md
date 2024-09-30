@@ -1,6 +1,6 @@
-# Summary
+# Front Matter
 
-[Start Here](./start_here.md)
+[Introduction](./introduction.md)
 
 [Glossary](./glossary.md)
 
@@ -55,6 +55,9 @@ Topics that go beyond [Applied Rust](#applied-rust).
 * [The stdlib](./std-lib-tour.md)
 * [Using Cargo](./using-cargo.md)
 * [Using Types to encode State](./type-state.md)
+
+# Rust and Web Assembly
+
 * [WASM](./wasm.md)
 
 # No-Std Rust
@@ -96,7 +99,7 @@ Topics around [Ferrocene](https://ferrous-systems.com/ferrocene/), the qualified
 * [What is Ferrocene](./ferrocene-what-it-is.md)
 * [Installing and Using Ferrocene](./ferrocene-installing.md)
 
-# Rust for Decision Makers
+# Why Rust?
 
 * [What is Rust?](./what-is-rust.md)
 * [Safety, Performance, and Productivity](./safety-performance-productivity.md)
