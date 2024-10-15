@@ -303,7 +303,7 @@ struct Configuration {
 
 Where does the string data come from?
 
-## Lifetime annotations are generic parameters
+## Generic lifetime parameter
 
 ```rust ignore
 struct Configuration<'a> {
@@ -312,11 +312,8 @@ struct Configuration<'a> {
 ```
 <p>&nbsp;<!-- spacer for "run" button --></p>
 
-An instance of `Configuration` *can't outlive* a string<br> that it refers to via `database_url`.
-
-or
-
-The string *can't be dropped<br> while* an instance of `Configuration` *still* refers to it.
+* An instance of `Configuration` *can't outlive* a string<br> that it refers to via `database_url`.
+* The string *can't be dropped<br> while* an instance of `Configuration` *still* refers to it.
 
 ## Lifetimes and Generics
 
