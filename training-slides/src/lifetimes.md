@@ -49,6 +49,18 @@ error[E0515]: cannot return reference to local variable `s`
   |     ^^ returns a reference to data owned by the current function
 ```
 
+## Local Data
+
+You will also see:
+
+```text
+error[E0106]: missing lifetime specifier
+ --> src/lib.rs:1:18
+  |
+1 | fn producer() -> &str {
+  |                  ^ expected named lifetime parameter
+```
+
 ## Static Data
 
 ```rust ignore
