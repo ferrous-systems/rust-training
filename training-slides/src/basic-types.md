@@ -4,11 +4,11 @@
 
 Rust comes with all standard int types, with and without sign
 
--   `i8`, `u8`
--   `i16`, `u16`
--   `i32`, `u32`
--   `i64`, `u64`
--   `i128`, `u128`
+* `i8`, `u8`
+* `i16`, `u16`
+* `i32`, `u32`
+* `i64`, `u64`
+* `i128`, `u128`
 
 ## Syntactic clarity in specifying numbers
 
@@ -24,7 +24,7 @@ let x = b'a';      // A single u8
 
 Rust comes with two architecture-dependent number types:
 
--   `isize`, `usize`
+* `isize`, `usize`
 
 ## Casts
 
@@ -65,9 +65,9 @@ Boolean in Rust is represented by either of two values: `true` or
 
 `char` is a [Unicode Scalar Value](https://www.unicode.org/glossary/#unicode_scalar_value) being represented as a "single character"
 
--   A literal in single quotes: `'r'`
--   Four (4) bytes in size
--   More than just ASCII: glyphs, emoji, accented characters, etc.
+* A literal in single quotes: `'r'`
+* Four (4) bytes in size
+* More than just ASCII: glyphs, emoji, accented characters, etc.
 
 ## Character Literals
 
@@ -119,8 +119,8 @@ fn main() {
 
 Note:
 
-- Use `.get()` method on the slice to avoid panics instead of accessing via index.
-- The range syntax include the first value but excludes the last value. Use `0..=1` to include both ends.
+* Use `.get()` method on the slice to avoid panics instead of accessing via index.
+* The range syntax include the first value but excludes the last value. Use `0..=1` to include both ends.
 
 ## String Slices
 
