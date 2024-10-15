@@ -63,11 +63,9 @@ error[E0106]: missing lifetime specifier
 
 ## Static Data
 
-```rust ignore
-static HELLO: &str = "hello";
-
+```rust
 fn producer() -> &'static str {
-    HELLO
+    "hello"
 }
 ```
 
