@@ -271,19 +271,17 @@ Note:
 
 This function body does not *force* the two inputs to live for the same amount of time. Variables live for as long as they live and we can't change that here. This just says "I'm going to use the same label for the lifetimes these two references have, so pick whichever is the shorter".
 
-## What if multiple parameters can be sources?
+## Example
 
 ```rust []
+fn coin_flip() -> bool { false }
+
 fn pick_one<'a>(s1: &'a str, s2: &'a str) -> &'a str {
     if coin_flip() {
         s1
     } else {
         s2
     }
-}
-
-fn coin_flip() -> bool {
-    false
 }
 
 fn main() {
