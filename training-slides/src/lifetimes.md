@@ -82,6 +82,18 @@ How big is a `&'static str`? Do you think the length lives with the string data,
 
 (It lives with the reference - so you can take sub-slices)
 
+## Static Data
+
+It doesn't have to be a string literal - any reference to a static is OK.
+
+```rust
+static HELLO: [u8; 5] = [0x68, 0x65, 0x6c, 0x6c, 0x6f];
+
+fn producer() -> &'static str {
+    std::str::from_utf8(&HELLO).unwrap()
+}
+```
+
 ## `'static` annotation
 
 * Rust never assumes `'static` for function returns or fields in types
