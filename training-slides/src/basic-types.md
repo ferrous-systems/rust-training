@@ -10,6 +10,26 @@ Rust comes with all standard int types, with and without sign
 * `i64`, `u64`
 * `i128`, `u128`
 
+## Kinds of variable
+
+```rust
+static X: i32 = 42;
+const Y: i32 = 42;
+
+fn some_function() {
+    let x = 42;
+    let x: i32 = 42;
+    let mut x = 42;
+    let mut x: i32 = 42;
+}
+```
+
+Note:
+
+The expression used to initialise a `static` or `const` must be evaluatable at compile time. This includes calling `const fn` functions. A `let` binding doesn't have this restriction.
+
+The `static` occupies some memory at run-time and get a symbol in the symbol table. The `const` does not, and is only used to initialise other values (or e.g. as an argument to a function) - it acts a bit like a C pre-processor macro.
+
 ## Syntactic clarity in specifying numbers
 
 ```rust
