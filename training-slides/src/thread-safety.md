@@ -90,7 +90,7 @@ It's our old friend/enemy shared mutability!
 ```rust ignore
 fn thread_function(arg: &std::cell::RefCell<i32>) {
     for _ in 0..1_000_000 {
-        let p = arg.borrow_mut();
+        let mut p = arg.borrow_mut();
         *p += 1;
     }
 }
