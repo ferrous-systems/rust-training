@@ -49,50 +49,24 @@ But we can show you what other people have found...
 <div class="columns">
 <div>
 
-* Microsoft
 * Mozilla
+* Microsoft
 * Google
-* Cloudflare
+* CISA
 * Amazon
+* Linux Kernel
 
 </div>
 <div>
 
-* Linux Kernel developers
+* Cloudflare
 * Dropbox
 * Meta
 * Infineon
+* Volvo
 
 </div>
 </div>
-
-## Microsoft
-
-> Tools and guidance are demonstrably not preventing this class of
-> vulnerabilities; memory safety issues have represented almost the same
-> proportion of vulnerabilities assigned a CVE for over a decade. We feel that
-> using memory-safe languages will mitigate this in ways that tools and training
-> have not been able to.
-
--- [MSRC Blog, July 2019](https://msrc.microsoft.com/blog/2019/07/we-need-a-safer-systems-programming-language)
-
----
-
-> We believe Rust changes the game when it comes to writing safe systems
-> software. Rust provides the performance and control needed to write low-level
-> systems, while empowering software developers to write robust, secure
-> programs.
-
--- [MSRC Blog, July 2019](https://msrc.microsoft.com/blog/2019/07/why-rust-for-safe-systems-programming)
-
----
-
-> Speaking of languages, it's time to halt starting any new projects in C/C++
-> and use Rust for those scenarios where a non-GC language is required. For the
-> sake of security and reliability, the industry should declare those languages
-> as deprecated.
-
--- [CTO of Azure, September 2022](https://twitter.com/markrussinovich/status/1571995117233504257)
 
 ## Mozilla
 
@@ -103,19 +77,33 @@ But we can show you what other people have found...
 > of bugs in a browser’s code. Rust’s memory-safe capabilities prevent these
 > vulnerabilities from being built into the code in the first place.
 
--- [Firefox Blog, March 2017](https://blog.mozilla.org/en/products/firefox/put-trust-rust-shipping-now-firefox)
+– [Firefox Blog (2017)](https://blog.mozilla.org/en/products/firefox/put-trust-rust-shipping-now-firefox)
 
-## Google
+## Microsoft
 
-> As the amount of new memory-unsafe code entering Android has decreased, so too
-> has the number of memory safety vulnerabilities. From 2019 to 2022 it has
-> dropped from 76% down to 35% of Android’s total vulnerabilities. 2022 is the
-> first year where memory safety vulnerabilities do not represent a majority of
-> Android’s vulnerabilities.
+> We believe Rust changes the game when it comes to writing safe systems
+> software. Rust provides the performance and control needed to write low-level
+> systems, while empowering software developers to write robust, secure
+> programs.
 
--- [Google Security Blog, December 2022](https://security.googleblog.com/2022/12/memory-safe-languages-in-android-13.html)
+– [MSRC Blog (2019)](https://msrc.microsoft.com/blog/2019/07/why-rust-for-safe-systems-programming)
 
 ---
+
+> Speaking of languages, it's time to halt starting any new projects in C/C++
+> and use Rust for those scenarios where a non-GC language is required. For the
+> sake of security and reliability, the industry should declare those languages
+> as deprecated.
+
+– [Mark Russinovich, CTO Azure (2022)](https://twitter.com/markrussinovich/status/1571995117233504257)
+
+Note:
+
+Microsoft are following up on this. As of October 2024, there is Rust in the
+Windows 11 kernel, and user-land APIs like DWriteCore are (at least partially)
+written in Rust.
+
+## Google
 
 > More than 2/3 of respondents are confident in contributing to a Rust codebase
 > within two months or less when learning Rust.
@@ -123,7 +111,7 @@ But we can show you what other people have found...
 > Anecdotally, these ramp-up numbers are in line with the time we’ve seen for
 > developers to adopt other languages, both inside and outside of Google.
 
--- [Google Open Source Blog, June 2023](https://opensource.googleblog.com/2023/06/rust-fact-vs-fiction-5-insights-from-googles-rust-journey-2022.html)
+– [Google Open Source Blog (2023)](https://opensource.googleblog.com/2023/06/rust-fact-vs-fiction-5-insights-from-googles-rust-journey-2022.html)
 
 ---
 
@@ -136,31 +124,32 @@ and
 > required to both build the services written in Rust, as well as maintain and
 > update those services. [...] C++ is very expensive for us to maintain.
 
--- [Lars Bergstrom at Rust Nation 2024](https://www.youtube.com/watch?v=QrrH2lcl9ew)
+– [Lars Bergstrom, Google (2024)](https://www.youtube.com/watch?v=QrrH2lcl9ew)
 
 ---
 
-> Our goal in bringing Rust into Chromium is to provide a simpler and safer way
-> to satisfy the rule of two, in order to speed up development and improve the
-> security of Chrome. And we believe that we can use third-party Rust libraries
-> to work toward this goal.
+> ...the percentage of memory safety vulnerabilities in Android dropped from 76%
+> to 24% over 6 years as development shifted to memory safe languages.
+>
+> We see the (Safe Coding) shift showing up in important metrics such as
+> rollback rates (emergency code revert due to an unanticipated bug). The
+> Android team has observed that the rollback rate of Rust changes is less than
+> half that of C++.
 
--- [Google Security Blog, January 2023](https://security.googleblog.com/2023/01/supporting-use-of-rust-in-chromium.html)
+– [Google Security Blog (2024)](https://security.googleblog.com/2024/09/eliminating-memory-safety-vulnerabilities-Android.html)
+
+## CISA
+
+> There are, however, a few areas that every software company should
+> investigate. First, there are some promising memory safety mitigations in
+> hardware. ... Second, companies should investigate memory safe programming
+> languages.
+
+– ["The Urgent Need for Memory Safety in Software Products", CISA (2023)](https://www.cisa.gov/news-events/news/urgent-need-memory-safety-software-products)
 
 Note:
 
-The *rule of two* is, pick up to two of:
-
-* Untrusted Input
-* No Sandbox
-* Unsafe Language
-
-## Cloudflare
-
-> In production, Pingora consumes about 70% less CPU and 67% less memory
-> compared to our old service with the same traffic load.
-
--- [Cloudflare Blog, September 2022](https://blog.cloudflare.com/how-we-built-pingora-the-proxy-that-connects-cloudflare-to-the-internet)
+CISA is the US Government's Cybersecurity and Infrastructure Security Agency
 
 ## Amazon
 
@@ -170,7 +159,7 @@ The *rule of two* is, pick up to two of:
 > ... Our Amazon EC2 team uses Rust as the language of choice for new AWS Nitro
 > System components...
 
--- [AWS Open Source Blog](https://aws.amazon.com/blogs/opensource/why-aws-loves-rust-and-how-wed-like-to-help)
+– [AWS Open Source Blog (2020)](https://aws.amazon.com/blogs/opensource/why-aws-loves-rust-and-how-wed-like-to-help)
 
 ## Linux Kernel
 
@@ -179,7 +168,12 @@ The *rule of two* is, pick up to two of:
 > working on the Rust abstractions for subsystems and write drivers and other
 > modules.
 
--- [Linux Kernel Mailing List, January 2022](https://lore.kernel.org/lkml/20220117053349.6804-1-ojeda@kernel.org)
+– [Linux Kernel Mailing List (2022)](https://lore.kernel.org/lkml/20220117053349.6804-1-ojeda@kernel.org)
+
+Note:
+
+* Asahi Linux wrote the Apple Silicon GPU driver in Rust.
+* The new Nova open-source driver for nVidia GPUs will be written in Rust.
 
 ## Dropbox
 
@@ -189,7 +183,14 @@ The *rule of two* is, pick up to two of:
 > We can encode complex invariants about our system in the type system and have
 > the compiler check them for us.
 
--- [Dropbox.Tech, March 2022](https://dropbox.tech/infrastructure/rewriting-the-heart-of-our-sync-engine)
+– [Dropbox.Tech (2022)](https://dropbox.tech/infrastructure/rewriting-the-heart-of-our-sync-engine)
+
+## Cloudflare
+
+> In production, Pingora consumes about 70% less CPU and 67% less memory
+> compared to our old service with the same traffic load.
+
+– [Cloudflare Blog (2022)](https://blog.cloudflare.com/how-we-built-pingora-the-proxy-that-connects-cloudflare-to-the-internet)
 
 ## Meta
 
@@ -200,7 +201,7 @@ The *rule of two* is, pick up to two of:
 > using Rust for back-end service code and exploring its use in mobile apps as
 > well.
 
--- [Engineering at Meta, April 2021](https://engineering.fb.com/2021/04/29/developer-tools/rust)
+– [Engineering at Meta (2021)](https://engineering.fb.com/2021/04/29/developer-tools/rust)
 
 ## Infineon
 
@@ -208,4 +209,32 @@ The *rule of two* is, pick up to two of:
 > become more widespread, standardizing the usage of Rust in the industry while
 > engaging with the Rust FOSS community.
 
--- [Infineon Developer Community Blog, April 2023](https://community.infineon.com/t5/Blogs/Infineon-leads-the-way-Enabling-Rust-for-MCUs-in-the-semiconductor-industry/ba-p/410425)
+– [Infineon Developer Community Blog (2023)](https://community.infineon.com/t5/Blogs/Infineon-leads-the-way-Enabling-Rust-for-MCUs-in-the-semiconductor-industry/ba-p/410425)
+
+## SEGGER
+
+> Rust is fast, memory-efficient and safe. With first-class tool support, it has
+> the potential to overtake C and C++.
+
+– [Rolf Segger, SEGGER (2024)](https://www.segger.com/news/pr-240927-ozone-support-rust/)
+
+## Volvo
+
+> I always had the feeling, is Rust too good to be true? I'm always looking for
+> the big pitfall. So far I have not found anything bad. Only some small things...
+>
+> [We have] a bigger and bigger pile of proof that Rust does actually work well.
+
+– [Julius Gustavsson, Volvo (2024)](https://tweedegolf.nl/en/blog/137/rust-is-rolling-off-the-volvo-assembly-line)
+
+Note:
+
+As of October 2024, the Volvo EX30 and the Polestar 3 are shipping with some
+firmware written in Rust, particular in the Low-Power ECU.
+
+## Volvo
+
+> I think we're at that point where instead of asking 'Can we use Rust for
+> this?', we should be asking 'Why can't we use Rust for this?'
+
+– [Julius Gustavsson, Volvo (2024)](https://tweedegolf.nl/en/blog/137/rust-is-rolling-off-the-volvo-assembly-line)
