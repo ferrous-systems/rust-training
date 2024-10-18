@@ -3,8 +3,8 @@
 set -euo pipefail
 
 TARGET_DIR=target/production
-RUSTC=$(criticalup which rustc)
-SYSROOT=$(criticalup run rustc --print sysroot)
+RUSTC="${1:-rustc}"
+SYSROOT=$("${RUSTC}" --print sysroot)
 OBJDUMP=$(ls "${SYSROOT}"/lib/rustlib/*/bin/llvm-objdump)
 RUSTC_FLAGS="--target armv8r-none-eabihf -Ctarget-cpu=cortex-r52 -Copt-level=s"
 
@@ -17,6 +17,11 @@ NO_HEAP_OUTPUT_ASM=${TARGET_DIR}/no_heap.asm
 
 rm -rf ${TARGET_DIR}
 mkdir -p ${TARGET_DIR}
+
+# ############################################################################
+echo "Printing version"
+# ############################################################################
+"${RUSTC}" --version
 
 # ############################################################################
 echo "Running rustc for critical-section"

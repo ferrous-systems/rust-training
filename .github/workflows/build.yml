@@ -5,10 +5,8 @@ on:
   pull_request:
 
 jobs:
-  build:
+  build-slides:
     runs-on: ubuntu-20.04
-    concurrency:
-      group: ${{ github.workflow }}-${{ github.ref }}
     steps:
       - uses: actions/checkout@v4
 
@@ -25,11 +23,6 @@ jobs:
         run: |
           rustup update stable
 
-      - name: Add Rust Targets
-        run: |
-          rustup target add thumbv7em-none-eabihf
-          curl --proto '=https' --tlsv1.2 -LsSf https://github.com/ferrocene/criticalup/releases/download/v1.1.0/criticalup-installer.sh | sh
-
       - name: Find slug name
         run: |
           slug=$(./describe.sh "${GITHUB_REF}")
@@ -37,17 +30,9 @@ jobs:
           echo "slug=${slug}" >> "${GITHUB_ENV}"
 
       - name: Build book-and-slides
-        env:
-          CRITICALUP_TOKEN: ${{ secrets.CRITICALUP_TOKEN }}
         run: |
           cd ./training-slides && ./build.sh
 
-      - name: Build example code
-        env:
-          CRITICALUP_TOKEN: ${{ secrets.CRITICALUP_TOKEN }}
-        run: |
-          cd ./example-code && ./build.sh
-  
       - name: Assemble Artifacts
         run: |
           echo "Making ./rust-training-${{ env.slug }}..."
@@ -62,7 +47,7 @@ jobs:
         uses: actions/upload-artifact@v4
         if: ${{success()}}
         with:
-          name: Artifacts
+          name: Slides
           if-no-files-found: error
           path: |
             ./rust-training-*/
@@ -73,3 +58,76 @@ jobs:
         uses: ncipollo/release-action@v1
         with:
           artifacts: ./rust-training-${{ env.slug }}.zip
+
+  build-examples-ferrocene:
+    runs-on: ubuntu-20.04
+    steps:
+      - uses: actions/checkout@v4
+     
+      - name: Install Critical Up
+        run: |
+          curl --proto '=https' --tlsv1.2 -LsSf https://github.com/ferrocene/criticalup/releases/download/v1.1.0/criticalup-installer.sh | sh
+
+      - name: Find slug name
+        run: |
+          slug=$(./describe.sh "${GITHUB_REF}")
+          echo "Building with slug '${slug}'"
+          echo "slug=${slug}" >> "${GITHUB_ENV}"
+
+      - name: Build example code
+        env:
+          CRITICALUP_TOKEN: ${{ secrets.CRITICALUP_TOKEN }}
+        run: |
+          cd ./example-code && ./build-ferrocene.sh
+  
+      - name: Assemble Artifacts
+        run: |
+          echo "Making ./rust-training-${{ env.slug }}..."
+          mkdir -p ./rust-training-${{ env.slug }}
+          cp -r ./example-code ./rust-training-${{ env.slug }}
+
+      - name: Upload Artifacts
+        uses: actions/upload-artifact@v4
+        if: ${{success()}}
+        with:
+          name: Ferrocene Examples
+          if-no-files-found: error
+          path: |
+            ./rust-training-*/
+
+  build-examples:
+    runs-on: ubuntu-20.04
+    steps:
+      - uses: actions/checkout@v4
+     
+      - name: Add Rust Targets and Tools
+        run: |
+          rustup target add thumbv7em-none-eabihf
+          rustup target add armv7r-none-eabihf
+          rustup target add aarch64-unknown-none
+          rustup component add llvm-tools-preview
+
+      - name: Find slug name
+        run: |
+          slug=$(./describe.sh "${GITHUB_REF}")
+          echo "Building with slug '${slug}'"
+          echo "slug=${slug}" >> "${GITHUB_ENV}"
+
+      - name: Build example code
+        run: |
+          cd ./example-code && ./build.sh
+  
+      - name: Assemble Artifacts
+        run: |
+          echo "Making ./rust-training-${{ env.slug }}..."
+          mkdir -p ./rust-training-${{ env.slug }}
+          cp -r ./example-code ./rust-training-${{ env.slug }}
+
+      - name: Upload Artifacts
+        uses: actions/upload-artifact@v4
+        if: ${{success()}}
+        with:
+          name: Examples
+          if-no-files-found: error
+          path: |
+            ./rust-training-*/
