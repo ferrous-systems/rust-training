@@ -233,12 +233,38 @@ Note:
 
 You cannot do `extern "C" fn some_function();` with no function body - you must use the block.
 
+## Changes in Rust 1.82
+
+You can now mark external functions as *safe*:
+
+```rust
+unsafe extern "C" {
+    // This function is basically impossible to call wrong, so let's mark it safe
+    safe fn do_stuff(x: i32) -> i32;
+}
+
+fn main() {
+    dbg!(do_stuff(3));
+}
+
+#[unsafe(export_name = "do_stuff")]
+extern "C" fn my_do_stuff(x: i32) -> i32 {
+    x + 1
+}
+```
+
+Note:
+
+You can only mark an extern function as `safe` within an `unsafe extern` block.
+
+Also note that in Rust 1.82, `export_name` became an unsafe attribute, along
+with `no_mangle` and `link_section`. The old form is still allowed in Edition
+2021 and earlier (for backwards compatibility), but you will have to use the new
+syntax in Edition 2024.
+
 ## Primitive types
 
-Some C types have direct Rust equivalents.
-
-The [`core::ffi`](https://doc.rust-lang.org/stable/core/ffi/index.html) module
-also defines a bunch of useful types and aliases.
+Some C types have direct Rust equivalents. See also [`core::ffi`](https://doc.rust-lang.org/stable/core/ffi/index.html).
 
 | C               | Rust                       |
 | --------------- | -------------------------- |
@@ -254,6 +280,10 @@ Note:
 On some systems, a C `char` is not 8 bits in size. Rust does not support those
 platforms, and likely never will. Rust does support platforms where `int` is
 only 16-bits in size.
+
+If `T: ?Sized`, then `Box<T>` may be larger than a single pointer as it will
+also need to hold the length information. That means it is no longer the same
+size and layout as `T*`.
 
 ## Calling this
 
