@@ -264,10 +264,7 @@ syntax in Edition 2024.
 
 ## Primitive types
 
-Some C types have direct Rust equivalents.
-
-The [`core::ffi`](https://doc.rust-lang.org/stable/core/ffi/index.html) module
-also defines a bunch of useful types and aliases.
+Some C types have direct Rust equivalents. See also [`core::ffi`](https://doc.rust-lang.org/stable/core/ffi/index.html).
 
 | C               | Rust                       |
 | --------------- | -------------------------- |
@@ -283,6 +280,10 @@ Note:
 On some systems, a C `char` is not 8 bits in size. Rust does not support those
 platforms, and likely never will. Rust does support platforms where `int` is
 only 16-bits in size.
+
+If `T: ?Sized`, then `Box<T>` may be larger than a single pointer as it will
+also need to hold the length information. That means it is no longer the same
+size and layout as `T*`.
 
 ## Calling this
 
