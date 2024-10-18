@@ -10,18 +10,36 @@ For that reason, Rust has the concept of "unsafe code".
 
 Unsafe code is allowed to:
 
--   freely access memory
--   dereference raw pointers
--   call external functions
--   declare values `Send` and `Sync`
--   write to unsynced global variables
+- freely access memory
+- dereference raw pointers
+- call external functions
+- declare values `Send` and `Sync`
+- write to unsynced global variables
 
 ---
 
 By definition, these are not unsafe:
 
--   conversion to raw pointers
--   memory leaks
+- conversion to raw pointers
+- memory leaks
+
+## Making pointers
+
+```rust
+#![allow(unused_variables)]
+fn main() {
+    let mut x = 1;
+    // The old way
+    let p1 = &x as *const i32;
+    let p2 = &mut x as *mut i32;
+    // Added in 1.51, was unsafe until 1.82
+    let p1 = core::ptr::addr_of!(x);
+    let p2 = core::ptr::addr_of_mut!(x);
+    // As of Rust 1.82, use this instead:
+    let p1 = &raw const x;
+    let p2 = &raw mut x;    
+}
+```
 
 ---
 
@@ -41,25 +59,34 @@ Safe Rust is the worst language to implement linked lists. There's a full [text 
 Unsafe code must *always* be marked `unsafe`.
 
 ```rust []
-use std::fmt::Debug;
-
 fn main() {
-    let pointer_to_int = &mut 1;
-    let raw = pointer_to_int as *mut i32;
-    unsafe { deref_pointer(raw) };
+    let mut x = 1;
+    let p = &raw mut x;
+    unsafe {
+        my_write(p, 100);
+    }
+    println!("x is {} (or {})", x, unsafe { p.read() });
 }
 
-unsafe fn deref_pointer<T: Debug>(p: *mut T) {
-    println!("{:?}", *p)
+pub unsafe fn my_write<T>(p: *mut T, new_value: T) {
+    p.write(new_value)
 }
 ```
 
+Note:
+
+Modern Rust generally tries to have only a small number of `unsafe` operations
+per `unsafe` block. And any unsafe function *should* still use `unsafe` blocks for
+the unsafe code within, even though the function itself is unsafe to call.
+
+Try running `clippy` on this example and play with `clippy::multiple_unsafe_ops_per_block` and `clippy::undocumented_unsafe_blocks`. Then try "Edition 2024".
+
 ## Traps of `unsafe`
 
--   Not all examples are that simple. `unsafe` *must* guarantee the invariants that Rust expects.
--   This *especially* applies to ownership and mutable borrowing
--   `unsafe` can lead to a value having 2 owners -&gt; double free
--   `unsafe` can make immutable data temporarily mutable, which will lead to broken promises and tears.
+- Not all examples are that simple. `unsafe` *must* guarantee the invariants that Rust expects.
+- This *especially* applies to ownership and mutable borrowing
+- `unsafe` can lead to a value having 2 owners -&gt; double free
+- `unsafe` can make immutable data temporarily mutable, which will lead to broken promises and tears.
 
 ---
 
@@ -84,8 +111,8 @@ fn split_at_mut<T>(value: &mut [T], mid: usize) -> (&mut [T], &mut [T]) {
 
 ## Highlight unsafe code in VSCode
 
-* Will highlight which function calls are `unsafe` inside an `unsafe` block
-* Helpful for longer `unsafe` blocks
+- Will highlight which function calls are `unsafe` inside an `unsafe` block
+- Helpful for longer `unsafe` blocks
 
 ```json
 {

@@ -20,7 +20,11 @@ jobs:
       - name: Add mdslides
         run: |
           curl --proto '=https' --tlsv1.2 -LsSf https://github.com/ferrous-systems/mdslides/releases/download/v0.4.0/mdslides-installer.sh | sh
-      
+
+      - name: Update Rust
+        run: |
+          rustup update stable
+
       - name: Add Rust Targets
         run: |
           rustup target add thumbv7em-none-eabihf
