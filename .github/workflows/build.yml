@@ -7,8 +7,6 @@ on:
 jobs:
   build-slides:
     runs-on: ubuntu-20.04
-    concurrency:
-      group: ${{ github.workflow }}-${{ github.ref }}
     steps:
       - uses: actions/checkout@v4
 
@@ -63,8 +61,6 @@ jobs:
 
   build-examples-ferrocene:
     runs-on: ubuntu-20.04
-    concurrency:
-      group: ${{ github.workflow }}-${{ github.ref }}
     steps:
       - uses: actions/checkout@v4
      
@@ -101,8 +97,6 @@ jobs:
 
   build-examples:
     runs-on: ubuntu-20.04
-    concurrency:
-      group: ${{ github.workflow }}-${{ github.ref }}
     steps:
       - uses: actions/checkout@v4
      
