@@ -25,7 +25,7 @@ popd
 # Build qemu Aarch64 Armv8-A example
 pushd ./qemu-aarch64v8a
 ./build.sh
-cargo build --target=armv7r-none-eabihf
+cargo build
 cargo clean
 popd
 # Build qemu Aarch32 Armv8-R/Armv7-R example
