@@ -89,8 +89,6 @@ jobs:
           echo "Making ./rust-training-${{ env.slug }}..."
           mkdir -p ./rust-training-${{ env.slug }}
           cp -r ./example-code ./rust-training-${{ env.slug }}
-          echo "Compressing ./rust-training-${{ env.slug }}.zip..."
-          zip -r ./rust-training-${{ env.slug }}.zip ./rust-training-${{ env.slug }}
 
       - name: Upload Artifacts
         uses: actions/upload-artifact@v4
@@ -130,8 +128,6 @@ jobs:
           echo "Making ./rust-training-${{ env.slug }}..."
           mkdir -p ./rust-training-${{ env.slug }}
           cp -r ./example-code ./rust-training-${{ env.slug }}
-          echo "Compressing ./rust-training-${{ env.slug }}.zip..."
-          zip -r ./rust-training-${{ env.slug }}.zip ./rust-training-${{ env.slug }}
 
       - name: Upload Artifacts
         uses: actions/upload-artifact@v4
