@@ -108,11 +108,12 @@ jobs:
     steps:
       - uses: actions/checkout@v4
      
-      - name: Add Rust Targets
+      - name: Add Rust Targets and Tools
         run: |
           rustup target add thumbv7em-none-eabihf
           rustup target add armv7r-none-eabihf
           rustup target add aarch64-unknown-none
+          rustup component add llvm-tools-preview
 
       - name: Find slug name
         run: |
