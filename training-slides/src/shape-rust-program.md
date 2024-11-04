@@ -41,7 +41,32 @@ typically with pre-emptive context switching, but not exclusively.
 * The most common approach
 * See [RTIC](https://rtic.rs/), [embassy](https://embassy.dev), [Eclipse ThreadX](https://ferrous-systems.com/blog/rust-and-threadx/), or [FreeRTOS](https://github.com/ferrous-systems/freertos-experiments)
 
-## 2) Tasks are Libraries
+## 2) Bootloader + Application
+
+* Two binaries, linked separately
+* First binary (e.g. bootloader) starts the second (e.g. application)
+* Sometimes the second calls back into the first
+* Use linker scripts to divide up memory
+* Also often used to implement Arm Secure Mode (TrustZone) APIs
+* See [RP2350 HAL](https://docs.rs/rp235x-hal) or [the nRF9160 SPM](https://github.com/nrf-rs/nrf9160-dk)
+
+Note:
+
+The RP2350 Bootloader is in ROM, but it's still a binary. It inspects the
+application in flash (optionally performing a hash check or a cryptographic
+signature check) before jumping to the application. The application can then
+make calls back into the ROM bootloader, by calling a function that lives at a
+well-known address (or that has a function pointer that is stored at a
+well-known address). The bootloader in ROM starts in the Arm Cortex-M33's
+'Secure' state, but can switch the CPU into 'non-secure' state before running
+the application, if that's what the application metadata says to do.
+
+The nRF9160 Secure Partition Manager is similar, but must be written to the
+start of the nRF9160's flash. It also expects the exclusive use of a particular
+block of SRAM and so you must avoid that region of SRAM in your application. See
+the nrf9160-hal's `memory.x` file for an example.
+
+## 3) Tasks are Libraries
 
 * Each 'task' is a static library
 * The OS provides a 'skeleton' binary
@@ -100,8 +125,9 @@ programs and shared libraries are PIE/PIC.
 ## Summary
 
 1. Flat Binaries
-2. Tasks are Libraries
-3. Tasks are Binaries (dynamic linking)
-4. Tasks are Binaries (static linking)
+2. Bootloader + Application
+3. Tasks are Libraries
+4. Tasks are Binaries (dynamic linking)
+5. Tasks are Binaries (static linking)
 
 Remember, these are *embedded systems issues*, not necessarily *Rust-specific issues*.
