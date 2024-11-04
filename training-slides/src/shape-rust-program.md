@@ -48,7 +48,9 @@ typically with pre-emptive context switching, but not exclusively.
   * It imports and calls your tasks
 * Tasks provide an entry point, and some mechanism to call the OS
   * Typically SVC calls
-* See [Zephyr](https://zephyrproject.org/zephyr-weekly-update-rust-coming-to-zephyr/) and [RTEMS](https://docs.rtems.org/branches/master/user/rust/index.html)
+* See
+  [Zephyr](https://zephyrproject.org/zephyr-weekly-update-rust-coming-to-zephyr/)
+  and [RTEMS](https://docs.rtems.org/branches/master/user/rust/index.html)
 
 Note:
 
@@ -60,10 +62,14 @@ SVC is the Arm mnemonic for performing a system call. These are also known as
 * Some systems have multiple 'flash slots'
   * The run-time address is not known at link time
 * Enforces isolation between tasks - has to use SVC calls
-* Rust does not currently support [RWPI](https://developer.arm.com/documentation/dui0774/l/Compiler-Command-line-Options/-frwpi---fno-rwpi?lang=en) or [ROPI](https://developer.arm.com/documentation/dui0774/l/Compiler-Command-line-Options/-fropi---fno-ropi?lang=en) code
-* Rust has some support for [PIC/PIE](https://mropert.github.io/2018/02/02/pic_pie_sanitizers/) code
+* Rust does not currently support [RWPI] or [ROPI] code
+* Rust has some support for [PIC/PIE] code
   * But then you have to write a dynamic linker for fix the code at load time
 * See [TockOS](https://tockos.org) or Linux/macOS/Windows/QNX...
+
+[RWPI]: https://developer.arm.com/documentation/dui0774/l/Compiler-Command-line-Options/-frwpi---fno-rwpi?lang=en
+[ROPI]: https://developer.arm.com/documentation/dui0774/l/Compiler-Command-line-Options/-fropi---fno-ropi?lang=en
+[PIC/PIE]: https://mropert.github.io/2018/02/02/pic_pie_sanitizers/
 
 Note:
 
