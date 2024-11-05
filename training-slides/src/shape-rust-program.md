@@ -15,7 +15,7 @@
 Note:
 
 A binary is a collection of executable machine code and data, typically but not
-exclusive in ELF format, with a defined 'entry point'. The CPU should jump to
+exclusively in ELF format, with a defined 'entry point'. The CPU should jump to
 the address of the 'entry point' and start executing from there.
 
 A static library is an archive containing object code, typically with a `.a`
