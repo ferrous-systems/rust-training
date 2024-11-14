@@ -22,11 +22,8 @@
   * breaks equality symmetry (`NaN != NaN`)
 * Cancellation
   * subtraction of nearly equal operands may cause extreme loss of accuracy
-    * 28 US Army soldiers were killed in 1991 because of this
 * Division Safety test is difficult
 * Limited exponent range leads to overflows and underflows
-
-Note: [On 25 February 1991, a loss of significance in a MIM-104 Patriot missile battery prevented it from intercepting an incoming Scud missile in Dhahran, Saudi Arabia, contributing to the death of 28 soldiers from the U.S. Army](https://www.gao.gov/products/imtec-92-26)
 
 ## Integers in Rust
 
@@ -45,8 +42,8 @@ Note: [On 25 February 1991, a loss of significance in a MIM-104 Patriot missile 
 * Does my program `panic` is **hard** question in Rust
 * `#[no_std]`-only? [`panic-never`](https://docs.rs/panic-never/latest/panic_never/)
   * triggers a linker error if there's panicking code path in the binary
-  * limited use: Standard Library and 3rd part crates have panicking code
-* `Clippy` has lints against well-known panicking APIs in standard library
+  * limited use: Standard Library and 3rd party crates have panicking code
+* `clippy` has lints against well-known panicking APIs in the Standard Library
 * No easy way to list all panicking call-sites across *all* dependencies
 
 ## Unsafe Rust
@@ -58,7 +55,7 @@ Note: [On 25 February 1991, a loss of significance in a MIM-104 Patriot missile 
 
 ## Verifying program's behavior
 
-* Static analysis tools: Clippy
+* Static analysis tools: `clippy`
 * **Testing**
 
 ## Generative testing
@@ -67,7 +64,7 @@ Note: [On 25 February 1991, a loss of significance in a MIM-104 Patriot missile 
 
 and observe program behavior"
 
-## Fuzzing
+## Fuzz testing
 
 * Produce essentially random inputs
   * Often context-aware.
@@ -81,44 +78,27 @@ and observe program behavior"
   * Test time often grows non-linearly
   * Time limit can prevent it from finding bugs
 * Still selects values at random to try to observe different behaviors earlier.
-* When observes different behavior explores the related input combinations to produce the minimal test case.
+* Observe different behavior => explore related input combinations to produce minimal test case.
 
 ## Model Checking
 
 * Aware of your code structure
-  * Including hidden code-paths like panics
-* Builds a model of all your program states
-  * Uses SAT / SMT solver to **proof** the validity of program behavior
+  * Including hidden code paths like panics
+* Builds a model of all of your program's states
+  * Uses SAT / SMT solver to **prove** the validity of program behavior
   * Building a model of your code may take a long time
 
 ## Generative testing is a spectrum
 
-```mermaid
-flowchart LR
-    A(
-        **Fuzzing**
-        ----
-        * Easier to set up
-        * May miss bugs
-    )
-    B(
-        **Property testing**
-        ----
-        ← more universal
-        more deterministic →
-    )
-    C(
-        **Model Checking**
-        ----
-        * Harder to apply
-        * **Proofs** correctness
-    )
-    A <--> B <--> C
-```
+* **Fuzzing**
+  * Easier to set up
+  * May miss bugs
+* **Property testing**
+  * Middle ground
+* **Model Checking**
+  * Harder to apply
+  * **Proves** correctness
 
-<!--
-
- -->
 ## Installing Kani
 
 ```bash
@@ -182,9 +162,7 @@ VERIFICATION:- FAILED
 cargo kani -Z concrete-playback --concrete-playback=print
 ```
 
-~~~text
-Concrete playback unit test for `proofs::verify_add`:
-```
+```rust ignore
 /// Test generated for harness `proofs::verify_add`
 ///
 /// Check for `assertion`: "attempt to add with overflow"
@@ -200,7 +178,6 @@ fn kani_concrete_playback_verify_add_7155943916565760311() {
     kani::concrete_playback_run(concrete_vals, verify_add);
 }
 ```
-~~~
 
 ## How to use Kani 5
 
@@ -231,14 +208,14 @@ cargo kani playback -Z concrete-playback
 * out-of-the-box Developer Experience is very painful
   * but can be fixed in VSCode!
 
-## Let's fix it! VSCode
+## Let's fix it! - VSCode
 
 * Rust Analyzer
 * [Kani extension](https://marketplace.visualstudio.com/items?itemName=model-checking.kani-vscode-extension)
 * CodeLLDB for debugging
 * You can use Docker and DevContainers on unsupported platforms
 
-## Let's fix it! `Cargo.toml`
+## Let's fix it! - `Cargo.toml`
 
 ```toml
 [dev-dependencies]
@@ -253,7 +230,7 @@ kani = { version = "0.56", git = "https://github.com/model-checking/kani", tag =
 unexpected_cfgs = { level = "warn", check-cfg = ['cfg(rust_analyzer)', 'cfg(kani)'] }
 ```
 
-## Let's fix it! `.vscode/settings.json`
+## Let's fix it! - `.vscode/settings.json`
 
 ```json
 {
@@ -262,7 +239,7 @@ unexpected_cfgs = { level = "warn", check-cfg = ['cfg(rust_analyzer)', 'cfg(kani
 }
 ```
 
-## Let's fix it! `*.rs`
+## Let's fix it! - `*.rs`
 
 Kani proc macros appear broken to Rust Analyzer
 
@@ -283,7 +260,7 @@ mod proofs {
 
 ## Full "hello world" example in our repository
 
-https://github.com/ferrous-systems/rust-training/tree/main/example-code/kani-hello-world
+https://github.com/ferrous-systems/rust-training/tree/main/example-code/kani/kani-hello-world
 
 ## Other Kani features
 
@@ -346,11 +323,19 @@ fn check_reduce_fraction() {
 
 * No multithreading support
   * No support for atomic operations
-  * No support for async runtimes (but syntax is supported)
+  * No support for async runtimes (but the syntax is supported)
 * No inline assembly
 * No use of `panic!`, `catch_unwind`, and `resume_unwind` for flow control
 * Loops and deep recursion balloon the number of states that require inspection
 * ...
+
+## Test-friendly code
+
+* Isolate IO
+* Isolate synchronization, message passing, `await`
+* Isolate target-dependent code
+
+By making our code more test-friendly we make it Kani-friendly, too!
 
 ## What code to test
 
