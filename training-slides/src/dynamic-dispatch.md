@@ -89,7 +89,7 @@ fn main() {
   - Plus auto traits, like `Send` and `Sync`
 - This trait must fulfill certain conditions
 
-## Rules for object-safe traits (abbreviated)
+## Rules for dyn-compatible traits (abbreviated)
 
 - Must not have `Self: Sized`
 - No associated constants or GATs
@@ -98,7 +98,7 @@ fn main() {
   - Not use `Self`, only `&self` etc
   - Not return `impl Trait`
 
-See [the docs](https://doc.rust-lang.org/reference/items/traits.html#object-safety) for details.
+See [the docs](https://doc.rust-lang.org/nightly/reference/items/traits.html#dyn-compatibility) for details.
 
 ## Performance
 
@@ -108,7 +108,7 @@ See <https://godbolt.org/z/cheWrvM45>
 
 ## Trait Objects and Closures
 
-Closure traits fulfill object safety rules.
+Closure traits fulfill `dyn compatibility` rules.
 
 ```rust []
 fn factory() -> Box<dyn Fn(i32) -> i32> {
