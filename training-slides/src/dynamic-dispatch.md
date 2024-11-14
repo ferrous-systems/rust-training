@@ -100,6 +100,8 @@ fn main() {
 
 See [the docs](https://doc.rust-lang.org/nightly/reference/items/traits.html#dyn-compatibility) for details.
 
+Note that these used to be called "object safety" rules before 1.83.
+
 ## Performance
 
 There is a small cost for jumping via the vtable, but it's cheaper than an enum match.
