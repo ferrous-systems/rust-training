@@ -18,7 +18,9 @@ if [ $(uname) == "Darwin" ]; then
         && rm -rf ./mdslides-*/ )
 else
     ./mdbook --version || curl -sSL https://github.com/rust-lang/mdBook/releases/download/v0.4.40/mdbook-v0.4.40-x86_64-unknown-linux-gnu.tar.gz | tar -xvzf -
-    ./mdbook-graphviz --version || ( curl -sSL https://github.com/dylanowen/mdbook-graphviz/releases/download/v0.2.1/mdbook-graphviz_v0.2.1_x86_64-unknown-linux-musl.zip | tar -xvzf - \
+    ./mdbook-graphviz --version || ( curl -sSL https://github.com/dylanowen/mdbook-graphviz/releases/download/v0.2.1/mdbook-graphviz_v0.2.1_x86_64-unknown-linux-musl.zip -o mdbook-graphviz.zip \
+        && unzip mdbook-graphviz.zip \
+        && rm mdbook-graphviz.zip \
         && chmod a+x ./mdbook-graphviz )
     ./mdslides --version || ( curl -sSL https://github.com/ferrous-systems/mdslides/releases/download/v0.4.0/mdslides-x86_64-unknown-linux-gnu.tar.xz | tar -xvJf - \
         && mv ./mdslides-*/mdslides . \
