@@ -1,4 +1,4 @@
 html
 mdbook
-mdbook-mermaid
+mdbook-graphviz
 mdslides

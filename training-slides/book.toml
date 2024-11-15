@@ -5,8 +5,8 @@ multilingual = false
 src = "src"
 title = "Rust Training Slides by Ferrous Systems"
 
-[preprocessor.mermaid]
-command = "mdbook-mermaid"
+[preprocessor.graphviz]
+command = "mdbook-graphviz"
 
 [output.html.playground]
 copyable = true          # include the copy button for copying code snippets
