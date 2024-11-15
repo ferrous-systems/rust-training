@@ -19,6 +19,10 @@ jobs:
         run: |
           curl --proto '=https' --tlsv1.2 -LsSf https://github.com/ferrous-systems/mdslides/releases/download/v0.4.0/mdslides-installer.sh | sh
 
+      - name: Add graphviz
+        run: |
+          sudo apt-get upgrade -y && sudo apt-get install -y graphviz
+
       - name: Update Rust
         run: |
           rustup update stable
