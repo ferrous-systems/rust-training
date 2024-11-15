@@ -35,15 +35,18 @@ History](https://rust-lang.github.io/rustup-components-history/)
 
 ## Contents of the toolchain
 
-```mermaid
-graph TD;
-    C(cargo) --> R(rustc);
-    C --> D(rustdoc);
-    C --> F(rustfmt);
-    C --> L(clippy);
-    R --> S(libstd);
-    R --> O(libcore);
-    S --> O;
+```dot process
+digraph {
+    node [shape=record, fontcolor=black, fontsize=14, width=3, fillcolor=lightgreen, style=filled];
+    cargo -> rustc;
+    cargo -> rustdoc;
+    cargo -> rustfmt;
+    cargo -> clippy;
+    node [shape=record, fontcolor=black, fontsize=14, width=3, fillcolor=lightblue, style=filled];
+    rustc -> libstd;
+    rustc -> libcore;
+    libstd -> libcore;
+}
 ```
 
 ## Hello, world! with Cargo

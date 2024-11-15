@@ -100,31 +100,18 @@ fn main() {
 
 ## Three kinds of Iterator
 
-```mermaid
-classDiagram
-    note for Vec "Our std::vec::Vec"
-    class Vec {
-        start: *mut T
-        size: usize
-        used: usize
-    }
-    note for Iter "If you call .iter()"
-    class Iter {
-        parent: &[T]
-        +next(&mut self) Option<&T>
-    }
-    note for IterMut "If you call .iter_mut()"
-    class IterMut {
-        parent: &mut [T]
-        +next(&mut self) Option<&mut T>
-    }
-    note for IntoIter "If you call .into_iter()"
-    class IntoIter {
-        start: *mut T
-        size: usize
-        used: usize
-        +next(&mut self) Option< T >
-    }
+```dot process
+digraph {
+    node [shape=record];
+    Vec[label="{struct Vec|start: *mut T\nlen: usize\ncap: usize|<i>fn iter(&self) -\> VecIter|<im>fn iter_mut(&mut self) -\> VecIterMut|<ii> fn into_iter(self) -\> VecIter}"];
+    VecIntoIter[label="{struct VecIntoIter|start: *mut T\nlen: usize\ncap: usize|Item=T}"];
+    VecIterMut[label="{struct VecIterMut|parent: &mut [T]|Item=&mut T}"];
+    VecIter[label="{struct VecIter|parent: &[T]|Item=&T}"];
+
+    Vec:ii -> VecIntoIter;
+    Vec:im -> VecIterMut;
+    Vec:i -> VecIter;
+}
 ```
 
 ## Three kinds of Iterator

@@ -12,12 +12,22 @@ Most common are `String` and `&str`.
 -   The bytes it points at exist on the *heap*
 -   Does not implement `Copy`, but implements `Clone`
 
-```mermaid
-flowchart LR
-    data("[0x31, 0x32, 0x33, 0x00, 0x00]")
-    string["String { ptr, cap: 5, len: 3 }"]
-    string --> data
-    style data fill:#ccf
+<br>
+<br>
+
+```dot process
+digraph {
+    node [shape=plaintext, fontcolor=black, fontsize=18];
+    "string:" [color=white];
+
+    node [shape=record, fontcolor=black, fontsize=14, width=3];
+    _inner [label="<f0> 0x48 | 0x65 | 0x6c | 0x6c | 0x6f | 0x21 | 0xFF | 0xFF", color=blue, fillcolor=lightgreen, style=filled];
+    node [shape=record, fontcolor=black, fontsize=14, width=2];
+    string [label="<p0> ptr | len = 6 | cap = 8", color=blue, fillcolor=lightblue, style=filled];
+    string:p0 -> _inner:f0;
+
+    { rank=same; "string:"; string }
+}
 ```
 
 ## `&str`
@@ -26,28 +36,20 @@ flowchart LR
 -   Usually only seen as a borrowed value
 -   The bytes it points at may be anywhere: heap, stack, or in read-only memory
 
-```mermaid
-flowchart LR
-    data1("[0x31, 0x32, 0x33, 0x00, 0x00]")
-    string["String { ptr, cap: 5, len: 3 }"]
-    string --> data1
+```dot process
+digraph {
+    node [shape=plaintext, fontcolor=black, fontsize=18];
+    "str:" [color=white];
 
-    data2("[0x34, 0x35, 0x36, 0x37]")
-    str1["&str { ptr, len: 4 }"]
-    str1 -.-> data2
+    node [shape=record, fontcolor=black, fontsize=14, width=3];
+    bytes [label="<f0> 0xC2 | 0xA3 | 0x39 | 0x39 | 0x21", color=blue, fillcolor=lightblue, style=filled];
+    node [shape=record, fontcolor=black, fontsize=14, width=2];
+    str [label="<p0> ptr | len = 5", color=blue, fillcolor=lightblue, style=filled];
+    str:p0 -> bytes:f0;
 
-    str2["&str { ptr, len: 3 }"]
-    str2 -.-> data1
-
-    style data1 fill:#ccf
-    style data2 fill:#cfc
+    { rank=same; "str:"; str }
+}
 ```
-
-Note:
-
-The dark blue block of data is heap allocated.
-
-The green block of data is a string literal in read-only memory (i.e. in the `.rodata` section).
 
 ## Creation
 
@@ -102,6 +104,12 @@ These types represent *platform native* strings. This is necessary because Unix 
 -   Rust strings are always valid UTF-8, and may contain `NUL` bytes.
 
 `OsString` and `OsStr` bridge this gap and allow for conversion to and from `String` and `str`.
+
+Note:
+
+In particular, UNIX file paths are not required to be valid UTF-8 and you might encounter such paths when looking at someone's disk.
+
+Windows file paths are also not required to be valid UTF-16 (i.e. might contain invalid surrogate pairs) and you might encounter such paths when looking at someone's disk.
 
 ## `CString` & `CStr`
 
