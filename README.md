@@ -34,8 +34,9 @@ This slide deck is an [`mdbook`](https://crates.io/crates/mdbook) that is also c
 To build as a book, run `mdbook` in the usual fashion:
 
 ```console
+$ apt install graphviz
 $ cargo install mdbook
-$ cargo install mdbook-mermaid
+$ cargo install mdbook-graphviz
 $ cd ./training-slides
 $ mdbook build
 2023-05-03 13:24:46 [INFO] (mdbook::book): Book building has started
@@ -55,6 +56,7 @@ mdbook test
 To convert the book to slides, run `mdslides` like this:
 
 ```console
+$ apt install graphviz
 $ cargo install mdslides
 $ cd ./training-slides
 $ mdslides --template ./template.html --output-dir ./slides --mdbook-path . --index-template ./index-template.html 
