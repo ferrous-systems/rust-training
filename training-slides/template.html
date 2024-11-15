@@ -71,6 +71,11 @@
             grid-template-columns: repeat(2, minmax(0, 1fr));
             gap: 1rem;
         }
+
+        .scrollable-slide {
+            height: 720px;
+            overflow-y: auto !important;
+        }
     </style>
 </head>
 
@@ -304,6 +309,25 @@ $CONTENT
                     // Center the mermaid diagrams.
                     el.style.cssText += 'text-align: center';
                 });
+            });
+
+            function resetSlideScrolling(slide) {
+                $(slide).removeClass('scrollable-slide');
+            }
+            
+            function handleSlideScrolling(slide) {
+                if ($(slide).height() >= 720) {
+                    $(slide).addClass('scrollable-slide');
+                }
+            }
+            
+            Reveal.addEventListener('ready', function (event) {
+                handleSlideScrolling(event.currentSlide);
+            });
+            
+            Reveal.addEventListener('slidechanged', function (event) {
+                resetSlideScrolling(event.previousSlide)
+                handleSlideScrolling(event.currentSlide);
             });
         });
     </script>
