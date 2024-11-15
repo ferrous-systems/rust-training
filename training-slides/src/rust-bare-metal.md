@@ -26,52 +26,38 @@ To support these elements, we (usually) have these layers.
 
 ---
 
-```mermaid
-graph TB
-    app(Application<br/><tt>my_application</tt>)
-    bsc[Board Support<br/><tt>nrf52840_dk</tt>]
-    hal[MCU HAL Implementation<br/><tt>nrf52480_hal</tt>]
-    lcd_driver[SPI LCD Driver<br/><tt>ssd1306</tt>]
-    hal_traits[[HAL Traits<br/><tt>embedded_hal</tt>]]
-    pac[MCU PAC<br/><tt>nrf52840-pac</tt>]
-    rt[Core Runtime<br/><tt>cortex_m_rt</tt>]
-    cp[Core Peripherals<br/><tt>cortex_m</tt>]
+```dot process
+digraph {
+    node [shape=oval, width=1.5, fillcolor=khaki1, style=filled];
+    app [label="Application\n(my_application)"]
 
-    subgraph Key
-        note1[Embedded Working Group]
-        note2[nrf-rs]
-        note3[You]
-        note4[Others]
-    end
+    node [shape=record, width=1.5, fillcolor=lightblue, style=filled];
+    bsc [label="Board Support\n(nrf52840_dk)"]
+    hal [label="MCU HAL Implementation\n(nrf52480_hal)"]
+    pac [label="MCU PAC\n(nrf52840-pac)"]
 
-    direction TB
-    app --> bsc
-    app & bsc --> hal
-    app --> lcd_driver
-    app & lcd_driver --> hal_traits
-    hal -- Implements --o hal_traits
-    app & hal --> pac
-    app & pac --> rt
-    app & pac & rt --> cp
+    node [shape=record, width=1.5, fillcolor=orange, style=filled];
+    lcd_driver [label="SPI LCD Driver\n(ssd1306)"]
 
-    class app binary;
-    class bsc library;
-    class lcd_driver library;
-    class hal mcu_library;
-    class pac mcu_library;
-    class hal_traits ewg_library;
-    class rt ewg_library;
-    class cp ewg_library;
+    node [shape=folder, width=1.5, fillcolor=lightgreen, style=filled];
+    hal_traits [label="HAL Traits\n(embedded_hal)"]
 
-    class note1 ewg_library;
-    class note2 mcu_library;
-    class note3 binary;
-    class note4 library;
+    node [shape=record, width=1.5, fillcolor=lightgreen, style=filled];
+    rt [label="Core Runtime\n(cortex_m_rt)"]
+    cp [label="Core Peripherals\n(cortex_m)"]
 
-    classDef binary fill:#fb8,stroke:#333,stroke-width:4px;
-    classDef library fill:#cf9,stroke:#333,stroke-width:2px;
-    classDef ewg_library fill:#f9c,stroke:#333,stroke-width:2px;
-    classDef mcu_library fill:#9cf,stroke:#333,stroke-width:2px;
+    app -> bsc;
+    bsc -> hal;
+    bsc -> hal_traits;
+    app -> lcd_driver;
+    lcd_driver -> hal_traits;
+    hal -> hal_traits [label="implements", style="dashed"]
+    hal -> pac;
+    app -> rt;
+    pac -> rt;
+    pac -> cp;
+    rt -> cp;
+}
 ```
 
 ## Don't worry

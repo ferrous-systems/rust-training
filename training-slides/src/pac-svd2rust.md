@@ -106,8 +106,6 @@ unsound.
 
 ## Other approaches
 
-Some developers prefer to generate a pointer for each peripheral register:
-
 ```rust []
 pub struct Uart { base: *mut u32 } // now has no fields
 
@@ -174,9 +172,21 @@ registers and fields on an MCU.
 
 We can use `svd2rust` to turn this into a Peripheral Access Crate.
 
-```mermaid
-graph LR
-    svd[(SVD XML)] --> svd2rust[<tt>svd2rust</tt>] --> rust[(Rust Source)]
+<br>
+
+```dot process
+
+digraph {
+    rankdir=LR;
+    node [shape=ellipse, width=1.5, fillcolor=lightgreen, style=filled];
+    svd [label="SVD XML"];
+    rust [label="Rust Source"];
+    node [shape=record, width=1.5, fillcolor=lightblue, style=filled];
+    svd2rust [label="svd2rust"];
+
+    svd -> svd2rust;
+    svd2rust -> rust;
+}
 ```
 
 Note:
@@ -191,14 +201,26 @@ fix known bugs in the SVD files.
 
 ## The `svd2rust` generated API
 
-```mermaid
-graph TB
-    Peripherals --> uarte1[.UARTE1: <b>UARTE1&nbsp;</b>]
-    uarte1 --> uart1_baudrate[.baudrate: <b>BAUDRATE&nbsp;</b>]
-    uarte1 --> uart1_inten[.inten: <b>INTEN&nbsp;</b>]
-    Peripherals --> uarte2[.UARTE2: <b>UARTE2&nbsp;</b>]
-    uarte2 --> uart2_baudrate[.baudrate: <b>BAUDRATE&nbsp;</b>]
-    uarte2 --> uart2_inten[.inten: <b>INTEN&nbsp;</b>]
+```dot process
+
+digraph {
+    node [shape=record, width=1.5, fillcolor=lightblue, style=filled];
+    Peripherals;
+    uarte1 [label=".UARTE1: UARTE1"];
+    uarte1_baudrate [label=".baudrate: BAUDATE"];
+    uarte1_inten [label=".inten: INTEN"];
+    uarte2 [label=".UARTE2: UARTE2"];
+    uarte2_baudrate [label=".baudrate: BAUDATE"];
+    uarte2_inten [label=".inten: INTEN"];
+
+    Peripherals -> uarte1;
+    uarte1 -> uarte1_baudrate;
+    uarte1 -> uarte1_inten;
+
+    Peripherals -> uarte2;
+    uarte2 -> uarte2_baudrate;
+    uarte2 -> uarte2_inten;
+}
 ```
 
 ---

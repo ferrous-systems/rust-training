@@ -10,29 +10,37 @@ We have a standard grouping of *lessons* into *modules*, but this can be customi
 
 Most of our modules are available now (shown in blue), but some are still in development and will be available in the future (shown in grey).
 
-```mermaid
----
-title: Ferrous Systems' Rust Training Modules
-config:
-  theme: base
-  themeVariables:
-    primaryColor: "#cdf"
----
-graph TD;
-    Fundamentals(Rust Fundamentals)-->Applied(Applied Rust);
-    Applied-->Advanced(Advanced Rust);
-    Applied-->NoStd(No-Std Rust);
-    NoStd-->Ferrocene(Using Ferrocene);
-    Applied-->BareMetal(Bare-Metal Rust);
-    Applied-->Async(Async Rust);
-    Applied-->Wasm(Rust and WebAssembly);
-    BareMetal-->Embassy(Using Embassy);
-    Async-->Embassy;
-    WhyRust(Why Rust?);
-    WhyFerrocene(Why Ferrocene?);
+## Ferrous Systems' Rust Training Modules
 
-    classDef grey fill:#eee,stroke:#ccc;
-    class Async,Embassy grey
+```dot process
+digraph {
+    node [shape=record, width=1.5, fillcolor=lightgreen, style=filled];
+    Advanced [label="Advanced Rust"];
+    Applied [label="Applied Rust"];
+    BareMetal [label="Bare-Metal Rust"];
+    Ferrocene [label="Using Ferrocene"];
+    Fundamentals [label="Rust Fundamentals"];
+    NoStd [label="No-Std Rust"];
+    Wasm [label="Rust and WebAssembly"];
+
+    node [shape=record, fillcolor=lightblue, style=filled];
+    WhyFerrocene [label="Why Ferrocene?"];
+    WhyRust [label="Why Rust?"];
+
+    node [shape=record, fillcolor=lightgray, style=filled];
+    Async [label="Async Rust"];
+    Embassy [label="Using Embassy"];
+
+    Fundamentals -> Applied;
+    Applied -> Advanced;
+    Applied -> NoStd;
+    NoStd -> Ferrocene;
+    Applied -> BareMetal;
+    Applied -> Async;
+    Applied -> Wasm;
+    BareMetal -> Embassy;
+    Async -> Embassy;
+}
 ```
 
 * **Why Rust?**: A (stand-alone) half-day tour of Rust for decision-makers, technical leads and managers.
