@@ -108,11 +108,11 @@
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>$(ProjectPath)\..\..\target\debug\ffi_use_rust_in_c.lib;kernel32.lib;advapi32.lib;ntdll.lib;userenv.lib;ws2_32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>$(ProjectDir)\..\target\debug\ffi_use_rust_in_c.lib;kernel32.lib;advapi32.lib;ntdll.lib;userenv.lib;ws2_32.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <IgnoreAllDefaultLibraries>false</IgnoreAllDefaultLibraries>
     </Link>
     <PreBuildEvent>
-      <Command>cd $(ProjectPath)\..
+      <Command>cd $(ProjectDir)\..
 cargo build
 </Command>
     </PreBuildEvent>
@@ -134,7 +134,7 @@ cargo build
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>$(ProjectPath)\..\..\target\release\ffi_use_rust_in_c.lib;kernel32.lib;advapi32.lib;ntdll.lib;userenv.lib;ws2_32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>$(ProjectDir)\..\target\release\ffi_use_rust_in_c.lib;kernel32.lib;advapi32.lib;ntdll.lib;userenv.lib;ws2_32.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <IgnoreAllDefaultLibraries>false</IgnoreAllDefaultLibraries>
     </Link>
     <PreBuildEvent>
