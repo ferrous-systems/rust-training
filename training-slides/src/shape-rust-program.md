@@ -82,7 +82,7 @@ Note:
 SVC is the Arm mnemonic for performing a system call. These are also known as
 'software interrupts' and earlier Arm architectures used the mnemonic SWI.
 
-## 3) Tasks are Binaries (dynamic linking)
+## 4) Tasks are Binaries (dynamic linking)
 
 * Some systems have multiple 'flash slots'
   * The run-time address is not known at link time
@@ -114,9 +114,9 @@ jumps to code or data being made via a Global Offset Table (GOT). The GOT needs
 modifying at load time, once you know where everything is in memory. Linux
 programs and shared libraries are PIE/PIC.
 
-## 4) Tasks are Binaries (static linking)
+## 5) Tasks are Binaries (static linking)
 
-* Like (3), but you have a tool work out the linking once you have all the
+* Like (4), but you have a tool work out the linking once you have all the
   binaries
 * Doesn't require ROPI or RWPI
 * But you have to know the full set of tasks in advance
