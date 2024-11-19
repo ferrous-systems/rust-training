@@ -110,7 +110,7 @@ See <https://godbolt.org/z/cheWrvM45>
 
 ## Trait Objects and Closures
 
-Closure traits fulfill `dyn compatibility` rules.
+Closure traits are dyn-compatible.
 
 ```rust []
 fn factory() -> Box<dyn Fn(i32) -> i32> {
