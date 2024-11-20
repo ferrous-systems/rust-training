@@ -21,7 +21,7 @@ digraph {
     "string:" [color=white];
 
     node [shape=record, fontcolor=black, fontsize=14, width=3];
-    _inner [label="<f0> 0x48 | 0x65 | 0x6c | 0x6c | 0x6f | 0x21 | 0xFF | 0xFF", color=blue, fillcolor=lightgreen, style=filled];
+    _inner [label="<f0> 0x48 | 0x65 | 0x6c | 0x6c | 0x6f | 0x21 | 0xFF | 0xFF", color=blue, fillcolor=green3, style=filled];
     node [shape=record, fontcolor=black, fontsize=14, width=2];
     string [label="<p0> ptr | len = 6 | cap = 8", color=blue, fillcolor=lightblue, style=filled];
     string:p0 -> _inner:f0;

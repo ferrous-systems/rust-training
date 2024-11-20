@@ -14,7 +14,7 @@ Most of our modules are available now (shown in blue), but some are still in dev
 
 ```dot process
 digraph {
-    node [shape=record, width=1.5, fillcolor=lightgreen, style=filled];
+    node [shape=record, width=1.5, fillcolor=green3, style=filled];
     Advanced [label="Advanced Rust"];
     Applied [label="Applied Rust"];
     BareMetal [label="Bare-Metal Rust"];
