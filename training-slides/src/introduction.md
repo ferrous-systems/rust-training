@@ -8,7 +8,7 @@ This is the book version of our material. You can also see the lessons in slide 
 
 We have a standard grouping of *lessons* into *modules*, but this can be customised according to customer needs. The modules have dependencies - that is, pre-requisite knowledge required to get the most out of a particular module. The dependencies are shown in the following graphic.
 
-Most of our modules are available now (shown in blue), but some are still in development and will be available in the future (shown in grey).
+Most of our modules are available now (shown in green), but some are still in development and will be available in the future (shown in grey). We also have stand-alone courses (shown in blue).
 
 ## Ferrous Systems' Rust Training Modules
 
