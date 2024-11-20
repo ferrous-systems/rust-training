@@ -131,3 +131,20 @@ jobs:
           if-no-files-found: error
           path: |
             ./rust-training-*/
+
+  build-windows-examples:
+    runs-on: windows-2022
+    steps:
+      - uses: actions/checkout@v4
+      - name: Update Rust
+        run: |
+          rustup update stable
+      - name: Add msbuild to PATH
+        uses: microsoft/setup-msbuild@v2
+      - name: Build FFI Example
+        run: |
+          cd example-code\native\ffi\use-rust-in-c\windows-example
+          msbuild.exe windows-example.sln /p:Configuration=Debug
+          .\x64\Debug\windows-example.exe
+          msbuild.exe windows-example.sln /p:Configuration=Release
+          .\x64\Release\windows-example.exe
