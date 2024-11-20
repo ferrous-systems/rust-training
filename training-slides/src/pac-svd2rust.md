@@ -178,7 +178,7 @@ We can use `svd2rust` to turn this into a Peripheral Access Crate.
 
 digraph {
     rankdir=LR;
-    node [shape=ellipse, width=1.5, fillcolor=lightgreen, style=filled];
+    node [shape=ellipse, width=1.5, fillcolor=green3, style=filled];
     svd [label="SVD XML"];
     rust [label="Rust Source"];
     node [shape=record, width=1.5, fillcolor=lightblue, style=filled];

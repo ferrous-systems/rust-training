@@ -37,7 +37,7 @@ History](https://rust-lang.github.io/rustup-components-history/)
 
 ```dot process
 digraph {
-    node [shape=record, fontcolor=black, fontsize=14, width=3, fillcolor=lightgreen, style=filled];
+    node [shape=record, fontcolor=black, fontsize=14, width=3, fillcolor=green3, style=filled];
     cargo -> rustc;
     cargo -> rustdoc;
     cargo -> rustfmt;

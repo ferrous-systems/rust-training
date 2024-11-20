@@ -113,7 +113,7 @@ digraph {
     "vector:" [color=white];
 
     node [shape=record, fontcolor=black, fontsize=14, width=3];
-    _inner [label="<f0> 2 | 4 | 6 | 0", color=blue, fillcolor=lightgreen, style=filled];
+    _inner [label="<f0> 2 | 4 | 6 | 0", color=blue, fillcolor=green3, style=filled];
     node [shape=record, fontcolor=black, fontsize=14, width=2];
     vector [label="<p0> ptr | len = 3 | cap = 4", color=blue, fillcolor=lightblue, style=filled];
     vector:p0 -> _inner:f0;
@@ -247,7 +247,7 @@ digraph {
     "string:" [color=white];
 
     node [shape=record, fontcolor=black, fontsize=14, width=3];
-    _inner [label="<f0> 0x48 | 0x65 | 0x6c | 0x6c | 0x6f | 0x21", color=blue, fillcolor=lightgreen, style=filled];
+    _inner [label="<f0> 0x48 | 0x65 | 0x6c | 0x6c | 0x6f | 0x21", color=blue, fillcolor=green3, style=filled];
     node [shape=record, fontcolor=black, fontsize=14, width=2];
     string [label="<p0> ptr | len = 6 | cap = 6", color=blue, fillcolor=lightblue, style=filled];
     string:p0 -> _inner:f0;

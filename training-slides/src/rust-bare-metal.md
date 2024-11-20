@@ -39,10 +39,10 @@ digraph {
     node [shape=record, width=1.5, fillcolor=orange, style=filled];
     lcd_driver [label="SPI LCD Driver\n(ssd1306)"]
 
-    node [shape=folder, width=1.5, fillcolor=lightgreen, style=filled];
+    node [shape=folder, width=1.5, fillcolor=green3, style=filled];
     hal_traits [label="HAL Traits\n(embedded_hal)"]
 
-    node [shape=record, width=1.5, fillcolor=lightgreen, style=filled];
+    node [shape=record, width=1.5, fillcolor=green3, style=filled];
     rt [label="Core Runtime\n(cortex_m_rt)"]
     cp [label="Core Peripherals\n(cortex_m)"]
 
