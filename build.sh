@@ -45,7 +45,7 @@ function build_and_store {
     # The PATH override lets it find our local copy of mdbook-graphviz
     PATH=$PATH:. ./mdbook build -d "${OUTPUT_DIR}/$1/book" ./training-slides
     # Then build the slides
-    RUST_LOG=info ./mdslides --template ./training-slides/template.html \
+    PATH=$PATH:. RUST_LOG=info ./mdslides --template ./training-slides/template.html \
         --output-dir "${OUTPUT_DIR}/$1/slides" \
         --mdbook-path ./training-slides \
         --index-template ./training-slides/index-template.html
