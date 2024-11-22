@@ -15,3 +15,8 @@ criticalup install
 criticalup run cargo build --release
 criticalup run cargo build --target=armv7r-none-eabihf --release
 popd
+# Build qemu Armv7E-M example
+pushd qemu-thumbv7em
+criticalup install
+criticalup run cargo build
+popd

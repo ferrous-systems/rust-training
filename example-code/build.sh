@@ -31,3 +31,8 @@ pushd ./qemu-aarch32v78r
 # ./build.sh
 cargo build --target=armv7r-none-eabihf
 popd
+# Build qemu Armv7E-M example
+pushd qemu-thumbv7em
+cargo build
+popd
+
