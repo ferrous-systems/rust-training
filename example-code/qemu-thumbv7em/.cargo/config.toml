@@ -1,0 +1,9 @@
+[build]
+target = ["thumbv7em-none-eabi"]
+
+[target.thumbv7em-none-eabi]
+rustflags = [
+    "-Clink-arg=-Tlink.x",
+    "-Clink-arg=-Tdefmt.x",
+]
+runner = "./qemu_run.sh"
