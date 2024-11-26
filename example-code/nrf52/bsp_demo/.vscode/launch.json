@@ -1,0 +1,20 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+      {
+        "preLaunchTask": "${defaultBuildTask}",
+        "type": "probe-rs-debug",
+        "request": "launch",
+        "name": "Run bsp_demo",
+        "flashingConfig": {
+          "flashingEnabled": true,
+        },
+        "chip": "nrf52840_xxaa",
+        "coreConfigs": [
+          {
+            "programBinary": "./target/thumbv7em-none-eabihf/debug/bsp_demo"
+          }
+        ]
+      }
+    ]
+  }
