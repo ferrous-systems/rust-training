@@ -7,5 +7,8 @@ edition = "2021"
 
 [dependencies]
 cortex-m-rt = "0.6"
-cortex-m = "0.6"
+cortex-m = { version = "0.7", features = ["critical-section-single-core"] }
 nrf52840-dk-bsp = { version = "0.2.0", features = [ "rt" ] }
+defmt = "0.3"
+defmt-rtt = "0.4"
+critical-section = "1.2.0"
