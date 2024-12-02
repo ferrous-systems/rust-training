@@ -212,7 +212,7 @@ cargo kani playback -Z concrete-playback
 
 * Rust Analyzer
 * [Kani extension](https://marketplace.visualstudio.com/items?itemName=model-checking.kani-vscode-extension)
-* CodeLLDB for debugging
+* CodeLLDB or Microsoft C/C++ (on Windows) for debugging
 * You can use Docker and DevContainers on unsupported platforms
 
 ## Let's fix it! - `Cargo.toml`
