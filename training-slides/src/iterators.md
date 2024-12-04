@@ -20,7 +20,7 @@ To *iterate* in Rust is to produce a sequence of items, one at a time.
   * The object holds the iterator's *state*
 * Some *Iterators* will take data from a collection (e.g. a Slice)
 * Some *Iterators* will calculate each item on-the-fly
-* Some *Iterators* will take data another iterator, and then calculate something new
+* Some *Iterators* will take data from another iterator, and then calculate something new
 
 Note:
 
