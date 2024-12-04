@@ -21,7 +21,7 @@ jobs:
 
       - name: Add graphviz
         run: |
-          sudo apt-get upgrade -y && sudo apt-get install -y graphviz
+          sudo apt-get update -y && sudo apt-get install -y graphviz
 
       - name: Update Rust
         run: |
