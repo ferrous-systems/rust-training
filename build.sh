@@ -14,6 +14,7 @@ if [ $(uname) == "Darwin" ]; then
     ./mdbook --version || curl -sSL https://github.com/rust-lang/mdBook/releases/download/v0.4.40/mdbook-v0.4.40-x86_64-apple-darwin.tar.gz | tar -xvzf -
     dot -V || brew install graphviz
     mdbook-graphviz --version || cargo install mdbook-graphviz
+    ./mdbook-mermaid --version || curl -sSL https://github.com/badboy/mdbook-mermaid/releases/download/v0.13.0/mdbook-mermaid-v0.13.0-x86_64-apple-darwin.tar.gz | tar -xvzf -
     ./mdslides --version || ( curl -sSL https://github.com/ferrous-systems/mdslides/releases/download/v0.5.0/mdslides-x86_64-apple-darwin.tar.xz | tar -xvJf - \
         && mv ./mdslides-*/mdslides . \
         && rm -rf ./mdslides-*/ )
@@ -24,6 +25,7 @@ else
         && unzip mdbook-graphviz.zip \
         && rm mdbook-graphviz.zip \
         && chmod a+x ./mdbook-graphviz )
+    ./mdbook-mermaid --version || curl -sSL https://github.com/badboy/mdbook-mermaid/releases/download/v0.13.0/mdbook-mermaid-v0.13.0-x86_64-unknown-linux-gnu.tar.gz | tar -xvzf -
     ./mdslides --version || ( curl -sSL https://github.com/ferrous-systems/mdslides/releases/download/v0.5.0/mdslides-x86_64-unknown-linux-gnu.tar.xz | tar -xvJf - \
         && mv ./mdslides-*/mdslides . \
         && rm -rf ./mdslides-*/ )
@@ -42,7 +44,7 @@ cp ./_redirects "${OUTPUT_DIR}/_redirects"
 function build_and_store {
     mkdir -p "${OUTPUT_DIR}/$1"
     # Build the book first, because mdbook will create any empty sections
-    # The PATH override lets it find our local copy of mdbook-graphviz
+    # The PATH override lets it find our local copy of mdbook-graphviz or mdbook-mermaid
     PATH=$PATH:. ./mdbook build -d "${OUTPUT_DIR}/$1/book" ./training-slides
     # Then build the slides
     PATH=$PATH:. RUST_LOG=info ./mdslides --template ./training-slides/template.html \
