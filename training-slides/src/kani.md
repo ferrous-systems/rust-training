@@ -1,4 +1,4 @@
-<!-- markdownlint-disable MD048 -->
+<!-- markdownlint-disable MD048, MD033 -->
 # Building Robust Programs with Kani
 
 ## Rust Guarantees are Very Strong
@@ -193,6 +193,8 @@ mod proofs {
 }
 ```
 
+<p>&nbsp<!-- run-button placeholder --></p>
+
 ```bash
 &#35; run playback tests
 cargo kani playback -Z concrete-playback
@@ -260,7 +262,7 @@ mod proofs {
 
 ## Full "hello world" example in our repository
 
-https://github.com/ferrous-systems/rust-training/tree/main/example-code/kani/kani-hello-world
+See [example-code/kani/kani-hello-world](https://github.com/ferrous-systems/rust-training/tree/main/example-code/kani/kani-hello-world)
 
 ## Other Kani features
 
