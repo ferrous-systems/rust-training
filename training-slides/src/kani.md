@@ -15,7 +15,7 @@
 * Some operations can `panic!`
 * FFI, *unsafe* code
 
-## IEE754 Floating point numbers
+## IEEE 754 Floating point numbers
 
 * `NaN`
   * propagates through operations `x + NaN => NaN`
@@ -39,7 +39,7 @@
 
 ## Panics
 
-* Does my program `panic` is **hard** question in Rust
+* "Does my program `panic`?" is a **hard** question in Rust
 * `#[no_std]`-only? [`panic-never`](https://docs.rs/panic-never/latest/panic_never/)
   * triggers a linker error if there's panicking code path in the binary
   * limited use: Standard Library and 3rd party crates have panicking code
