@@ -38,6 +38,7 @@ Using Rust on Windows/macOS/Linux. Requires [Rust Fundamentals](#rust-fundamenta
 Topics that go beyond [Applied Rust](#applied-rust).
 
 * [Advanced Strings](./advanced-strings.md)
+* [Building Robust Programs with Kani](./kani.md)
 * [Debugging Rust](./debugging-rust.md)
 * [Deconstructing Send, Arc, and Mutex](./deconstructing-send-arc-mutex.md)
 * [Dependency Management with Cargo](./dependency-management.md)
