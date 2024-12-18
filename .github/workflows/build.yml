@@ -86,7 +86,7 @@ jobs:
       - name: Update Beta Rust
         run: |
           rustup update beta
-          rusutp default beta
+          rustup default beta
 
       - name: Find slug name
         run: |
