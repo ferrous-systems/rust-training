@@ -235,7 +235,7 @@ The Rust Project, and pretty much the whole Community, follow a [Code of
  --> src/main.rs:4:5
   |
 3 |     let nickname = &name[..3];
-  |                     <b style='color:blue;'>---- immutable borrow occurs heree</b>
+  |                     <b style='color:blue;'>---- immutable borrow occurs here</b>
 4 |     name.clear();
   |     <b style='color:red;'>^^^^^^^^^^^^ mutable borrow occurs here</b>
 5 |     println!("Hello there, {}!", nickname);
