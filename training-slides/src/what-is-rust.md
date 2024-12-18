@@ -230,19 +230,20 @@ The Rust Project, and pretty much the whole Community, follow a [Code of
 ## Compiler Error Driven Development works!
 
 <section>
-  <pre><code data-trim data-noescape>
-<b style='color:red;'>error[E0502]</b>: cannot borrow `name` as mutable because it is also borrowed as immutable
- --> src/main.rs:4:5
-  |
-3 |     let nickname = &name[..3];
-  |                     <b style='color:blue;'>---- immutable borrow occurs here</b>
-4 |     name.clear();
-  |     <b style='color:red;'>^^^^^^^^^^^^ mutable borrow occurs here</b>
-5 |     println!("Hello there, {}!", nickname);
-  |                                  <b style='color:blue;'>-------- immutable borrow later used here</b>
-For more information about this error, try <strong>`rustc --explain E0502`</strong>.
-  </code></pre>
-</section>
+<pre><code data-trim data-noescape>
+<font color="#F15D22"><b>error[E0502]</b></font><b>: cannot borrow `name` as mutable because it is also borrowed as immutable</b>
+ <font color="#48B9C7"><b>--&gt; </b></font>src/main.rs:4:5
+  <font color="#48B9C7"><b>|</b></font>
+<font color="#48B9C7"><b>3</b></font> <font color="#48B9C7"><b>|</b></font>     let nickname = &amp;name[..3];
+  <font color="#48B9C7"><b>|</b></font>                     <font color="#48B9C7"><b>----</b></font> <font color="#48B9C7"><b>immutable borrow occurs here</b></font>
+<font color="#48B9C7"><b>4</b></font> <font color="#48B9C7"><b>|</b></font>     name.clear();
+  <font color="#48B9C7"><b>|</b></font>     <font color="#F15D22"><b>^^^^^^^^^^^^</b></font> <font color="#F15D22"><b>mutable borrow occurs here</b></font>
+<font color="#48B9C7"><b>5</b></font> <font color="#48B9C7"><b>|</b></font>     println!(&quot;Hello there, {}!&quot;, nickname);
+  <font color="#48B9C7"><b>|</b></font>                                  <font color="#48B9C7"><b>--------</b></font> <font color="#48B9C7"><b>immutable borrow later used here</b></font>
+<b>Some errors have detailed explanations: E0502, E0596.</b>
+<b>For more information about an error, try `rustc --explain E0502`.</b></pre>
+</code></pre>
+<section>
 
 ## What does Rust run on?
 
