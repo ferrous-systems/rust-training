@@ -229,7 +229,6 @@ The Rust Project, and pretty much the whole Community, follow a [Code of
 
 ## Compiler Error Driven Development works!
 
-<section>
 <pre><code data-trim data-noescape>
 <font color="#F15D22"><b>error[E0502]</b></font><b>: cannot borrow `name` as mutable because it is also borrowed as immutable</b>
  <font color="#48B9C7"><b>--&gt; </b></font>src/main.rs:4:5
@@ -243,7 +242,6 @@ The Rust Project, and pretty much the whole Community, follow a [Code of
 <b>Some errors have detailed explanations: E0502, E0596.</b>
 <b>For more information about an error, try `rustc --explain E0502`.</b></pre>
 </code></pre>
-<section>
 
 ## What does Rust run on?
 
