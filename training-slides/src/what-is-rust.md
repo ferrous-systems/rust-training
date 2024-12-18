@@ -229,19 +229,20 @@ The Rust Project, and pretty much the whole Community, follow a [Code of
 
 ## Compiler Error Driven Development works!
 
-```text
-error[E0502]: cannot borrow `name` as mutable because it is also borrowed as immutable
- --> a.rs:4:5
+<section>
+  <pre><code data-trim data-noescape>
+<b style='color:red;'>error[E0502]</b>: cannot borrow `name` as mutable because it is also borrowed as immutable
+ --> src/main.rs:4:5
   |
 3 |     let nickname = &name[..3];
-  |                     ---- immutable borrow occurs here
+  |                     <b style='color:blue;'>---- immutable borrow occurs heree</b>
 4 |     name.clear();
-  |     ^^^^^^^^^^^^ mutable borrow occurs here
+  |     <b style='color:red;'>^^^^^^^^^^^^ mutable borrow occurs here</b>
 5 |     println!("Hello there, {}!", nickname);
-  |                                  -------- immutable borrow later used here
-
-For more information about this error, try `rustc --explain E0502`.
-```
+  |                                  <b style='color:blue;'>-------- immutable borrow later used here</b>
+For more information about this error, try <strong>`rustc --explain E0502`</strong>.
+  </code></pre>
+</section>
 
 ## What does Rust run on?
 
