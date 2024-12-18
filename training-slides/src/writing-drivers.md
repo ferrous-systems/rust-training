@@ -71,7 +71,7 @@ restrictive!
 
 ```rust ignore []
 // 'degrade()' converts a P0_08 type into a generic Pin type.
-let pins =  hal::uarte::Pins {
+let uarte_pins =  hal::uarte::Pins {
     rxd: pins.p0_08.degrade().into_floating_input(),
     txd: pins.p0_06.degrade().into_push_pull_output(Level::High),
     cts: None,
@@ -79,7 +79,7 @@ let pins =  hal::uarte::Pins {
 };
 
 let uarte = hal::uarte::Uarte::new(
-    periph.UARTE1, pins, Parity::EXCLUDED, Baudrate::BAUD115200
+    periph.UARTE1, uarte_pins, Parity::EXCLUDED, Baudrate::BAUD115200
 );
 ```
 
