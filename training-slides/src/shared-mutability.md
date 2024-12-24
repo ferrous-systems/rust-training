@@ -16,7 +16,7 @@ These rules can be ... *bent*
 
 ## Why the rules exist...
 
-* Optimisations!
+* Optimizations!
 * It is *undefined behaviour* (UB) to have multiple `&mut` references to the *same* object at the *same* time
 * You *must* avoid UB
 
@@ -52,7 +52,7 @@ fn main() {
 
 Note:
 
-The `UnsafeCell::get(&self) -> *mut T` method is safe, but deferencing the pointer (or converting it to a `&mut` reference) is unsafe because a human must verify there is no aliasing.
+The `UnsafeCell::get(&self) -> *mut T` method is safe, but dereferencing the pointer (or converting it to a `&mut` reference) is unsafe because a human must verify there is no aliasing.
 
 ## Can we be safer?
 
@@ -278,7 +278,7 @@ To get *shared ownership* and *mutability* you need two things:
 
 ## `OnceCell` for special cases
 
-If you only need to modify a field *once*, a `OnceCell` can help you keep the ownership system checks at compile-time
+If you only need to modify a field *once*, a [OnceCell](https://doc.rust-lang.org/stable/std/cell/struct.OnceCell.html) can help you keep the ownership system checks at compile-time.
 
 ```rust
 use std::time::Instant;
@@ -307,3 +307,4 @@ impl Post {
 ```
 
 A [LazyCell](https://doc.rust-lang.org/std/cell/struct.LazyCell.html) will do this initialization lazily, and a [LazyLock](https://doc.rust-lang.org/std/sync/struct.LazyLock.html) will do it in a threadsafe way.
+
