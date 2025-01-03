@@ -148,17 +148,15 @@ fn main() -> Result<(), io::Error> {
 ## Errors
 
 <pre>
-error[E0373]: closure may outlive the current function, but it borrows `log`,
-which is owned by the current function
-  --> src/main.rs:26:23
-   |
-26 |         thread::spawn(|| {
-   |                       ^^ may outlive borrowed value `log`
-27 |             let _ = handle_client(stream, &mut log);
-   |                                                --- `log` is borrowed here
-   |
-note: function requires argument type to outlive `'static`
-</pre>
+<font color="#F15D22"><b>error[E0373]</b></font><b>: closure may outlive the current function, but it borrows `log`, which is owned by the current function</b>
+<font color="#48B9C7"><b>--&gt; </b></font>src/main.rs:26:23
+<font color="#48B9C7"><b>|</b></font>
+<font color="#48B9C7"><b>26</b></font> <font color="#48B9C7"><b>|</b></font>         thread::spawn(|| {
+<font color="#48B9C7"><b>|</b></font>                       <font color="#F15D22"><b>^^</b></font> <font color="#F15D22"><b>may outlive borrowed value `log`</b></font>
+<font color="#48B9C7"><b>27</b></font> <font color="#48B9C7"><b>|</b></font>             let _ = handle_client(stream.unwrap(), &amp;mut log);
+<font color="#48B9C7"><b>|</b></font>                                                         <font color="#48B9C7"><b>---</b></font> <font color="#48B9C7"><b>`log` is borrowed here</b></font>
+<font color="#48B9C7"><b>|</b></font>
+<font color="#73C48F"><b>note</b></font>: function requires argument type to outlive `&apos;static`</pre>
 
 ## Lifetime problem
 
