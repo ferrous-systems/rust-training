@@ -181,7 +181,7 @@ impl Post {
 
 Note:
 
-As an in-depth example of the borrowchecker's limitations, consider the [Splitting Borrows](https://doc.rust-lang.org/nomicon/borrow-splitting.html) idiom, which allows one to borrow different fields of the same struct with different mutability semantics:
+As an in-depth example of the borrow checker's limitations, consider the [Splitting Borrows](https://doc.rust-lang.org/nomicon/borrow-splitting.html) idiom, which allows one to borrow different fields of the same struct with different mutability semantics:
 
 ```rust
 struct Foo {
@@ -200,11 +200,11 @@ let c2 = &x.c;
 println!("{} {} {} {}", a, b, c, c2);
 ```
 
-The code works, but you *have* to fallback on special cases the borrow-checker understands, like shadowing with `let a = &mut x.a;` or else the compiler will error. The borrowchecker is particularly frail here - replacing `Foo` with `x = [1,2,3]` and trying to borrow indexes will make it error out.
+The code works, but you *have* to fallback on special cases the borrow checker understands, like shadowing with `let a = &mut x.a;` or else the compiler will error. The borrow checker is particularly frail here - replacing `Foo` with `x = [1,2,3]` and trying to borrow indexes will make it error out.
 
 Note:
 
-Here's an example where tuple fields are special-cased for the borrowchecker:
+Here's an example where tuple fields are special-cased for the borrow checker:
 
 ```rust
 let mut z = (1, 2);
@@ -226,7 +226,7 @@ println!("{:?}, {}", z, r);
 
 A `RefCell` is also safe, but lets you *borrow* or *mutably borrow* the contents.
 
-The borrow-checking is deferred to *run-time*
+The borrow checking is deferred to *run-time*
 
 ## Using `RefCell`
 
