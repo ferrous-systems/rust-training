@@ -103,7 +103,7 @@ fn main() {
 ```dot process
 digraph {
     node [shape=record];
-    Vec[label="{struct Vec|start: *mut T\nlen: usize\ncap: usize|<i>fn iter(&self) -\> VecIter|<im>fn iter_mut(&mut self) -\> VecIterMut|<ii> fn into_iter(self) -\> VecIter}"];
+    Vec[label="{struct Vec|start: *mut T\nlen: usize\ncap: usize|<i>fn iter(&self) -\> VecIter|<im>fn iter_mut(&mut self) -\> VecIterMut|<ii> fn into_iter(self) -\> VecIntoIter}"];
     VecIntoIter[label="{struct VecIntoIter|start: *mut T\nlen: usize\ncap: usize|Item=T}"];
     VecIterMut[label="{struct VecIterMut|parent: &mut [T]|Item=&mut T}"];
     VecIter[label="{struct VecIter|parent: &[T]|Item=&T}"];
