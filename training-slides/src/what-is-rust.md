@@ -229,8 +229,7 @@ The Rust Project, and pretty much the whole Community, follow a [Code of
 
 ## Compiler Error Driven Development works!
 
-<pre><code data-trim data-noescape>
-<font color="#F15D22"><b>error[E0502]</b></font><b>: cannot borrow `name` as mutable because it is also borrowed as immutable</b>
+<pre><code><font color="#F15D22"><b>error[E0502]</b></font><b>: cannot borrow `name` as mutable because it is also borrowed as immutable</b>
  <font color="#48B9C7"><b>--&gt; </b></font>src/main.rs:4:5
   <font color="#48B9C7"><b>|</b></font>
 <font color="#48B9C7"><b>3</b></font> <font color="#48B9C7"><b>|</b></font>     let nickname = &amp;name[..3];
@@ -240,7 +239,7 @@ The Rust Project, and pretty much the whole Community, follow a [Code of
 <font color="#48B9C7"><b>5</b></font> <font color="#48B9C7"><b>|</b></font>     println!(&quot;Hello there, {}!&quot;, nickname);
   <font color="#48B9C7"><b>|</b></font>                                  <font color="#48B9C7"><b>--------</b></font> <font color="#48B9C7"><b>immutable borrow later used here</b></font>
 <b>Some errors have detailed explanations: E0502, E0596.</b>
-<b>For more information about an error, try `rustc --explain E0502`.</b></pre>
+<b>For more information about an error, try `rustc --explain E0502`.</b>
 </code></pre>
 
 ## What does Rust run on?

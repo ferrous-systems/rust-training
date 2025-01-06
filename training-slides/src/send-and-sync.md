@@ -25,7 +25,7 @@ struct Thing;
 // Can send between threads!
 fn main() {
     let thing = Thing;
-    
+
     thread::spawn(move || {
         println!("{:?}", thing);
     }).join().unwrap();
@@ -55,13 +55,35 @@ fn main() {
 
 ## Example: `Rc`
 
-```text
-error[E0277]: the trait bound `std::rc::Rc<bool>: std::marker::Send` is not satisfied
- --> <anon>:7:5
-  |
-7 |     thread::spawn(move || {
-  |     ^^^^^^^^^^^^^ the trait `std::marker::Send` is not implemented for `std::rc::Rc<bool>`
-```
+<pre><code><font color="#FF0000"><b>error[E0277]</b></font><b>: `Rc&lt;bool&gt;` cannot be sent between threads safely</b>
+   <font color="#5C5CFF"><b>--&gt; </b></font>src/main.rs:7:19
+    <font color="#5C5CFF"><b>|</b></font>
+<font color="#5C5CFF"><b>7</b></font>   <font color="#5C5CFF"><b>|</b></font>       thread::spawn(move || {
+    <font color="#5C5CFF"><b>|</b></font>       <font color="#5C5CFF"><b>-------------</b></font> <font color="#FF0000"><b>^</b></font><font color="#5C5CFF"><b>------</b></font>
+    <font color="#5C5CFF"><b>|</b></font>       <font color="#5C5CFF"><b>|</b></font>             <font color="#FF0000"><b>|</b></font>
+    <font color="#5C5CFF"><b>|</b></font>  <font color="#FF0000"><b>_____</b></font><font color="#5C5CFF"><b>|</b></font><font color="#FF0000"><b>_____________</b></font><font color="#5C5CFF"><b>within this `{closure@src/main.rs:7:19: 7:26}`</b></font>
+    <font color="#5C5CFF"><b>|</b></font> <font color="#FF0000"><b>|</b></font>     <font color="#5C5CFF"><b>|</b></font>
+    <font color="#5C5CFF"><b>|</b></font> <font color="#FF0000"><b>|</b></font>     <font color="#5C5CFF"><b>required by a bound introduced by this call</b></font>
+<font color="#5C5CFF"><b>8</b></font>   <font color="#5C5CFF"><b>|</b></font> <font color="#FF0000"><b>|</b></font>         println!(&quot;{:?}&quot;, value);
+<font color="#5C5CFF"><b>9</b></font>   <font color="#5C5CFF"><b>|</b></font> <font color="#FF0000"><b>|</b></font>     }).join().unwrap();
+    <font color="#5C5CFF"><b>|</b></font> <font color="#FF0000"><b>|_____^</b></font> <font color="#FF0000"><b>`Rc&lt;bool&gt;` cannot be sent between threads safely</b></font>
+    <font color="#5C5CFF"><b>|</b></font>
+    <font color="#5C5CFF"><b>= </b></font><b>help</b>: within `{closure@src/main.rs:7:19: 7:26}`, the trait `Send` is not implemented for `Rc&lt;bool&gt;`, which is required by `{closure@src/main.rs:7:19: 7:26}: Send`
+<font color="#00FF00"><b>note</b></font>: required because it&apos;s used within this closure
+   <font color="#5C5CFF"><b>--&gt; </b></font>src/main.rs:7:19
+    <font color="#5C5CFF"><b>|</b></font>
+<font color="#5C5CFF"><b>7</b></font>   <font color="#5C5CFF"><b>|</b></font>     thread::spawn(move || {
+    <font color="#5C5CFF"><b>|</b></font>                   <font color="#00FF00"><b>^^^^^^^</b></font>
+<font color="#00FF00"><b>note</b></font>: required by a bound in `spawn`
+   <font color="#5C5CFF"><b>--&gt; </b></font>/home/mrg/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/lib/rustlib/src/rust/library/std/src/thread/mod.rs:675:8
+    <font color="#5C5CFF"><b>|</b></font>
+<font color="#5C5CFF"><b>672</b></font> <font color="#5C5CFF"><b>|</b></font> pub fn spawn&lt;F, T&gt;(f: F) -&gt; JoinHandle&lt;T&gt;
+    <font color="#5C5CFF"><b>|</b></font>        <font color="#5C5CFF"><b>-----</b></font> <font color="#5C5CFF"><b>required by a bound in this function</b></font>
+<font color="#5C5CFF"><b>...</b></font>
+<font color="#5C5CFF"><b>675</b></font> <font color="#5C5CFF"><b>|</b></font>     F: Send + &apos;static,
+    <font color="#5C5CFF"><b>|</b></font>        <font color="#00FF00"><b>^^^^</b></font> <font color="#00FF00"><b>required by this bound in `spawn`</b></font>
+<b>For more information about this error, try `rustc --explain E0277`.</b>
+</code></pre>
 
 ## Implementing
 

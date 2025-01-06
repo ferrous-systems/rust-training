@@ -197,15 +197,15 @@ Note:
 
 You get an error like:
 
-```text
-error[E0596]: cannot borrow data in an `Rc` as mutable
-  --> src/main.rs:10:5
-   |
-10 |     sam.pet_dogs.push(Rc::downgrade(&rover));
-   |     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ cannot borrow as mutable
-   |
-   = help: trait `DerefMut` is required to modify through a dereference, but it is not implemented for `Rc<Human>`
-```
+<pre><code><font color="#FF0000"><b>error[E0596]</b></font><b>: cannot borrow data in an `Rc` as mutable</b>
+  <font color="#5C5CFF"><b>--&gt; </b></font>src/main.rs:12:5
+   <font color="#5C5CFF"><b>|</b></font>
+<font color="#5C5CFF"><b>12</b></font> <font color="#5C5CFF"><b>|</b></font>     sam.pet_dogs.push(rover);
+   <font color="#5C5CFF"><b>|</b></font>     <font color="#FF0000"><b>^^^^^^^^^^^^</b></font> <font color="#FF0000"><b>cannot borrow as mutable</b></font>
+   <font color="#5C5CFF"><b>|</b></font>
+   <font color="#5C5CFF"><b>= </b></font><b>help</b>: trait `DerefMut` is required to modify through a dereference, but it is not implemented for `Rc&lt;Human&gt;`
+<b>For more information about this error, try `rustc --explain E0596`.</b>
+</code></pre>
 
 Why do you want this structure? Because given some `&Dog` you might very well want to know who owns it!
 
