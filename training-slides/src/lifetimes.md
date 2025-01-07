@@ -41,23 +41,23 @@ fn producer() -> &str {
 
 No, we can't return a reference to local data...
 
-<pre><code data-trim data-noescape><font color="#FF0000"><b>error[E0515]</b></font><b>: cannot return reference to local variable `s`</b>
- <font color="#5C5CFF"><b>--&gt; </b></font>src/lib.rs:3:5
-  <font color="#5C5CFF"><b>|</b></font>
-<font color="#5C5CFF"><b>3</b></font> <font color="#5C5CFF"><b>|</b></font>     &amp;s
-  <font color="#5C5CFF"><b>|</b></font>     <font color="#FF0000"><b>^^</b></font> <font color="#FF0000"><b>returns a reference to data owned by the current function</b></font>
+<pre><code data-trim data-noescape><font color="#FF0000"><b>error[E0515]</b></span><b>: cannot return reference to local variable `s`</b>
+ <font color="#5C5CFF"><b>--&gt; </b></span>src/lib.rs:3:5
+  <font color="#5C5CFF"><b>|</b></span>
+<font color="#5C5CFF"><b>3</b></span> <font color="#5C5CFF"><b>|</b></span>     &amp;s
+  <font color="#5C5CFF"><b>|</b></span>     <font color="#FF0000"><b>^^</b></span> <font color="#FF0000"><b>returns a reference to data owned by the current function</b></span>
 </code></pre>
 
 ## Local Data
 
 You will also see:
 
-<pre><code data-trim data-noescape><font color="#FF0000"><b>error[E0106]</b></font><b>: missing lifetime specifier</b>
- <font color="#5C5CFF"><b>--&gt; </b></font>src/lib.rs:1:18
-  <font color="#5C5CFF"><b>|</b></font>
-<font color="#5C5CFF"><b>1</b></font> <font color="#5C5CFF"><b>|</b></font> fn producer() -&gt; &amp;str {
-  <font color="#5C5CFF"><b>|</b></font>                  <font color="#FF0000"><b>^</b></font> <font color="#FF0000"><b>expected named lifetime parameter</b></font>
-  <font color="#5C5CFF"><b>|</b></font>
+<pre><code data-trim data-noescape><font color="#FF0000"><b>error[E0106]</b></span><b>: missing lifetime specifier</b>
+ <font color="#5C5CFF"><b>--&gt; </b></span>src/lib.rs:1:18
+  <font color="#5C5CFF"><b>|</b></span>
+<font color="#5C5CFF"><b>1</b></span> <font color="#5C5CFF"><b>|</b></span> fn producer() -&gt; &amp;str {
+  <font color="#5C5CFF"><b>|</b></span>                  <font color="#FF0000"><b>^</b></span> <font color="#FF0000"><b>expected named lifetime parameter</b></span>
+  <font color="#5C5CFF"><b>|</b></span>
 </code></pre>
 
 ## Static Data
@@ -183,37 +183,37 @@ fn first_three_of_each<'a, 'b>(s1: &'a str, s2: &'b str) -> (&'a str, &'b str) {
 
 "The source you used in code doesn't match the tags"
 
-<pre><code data-trim data-noescape><font color="#FF0000"><b>error</b></font><b>: lifetime may not live long enough</b>
- <font color="#5C5CFF"><b>--&gt; </b></font>src/lib.rs:2:5
-  <font color="#5C5CFF"><b>|</b></font>
-<font color="#5C5CFF"><b>1</b></font> <font color="#5C5CFF"><b>|</b></font> fn first_three_of_each&lt;&apos;a, &apos;b&gt;(s1: &amp;&apos;a str, s2: &amp;&apos;b str) -&gt; (&amp;&apos;a str, &amp;&apos;b str) {
-  <font color="#5C5CFF"><b>|</b></font>                        <font color="#5C5CFF"><b>--</b></font>  <font color="#5C5CFF"><b>--</b></font> <font color="#5C5CFF"><b>lifetime `&apos;b` defined here</b></font>
-  <font color="#5C5CFF"><b>|</b></font>                        <font color="#5C5CFF"><b>|</b></font>
-  <font color="#5C5CFF"><b>|</b></font>                        <font color="#5C5CFF"><b>lifetime `&apos;a` defined here</b></font>
-<font color="#5C5CFF"><b>2</b></font> <font color="#5C5CFF"><b>|</b></font>     (&amp;s1[0..3], &amp;s1[0..3])
-  <font color="#5C5CFF"><b>|</b></font>     <font color="#FF0000"><b>^^^^^^^^^^^^^^^^^^^^^^</b></font> <font color="#FF0000"><b>function was supposed to return data with lifetime `&apos;b` but it is returning data with lifetime `&apos;a`</b></font>
-  <font color="#5C5CFF"><b>|</b></font>
-  <font color="#5C5CFF"><b>= </b></font><b>help</b>: consider adding the following bound: `&apos;a: &apos;b`
+<pre><code data-trim data-noescape><font color="#FF0000"><b>error</b></span><b>: lifetime may not live long enough</b>
+ <font color="#5C5CFF"><b>--&gt; </b></span>src/lib.rs:2:5
+  <font color="#5C5CFF"><b>|</b></span>
+<font color="#5C5CFF"><b>1</b></span> <font color="#5C5CFF"><b>|</b></span> fn first_three_of_each&lt;&apos;a, &apos;b&gt;(s1: &amp;&apos;a str, s2: &amp;&apos;b str) -&gt; (&amp;&apos;a str, &amp;&apos;b str) {
+  <font color="#5C5CFF"><b>|</b></span>                        <font color="#5C5CFF"><b>--</b></span>  <font color="#5C5CFF"><b>--</b></span> <font color="#5C5CFF"><b>lifetime `&apos;b` defined here</b></span>
+  <font color="#5C5CFF"><b>|</b></span>                        <font color="#5C5CFF"><b>|</b></span>
+  <font color="#5C5CFF"><b>|</b></span>                        <font color="#5C5CFF"><b>lifetime `&apos;a` defined here</b></span>
+<font color="#5C5CFF"><b>2</b></span> <font color="#5C5CFF"><b>|</b></span>     (&amp;s1[0..3], &amp;s1[0..3])
+  <font color="#5C5CFF"><b>|</b></span>     <font color="#FF0000"><b>^^^^^^^^^^^^^^^^^^^^^^</b></span> <font color="#FF0000"><b>function was supposed to return data with lifetime `&apos;b` but it is returning data with lifetime `&apos;a`</b></span>
+  <font color="#5C5CFF"><b>|</b></span>
+  <font color="#5C5CFF"><b>= </b></span><b>help</b>: consider adding the following bound: `&apos;a: &apos;b`
 </code></pre>
 
 ## Annotations are used to validate reference lifetimes at a call site
 
 "Produced reference *can't outlive* the source"
 
-<pre><code data-trim data-noescape><font color="#FF0000"><b>error[E0597]</b></font><b>: `amsterdam` does not live long enough</b>
-  <font color="#5C5CFF"><b>--&gt; </b></font>src/main.rs:10:29
-   <font color="#5C5CFF"><b>|</b></font>
-<font color="#5C5CFF"><b>6</b></font>  <font color="#5C5CFF"><b>|</b></font>     let amsterdam = format!(&quot;AMS Amsterdam&quot;);
-   <font color="#5C5CFF"><b>|</b></font>         <font color="#5C5CFF"><b>---------</b></font> <font color="#5C5CFF"><b>binding `amsterdam` declared here</b></font>
-<font color="#5C5CFF"><b>...</b></font>
-<font color="#5C5CFF"><b>10</b></font> <font color="#5C5CFF"><b>|</b></font>         first_three_of_each(&amp;amsterdam, &amp;denver)
-   <font color="#5C5CFF"><b>|</b></font>         <font color="#5C5CFF"><b>--------------------</b></font><font color="#FF0000"><b>^^^^^^^^^^</b></font><font color="#5C5CFF"><b>----------</b></font>
-   <font color="#5C5CFF"><b>|</b></font>         <font color="#5C5CFF"><b>|</b></font>                   <font color="#FF0000"><b>|</b></font>
-   <font color="#5C5CFF"><b>|</b></font>         <font color="#5C5CFF"><b>|</b></font>                   <font color="#FF0000"><b>borrowed value does not live long enough</b></font>
-   <font color="#5C5CFF"><b>|</b></font>         <font color="#5C5CFF"><b>argument requires that `amsterdam` is borrowed for `&apos;static`</b></font>
-<font color="#5C5CFF"><b>...</b></font>
-<font color="#5C5CFF"><b>14</b></font> <font color="#5C5CFF"><b>|</b></font> }
-   <font color="#5C5CFF"><b>|</b></font> <font color="#5C5CFF"><b>-</b></font> <font color="#5C5CFF"><b>`amsterdam` dropped here while still borrowed</b></font>
+<pre><code data-trim data-noescape><font color="#FF0000"><b>error[E0597]</b></span><b>: `amsterdam` does not live long enough</b>
+  <font color="#5C5CFF"><b>--&gt; </b></span>src/main.rs:10:29
+   <font color="#5C5CFF"><b>|</b></span>
+<font color="#5C5CFF"><b>6</b></span>  <font color="#5C5CFF"><b>|</b></span>     let amsterdam = format!(&quot;AMS Amsterdam&quot;);
+   <font color="#5C5CFF"><b>|</b></span>         <font color="#5C5CFF"><b>---------</b></span> <font color="#5C5CFF"><b>binding `amsterdam` declared here</b></span>
+<font color="#5C5CFF"><b>...</b></span>
+<font color="#5C5CFF"><b>10</b></span> <font color="#5C5CFF"><b>|</b></span>         first_three_of_each(&amp;amsterdam, &amp;denver)
+   <font color="#5C5CFF"><b>|</b></span>         <font color="#5C5CFF"><b>--------------------</b></span><font color="#FF0000"><b>^^^^^^^^^^</b></span><font color="#5C5CFF"><b>----------</b></span>
+   <font color="#5C5CFF"><b>|</b></span>         <font color="#5C5CFF"><b>|</b></span>                   <font color="#FF0000"><b>|</b></span>
+   <font color="#5C5CFF"><b>|</b></span>         <font color="#5C5CFF"><b>|</b></span>                   <font color="#FF0000"><b>borrowed value does not live long enough</b></span>
+   <font color="#5C5CFF"><b>|</b></span>         <font color="#5C5CFF"><b>argument requires that `amsterdam` is borrowed for `&apos;static`</b></span>
+<font color="#5C5CFF"><b>...</b></span>
+<font color="#5C5CFF"><b>14</b></span> <font color="#5C5CFF"><b>|</b></span> }
+   <font color="#5C5CFF"><b>|</b></span> <font color="#5C5CFF"><b>-</b></span> <font color="#5C5CFF"><b>`amsterdam` dropped here while still borrowed</b></span>
 </code></pre>
 
 ## Lifetime annotations help the compiler help you!

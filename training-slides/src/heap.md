@@ -197,13 +197,13 @@ Note:
 
 You get an error like:
 
-<pre><code data-trim data-noescape><font color="#FF0000"><b>error[E0596]</b></font><b>: cannot borrow data in an `Rc` as mutable</b>
-  <font color="#5C5CFF"><b>--&gt; </b></font>src/main.rs:12:5
-   <font color="#5C5CFF"><b>|</b></font>
-<font color="#5C5CFF"><b>12</b></font> <font color="#5C5CFF"><b>|</b></font>     sam.pet_dogs.push(rover);
-   <font color="#5C5CFF"><b>|</b></font>     <font color="#FF0000"><b>^^^^^^^^^^^^</b></font> <font color="#FF0000"><b>cannot borrow as mutable</b></font>
-   <font color="#5C5CFF"><b>|</b></font>
-   <font color="#5C5CFF"><b>= </b></font><b>help</b>: trait `DerefMut` is required to modify through a dereference, but it is not implemented for `Rc&lt;Human&gt;`
+<pre><code data-trim data-noescape><font color="#FF0000"><b>error[E0596]</b></span><b>: cannot borrow data in an `Rc` as mutable</b>
+  <font color="#5C5CFF"><b>--&gt; </b></span>src/main.rs:12:5
+   <font color="#5C5CFF"><b>|</b></span>
+<font color="#5C5CFF"><b>12</b></span> <font color="#5C5CFF"><b>|</b></span>     sam.pet_dogs.push(rover);
+   <font color="#5C5CFF"><b>|</b></span>     <font color="#FF0000"><b>^^^^^^^^^^^^</b></span> <font color="#FF0000"><b>cannot borrow as mutable</b></span>
+   <font color="#5C5CFF"><b>|</b></span>
+   <font color="#5C5CFF"><b>= </b></span><b>help</b>: trait `DerefMut` is required to modify through a dereference, but it is not implemented for `Rc&lt;Human&gt;`
 <b>For more information about this error, try `rustc --explain E0596`.</b>
 </code></pre>
 
