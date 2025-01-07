@@ -28,7 +28,7 @@ As `training-material` grows and changes, maintenance could be a nightmare. We b
 * call `cargo xtask make-cheatsheet python` at the root folder
 * scrape Markdown headers in `SUMMARY.md` and segment topics by `Rust Fundamentals`, `Applied Rust` and `Advanced Rust`
 * write out to `src/python-cheatsheet.md` if it doesn't exist
-* if it does exist, check that it in sync: all headers in `python-cheatsheet.md` are in the appropriate sections, in order, and none are missing.
+* if it does exist, check that it is in sync: all headers in `python-cheatsheet.md` are in the appropriate sections, in order, and none are missing.
 
 Specifically, `make-cheatsheet` and `test-cheatsheet` are defined in `xtask/src/tasks.rs` with utility functions to take our `SUMMARY.md`
 
@@ -56,7 +56,7 @@ and convert it into a `Vec<SlidesSection>`:
 From there we can
 
 * create the cheatsheet for Python and have it written out to `training-slides/src/python-cheatsheet.md` by just iterating over `Vec<SlideSection>` and prefixing with the appropriate header level before printing
-* test that the cheathseet is in sync by scraping for all the lines that start with `#` in `python-cheatsheet.md` and check that they match, in order, those we scraped from `SUMMARY.md`.
+* test that the cheatsheet is in sync by scraping for all the lines that start with `#` in `python-cheatsheet.md` and check that they match, in order, those we scraped from `SUMMARY.md`.
 
 Note: some languages will warrant some special entries - any headers after the last `SlideSection` header will be ignored,
 so that we can add additional relevant information without having to conform to the slides.
