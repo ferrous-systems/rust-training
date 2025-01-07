@@ -147,15 +147,15 @@ fn main() -> Result<(), io::Error> {
 
 ## Errors
 
-<pre><code data-trim data-noescape><font color="#F15D22"><b>error[E0373]</b></span><b>: closure may outlive the current function, but it borrows `log`, which is owned by the current function</b>
-<font color="#48B9C7"><b>--&gt; </b></span>src/main.rs:26:23
-<font color="#48B9C7"><b>|</b></span>
-<font color="#48B9C7"><b>26</b></span> <font color="#48B9C7"><b>|</b></span>         thread::spawn(|| {
-<font color="#48B9C7"><b>|</b></span>                       <font color="#F15D22"><b>^^</b></span> <font color="#F15D22"><b>may outlive borrowed value `log`</b></span>
-<font color="#48B9C7"><b>27</b></span> <font color="#48B9C7"><b>|</b></span>             let _ = handle_client(stream.unwrap(), &amp;mut log);
-<font color="#48B9C7"><b>|</b></span>                                                         <font color="#48B9C7"><b>---</b></span> <font color="#48B9C7"><b>`log` is borrowed here</b></span>
-<font color="#48B9C7"><b>|</b></span>
-<font color="#73C48F"><b>note</b></span>: function requires argument type to outlive `&apos;static`
+<pre><code data-trim data-noescape><span style="color:#F15D22"><b>error[E0373]</b></span><b>: closure may outlive the current function, but it borrows `log`, which is owned by the current function</b>
+<span style="color:#48B9C7"><b>--&gt; </b></span>src/main.rs:26:23
+   <span style="color:#48B9C7"><b>|</b></span>
+<span style="color:#48B9C7"><b>26</b></span> <span style="color:#48B9C7"><b>|</b></span>         thread::spawn(|| {
+   <span style="color:#48B9C7"><b>|</b></span>                       <span style="color:#F15D22"><b>^^</b></span> <span style="color:#F15D22"><b>may outlive borrowed value `log`</b></span>
+<span style="color:#48B9C7"><b>27</b></span> <span style="color:#48B9C7"><b>|</b></span>             let _ = handle_client(stream.unwrap(), &amp;mut log);
+   <span style="color:#48B9C7"><b>|</b></span>                                                         <span style="color:#48B9C7"><b>---</b></span> <span style="color:#48B9C7"><b>`log` is borrowed here</b></span>
+   <span style="color:#48B9C7"><b>|</b></span>
+<span style="color:#73C48F"><b>note</b></span>: function requires argument type to outlive `&apos;static`
 </code></pre>
 
 ## Lifetime problem
@@ -175,7 +175,7 @@ Solution:
 * `let mut thread_log = log.clone()` now doesn't clone the data, but simply increases the reference count
   * both variables now have *owned* type, and satisfy `F: 'static` requirement
 
-<pre><code data-trim data-noescape><font color="#F15D22"><b>error[E0277]</b></span><b>: `Rc<Vec<usize>>` cannot be sent between threads safely</b>
+<pre><code data-trim data-noescape><span style="color:#F15D22"><b>error[E0277]</b></span><b>: `Rc<Vec<usize>>` cannot be sent between threads safely</b>
 </code></pre>
 
 ## `Rc` in Rust Standard Library
