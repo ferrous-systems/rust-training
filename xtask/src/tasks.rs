@@ -1,62 +1,80 @@
-/// This file implements the `make-cheatsheets` and `test-cheetsheets` `xtasks` commands.
-/// These commands offer us the ability to
-/// 1. Make a cheatsheet for a predetermined language, coded in `main.rs` and which will mainly be c/c++/python/java
-/// 2. Test that said cheatsheet does not fall out of sync with the rest of the `training-material`.
-///
-/// How?
-/// The approach is to chunk the appropriate info from a `SUMMARY.md` that could look like this:
-/// ```
-///# Rust Fundamentals
-///
-///* [Overview](./overview.md)
-///* [Basic Types](./basic-types.md)
-///
-///# Applied Rust
-///
-/// ...
-///```
-/// A cheatsheet is then just as a collection of `Vec<SlideSections>`, where the `headers` 
-/// are strings like `# Rust Fundamentals` and the corresponding `slide_titles`
-/// is a `vec!["Overview", "Basic Types"];`, for this example.
-///
-/// That's the logic behind `make-cheatsheets` which is half the functionality here.
-///
-/// It then gets crafted into a single markdown file `src/lang-cheatsheet.md` so that
-/// we (trainers) can fill it out with the pertinent info for Python Basic Types,
-/// Python Strings, etc.
-///
-/// -----------
-///
-/// The other half of the functionality is `test-cheatsheets`, which requires thinking
-/// about what would make our `cheatsheets` fall out of sync.
-/// 
-/// Assume we have a folder with `src/*-cheatsheets.md`.
-/// 
-/// In theory, the cheatsheets and the files in `SUMMARY.md` need to have
-/// 
-/// * matching of headers (in the right order, as we're bound to have slides migrate)
-/// * at least as many slides as the source files
-/// 
-/// We allow more slides than in the source files because we want to allow ourselves
-/// to add extra info that doesn't make sense as part of the larger Rust training-materials.
-/// 
-/// Any condition that fails will emit a message as to why it did, but we'll continue listing the other ones
-/// to streamline UX.
-/// 
+//! This file implements the `make-cheatsheets` and `test-cheetsheets` `xtasks` commands.
+//! These commands offer us the ability to
+//! 1. Make a cheatsheet for a predetermined language, coded in `main.rs` and which will mainly be c/c++/python/java
+//! 2. Test that said cheatsheet does not fall out of sync with the rest of the `training-material`.
+//!
+//! How?
+//! The approach is to chunk the appropriate info from a `SUMMARY.md` that could look like this:
+//! ```
+//!# Rust Fundamentals
+//!
+//!* [Overview](./overview.md)
+//!* [Basic Types](./basic-types.md)
+//!
+//!# Applied Rust
+//!
+//! ...
+//!```
+//! A cheatsheet is then just as a collection of `Vec<SlideSections>`, where the `headers`
+//! are strings like `# Rust Fundamentals` and the corresponding `slide_titles`
+//! is a `vec!["Overview", "Basic Types"];`, for this example.
+//!
+//! That's the logic behind `make-cheatsheets` which is half the functionality here.
+//!
+//! It then gets crafted into a single markdown file `src/lang-cheatsheet.md` so that
+//! we (trainers) can fill it out with the pertinent info for Python Basic Types,
+//! Python Strings, etc.
+//!
+//! -----------
+//!
+//! The other half of the functionality is `test-cheatsheets`, which requires thinking
+//! about what would make our `cheatsheets` fall out of sync.
+//!
+//! Assume we have a folder with `src/*-cheatsheets.md`.
+//!
+//! In theory, the cheatsheets and the files in `SUMMARY.md` need to have
+//!
+//! * matching of headers (in the right order, as we're bound to have slides migrate)
+//! * at least as many slides as the source files
+//!
+//! We allow more slides than in the source files because we want to allow ourselves
+//! to add extra info that doesn't make sense as part of the larger Rust training-materials.
+//!
+//! Any condition that fails will emit a message as to why it did, but we'll continue listing the other ones
+//! to streamline UX.
+
+use eyre::{ContextCompat, WrapErr};
 use std::{
     fs::{read_to_string, File},
     io::Write,
     path::Path,
 };
 
-#[derive(Debug, Eq, PartialEq)]
+/// We ignore anything before this header.
+///
+/// We also verify that this header exists.
+const INITIAL_HEADER: &str = "# Rust Fundamentals";
+
+/// We ignore anything after this header
+///
+/// We also verify that this header exists.
+const LAST_HEADER: &str = "# No-Std Rust";
+
+/// Describes a section of the training material.
+#[derive(Debug, Eq, PartialEq, Default)]
 struct SlidesSection {
+    /// The heading name from SUMMARY.md
     header: String,
-    slide_titles: Vec<String>,
+    /// The individual slide deck names under that heading
+    ///
+    /// Note this is human-readable titles, not filenames.
+    deck_titles: Vec<String>,
 }
 
-// Extract "* [Overview](./overview.md)" into "Overview"
-fn get_slide_name(line: &str) -> String {
+/// Parse the slide deck name from a Markdown URL.
+///
+/// Converts a string like "* [Overview](./overview.md)" into "Overview"
+fn get_deck_title(line: &str) -> String {
     assert!(line.starts_with("* ["));
     assert!(line.ends_with(".md)"));
     // SAFETY
@@ -70,12 +88,16 @@ fn get_slide_name(line: &str) -> String {
     String::from(&line[bot + 1..top])
 }
 
-// Not all slides make sense as cheatsheet, namely the material after the No-Std/Embedded materials
-const INITIAL_HEADER: &str = "# Rust Fundamentals";
-const LAST_HEADER: &str = "# No-Std Rust";
-
-// There's lines we don't care about in `SUMMARY.md` for the purposes of our cheatsheet.
-// Let's filter those out, and collect into a `Vec<Vec<String>>`.
+/// Pull a list of interesting headings and slide deck titles from a Markdown
+/// blob.
+///
+/// There's lines we don't care about in `SUMMARY.md` for the purposes of our
+/// cheatsheet.
+///
+/// Let's filter those out, and collect into a `Vec<Vec<String>>`.
+///
+/// The first entry in each `Vec<String>` is the heading. The rest are the deck
+/// titles.
 fn focus_regions(text: &str) -> Vec<Vec<String>> {
     let mut result: Vec<Vec<String>> = Vec::new();
     let mut current_section: Vec<String> = Vec::new();
@@ -120,33 +142,34 @@ fn focus_regions(text: &str) -> Vec<Vec<String>> {
     result
 }
 
-// From `vec!["# Rust Fundamentals", "Overview", "Basic Types"]` turn it into a `SlidesSection`
-fn extract_slides(chunk: Vec<String>) -> SlidesSection {
-    assert!(chunk.len() > 2);
-    // # Rust Fundamentals
-    //   ^ 3rd character in title
-    let header = String::from(&chunk[0][2..]);
+/// Convert a list of strings into a [`SlidesSection`]
+///
+/// The first string is the heading and the test are slide deck titles
+fn extract_decks(chunk: &[String]) -> SlidesSection {
+    assert!(chunk.len() >= 2);
+    // '# Rust Fundamentals' -> 'Rust Fundamentals'
+    let Some(header) = chunk[0].strip_prefix("# ") else {
+        panic!("Malformed header {:?}?!", chunk[0]);
+    };
 
-    let slide_titles = chunk[1..]
+    let deck_titles = chunk[1..]
         .iter()
-        .map(|l| get_slide_name(l))
+        .map(|l| get_deck_title(l))
         .collect::<Vec<String>>();
 
     SlidesSection {
-        header,
-        slide_titles,
+        header: header.to_string(),
+        deck_titles,
     }
 }
 
-// Collect all the headers and write them out into a new `src/lang-cheatsheet.md`.
+/// Collect all the headers and write them out into a new `src/lang-cheatsheet.md`.
 pub fn make_cheatsheet(lang: &str) -> Result<(), eyre::Report> {
     // Collect slide sections, chunked by header
-    let text = read_to_string("./training-slides/src/SUMMARY.md").expect("SUMMARY.md not found");
+    let text =
+        read_to_string("./training-slides/src/SUMMARY.md").context("SUMMARY.md not found")?;
     let slide_texts = focus_regions(&text);
-    let slide_sections: Vec<SlidesSection> = slide_texts
-        .iter()
-        .map(|l| extract_slides(l.clone()))
-        .collect();
+    let slide_sections: Vec<SlidesSection> = slide_texts.iter().map(|l| extract_decks(l)).collect();
 
     // Check to see if a file exists
     let file_str = format!("./training-slides/src/{lang}-cheatsheet.md");
@@ -156,34 +179,31 @@ pub fn make_cheatsheet(lang: &str) -> Result<(), eyre::Report> {
     // Otherwise, create the lang-cheatsheet.md
     match File::create_new(new_file) {
         Ok(mut f) => {
-            let result_text = write_cheatsheet(slide_sections);
-            drop(f.write_all(result_text.as_bytes()));
+            let result_text = render_cheatsheet(slide_sections);
+            f.write_all(result_text.as_bytes())?;
             eprintln!("Cheatsheat for {lang} written at {file_str}");
             eprintln!("Make sure to add it to SUMMARY.md!")
         }
         Err(_) => {
             eprintln!("File {lang}-cheatsheet.md already exists - checking it's in sync");
-            drop(test_cheatsheet(lang));
+            test_cheatsheet(lang)?;
         }
     }
     Ok(())
 }
 
-//
+/// Verify that a cheatsheet has all the right headings in the right order
 pub fn test_cheatsheet(lang: &str) -> Result<(), eyre::Report> {
     // Collect Vec<SlideSection>
     let text = read_to_string("./training-slides/src/SUMMARY.md")
-        .expect("could not read_to_string - SUMMARY.md not found");
+        .context("could not read_to_string - SUMMARY.md not found")?;
     let slide_texts = focus_regions(&text);
-    let slide_sections: Vec<SlidesSection> = slide_texts
-        .iter()
-        .map(|l| extract_slides(l.clone()))
-        .collect();
+    let slide_sections: Vec<SlidesSection> = slide_texts.iter().map(|l| extract_decks(l)).collect();
 
     // Collect SlideSections and slide titles
     let file_name = format!("./training-slides/src/{lang}-cheatsheet.md");
-    let lang_cheatsheet_not_found = format!("{lang}-cheatsheet.md not found.");
-    let cheatsheet_text = read_to_string(file_name).expect(lang_cheatsheet_not_found.as_str());
+    let cheatsheet_text = read_to_string(file_name)
+        .with_context(|| eyre::eyre!("{lang}-cheatsheet.md not found."))?;
     let cheatsheet_lines = cheatsheet_text
         .lines()
         // Tricky: We only care about entries that start with '#'
@@ -191,11 +211,14 @@ pub fn test_cheatsheet(lang: &str) -> Result<(), eyre::Report> {
         .map(|l| l.to_string())
         .collect::<Vec<String>>();
 
+    let first_line = cheatsheet_lines
+        .first()
+        .expect("Cheatsheet should not be empty");
     let mut missing_files = false;
     let mut idx = 0;
     for line in cheatsheet_lines.iter() {
         if line.starts_with("# ") {
-            if line != cheatsheet_lines.first().unwrap() {
+            if line != first_line {
                 idx += 1;
                 // Check if people have added extra headers - leave them alone
                 // so that lang - specific advice doesn't have to correlate to slides
@@ -214,10 +237,10 @@ pub fn test_cheatsheet(lang: &str) -> Result<(), eyre::Report> {
         if line.starts_with("## ") {
             let slide_title = line
                 .strip_prefix("## ")
-                .expect("Expected the line to start with `## `");
-            if !(slide_sections[idx].slide_titles).contains(&slide_title.to_string()) {
+                .context("Expected the line to start with `## `")?;
+            if !(slide_sections[idx].deck_titles).contains(&slide_title.to_string()) {
                 eprintln!(
-                    "{} is not in {lang}-cheathseet.md under expected header {}",
+                    "{} is not in {lang}-cheatsheet.md under expected header {}",
                     slide_title, slide_sections[idx].header
                 );
                 missing_files = true;
@@ -232,11 +255,12 @@ pub fn test_cheatsheet(lang: &str) -> Result<(), eyre::Report> {
     }
 }
 
-fn write_cheatsheet(slide_sections: Vec<SlidesSection>) -> String {
+/// Format a cheatsheet from a bunch of `SlideSection` entries
+fn render_cheatsheet(slide_sections: Vec<SlidesSection>) -> String {
     let mut res = String::new();
     for slide in slide_sections.iter() {
         let mut section_str_buf = format!("# {}\n", slide.header);
-        for entry in slide.slide_titles.iter() {
+        for entry in slide.deck_titles.iter() {
             let slide_title = format!("## {entry}\n");
             section_str_buf.push_str(&slide_title);
         }
@@ -254,11 +278,11 @@ mod tests {
     fn test_get_slide_name() {
         let test = "* [Methods and Traits](./methods-traits.md)";
         let res = "Methods and Traits";
-        assert_eq!(res, get_slide_name(test));
+        assert_eq!(res, get_deck_title(test));
 
         let test2 = "* [Shared Mutability (Cell, RefCell)](./shared-mutability.md)";
         let res2 = "Shared Mutability (Cell, RefCell)";
-        assert_eq!(res2, get_slide_name(test2));
+        assert_eq!(res2, get_deck_title(test2));
     }
 
     #[test]
@@ -313,10 +337,10 @@ Rust for the Linux Kernel and other no-std environments with an pre-existing C A
         let slide_titles = vec![String::from("Rust I/O Traits"), String::from("Generics")];
         let res = SlidesSection {
             header,
-            slide_titles,
+            deck_titles: slide_titles,
         };
         let region = focus_regions(test);
-        assert_eq!(extract_slides(region[0].clone()), res);
+        assert_eq!(extract_decks(&region[0]), res);
         assert!(true);
     }
 }

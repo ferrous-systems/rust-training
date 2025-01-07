@@ -1,11 +1,15 @@
+//! The binary executed when you run `cargo xtask`.
+//!
+//! Spawns varies tasks, according to the command-line arguments.
+
 #![deny(warnings)]
 
 mod tasks;
 
 use std::env;
 
-static LANG_LIST: [&'static str; 7] = ["python", "go", "cpp", "swift", "java", "julia", "c"];
-static HELP_TEXT: &'static str = "cargo xtask
+static LANG_LIST: [&str; 7] = ["python", "go", "cpp", "swift", "java", "julia", "c"];
+static HELP_TEXT: &str = "cargo xtask
 
 USAGE:
     cargo xtask [COMMAND]
@@ -19,7 +23,9 @@ LANG:
     We support $$LANG_LIST$$
 ";
 
-// Code adapted from the xtask workflow in rust-exercises
+/// Entry-point to the program.
+///
+/// This code was adapted from the xtask workflow in rust-exercises.
 fn main() -> color_eyre::Result<()> {
     color_eyre::install()?;
 
@@ -52,13 +58,11 @@ fn main() -> color_eyre::Result<()> {
     match &args[..] {
         ["make-cheatsheet", lang] => tasks::make_cheatsheet(lang),
         ["test-cheatsheet", lang] => tasks::test_cheatsheet(lang),
-        _ => {
-            Ok(())
-        }
+        _ => Ok(()),
     }
 }
 
-// Helper function for pretty printing the lang list string
+/// Helper function for pretty printing the lang list string
 fn join_str(input: &[&str]) -> String {
     let mut output = String::new();
     let mut iter = input.iter().peekable();
