@@ -206,7 +206,7 @@ Note:
 
 Here's an example where tuple fields are special-cased for the borrow checker:
 
-```rust
+```rust ignore
 let mut z = (1, 2);
 let r = &z.1;
 z.0 += 1;
@@ -215,7 +215,7 @@ println!("{:?}, {}", z, r);
 
 but fails on an equivalent array
 
-```rust
+```rust ignore
 let mut z = [1, 2];
 let r = &z[1];
 z[0] += 1;
