@@ -6,7 +6,7 @@ Teaching Rust can be hard, and it's harder when trainees we teach come from diff
 
 A person in Python might have more questions about memory safety in general, since the GC allows them not to worry about that, but a person from C++ would be confused by the keyword `move` in a closure.
 
-To alleviate this, we've created some cheatsheets of the form 
+To alleviate this, we've created some cheatsheets of the form
 
 ```
 # Applied Rust
@@ -30,7 +30,7 @@ As `training-material` grows and changes, maintenance could be a nightmare. We b
 * write out to `src/python-cheatsheet.md` if it doesn't exist
 * if it does exist, check that it is in sync: all headers in `python-cheatsheet.md` are in the appropriate sections, in order, and none are missing.
 
-Specifically, `make-cheatsheet` and `test-cheatsheet` are defined in `xtask/src/tasks.rs` with utility functions to take our `SUMMARY.md`
+Specifically, `make-cheatsheet`, `test-cheatsheet`, and `test-all-cheatsheets` are defined in `xtask/src/tasks.rs` with utility functions to take our `SUMMARY.md`
 
 ```
 # Rust Fundamentals
@@ -65,7 +65,7 @@ Concretely, this is allowed:
 
 ```md
 
-# Applied Rust 
+# Applied Rust
 ## Methods and Traits
 ## Rust I/O Traits
 ## Generics

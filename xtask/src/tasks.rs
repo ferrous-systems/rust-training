@@ -1,4 +1,4 @@
-//! This file implements the `make-cheatsheets`, `test-cheetsheets` and, `test-all` `xtasks` commands.
+//! This file implements the `make-cheatsheets`, `test-cheetsheets` and, `test-all-cheatsheets` `xtasks` commands.
 //! These commands offer us the ability to
 //! 1. Make a cheatsheet for a predetermined language, coded in `main.rs` and which will mainly be c/c++/python/java
 //! 2. Test that said cheatsheet does not fall out of sync with the rest of the `training-material`.
@@ -42,6 +42,8 @@
 //!
 //! Any condition that fails will emit a message as to why it did, but we'll continue listing the other ones
 //! to streamline UX.
+//!
+//! Lastly, `test-all-cheatsheets` is just a convinience function to test all existing cheatsheets at once.
 
 use eyre::{ContextCompat, WrapErr};
 use std::{
