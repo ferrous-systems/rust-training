@@ -8,6 +8,8 @@ mod tasks;
 
 use std::env;
 
+use tasks::*;
+
 static LANG_LIST: [&str; 7] = ["python", "go", "cpp", "swift", "java", "julia", "c"];
 static HELP_TEXT: &str = "cargo xtask
 
@@ -17,6 +19,7 @@ USAGE:
 COMMANDS:
     make-cheatsheet [LANG]      make LANG cheatsheet by scraping slides names in `SUMMARY.md`
     test-cheatsheet [LANG]      test LANG's cheatsheet (all `SUMMARY.md` items are in sheet)
+    test-all-cheatsheets        test all LANGs' cheatsheets
 
 LANG:
 
@@ -39,8 +42,13 @@ fn main() -> color_eyre::Result<()> {
     let printed_help_text = HELP_TEXT.replace("$$LANG_LIST$$", &join_str(&LANG_LIST));
 
     // Check they gave the right number of args
-    if args.len() != 2 {
+    if args.len() != 2 && args[0] != "test-all-cheatsheets" {
         panic!("Incorrect number of arguments.\n\n{printed_help_text}");
+    }
+
+    if args[0] == "test-all-cheatsheets" {
+        let _ = test_all_cheatsheets();
+        return Ok(());
     }
 
     // We replace $$LANG_LISTS$$ with the pretty-printed langs

@@ -1,4 +1,4 @@
-//! This file implements the `make-cheatsheets` and `test-cheetsheets` `xtasks` commands.
+//! This file implements the `make-cheatsheets`, `test-cheetsheets` and, `test-all` `xtasks` commands.
 //! These commands offer us the ability to
 //! 1. Make a cheatsheet for a predetermined language, coded in `main.rs` and which will mainly be c/c++/python/java
 //! 2. Test that said cheatsheet does not fall out of sync with the rest of the `training-material`.
@@ -49,6 +49,8 @@ use std::{
     io::Write,
     path::Path,
 };
+
+use crate::LANG_LIST;
 
 /// We ignore anything before this header.
 ///
@@ -253,6 +255,20 @@ pub fn test_cheatsheet(lang: &str) -> Result<(), eyre::Report> {
         eprintln!("Neat! {lang}-cheatsheet.md is in sync");
         Ok(())
     }
+}
+
+/// Test all the cheatsheets
+pub fn test_all_cheatsheets() -> Result<(), eyre::Report> {
+    for lang in LANG_LIST.iter() {
+        let file_name = format!("./training-slides/src/{lang}-cheatsheet.md");
+        let file_path = Path::new(&file_name);
+        if Path::exists(file_path) {
+            test_cheatsheet(lang)?;
+        } else {
+            continue;
+        }
+    }
+    Ok(())
 }
 
 /// Format a cheatsheet from a bunch of `SlideSection` entries
