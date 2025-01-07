@@ -200,7 +200,7 @@ let c2 = &x.c;
 println!("{} {} {} {}", a, b, c, c2);
 ```
 
-Note:
+The code works, but you *have* to fallback on special cases the borrow checker understands, like shadowing with `let a = &mut x.a;` or else the compiler will error. The borrow checker is particularly frail here - replacing `Foo` with `x = [1,2,3]` and trying to borrow indexes will make it error out.
 
 Here's an example where tuple fields are special-cased for the borrow checker:
 
