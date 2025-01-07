@@ -102,6 +102,11 @@ fn main() {
 * It's like a C pointer but with special compile-time checks.
 * Rust also allows type-conversion functions to be called when you take a reference.
 
+Note:
+
+C pointers are convertible to/from integers. Rust references are not, and Rust
+pointers may or may not be, depending on what they point at.
+
 ## Making a Reference
 
 ```rust []
@@ -308,7 +313,7 @@ We call this *dropping* the value.
 
 ## Custom Cleaning
 
-You can define a specific behaviour to happen on *drop* using the *Drop* trait.
+You can define a specific behaviour to happen on *drop* using the *Drop* trait (cf. [std::ops::Drop](https://doc.rust-lang.org/stable/std/ops/trait.Drop.html)).
 
 For example, the memory used by a `String` is freed when dropped:
 

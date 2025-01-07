@@ -2,7 +2,7 @@
 
 ## Using Arrays
 
-In Rust, arrays (`[T; N]`) have a fixed size.
+Arrays (`[T; N]`) have a fixed size.
 
 ```rust []
 fn main() {
@@ -13,9 +13,16 @@ fn main() {
 
 <br>
 
-```mermaid
-flowchart LR
-    array("[1, 2, 3, 4, 5]")
+```dot process
+digraph {
+    node [shape=plaintext, fontcolor=black, fontsize=18];
+    "array:" [color=white];
+
+    node [shape=record, fontcolor=black, fontsize=14, width=4.75, fixedsize=true];
+    array [label="1 | 2 | 3 | 4 | 5", color=blue, fillcolor=lightblue, style=filled];
+
+    { rank=same; "array:"; array }
+}
 ```
 
 ## Building the array at runtime.
@@ -34,16 +41,21 @@ fn main() {
 
 <br>
 
-```mermaid
-flowchart LR
-    array("[0, 1, 2, 3, 4, 0, 0, 0, 0, 0]")
+```dot process
+digraph {
+    node [shape=plaintext, fontcolor=black, fontsize=18];
+    "array:" [color=white];
+
+    node [shape=record, fontcolor=black, fontsize=14, width=4.75, fixedsize=true];
+    array [label="0 | 1 | 2 | 3 | 4 | 0 | 0 | 0 | 0 | 0", color=blue, fillcolor=lightblue, style=filled];
+
+    { rank=same; "array:"; array }
+}
 ```
 
 ## Slices
 
-A view into *some other data*, plus a value to indicate *how many items*.
-
-Written as `&[T]` (or `&mut [T]`).
+A view into *some other data*. Written as `&[T]` (or `&mut [T]`).
 
 ```rust [1-8|6]
 fn main() {
@@ -58,11 +70,20 @@ fn main() {
 
 <br>
 
-```mermaid
-flowchart LR
-    array("[0, 1, 2, 3, 4, 0, 0, 0, 0, 0]")
-    data["&[u8] { ptr, len: 5 }"]
-    data -.-> array
+```dot process
+digraph {
+    node [shape=plaintext, fontcolor=black, fontsize=18];
+    "data:" -> "array:" [color=white];
+
+    node [shape=record, fontcolor=black, fontsize=14, width=3];
+    array [label="<f0> 0 | 1 | 2 | 3 | 4 | 0 | 0 | 0 | 0 | 0", color=blue, fillcolor=lightblue, style=filled];
+    node [shape=record, fontcolor=black, fontsize=14, width=2];
+    data [label="<p0> ptr | len = 5", color=blue, fillcolor=lightblue, style=filled];
+    data:p0 -> array:f0;
+
+    { rank=same; "data:"; data }
+    { rank=same; "array:"; array }
+}
 ```
 
 Note:
@@ -70,7 +91,7 @@ Slices are *unsized* types and can only be access via a reference. This referenc
 
 ## Vectors
 
-If you don't how how much space you will need, a `Vec` is a growable, heap-allocated, array-like type, that you can index and also treat as a slice.
+`Vec` is a growable, heap-allocated, array-like type.
 
 ```rust []
 fn process_data(input: &[u32]) {
@@ -86,17 +107,24 @@ fn main() { process_data(&[1, 2, 3]); }
 
 <br>
 
-```mermaid
-flowchart LR
-    data("[2, 4, 6, 0]")
-    vector["Vec { ptr, cap: 4, len: 3 }"]
-    vector --> data
-    style data fill:#ccf
+```dot process
+digraph {
+    node [shape=plaintext, fontcolor=black, fontsize=18];
+    "vector:" [color=white];
+
+    node [shape=record, fontcolor=black, fontsize=14, width=3];
+    _inner [label="<f0> 2 | 4 | 6 | 0", color=blue, fillcolor=green3, style=filled];
+    node [shape=record, fontcolor=black, fontsize=14, width=2];
+    vector [label="<p0> ptr | len = 3 | cap = 4", color=blue, fillcolor=lightblue, style=filled];
+    vector:p0 -> _inner:f0;
+
+    { rank=same; "vector:"; vector }
+}
 ```
 
 Note:
 
-The dark blue block of data is heap allocated.
+The green block of data is heap allocated.
 
 ## There's a macro short-cut too...
 
@@ -139,11 +167,20 @@ fn main() {
 
 <br>
 
-```mermaid
-flowchart LR
-    data("[0xC2, 0xA3, 0x39, 0x39, 0x21]")
-    s["&str { ptr, len: 5 }"]
-    s -.-> data
+```dot process
+digraph {
+    node [shape=plaintext, fontcolor=black, fontsize=18];
+    "s:" -> "bytes:" [color=white];
+
+    node [shape=record, fontcolor=black, fontsize=14, width=3];
+    bytes [label="<f0> 0xC2 | 0xA3 | 0x39 | 0x39 | 0x21", color=blue, fillcolor=lightblue, style=filled];
+    node [shape=record, fontcolor=black, fontsize=14, width=2];
+    s [label="<p0> ptr | len = 5", color=blue, fillcolor=lightblue, style=filled];
+    s:p0 -> bytes:f0;
+
+    { rank=same; "s:"; s }
+    { rank=same; "bytes:"; bytes }
+}
 ```
 
 Note:
@@ -164,18 +201,19 @@ fn main() {
 
 <br>
 
-```mermaid
-flowchart LR
-    data1("[0x48, 0x65, 0x6c, 0x6c, 0x6f, 0x21")
-    str1["&str { ptr, len: 6 }"]
-    str1 -.-> data1
+```dot process
+digraph {
+    node [shape=plaintext, fontcolor=black, fontsize=18];
+    "s:" [color=white];
 
-    data2("[0x73, 0x20, 0x3d, 0x20")
-    str2["&str { ptr, len: 4 }"]
-    str2 -.-> data2
+    node [shape=record, fontcolor=black, fontsize=14, width=3];
+    bytes [label="<f0> 0x48 | 0x65 | 0x6c | 0x6c | 0x6f | 0x21", color=blue, fillcolor=lightgray, style=filled];
+    node [shape=record, fontcolor=black, fontsize=14, width=2];
+    s [label="<p0> ptr | len = 5", color=blue, fillcolor=lightblue, style=filled];
+    s:p0 -> bytes:f0;
 
-    style data1 fill:#cfc
-    style data2 fill:#cfc
+    { rank=same; "s:"; s }
+}
 ```
 
 Note:
@@ -184,7 +222,9 @@ The lifetime annotation of `'static` just means the string slice lives forever
 and never gets destroyed. We wrote out the type in full so you can see it - you
 can emit it on variable declarations.
 
-The second green object is the literal we gave to println - `s = `
+There's a second string literal in this program. Can you spot it?
+
+(It's the format string in the call to `println!`)
 
 ## Strings ([docs](https://doc.rust-lang.org/std/string/struct.String.html))
 
@@ -193,17 +233,32 @@ The second green object is the literal we gave to println - `s = `
 * You cannot access characters by index (only bytes)
   * But you never really want to anyway
 
-```mermaid
-flowchart LR
-    data("[0xc2, 0xa3, 0x31, 0x32, 0x00]")
-    string["String { ptr, cap: 5, len: 4 }"]
-    string --> data
-    style data fill:#ccf
+```rust
+fn main() {
+    let string = String::from("Hello!");
+}
+```
+
+<br>
+
+```dot process
+digraph {
+    node [shape=plaintext, fontcolor=black, fontsize=18];
+    "string:" [color=white];
+
+    node [shape=record, fontcolor=black, fontsize=14, width=3];
+    _inner [label="<f0> 0x48 | 0x65 | 0x6c | 0x6c | 0x6f | 0x21", color=blue, fillcolor=green3, style=filled];
+    node [shape=record, fontcolor=black, fontsize=14, width=2];
+    string [label="<p0> ptr | len = 6 | cap = 6", color=blue, fillcolor=lightblue, style=filled];
+    string:p0 -> _inner:f0;
+
+    { rank=same; "string:"; string }
+}
 ```
 
 Note:
 
-The dark blue block of data is heap allocated.
+The green block of data is heap allocated.
 
 ## Making a String
 
@@ -378,7 +433,7 @@ We also have [HashSet](https://doc.rust-lang.org/std/collections/struct.HashSet.
 
 Just sets the `V` type parameter to `()`!
 
-## A Summary
+---
 
 | Type         | Owns | Grow |  Index  | Slice | Cheap Insert |
 | :----------- | :--: | :--: | :-----: | :---: | :----------: |

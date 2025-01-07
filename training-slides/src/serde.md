@@ -1,4 +1,4 @@
-# `serde`
+# Serialization and Deserialization (`serde`)
 
 ## **Ser**ialization and **De**serialization
 
@@ -8,7 +8,7 @@
 
 To make a Rust structure (de)serializable:
 
-```rust [] ignore
+```rust ignore []
 #[derive(Debug, serde::Serialize, serde::Deserialize)]
 struct Move {
     id: usize,
@@ -37,7 +37,7 @@ Did you enjoy that acronym salad?
 
 To JSON:
 
-```rust [] ignore
+```rust ignore []
 use serde::{Serialize, Deserialize};
 
 #[derive(Debug, Serialize, Deserialize)]
@@ -60,7 +60,7 @@ fn main() {
 
 From JSON:
 
-```rust [] ignore
+```rust ignore []
 use serde::{Serialize, Deserialize};
 
 #[derive(Debug, Serialize, Deserialize)]
@@ -81,7 +81,7 @@ fn main() {
 
 ## Transcode
 
-```rust [] ignore
+```rust ignore []
 use serde::{Serialize, Deserialize};
 use serde_transcode::transcode;
 
@@ -111,7 +111,7 @@ fn main() {
 
 `serde` has a large number of attributes you can utilize:
 
-```rust [] ignore
+```rust ignore []
 #[serde(deny_unknown_fields)] // Be extra strict
 struct Move {
     #[serde(default)] // Call usize::default()

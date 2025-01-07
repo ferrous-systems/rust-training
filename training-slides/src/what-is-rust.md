@@ -272,7 +272,7 @@ For more information about this error, try `rustc --explain E0502`.
 * QNX, VxWorks, AIX
 * WebAssembly
 * UEFI
-* Nintendo Switch, Sony Playstation...
+* Nintendo Switch, Sony PSP and PS Vita...
 * Add your own!
 
 ## What does Rust cost?

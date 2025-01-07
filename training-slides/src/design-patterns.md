@@ -159,7 +159,7 @@ fn main() {
 - Use it to get the inner Type, say in `Option`.
 - Use it to your advantage to make variable immutable after it's served its purpose.
 
-```rust [] ignore
+```rust ignore []
 // Get the inner type from Option
 let array = [1, 2, 3, 4];
 let item = array.get(1);

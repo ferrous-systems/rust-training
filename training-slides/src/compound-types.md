@@ -16,7 +16,7 @@ struct Point {
 Note:
 
 The fields may not be laid out in memory in the order they are written (unless
-you ask the compiler to ensure that they are).
+you ask the compiler to [ensure that they are](https://doc.rust-lang.org/nomicon/other-reprs.html#reprc)).
 
 ## Construction
 
@@ -186,7 +186,7 @@ fn check_shape(shape: Shape) {
 ## Doing a `match` on an `enum`
 
 - There are two variables called `radius`
-- The later one hides the earlier one
+- The binding of `radius` in the pattern on line 9 hides the `radius` variable on line 7
 
 ```rust [7|9]
 enum Shape {

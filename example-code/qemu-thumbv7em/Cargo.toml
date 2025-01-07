@@ -1,0 +1,11 @@
+[package]
+name = "qemu-thumbv7em"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+cortex-m-rt = "0.7.5"
+cortex-m-semihosting = "0.5.0"
+defmt = "0.3.9"
+defmt-semihosting = "0.1.0"
+

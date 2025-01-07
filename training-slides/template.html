@@ -71,6 +71,11 @@
             grid-template-columns: repeat(2, minmax(0, 1fr));
             gap: 1rem;
         }
+
+        .scrollable-slide {
+            height: 720px;
+            overflow-y: auto !important;
+        }
     </style>
 </head>
 
@@ -96,8 +101,6 @@ $CONTENT
     <script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.5.0/plugin/markdown/markdown.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.5.0/plugin/highlight/highlight.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/highlight.min.js"></script>
-    <!-- Stick with mermaid 9.x as 10.x uses ESM -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/mermaid/9.4.0/mermaid.js"></script>
     <script src="https://code.jquery.com/jquery-3.6.4.min.js" crossorigin="anonymous"></script>
     <script>
         const buttons = '<p><button class="open-in-playground">RUN</button></p>\n';
@@ -306,32 +309,25 @@ $CONTENT
                     // Center the mermaid diagrams.
                     el.style.cssText += 'text-align: center';
                 });
+            });
 
-                mermaid.initialize({
-                    startOnLoad: false,
-                    themeCSS: '.label { font-size: 28px; }'
-                });
-
-                let doMermaidStuff = function doMermaidStuff(event) {
-
-                    let mermaidDivs = event.currentSlide.querySelectorAll('.mermaid:not(.done)');
-                    let indices = Reveal.getIndices();
-                    let pageno = `${indices.h}-${indices.v}`
-
-                    mermaidDivs.forEach(function (mermaidDiv, i) {
-
-                        let insertSvg = function (svgCode, bindFunctions) {
-                            mermaidDiv.innerHTML = svgCode;
-                            mermaidDiv.classList.add('done');
-                        };
-                        let graphDefinition = mermaidDiv.textContent;
-                        mermaid.mermaidAPI.render(`mermaid${pageno}-${i}`, graphDefinition, insertSvg);
-                    });
-                    Reveal.layout();
-                };
-
-                Reveal.on('ready', event => doMermaidStuff(event));
-                Reveal.on('slidechanged', event => doMermaidStuff(event));
+            function resetSlideScrolling(slide) {
+                $(slide).removeClass('scrollable-slide');
+            }
+            
+            function handleSlideScrolling(slide) {
+                if ($(slide).height() >= 720) {
+                    $(slide).addClass('scrollable-slide');
+                }
+            }
+            
+            Reveal.addEventListener('ready', function (event) {
+                handleSlideScrolling(event.currentSlide);
+            });
+            
+            Reveal.addEventListener('slidechanged', function (event) {
+                resetSlideScrolling(event.previousSlide)
+                handleSlideScrolling(event.currentSlide);
             });
         });
     </script>

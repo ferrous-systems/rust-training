@@ -109,5 +109,5 @@ To clarify
 
 ## Tools
 
-* `cargo-chef` to speed up your docker builds
-* `sccache` for caching intermediary build artifacts across multiple projects and developers
+* [`cargo-chef`](https://github.com/LukeMathWalker/cargo-chef) to speed up your docker builds
+* [`sccache`](https://github.com/mozilla/sccache) for caching intermediary build artifacts across multiple projects and developers

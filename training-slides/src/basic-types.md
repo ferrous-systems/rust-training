@@ -4,11 +4,31 @@
 
 Rust comes with all standard int types, with and without sign
 
--   `i8`, `u8`
--   `i16`, `u16`
--   `i32`, `u32`
--   `i64`, `u64`
--   `i128`, `u128`
+* `i8`, `u8`
+* `i16`, `u16`
+* `i32`, `u32`
+* `i64`, `u64`
+* `i128`, `u128`
+
+## Kinds of variable
+
+```rust
+static X: i32 = 42;
+const Y: i32 = 42;
+
+fn some_function() {
+    let x = 42;
+    let x: i32 = 42;
+    let mut x = 42;
+    let mut x: i32 = 42;
+}
+```
+
+Note:
+
+The expression used to initialise a `static` or `const` must be evaluatable at compile time. This includes calling `const fn` functions. A `let` binding doesn't have this restriction.
+
+The `static` occupies some memory at run-time and get a symbol in the symbol table. The `const` does not, and is only used to initialise other values (or e.g. as an argument to a function) - it acts a bit like a C pre-processor macro.
 
 ## Syntactic clarity in specifying numbers
 
@@ -24,7 +44,7 @@ let x = b'a';      // A single u8
 
 Rust comes with two architecture-dependent number types:
 
--   `isize`, `usize`
+* `isize`, `usize`
 
 ## Casts
 
@@ -65,9 +85,9 @@ Boolean in Rust is represented by either of two values: `true` or
 
 `char` is a [Unicode Scalar Value](https://www.unicode.org/glossary/#unicode_scalar_value) being represented as a "single character"
 
--   A literal in single quotes: `'r'`
--   Four (4) bytes in size
--   More than just ASCII: glyphs, emoji, accented characters, etc.
+* A literal in single quotes: `'r'`
+* Four (4) bytes in size
+* More than just ASCII: glyphs, emoji, accented characters, etc.
 
 ## Character Literals
 
@@ -119,8 +139,8 @@ fn main() {
 
 Note:
 
-- Use `.get()` method on the slice to avoid panics instead of accessing via index.
-- The range syntax include the first value but excludes the last value. Use `0..=1` to include both ends.
+* Use `.get()` method on the slice to avoid panics instead of accessing via index.
+* The range syntax include the first value but excludes the last value. Use `0..=1` to include both ends.
 
 ## String Slices
 

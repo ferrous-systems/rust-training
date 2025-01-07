@@ -80,7 +80,7 @@ uart0_reg_t* const p_uart = (uart0_reg_t*) 0x40002000;
 
 ## Structures in Rust
 
-```rust [] ignore
+```rust ignore []
 #[repr(C)]
 pub struct Uart0 {
     pub tasks_startrx: VolatileCell<u32>, // @ 0x000
@@ -105,8 +105,6 @@ rules around references. It works in practice, but it might be technically
 unsound.
 
 ## Other approaches
-
-Some developers prefer to generate a pointer for each peripheral register:
 
 ```rust []
 pub struct Uart { base: *mut u32 } // now has no fields
@@ -174,9 +172,21 @@ registers and fields on an MCU.
 
 We can use `svd2rust` to turn this into a Peripheral Access Crate.
 
-```mermaid
-graph LR
-    svd[(SVD XML)] --> svd2rust[<tt>svd2rust</tt>] --> rust[(Rust Source)]
+<br>
+
+```dot process
+
+digraph {
+    rankdir=LR;
+    node [shape=ellipse, width=1.5, fillcolor=green3, style=filled];
+    svd [label="SVD XML"];
+    rust [label="Rust Source"];
+    node [shape=record, width=1.5, fillcolor=lightblue, style=filled];
+    svd2rust [label="svd2rust"];
+
+    svd -> svd2rust;
+    svd2rust -> rust;
+}
 ```
 
 Note:
@@ -191,14 +201,26 @@ fix known bugs in the SVD files.
 
 ## The `svd2rust` generated API
 
-```mermaid
-graph TB
-    Peripherals --> uarte1[.UARTE1: <b>UARTE1&nbsp;</b>]
-    uarte1 --> uart1_baudrate[.baudrate: <b>BAUDRATE&nbsp;</b>]
-    uarte1 --> uart1_inten[.inten: <b>INTEN&nbsp;</b>]
-    Peripherals --> uarte2[.UARTE2: <b>UARTE2&nbsp;</b>]
-    uarte2 --> uart2_baudrate[.baudrate: <b>BAUDRATE&nbsp;</b>]
-    uarte2 --> uart2_inten[.inten: <b>INTEN&nbsp;</b>]
+```dot process
+
+digraph {
+    node [shape=record, width=1.5, fillcolor=lightblue, style=filled];
+    Peripherals;
+    uarte1 [label=".UARTE1: UARTE1"];
+    uarte1_baudrate [label=".baudrate: BAUDATE"];
+    uarte1_inten [label=".inten: INTEN"];
+    uarte2 [label=".UARTE2: UARTE2"];
+    uarte2_baudrate [label=".baudrate: BAUDATE"];
+    uarte2_inten [label=".inten: INTEN"];
+
+    Peripherals -> uarte1;
+    uarte1 -> uarte1_baudrate;
+    uarte1 -> uarte1_inten;
+
+    Peripherals -> uarte2;
+    uarte2 -> uarte2_baudrate;
+    uarte2 -> uarte2_inten;
+}
 ```
 
 ---
@@ -222,7 +244,7 @@ graph TB
 
 ## Using a PAC
 
-```rust [] ignore
+```rust ignore []
 let p = nrf52840_pac::Peripherals::take().unwrap();
 // Reading the 'baudrate' field
 let contents = p.UARTE1.baudrate.read();
@@ -258,7 +280,7 @@ function. We see this used [all
 
 What are the three steps here?
 
-```rust [] ignore
+```rust ignore []
 p.UARTE1.inten.modify(|_r, w| {
     w.cts().enabled();
     w.ncts().enabled();

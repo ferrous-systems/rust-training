@@ -17,7 +17,10 @@ The Rust ABI is *not* stable.
 
 Rust also supports your platform's ABI(s).
 
-(Windows has two...)
+(There [might] be [several]...)
+
+[might]: https://learn.microsoft.com/en-us/cpp/cpp/argument-passing-and-naming-conventions?view=msvc-170
+[several]: https://github.com/rust-lang/rust/blob/99f77a2eda555b50b518f74823ab636a20efb87f/compiler/rustc_target/src/spec/abi/mod.rs#L12
 
 Note:
 
@@ -29,7 +32,9 @@ Clearly these two compilers must agree, otherwise the callee will not receive th
 
 x86 is ~40 years old and many standards exist on how to do this. See https://en.wikipedia.org/wiki/X86_calling_conventions#Historical_background.
 
-AMD64 is only ~15 years old, and there are two standards - the Microsoft one for Windows, and the Linux one (which is based on System V UNIX).
+AMD64 is only ~20 years old, and there are two standards - the Microsoft one for Windows, and the Linux one (which is based on System V UNIX).
+
+ARM64 has one main standard (the Arm Architecture Procedure Call Standard, or AAPCS), plus one Microsoft invented which works much more like AMD64 and lets ARM64 call emulated AMD64 much more easily. That's called [ARM64EC](https://learn.microsoft.com/en-us/windows/arm/arm64ec).
 
 ---
 
@@ -215,12 +220,12 @@ unsigned int cool_library_function(const char* p);
 ```
 
 ```rust []
-use std::ffi::{c_char, c_uint}; // also in core::ffi
+use std::ffi::c_char; // also in core::ffi
 
 extern "C" {
     // We state that this function exists, but there's no definition.
     // The linker looks for this 'symbol name' in the other objects
-    fn cool_library_function(p: *const c_char) -> c_uint;
+    fn cool_library_function(p: *const c_char) -> u32;
 }
 ```
 
@@ -228,20 +233,47 @@ Note:
 
 You cannot do `extern "C" fn some_function();` with no function body - you must use the block.
 
+## Changes in Rust 1.82
+
+You can now mark external functions as *safe*:
+
+```rust
+unsafe extern "C" {
+    // This function is basically impossible to call wrong, so let's mark it safe
+    safe fn do_stuff(x: i32) -> i32;
+}
+
+fn main() {
+    dbg!(do_stuff(3));
+}
+
+#[unsafe(export_name = "do_stuff")]
+extern "C" fn my_do_stuff(x: i32) -> i32 {
+    x + 1
+}
+```
+
+Note:
+
+You can only mark an extern function as `safe` within an `unsafe extern` block.
+
+Also note that in Rust 1.82, `export_name` became an unsafe attribute, along
+with `no_mangle` and `link_section`. The old form is still allowed in Edition
+2021 and earlier (for backwards compatibility), but you will have to use the new
+syntax in Edition 2024.
+
 ## Primitive types
 
-Some C types have direct Rust equivalents.
+Some C types have direct Rust equivalents. See also [`core::ffi`](https://doc.rust-lang.org/stable/core/ffi/index.html).
 
-The [`core::ffi`](https://doc.rust-lang.org/stable/core/ffi/index.html) module
-also defines a bunch of useful types and aliases.
-
-| C             | Rust                   |
-| ------------- | ---------------------- |
-| int32_t       | i32                    |
-| unsigned int  | c_uint                 |
-| unsigned char | u8 (not char!)         |
-| void          | ()                     |
-| char\*        | CStr or \*const c_char |
+| C               | Rust                       |
+| --------------- | -------------------------- |
+| `int32_t`       | `i32`                      |
+| `unsigned int`  | `c_uint`                   |
+| `unsigned char` | `u8` (not `char`!)         |
+| `void`          | `()`                       |
+| `char*`         | `CStr` or `*const c_char`  |
+| `T*`            | `Box<T>` (if `T` is sized) |
 
 Note:
 
@@ -249,9 +281,13 @@ On some systems, a C `char` is not 8 bits in size. Rust does not support those
 platforms, and likely never will. Rust does support platforms where `int` is
 only 16-bits in size.
 
+If `T: ?Sized`, then `Box<T>` may be larger than a single pointer as it will
+also need to hold the length information. That means it is no longer the same
+size and layout as `T*`.
+
 ## Calling this
 
-```rust [] ignore
+```rust ignore []
 use std::ffi::{c_char, c_uint};
 
 extern "C" {
@@ -296,7 +332,7 @@ pub struct FoobarHandle(*mut FoobarContext);
 
 `extern "C"` applies to function pointers given to extern functions too.
 
-```rust [] ignore
+```rust ignore []
 use std::ffi::c_void;
 
 pub type FooCallback = extern "C" fn(state: *mut c_void);

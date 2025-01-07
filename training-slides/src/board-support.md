@@ -9,7 +9,7 @@
 
 ## Using an Embedded System
 
-* There is (almost always) no plug-and-play
+* Plug-and-play is extremely rare
 * Your MCU can put different functions (UART, SPI, etc) on different pins
 * The choice of which function goes on which pin was decided by the PCB designer
 * You now have to tell the software how the PCB was laid out
@@ -28,7 +28,7 @@
 
 See `example-code/nrf52/bsp_demo`
 
-```rust [] ignore
+```rust ignore []
 #[entry]
 fn main() -> ! {
     let mut nrf52 = Board::take().unwrap();
@@ -48,7 +48,7 @@ the UART pins. The Board Support Crate did it all for us.
 
 ## Making a Board Support Crate
 
-```rust [] ignore
+```rust ignore []
 pub struct Board {
     /// The nRF52's pins which are not otherwise occupied on the nRF52840-DK
     pub pins: Pins,

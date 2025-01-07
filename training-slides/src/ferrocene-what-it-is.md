@@ -6,9 +6,10 @@
 * A downstream of The Rust Project
 * Long-term stable
 * Open Source
-* Qualified per ISO 26262 / IEC 61508
+* Qualified per ISO 26262 (ASIL D) / IEC 61508 (SIL 4)
 * Supplied with a warranty
 * Available with support
+* Tested differently
 
 ## Rust, not a subset
 
@@ -48,14 +49,13 @@
 
 ## Long-term Stable
 
-As of 11 March 2024, the Ferrocene releases are:
+As of 3 September 2024, the Ferrocene releases are:
 
 * *nightly* (upstream *nightly*)
 * *pre-rolling* (upstream *beta*)
 * *rolling* (upstream *stable*)
-* beta-23.06 (upstream *1.68.2*)
-* stable-23.06 (upstream *1.68.2*)
-* beta-24.05 (upstream *1.76.0*)
+* stable-24.05 (upstream *1.76*)
+* stable-24.08 (upstream *1.79*)
 
 Note:
 
@@ -68,7 +68,7 @@ tracking of Known Problems.
 * The source code is MIT || Apache-2.0
 * The docs are published at <https://public-docs.ferrocene.dev>
 
-## Qualified per ISO 26262 / IEC 61508
+## Qualified per ISO 26262 (ASIL D) / IEC 61508 (SIL 4)
 
 We're in [the TÜV SÜD database](https://www.tuvsud.com/en/services/product-certification/ps-cert?q=Z10+123030+0001+Rev.+00)
 
@@ -95,3 +95,12 @@ If you find a bug in the compiler, we will fix it or give you details on how to 
 * A subscription gets you binary downloads and access to the Known Problems list
 * Signed Qualification Documents are available (call us)
 * If you need additional support with your Rust development, we can help
+
+## Tested Differently
+
+* The Rust Project only tests [*Tier 1* targets](https://doc.rust-lang.org/rustc/platform-support.html#tier-1-with-host-tools)
+* We have developed our own CI
+  * Separate and parallel to that used by The Rust Project
+  * They have different goals!
+* Having multiple independent, parallel, rock solid CI pipelines can only benefit Rust
+* Our CI produces the artefacts we need for qualification

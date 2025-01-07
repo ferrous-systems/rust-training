@@ -6,11 +6,9 @@ set -euo pipefail
 pushd ./native/ffi/use-c-in-rust
 cargo build --all
 cargo test
-cargo clean
 popd
 pushd ./native/stdout
 cargo build --all
-cargo clean
 popd
 # And the C based example
 pushd native/ffi/use-rust-in-c
@@ -19,20 +17,22 @@ make clean
 popd
 # And the nRF52 examples
 pushd ./nrf52/bsp_demo
-cargo build
-cargo clean
+cargo build --release
 popd
-# And the qemu Aarch64 Armv8-A example
+# Build qemu Aarch64 Armv8-A example
 pushd ./qemu-aarch64v8a
-criticalup install
 ./build.sh
-criticalup run cargo build
-criticalup run cargo clean
+cargo build
 popd
-# And the qemu Aarch32 Armv8-R example
-pushd ./qemu-armv8r
-criticalup install
-./build.sh
-criticalup run cargo build
-criticalup run cargo clean
+# Build qemu Aarch32 Armv8-R/Armv7-R example
+pushd ./qemu-aarch32v78r
+# Can't use the shell script or the default target becuase armv8r isn't available
+# outside Ferrocene
+# ./build.sh
+cargo build --target=armv7r-none-eabihf
 popd
+# Build qemu Armv7E-M example
+pushd qemu-thumbv7em
+cargo build
+popd
+

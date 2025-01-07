@@ -1,6 +1,6 @@
-# Summary
+# Front Matter
 
-[Start Here](./start_here.md)
+[Introduction](./introduction.md)
 
 [Glossary](./glossary.md)
 
@@ -38,7 +38,9 @@ Using Rust on Windows/macOS/Linux. Requires [Rust Fundamentals](#rust-fundamenta
 Topics that go beyond [Applied Rust](#applied-rust).
 
 * [Advanced Strings](./advanced-strings.md)
+* [Building Robust Programs with Kani](./kani.md)
 * [Debugging Rust](./debugging-rust.md)
+* [Deconstructing Send, Arc, and Mutex](./deconstructing-send-arc-mutex.md)
 * [Dependency Management with Cargo](./dependency-management.md)
 * [Deref Coercions](./deref-coercions.md)
 * [Design Patterns](./design-patterns.md)
@@ -54,6 +56,9 @@ Topics that go beyond [Applied Rust](#applied-rust).
 * [The stdlib](./std-lib-tour.md)
 * [Using Cargo](./using-cargo.md)
 * [Using Types to encode State](./type-state.md)
+
+# Rust and Web Assembly
+
 * [WASM](./wasm.md)
 
 # No-Std Rust
@@ -63,6 +68,7 @@ Rust for the Linux Kernel and other no-std environments with an pre-existing C A
 * [Unsafe Rust](./unsafe.md)
 * [Foreign Function Interface](./ffi.md)
 * [Working with Nightly](./working-with-nightly.md)
+* [The Shape of a Rust Program](./shape-rust-program.md)
 
 ## Under development
 
@@ -95,7 +101,7 @@ Topics around [Ferrocene](https://ferrous-systems.com/ferrocene/), the qualified
 * [What is Ferrocene](./ferrocene-what-it-is.md)
 * [Installing and Using Ferrocene](./ferrocene-installing.md)
 
-# Rust for Decision Makers
+# Why Rust?
 
 * [What is Rust?](./what-is-rust.md)
 * [Safety, Performance, and Productivity](./safety-performance-productivity.md)

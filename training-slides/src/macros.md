@@ -76,7 +76,7 @@ The actual macro is more complicated as it sets the `Vec` to have the correct ca
 
 ## Expanding `println!`
 
-```rust [] ignore
+```rust ignore []
 fn main() {
     // You write
     println!("Hello {}, aged {}", "Sam", 40);
@@ -123,7 +123,7 @@ This is a simplified example - the real output is slightly more complicated, and
 
 Work like the built-in Rust derives, once you've imported them:
 
-```rust [] ignore
+```rust ignore []
 use serde::Serialize;
 
 #[derive(Debug, Clone, Serialize)]
@@ -151,7 +151,7 @@ Rust can always work out whether you mean the trait or the macro, from the conte
 * Placed above a type, function, or field
 * Can have optional arguments
 
-```rust [] ignore
+```rust ignore []
 #[tokio::main(worker_threads = 2)]
 async fn main() {
     println!("Hello world");

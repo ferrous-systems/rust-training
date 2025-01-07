@@ -2,6 +2,8 @@
 rustflags = [
     "-Clink-arg=-Tlinker.ld",
 ]
+# QEMU Aarch64 boots in EL1 by default
+# Add "-machine virtualization=on" to boot in EL2
 runner = "qemu-system-aarch64 -machine virt -cpu cortex-a57 -semihosting -nographic -kernel"
 
 [build]

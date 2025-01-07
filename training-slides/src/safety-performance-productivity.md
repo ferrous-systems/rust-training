@@ -29,7 +29,7 @@ memory.
 
 ## Iter Example
 
-```rust [] ignore
+```rust ignore []
 /// Adds 0x00 padding for every 0xCC found
 fn process(data: &mut Vec<u8>) {
     for item in data.iter_mut() {
@@ -197,7 +197,7 @@ sum = 24999999500000002500000000000000
 
 ## Let's use all our CPU cores...
 
-```rust [] ignore
+```rust ignore []
 // Import the rayon library
 use rayon::prelude::*;
 

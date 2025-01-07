@@ -77,6 +77,10 @@ On three levels:
 * The *value* is the size of a pointer
 * The *contents* of the Box can be any T (including *unsized* things)
 
+Note:
+
+Pointers can be 'thin' (one word in length) or 'wide' (two words in length). In a wide pointer, the second word holds the length of the thing being pointed to, or a pointer to the vtable if it's a dyn-trait pointer. The same applies to Boxes.
+
 ## Why not raw pointers?
 
 Because `Box<T>`:
@@ -230,7 +234,7 @@ fn main() {
 
 Why is this function less than ideal?
 
-```rust [] should_panic
+```rust should_panic []
 /// Replaces all the ` ` characters with `_`
 fn replace_spaces(input: &str) -> String {
     todo!()
@@ -250,7 +254,7 @@ Did the second call replace anything? Did you have to allocate a `String` and co
 
 Rust has the [`Cow`](https://doc.rust-lang.org/std/borrow/enum.Cow.html) type to handle this.
 
-```rust [] should_panic
+```rust should_panic []
 /// Replaces all the ` ` characters with `_`
 fn replace_spaces(input: &str) -> std::borrow::Cow<str> {
     todo!()

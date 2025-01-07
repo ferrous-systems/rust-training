@@ -21,7 +21,7 @@ Rust is an empathic systems programming language that is determined to not let y
 
 ## A Little Bit of History
 
--   Rust began around 2008
+-   Rust [began around 2006](https://github.com/graydon/rust-prehistory)
 -   An experimental project by Graydon Hoare
 -   Adopted by Mozilla
 -   Presented to the general public as version 0.4 in 2012
@@ -29,10 +29,11 @@ Rust is an empathic systems programming language that is determined to not let y
 
 ## Focus
 
--   Rust has lost many features from 2012 to 2014
+-   Rust lost many features leading up to 1.0:
     -   Garbage collector
     -   evented runtime
     -   complex error handling
+    -   `~T` syntax
 -   Orientation towards a usable systems programming language
 
 ## Development
@@ -75,7 +76,7 @@ spend time discussing the impact of many features on large projects.
 ## Safety
 
 -   Rust is memory-safe and thread-safe
-    - Buffer overflows, use-after-free: all impossible
+    - Buffer overflows, use-after-free, double free: all impossible
     - Unless you tell the compiler you know what you're doing
 -   De-allocation is automated
     - Great for files, mutexes, sockets, etc
