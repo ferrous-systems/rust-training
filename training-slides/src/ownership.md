@@ -53,9 +53,8 @@ fn print_string(s: String) {
 }
 ```
 
-## It does not...
+## It does not!
 
-asdf
 <pre><code data-trim data-noescape><font color="#FF0000"><b>error[E0382]</b></font><b>: use of moved value: `s`</b>
  <font color="#5C5CFF"><b>--&gt; </b></font>src/main.rs:4:18
   <font color="#5C5CFF"><b>|</b></font>
