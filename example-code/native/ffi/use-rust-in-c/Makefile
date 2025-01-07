@@ -19,7 +19,7 @@ clean:
 run: example
 	./example
 
-# The `example` binary requires the Rust library and some C source
+# The `example` binary requires the Rust library and some C source 
 example: example.c example.h $(TARGET_DIR)/debug/libffi_use_rust_in_c.a
 	$(CC) -o example $(CFLAGS) example.c $(TARGET_DIR)/debug/libffi_use_rust_in_c.a $(LIBS)
 
