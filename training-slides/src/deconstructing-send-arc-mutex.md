@@ -147,7 +147,7 @@ fn main() -> Result<(), io::Error> {
 
 ## Errors
 
-<pre><code><font color="#F15D22"><b>error[E0373]</b></font><b>: closure may outlive the current function, but it borrows `log`, which is owned by the current function</b>
+<pre><code data-trim data-noescape><font color="#F15D22"><b>error[E0373]</b></font><b>: closure may outlive the current function, but it borrows `log`, which is owned by the current function</b>
 <font color="#48B9C7"><b>--&gt; </b></font>src/main.rs:26:23
 <font color="#48B9C7"><b>|</b></font>
 <font color="#48B9C7"><b>26</b></font> <font color="#48B9C7"><b>|</b></font>         thread::spawn(|| {
@@ -175,7 +175,7 @@ Solution:
 * `let mut thread_log = log.clone()` now doesn't clone the data, but simply increases the reference count
   * both variables now have *owned* type, and satisfy `F: 'static` requirement
 
-<pre><code><font color="#F15D22"><b>error[E0277]</b></font><b>: `Rc<Vec<usize>>` cannot be sent between threads safely</b>
+<pre><code data-trim data-noescape><font color="#F15D22"><b>error[E0277]</b></font><b>: `Rc<Vec<usize>>` cannot be sent between threads safely</b>
 </code></pre>
 
 ## `Rc` in Rust Standard Library

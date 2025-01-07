@@ -55,7 +55,7 @@ fn main() {
 
 ## Example: `Rc`
 
-<pre><code><font color="#FF0000"><b>error[E0277]</b></font><b>: `Rc&lt;bool&gt;` cannot be sent between threads safely</b>
+<pre><code data-trim data-noescape><font color="#FF0000"><b>error[E0277]</b></font><b>: `Rc&lt;bool&gt;` cannot be sent between threads safely</b>
    <font color="#5C5CFF"><b>--&gt; </b></font>src/main.rs:7:19
     <font color="#5C5CFF"><b>|</b></font>
 <font color="#5C5CFF"><b>7</b></font>   <font color="#5C5CFF"><b>|</b></font>       thread::spawn(move || {

@@ -55,7 +55,8 @@ fn print_string(s: String) {
 
 ## It does not...
 
-<pre><code><font color="#FF0000"><b>error[E0382]</b></font><b>: use of moved value: `s`</b>
+asdf
+<pre><code data-trim data-noescape><font color="#FF0000"><b>error[E0382]</b></font><b>: use of moved value: `s`</b>
  <font color="#5C5CFF"><b>--&gt; </b></font>src/main.rs:4:18
   <font color="#5C5CFF"><b>|</b></font>
 <font color="#5C5CFF"><b>2</b></font> <font color="#5C5CFF"><b>|</b></font>     let s = String::from(&quot;Hello 😀&quot;);

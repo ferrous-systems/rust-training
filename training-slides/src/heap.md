@@ -197,7 +197,7 @@ Note:
 
 You get an error like:
 
-<pre><code><font color="#FF0000"><b>error[E0596]</b></font><b>: cannot borrow data in an `Rc` as mutable</b>
+<pre><code data-trim data-noescape><font color="#FF0000"><b>error[E0596]</b></font><b>: cannot borrow data in an `Rc` as mutable</b>
   <font color="#5C5CFF"><b>--&gt; </b></font>src/main.rs:12:5
    <font color="#5C5CFF"><b>|</b></font>
 <font color="#5C5CFF"><b>12</b></font> <font color="#5C5CFF"><b>|</b></font>     sam.pet_dogs.push(rover);

@@ -99,7 +99,7 @@ Are there some trait bounds we could place on `T` such that `T + T -> T` and `T 
 
 ## The error:
 
-<pre><code data-trim code-noescape><font color="#FF0000"><b>error[E0599]</b></font><b>: no method named `magnitude` found for struct `Vector&lt;{integer}&gt;` in the current scope</b>
+<pre><code data-trim data-noescape><font color="#FF0000"><b>error[E0599]</b></font><b>: no method named `magnitude` found for struct `Vector&lt;{integer}&gt;` in the current scope</b>
   <font color="#5C5CFF"><b>--&gt; </b></font>src/main.rs:23:23
    <font color="#5C5CFF"><b>|</b></font>
 <font color="#5C5CFF"><b>2</b></font>  <font color="#5C5CFF"><b>|</b></font> struct Vector&lt;T&gt; {

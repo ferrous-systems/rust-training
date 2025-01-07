@@ -65,7 +65,7 @@ fn main() {
 
 ## Oh!
 
-<pre><code><font color="#FF0000"><b>error[E0499]</b></font><b>: cannot borrow `value` as mutable more than once at a time</b>
+<pre><code data-trim data-noescape><font color="#FF0000"><b>error[E0499]</b></font><b>: cannot borrow `value` as mutable more than once at a time</b>
   <font color="#5C5CFF"><b>--&gt; </b></font>src/main.rs:11:17
    <font color="#5C5CFF"><b>|</b></font>
 <font color="#5C5CFF"><b>9</b></font>  <font color="#5C5CFF"><b>|</b></font>     std::thread::scope(|s| {
@@ -107,7 +107,7 @@ fn main() {
 
 ## Oh come on...
 
-<pre><code><font color="#FF0000"><b>error[E0277]</b></font><b>: `RefCell&lt;i32&gt;` cannot be shared between threads safely</b>
+<pre><code data-trim data-noescape><font color="#FF0000"><b>error[E0277]</b></font><b>: `RefCell&lt;i32&gt;` cannot be shared between threads safely</b>
    <font color="#5C5CFF"><b>--&gt; </b></font>src/main.rs:11:17
     <font color="#5C5CFF"><b>|</b></font>
 <font color="#5C5CFF"><b>11</b></font>  <font color="#5C5CFF"><b>|</b></font>         s.spawn(|| thread_function(&amp;value));

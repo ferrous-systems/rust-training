@@ -41,7 +41,7 @@ fn producer() -> &str {
 
 No, we can't return a reference to local data...
 
-<pre><code><font color="#FF0000"><b>error[E0515]</b></font><b>: cannot return reference to local variable `s`</b>
+<pre><code data-trim data-noescape><font color="#FF0000"><b>error[E0515]</b></font><b>: cannot return reference to local variable `s`</b>
  <font color="#5C5CFF"><b>--&gt; </b></font>src/lib.rs:3:5
   <font color="#5C5CFF"><b>|</b></font>
 <font color="#5C5CFF"><b>3</b></font> <font color="#5C5CFF"><b>|</b></font>     &amp;s
@@ -52,7 +52,7 @@ No, we can't return a reference to local data...
 
 You will also see:
 
-<pre><code><font color="#FF0000"><b>error[E0106]</b></font><b>: missing lifetime specifier</b>
+<pre><code data-trim data-noescape><font color="#FF0000"><b>error[E0106]</b></font><b>: missing lifetime specifier</b>
  <font color="#5C5CFF"><b>--&gt; </b></font>src/lib.rs:1:18
   <font color="#5C5CFF"><b>|</b></font>
 <font color="#5C5CFF"><b>1</b></font> <font color="#5C5CFF"><b>|</b></font> fn producer() -&gt; &amp;str {
@@ -183,7 +183,7 @@ fn first_three_of_each<'a, 'b>(s1: &'a str, s2: &'b str) -> (&'a str, &'b str) {
 
 "The source you used in code doesn't match the tags"
 
-<pre><code><font color="#FF0000"><b>error</b></font><b>: lifetime may not live long enough</b>
+<pre><code data-trim data-noescape><font color="#FF0000"><b>error</b></font><b>: lifetime may not live long enough</b>
  <font color="#5C5CFF"><b>--&gt; </b></font>src/lib.rs:2:5
   <font color="#5C5CFF"><b>|</b></font>
 <font color="#5C5CFF"><b>1</b></font> <font color="#5C5CFF"><b>|</b></font> fn first_three_of_each&lt;&apos;a, &apos;b&gt;(s1: &amp;&apos;a str, s2: &amp;&apos;b str) -&gt; (&amp;&apos;a str, &amp;&apos;b str) {
@@ -200,7 +200,7 @@ fn first_three_of_each<'a, 'b>(s1: &'a str, s2: &'b str) -> (&'a str, &'b str) {
 
 "Produced reference *can't outlive* the source"
 
-<pre><code><font color="#FF0000"><b>error[E0597]</b></font><b>: `amsterdam` does not live long enough</b>
+<pre><code data-trim data-noescape><font color="#FF0000"><b>error[E0597]</b></font><b>: `amsterdam` does not live long enough</b>
   <font color="#5C5CFF"><b>--&gt; </b></font>src/main.rs:10:29
    <font color="#5C5CFF"><b>|</b></font>
 <font color="#5C5CFF"><b>6</b></font>  <font color="#5C5CFF"><b>|</b></font>     let amsterdam = format!(&quot;AMS Amsterdam&quot;);
