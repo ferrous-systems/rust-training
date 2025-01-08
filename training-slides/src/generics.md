@@ -99,21 +99,18 @@ Are there some trait bounds we could place on `T` such that `T + T -> T` and `T 
 
 ## The error:
 
-```text
-error[E0599]: no method named `magnitude` found for struct `Vector<{integer}>` in the current scope
-  --> src/main.rs:22:23
-   |
-1  | struct Vector<T> {
-   | ---------------- method `magnitude` not found for this struct
-...
-22 |     println!("{}", v2.magnitude());
-   |                       ^^^^^^^^^ method not found in `Vector<{integer}>`
-   |
-   = note - the method was found for
-           - `Vector<f32>`
-
-For more information about this error, try `rustc --explain E0599`.
-```
+<pre><code data-trim data-noescape><span style="color:#FF0000"><b>error[E0599]</b></span><b>: no method named `magnitude` found for struct `Vector&lt;{integer}&gt;` in the current scope</b>
+  <span style="color:#5C5CFF"><b>--&gt; </b></span>src/main.rs:23:23
+   <span style="color:#5C5CFF"><b>|</b></span>
+<span style="color:#5C5CFF"><b>2</b></span>  <span style="color:#5C5CFF"><b>|</b></span> struct Vector&lt;T&gt; {
+   <span style="color:#5C5CFF"><b>|</b></span> <span style="color:#5C5CFF"><b>----------------</b></span> <span style="color:#5C5CFF"><b>method `magnitude` not found for this struct</b></span>
+<span style="color:#5C5CFF"><b>...</b></span>
+<span style="color:#5C5CFF"><b>23</b></span> <span style="color:#5C5CFF"><b>|</b></span>     println!(&quot;{}&quot;, v2.magnitude());
+   <span style="color:#5C5CFF"><b>|</b></span>                       <span style="color:#FF0000"><b>^^^^^^^^^</b></span> <span style="color:#FF0000"><b>method not found in `Vector&lt;{integer}&gt;`</b></span>
+   <span style="color:#5C5CFF"><b>|</b></span>
+   <span style="color:#5C5CFF"><b>= </b></span><b>note</b>: the method was found for
+           - `Vector&lt;f32&gt;`
+<b>For more information about this error, try `rustc --explain E0599`.</b></code></pre>
 
 ## Adding Bounds
 
@@ -275,7 +272,7 @@ Traits themselves can have type parameters too!
 trait HasArea<T> {
     fn area(&self) -> T;
 }
- 
+
 // Here we only accept a shape where the `U` in `HasArea<Y>` is printable
 fn print_area<T, U>(shape: &T) where T: HasArea<U>, U: std::fmt::Debug {
     let area = shape.area();
@@ -289,7 +286,6 @@ impl HasArea<f64> for UnitSquare {
         1.0
     }
 }
-
 fn main() {
     let u = UnitSquare;
     print_area(&u);
@@ -315,4 +311,3 @@ Things that don't have sizes known at compile time (but which may or may not imp
 
 * String Slices
 * Closures
-

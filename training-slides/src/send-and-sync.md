@@ -25,7 +25,7 @@ struct Thing;
 // Can send between threads!
 fn main() {
     let thing = Thing;
-    
+
     thread::spawn(move || {
         println!("{:?}", thing);
     }).join().unwrap();
@@ -55,13 +55,35 @@ fn main() {
 
 ## Example: `Rc`
 
-```text
-error[E0277]: the trait bound `std::rc::Rc<bool>: std::marker::Send` is not satisfied
- --> <anon>:7:5
-  |
-7 |     thread::spawn(move || {
-  |     ^^^^^^^^^^^^^ the trait `std::marker::Send` is not implemented for `std::rc::Rc<bool>`
-```
+<pre><code data-trim data-noescape><span style="color:#FF0000"><b>error[E0277]</b></span><b>: `Rc&lt;bool&gt;` cannot be sent between threads safely</b>
+   <span style="color:#5C5CFF"><b>--&gt; </b></span>src/main.rs:7:19
+    <span style="color:#5C5CFF"><b>|</b></span>
+<span style="color:#5C5CFF"><b>7</b></span>   <span style="color:#5C5CFF"><b>|</b></span>       thread::spawn(move || {
+    <span style="color:#5C5CFF"><b>|</b></span>       <span style="color:#5C5CFF"><b>-------------</b></span> <span style="color:#FF0000"><b>^</b></span><span style="color:#5C5CFF"><b>------</b></span>
+    <span style="color:#5C5CFF"><b>|</b></span>       <span style="color:#5C5CFF"><b>|</b></span>             <span style="color:#FF0000"><b>|</b></span>
+    <span style="color:#5C5CFF"><b>|</b></span>  <span style="color:#FF0000"><b>_____</b></span><span style="color:#5C5CFF"><b>|</b></span><span style="color:#FF0000"><b>_____________</b></span><span style="color:#5C5CFF"><b>within this `{closure@src/main.rs:7:19: 7:26}`</b></span>
+    <span style="color:#5C5CFF"><b>|</b></span> <span style="color:#FF0000"><b>|</b></span>     <span style="color:#5C5CFF"><b>|</b></span>
+    <span style="color:#5C5CFF"><b>|</b></span> <span style="color:#FF0000"><b>|</b></span>     <span style="color:#5C5CFF"><b>required by a bound introduced by this call</b></span>
+<span style="color:#5C5CFF"><b>8</b></span>   <span style="color:#5C5CFF"><b>|</b></span> <span style="color:#FF0000"><b>|</b></span>         println!(&quot;{:?}&quot;, value);
+<span style="color:#5C5CFF"><b>9</b></span>   <span style="color:#5C5CFF"><b>|</b></span> <span style="color:#FF0000"><b>|</b></span>     }).join().unwrap();
+    <span style="color:#5C5CFF"><b>|</b></span> <span style="color:#FF0000"><b>|_____^</b></span> <span style="color:#FF0000"><b>`Rc&lt;bool&gt;` cannot be sent between threads safely</b></span>
+    <span style="color:#5C5CFF"><b>|</b></span>
+    <span style="color:#5C5CFF"><b>= </b></span><b>help</b>: within `{closure@src/main.rs:7:19: 7:26}`, the trait `Send` is not implemented for `Rc&lt;bool&gt;`, which is required by `{closure@src/main.rs:7:19: 7:26}: Send`
+<span style="color:#00FF00"><b>note</b></span>: required because it&apos;s used within this closure
+   <span style="color:#5C5CFF"><b>--&gt; </b></span>src/main.rs:7:19
+    <span style="color:#5C5CFF"><b>|</b></span>
+<span style="color:#5C5CFF"><b>7</b></span>   <span style="color:#5C5CFF"><b>|</b></span>     thread::spawn(move || {
+    <span style="color:#5C5CFF"><b>|</b></span>                   <span style="color:#00FF00"><b>^^^^^^^</b></span>
+<span style="color:#00FF00"><b>note</b></span>: required by a bound in `spawn`
+   <span style="color:#5C5CFF"><b>--&gt; </b></span>/home/mrg/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/lib/rustlib/src/rust/library/std/src/thread/mod.rs:675:8
+    <span style="color:#5C5CFF"><b>|</b></span>
+<span style="color:#5C5CFF"><b>672</b></span> <span style="color:#5C5CFF"><b>|</b></span> pub fn spawn&lt;F, T&gt;(f: F) -&gt; JoinHandle&lt;T&gt;
+    <span style="color:#5C5CFF"><b>|</b></span>        <span style="color:#5C5CFF"><b>-----</b></span> <span style="color:#5C5CFF"><b>required by a bound in this function</b></span>
+<span style="color:#5C5CFF"><b>...</b></span>
+<span style="color:#5C5CFF"><b>675</b></span> <span style="color:#5C5CFF"><b>|</b></span>     F: Send + &apos;static,
+    <span style="color:#5C5CFF"><b>|</b></span>        <span style="color:#00FF00"><b>^^^^</b></span> <span style="color:#00FF00"><b>required by this bound in `spawn`</b></span>
+<b>For more information about this error, try `rustc --explain E0277`.</b>
+</code></pre>
 
 ## Implementing
 

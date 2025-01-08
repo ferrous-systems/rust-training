@@ -10,7 +10,7 @@ But what does that mean?
 #include <stdio.h>
 #include <stdlib.h>
 #include <pthread.h>
-  
+
 void *thread_function(void *p_arg) {
     int* p = (int*) p_arg;
     for(int i = 0; i < 1000000; i++) {
@@ -18,7 +18,7 @@ void *thread_function(void *p_arg) {
     }
     return NULL;
 }
-   
+
 int main() {
     int value = 0;
     pthread_t thread1, thread2;
@@ -52,7 +52,7 @@ fn thread_function(arg: &mut i32) {
         *arg += 1;
     }
 }
-   
+
 fn main() {
     let mut value = 0;
     std::thread::scope(|s| {
@@ -65,23 +65,23 @@ fn main() {
 
 ## Oh!
 
-```text
-error[E0499]: cannot borrow `value` as mutable more than once at a time
-  --> ./src/thread-safety.md:60:17
-   |
-10 |     std::thread::scope(|s| {
-   |                         - has type `&'1 Scope<'1, '_>`
-11 |         s.spawn(|| thread_function(&mut value));
-   |         ---------------------------------------
-   |         |       |                       |
-   |         |       |                       first borrow occurs due to use of `value` in closure
-   |         |       first mutable borrow occurs here
-   |         argument requires that `value` is borrowed for `'1`
-12 |         s.spawn(|| thread_function(&mut value));
-   |                 ^^                      ----- second borrow occurs due to use of `value` in closure
-   |                 |
-   |                 second mutable borrow occurs here
-```
+<pre><code data-trim data-noescape><span style="color:#FF0000"><b>error[E0499]</b></span><b>: cannot borrow `value` as mutable more than once at a time</b>
+  <span style="color:#5C5CFF"><b>--&gt; </b></span>src/main.rs:11:17
+   <span style="color:#5C5CFF"><b>|</b></span>
+<span style="color:#5C5CFF"><b>9</b></span>  <span style="color:#5C5CFF"><b>|</b></span>     std::thread::scope(|s| {
+   <span style="color:#5C5CFF"><b>|</b></span>                         <span style="color:#5C5CFF"><b>-</b></span> <span style="color:#5C5CFF"><b>has type `&amp;&apos;1 Scope&lt;&apos;1, &apos;_&gt;`</b></span>
+<span style="color:#5C5CFF"><b>10</b></span> <span style="color:#5C5CFF"><b>|</b></span>         s.spawn(|| thread_function(&amp;mut value));
+   <span style="color:#5C5CFF"><b>|</b></span>         <span style="color:#5C5CFF"><b>---------------------------------------</b></span>
+   <span style="color:#5C5CFF"><b>|</b></span>         <span style="color:#5C5CFF"><b>|</b></span>       <span style="color:#5C5CFF"><b>|</b></span>                       <span style="color:#5C5CFF"><b>|</b></span>
+   <span style="color:#5C5CFF"><b>|</b></span>         <span style="color:#5C5CFF"><b>|</b></span>       <span style="color:#5C5CFF"><b>|</b></span>                       <span style="color:#5C5CFF"><b>first borrow occurs due to use of `value` in closure</b></span>
+   <span style="color:#5C5CFF"><b>|</b></span>         <span style="color:#5C5CFF"><b>|</b></span>       <span style="color:#5C5CFF"><b>first mutable borrow occurs here</b></span>
+   <span style="color:#5C5CFF"><b>|</b></span>         <span style="color:#5C5CFF"><b>argument requires that `value` is borrowed for `&apos;1`</b></span>
+<span style="color:#5C5CFF"><b>11</b></span> <span style="color:#5C5CFF"><b>|</b></span>         s.spawn(|| thread_function(&amp;mut value));
+   <span style="color:#5C5CFF"><b>|</b></span>                 <span style="color:#FF0000"><b>^^</b></span>                      <span style="color:#5C5CFF"><b>-----</b></span> <span style="color:#5C5CFF"><b>second borrow occurs due to use of `value` in closure</b></span>
+   <span style="color:#5C5CFF"><b>|</b></span>                 <span style="color:#FF0000"><b>|</b></span>
+   <span style="color:#5C5CFF"><b>|</b></span>                 <span style="color:#FF0000"><b>second mutable borrow occurs here</b></span>
+<b>For more information about this error, try `rustc --explain E0499`.</b>
+</code></pre>
 
 It's our old friend/enemy shared mutability!
 
@@ -94,7 +94,7 @@ fn thread_function(arg: &std::cell::RefCell<i32>) {
         *p += 1;
     }
 }
-   
+
 fn main() {
     let mut value = std::cell::RefCell::new(0);
     std::thread::scope(|s| {
@@ -107,19 +107,32 @@ fn main() {
 
 ## Oh come on...
 
-```text
-error[E0277]: `RefCell<i32>` cannot be shared between threads safely
-   --> ./src/thread-safety.md:101:17
-    |
-12  |         s.spawn(|| thread_function(&value));
-    |           ----- ^^^^^^^^^^^^^^^^^^^^^^^^^^ `RefCell<i32>` cannot be shared between threads safely
-    |           |
-    |           required by a bound introduced by this call
-    |
-    = help: the trait `Sync` is not implemented for `RefCell<i32>`
-    = note: if you want to do aliasing and mutation between multiple threads, use `std::sync::RwLock` instead
-    = note: required for `&RefCell<i32>` to implement `Send`
-```
+<pre><code data-trim data-noescape><span style="color:#FF0000"><b>error[E0277]</b></span><b>: `RefCell&lt;i32&gt;` cannot be shared between threads safely</b>
+   <span style="color:#5C5CFF"><b>--&gt; </b></span>src/main.rs:11:17
+    <span style="color:#5C5CFF"><b>|</b></span>
+<span style="color:#5C5CFF"><b>11</b></span>  <span style="color:#5C5CFF"><b>|</b></span>         s.spawn(|| thread_function(&amp;value));
+    <span style="color:#5C5CFF"><b>|</b></span>           <span style="color:#5C5CFF"><b>-----</b></span> <span style="color:#FF0000"><b>^^^^^^^^^^^^^^^^^^^^^^^^^^</b></span> <span style="color:#FF0000"><b>`RefCell&lt;i32&gt;` cannot be shared between threads safely</b></span>
+    <span style="color:#5C5CFF"><b>|</b></span>           <span style="color:#5C5CFF"><b>|</b></span>
+    <span style="color:#5C5CFF"><b>|</b></span>           <span style="color:#5C5CFF"><b>required by a bound introduced by this call</b></span>
+    <span style="color:#5C5CFF"><b>|</b></span>
+    <span style="color:#5C5CFF"><b>= </b></span><b>help</b>: the trait `Sync` is not implemented for `RefCell&lt;i32&gt;`, which is required by `{closure@src/main.rs:11:17: 11:19}: Send`
+    <span style="color:#5C5CFF"><b>= </b></span><b>note</b>: if you want to do aliasing and mutation between multiple threads, use `std::sync::RwLock` instead
+    <span style="color:#5C5CFF"><b>= </b></span><b>note</b>: required for `&amp;RefCell&lt;i32&gt;` to implement `Send`
+<span style="color:#00FF00"><b>note</b></span>: required because it&apos;s used within this closure
+   <span style="color:#5C5CFF"><b>--&gt; </b></span>src/main.rs:11:17
+    <span style="color:#5C5CFF"><b>|</b></span>
+<span style="color:#5C5CFF"><b>11</b></span>  <span style="color:#5C5CFF"><b>|</b></span>         s.spawn(|| thread_function(&amp;value));
+    <span style="color:#5C5CFF"><b>|</b></span>                 <span style="color:#00FF00"><b>^^</b></span>
+<span style="color:#00FF00"><b>note</b></span>: required by a bound in `Scope::&lt;&apos;scope, &apos;env&gt;::spawn`
+   <span style="color:#5C5CFF"><b>--&gt; </b></span>/home/mrg/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/lib/rustlib/src/rust/library/std/src/thread/scoped.rs:196:28
+    <span style="color:#5C5CFF"><b>|</b></span>
+<span style="color:#5C5CFF"><b>194</b></span> <span style="color:#5C5CFF"><b>|</b></span>     pub fn spawn&lt;F, T&gt;(&amp;&apos;scope self, f: F) -&gt; ScopedJoinHandle&lt;&apos;scope, T&gt;
+    <span style="color:#5C5CFF"><b>|</b></span>            <span style="color:#5C5CFF"><b>-----</b></span> <span style="color:#5C5CFF"><b>required by a bound in this associated function</b></span>
+<span style="color:#5C5CFF"><b>195</b></span> <span style="color:#5C5CFF"><b>|</b></span>     where
+<span style="color:#5C5CFF"><b>196</b></span> <span style="color:#5C5CFF"><b>|</b></span>         F: FnOnce() -&gt; T + Send + &apos;scope,
+    <span style="color:#5C5CFF"><b>|</b></span>                            <span style="color:#00FF00"><b>^^^^</b></span> <span style="color:#00FF00"><b>required by this bound in `Scope::&lt;&apos;scope, &apos;env&gt;::spawn`</b></span>
+<b>For more information about this error, try `rustc --explain E0277`.</b>
+</code></pre>
 
 ## What is Send?
 
@@ -155,7 +168,7 @@ fn thread_function(arg: &std::sync::Mutex<i32>) {
         *p += 1;
     }
 }
-   
+
 fn main() {
     let value = std::sync::Mutex::new(0);
     std::thread::scope(|s| {
@@ -185,7 +198,7 @@ fn thread_function(arg: &std::sync::Mutex<i32>) {
         *p += 1;
     }
 }
-   
+
 fn main() {
     let value = std::sync::Arc::new(std::sync::Mutex::new(0));
     let t1 = std::thread::spawn({
@@ -237,7 +250,7 @@ fn thread_function(arg: &AtomicI32) {
         arg.fetch_add(1, Ordering::Relaxed);
     }
 }
-   
+
 fn main() {
     let value = AtomicI32::new(0);
     std::thread::scope(|s| {
@@ -247,4 +260,3 @@ fn main() {
     println!("value = {}", value.load(Ordering::Relaxed));
 }
 ```
-

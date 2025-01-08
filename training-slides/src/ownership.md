@@ -53,20 +53,31 @@ fn print_string(s: String) {
 }
 ```
 
-## It does not...
+## It does not!
 
-```text
-error[E0382]: use of moved value: `s`
- --> src/main.rs:4:18
-  |
-2 |     let s = String::from("Hello 😀");
-  |         - move occurs because `s` has type `String`, which does not implement the `Copy` trait
-3 |     print_string(s);
-  |                  - value moved here
-4 |     print_string(s);
-  |                  ^ value used here after move
-  |
-```
+<pre><code data-trim data-noescape><span style="color:#FF0000"><b>error[E0382]</b></span><b>: use of moved value: `s`</b>
+ <span style="color:#5C5CFF"><b>--&gt; </b></span>src/main.rs:4:18
+  <span style="color:#5C5CFF"><b>|</b></span>
+<span style="color:#5C5CFF"><b>2</b></span> <span style="color:#5C5CFF"><b>|</b></span>     let s = String::from(&quot;Hello 😀&quot;);
+  <span style="color:#5C5CFF"><b>|</b></span>         <span style="color:#5C5CFF"><b>-</b></span> <span style="color:#5C5CFF"><b>move occurs because `s` has type `String`, which does not implement the `Copy` trait</b></span>
+<span style="color:#5C5CFF"><b>3</b></span> <span style="color:#5C5CFF"><b>|</b></span>     print_string(s);
+  <span style="color:#5C5CFF"><b>|</b></span>                  <span style="color:#5C5CFF"><b>-</b></span> <span style="color:#5C5CFF"><b>value moved here</b></span>
+<span style="color:#5C5CFF"><b>4</b></span> <span style="color:#5C5CFF"><b>|</b></span>     print_string(s);
+  <span style="color:#5C5CFF"><b>|</b></span>                  <span style="color:#FF0000"><b>^</b></span> <span style="color:#FF0000"><b>value used here after move</b></span>
+  <span style="color:#5C5CFF"><b>|</b></span>
+<span style="color:#00FF00"><b>note</b></span>: consider changing this parameter type in function `print_string` to borrow instead if owning the value isn&apos;t necessary
+ <span style="color:#5C5CFF"><b>--&gt; </b></span>src/main.rs:7:20
+  <span style="color:#5C5CFF"><b>|</b></span>
+<span style="color:#5C5CFF"><b>7</b></span> <span style="color:#5C5CFF"><b>|</b></span> fn print_string(s: String) {
+  <span style="color:#5C5CFF"><b>|</b></span>    <span style="color:#5C5CFF"><b>------------</b></span>    <span style="color:#00FF00"><b>^^^^^^</b></span> <span style="color:#00FF00"><b>this parameter takes ownership of the value</b></span>
+  <span style="color:#5C5CFF"><b>|</b></span>    <span style="color:#5C5CFF"><b>|</b></span>
+  <span style="color:#5C5CFF"><b>|</b></span>    <span style="color:#5C5CFF"><b>in this function</b></span>
+<span style="color:#00FFFF"><b>help</b></span>: consider cloning the value if the performance cost is acceptable
+  <span style="color:#5C5CFF"><b>|</b></span>
+<span style="color:#5C5CFF"><b>3</b></span> <span style="color:#5C5CFF"><b>| </b></span>    print_string(s<span style="color:#00FF00">.clone()</span>);
+  <span style="color:#5C5CFF"><b>|</b></span>                   <span style="color:#00FF00">++++++++</span>
+<b>For more information about this error, try `rustc --explain E0382`.</b>
+</code></pre>
 
 ## Background
 
