@@ -198,13 +198,13 @@ pub fn make_cheatsheet(lang: &str) -> Result<(), eyre::Report> {
 
 /// Verify that a cheatsheet has all the right headings in the right order
 pub fn test_cheatsheet(lang: &str) -> Result<(), eyre::Report> {
-    // Collect Vec<SlideSection>
+    // Collect Vec<SlideSection> from SUMMARY.md
     let text = read_to_string("./training-slides/src/SUMMARY.md")
         .context("could not read_to_string - SUMMARY.md not found")?;
     let slide_texts = focus_regions(&text);
     let slide_sections: Vec<SlidesSection> = slide_texts.iter().map(|l| extract_decks(l)).collect();
 
-    // Collect SlideSections and slide titles
+    // Collect Vec<String> from lang-cheatsheet.md
     let file_name = format!("./training-slides/src/{lang}-cheatsheet.md");
     let cheatsheet_text = read_to_string(file_name)
         .with_context(|| eyre::eyre!("{lang}-cheatsheet.md not found."))?;
@@ -218,12 +218,16 @@ pub fn test_cheatsheet(lang: &str) -> Result<(), eyre::Report> {
     let first_line = cheatsheet_lines
         .first()
         .expect("Cheatsheet should not be empty");
+
+    //compare_slidesections_to_vec_strings(vs, vslides);
     let mut missing_files = false;
     let mut idx = 0;
     for line in cheatsheet_lines.iter() {
+        println!("{line}");
         if line.starts_with("# ") {
             if line != first_line {
                 idx += 1;
+
                 // Check if people have added extra headers - leave them alone
                 // so that lang - specific advice doesn't have to correlate to slides
                 // if it goes at the end
@@ -239,9 +243,11 @@ pub fn test_cheatsheet(lang: &str) -> Result<(), eyre::Report> {
             }
         }
         if line.starts_with("## ") {
+            //println!("line is {line}");
             let slide_title = line
                 .strip_prefix("## ")
                 .context("Expected the line to start with `## `")?;
+            //println!("{:?}", slide_sections[idx]);
             if !(slide_sections[idx].deck_titles).contains(&slide_title.to_string()) {
                 eprintln!(
                     "{} is not in {lang}-cheatsheet.md under expected header {}",
