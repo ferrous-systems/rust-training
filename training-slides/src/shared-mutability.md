@@ -95,10 +95,7 @@ This isn't ideal! `view` takes a `&mut self`, meaning this won't work:
 
 ```rust []
 fn main() {
-    let post = Post {
-        content: String::from("Blah"),
-        ..Post::default()
-    };
+    let post = Post { content: "Blah".into(), ..Post::default() };
     // This line is a compile error!
     // println!("{}", post.view());
 }
@@ -125,10 +122,7 @@ impl Post {
 ```rust []
 fn main() {
     // We need to make the entire struct mutable!
-    let mut post = Post {
-        content: String::from("Blah"),
-        ..Post::default()
-    };
+    let mut post = Post { content: "Blah".into(), ..Post::default() };
     println!("{}", post.view());
     // Now this is allowed too...
     post.content.push_str(" - extra content");
@@ -157,7 +151,7 @@ Let's see our previous example with `Cell`.
 ```rust []
 fn main() {
     let post = Post {
-        content: String::from("Blah"),
+        content: "Blah".into(),
         ..Post::default()
     };
     println!("{}", post.view());
@@ -179,11 +173,52 @@ impl Post {
 }
 ```
 
+Note:
+
+As an in-depth example of the borrow checker's limitations, consider the [Splitting Borrows](https://doc.rust-lang.org/nomicon/borrow-splitting.html) idiom, which allows one to borrow different fields of the same struct with different mutability semantics:
+
+```rust
+struct Foo {
+    a: i32,
+    b: i32,
+    c: i32,
+}
+
+let mut x = Foo {a: 0, b: 0, c: 0};
+let a = &mut x.a;
+let b = &mut x.b;
+let c = &x.c;
+*b += 1;
+let c2 = &x.c;
+*a += 10;
+println!("{} {} {} {}", a, b, c, c2);
+```
+
+The code works, but, once you have mutably borrowed a field you cannot mutably borrow the whole value (e.g. by calling a method on it) at the same time - otherwise you could get two mutable references to the same field at the same time.
+
+Here's an example where tuple fields are special-cased for the borrow checker:
+
+```rust ignore
+let mut z = (1, 2);
+let r = &z.1;
+z.0 += 1;
+println!("{:?}, {}", z, r);
+```
+
+but fails on an equivalent array
+
+```rust ignore
+let mut z = [1, 2];
+let r = &z[1];
+z[0] += 1;
+println!("{:?}, {}", z, r);
+```
+
 ## `RefCell`
 
 A `RefCell` is also safe, but lets you *borrow* or *mutably borrow* the contents.
 
-The borrow-checking is deferred to *run-time*
+The borrow checking is deferred to *run-time*
 
 ## Using `RefCell`
 
@@ -213,10 +248,7 @@ Let's see our previous example with `RefCell`.
 
 ```rust []
 fn main() {
-    let post = Post {
-        content: String::from("Blah"),
-        ..Post::default()
-    };
+    let post = Post { content: "Blah".into(), ..Post::default() };
     println!("{}", post.view());
 }
 
@@ -252,3 +284,26 @@ To get *shared ownership* and *mutability* you need two things:
 
 * `Rc<RefCell<T>>`
 * (Multi-threaded programs might use `Arc<Mutex<T>>`)
+
+## `OnceCell` for special cases
+
+A `OnceCell` lets you initialise a value using `&self`, but not subsequently modify it.
+
+```rust
+fn main() {
+    let post: Post = Post { content: "Blah".into(), ..Post::default() };
+    println!("{:?}", post.first_viewed());
+}
+
+#[derive(Debug, Default)]
+struct Post {
+    content: String,
+    first_viewed_at: std::cell::OnceCell<std::time::Instant>,
+}
+
+impl Post {
+    fn first_viewed(&self) -> std::time::Instant {
+        self.first_viewed_at.get_or_init(std::time::Instant::now).clone()
+    }
+}
+```
