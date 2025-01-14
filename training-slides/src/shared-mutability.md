@@ -296,7 +296,7 @@ To get *shared ownership* and *mutability* you need two things:
 
 ## `OnceCell` for special cases
 
-If you only need to modify a field *once*, a [OnceCell](https://doc.rust-lang.org/stable/std/cell/struct.OnceCell.html) can help you keep the ownership system checks at compile-time.
+A `OnceCell` lets you initialise a value using `&self`, but not subsequently modify it.
 
 ```rust
 use std::time::Instant;
