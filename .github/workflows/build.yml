@@ -161,7 +161,7 @@ jobs:
     runs-on: ubuntu-20.04
     steps:
       - uses: actions/checkout@v4
-    
+ 
       - name: Install Critical Up
         run: |
           curl --proto '=https' --tlsv1.2 -LsSf https://github.com/ferrocene/criticalup/releases/download/v1.1.0/criticalup-installer.sh | sh
@@ -197,7 +197,7 @@ jobs:
     runs-on: ubuntu-20.04
     steps:
       - uses: actions/checkout@v4
-    
+ 
       - name: Add Rust Targets and Tools
         run: |
           rustup target add thumbv7em-none-eabihf
