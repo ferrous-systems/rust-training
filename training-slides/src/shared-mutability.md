@@ -95,10 +95,7 @@ This isn't ideal! `view` takes a `&mut self`, meaning this won't work:
 
 ```rust []
 fn main() {
-    let post = Post {
-        content: String::from("Blah"),
-        ..Post::default()
-    };
+    let post = Post { content: "Blah".into(), ..Post::default() };
     // This line is a compile error!
     // println!("{}", post.view());
 }
@@ -125,10 +122,7 @@ impl Post {
 ```rust []
 fn main() {
     // We need to make the entire struct mutable!
-    let mut post = Post {
-        content: String::from("Blah"),
-        ..Post::default()
-    };
+    let mut post = Post { content: "Blah".into(), ..Post::default() };
     println!("{}", post.view());
     // Now this is allowed too...
     post.content.push_str(" - extra content");
@@ -157,7 +151,7 @@ Let's see our previous example with `Cell`.
 ```rust []
 fn main() {
     let post = Post {
-        content: String::from("Blah"),
+        content: "Blah".into(),
         ..Post::default()
     };
     println!("{}", post.view());
@@ -254,10 +248,7 @@ Let's see our previous example with `RefCell`.
 
 ```rust []
 fn main() {
-    let post = Post {
-        content: String::from("Blah"),
-        ..Post::default()
-    };
+    let post = Post { content: "Blah".into(), ..Post::default() };
     println!("{}", post.view());
 }
 
@@ -299,27 +290,20 @@ To get *shared ownership* and *mutability* you need two things:
 A `OnceCell` lets you initialise a value using `&self`, but not subsequently modify it.
 
 ```rust
-use std::time::Instant;
-
 fn main() {
-    let post = Post {
-        content: String::from("Blah"),
-        ..Post::default()
-    };
-    assert!(post.first_viewed_at.get().is_none());
-    println!("{:?}", post.date_of_first_view());
-    assert!(post.first_viewed_at.get().is_some());
+    let post: Post = Post { content: "Blah".into(), ..Post::default() };
+    println!("{:?}", post.first_viewed());
 }
 
 #[derive(Debug, Default)]
 struct Post {
     content: String,
-    first_viewed_at: std::cell::OnceCell<Instant>,
+    first_viewed_at: std::cell::OnceCell<std::time::Instant>,
 }
 
 impl Post {
-    fn date_of_first_view(&self) -> Instant {
-        *self.first_viewed_at.get_or_init(Instant::now)
+    fn first_viewed(&self) -> std::time::Instant {
+        self.first_viewed_at.get_or_init(std::time::Instant::now).clone()
     }
 }
 ```
