@@ -10,7 +10,7 @@ use std::env;
 
 use tasks::*;
 
-static LANG_LIST: [&str; 7] = ["python", "go", "cpp", "swift", "java", "julia", "c"];
+static LANG_LIST: [&str; 8] = ["python", "go", "ruby", "swift", "java", "julia", "c", "cpp"];
 static HELP_TEXT: &str = "cargo xtask
 
 USAGE:
@@ -76,7 +76,7 @@ fn join_str(input: &[&str]) -> String {
     let mut iter = input.iter().peekable();
     while let Some(lang) = iter.next() {
         if iter.peek().is_none() {
-            output += " or ";
+            output += "or ";
             output += lang;
         } else {
             output += lang;

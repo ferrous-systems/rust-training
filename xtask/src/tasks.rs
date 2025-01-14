@@ -45,7 +45,7 @@
 //!
 //! Lastly, `test-all-cheatsheets` is just a convinience function to test all existing cheatsheets at once.
 
-use eyre::{ContextCompat, WrapErr};
+use eyre::WrapErr;
 use std::{
     fs::{read_to_string, File},
     io::Write,
@@ -63,6 +63,19 @@ const INITIAL_HEADER: &str = "# Rust Fundamentals";
 ///
 /// We also verify that this header exists.
 const LAST_HEADER: &str = "# No-Std Rust";
+
+/// How many headers we are processing.
+///
+/// We use this to split the cheatsheet into `NUM_HEADERS` headers
+const _NUM_HEADERS: usize = 4;
+
+/// All the headers
+const HEADERS: [&str; 4] = [
+    INITIAL_HEADER,
+    "# Applied Rust",
+    "# Advanced Rust",
+    "# Rust and Web Assembly",
+];
 
 /// Describes a section of the training material.
 #[derive(Debug, Eq, PartialEq, Default)]
@@ -108,10 +121,10 @@ fn focus_regions(text: &str) -> Vec<Vec<String>> {
 
     // These are loud checks to see if we've migrated any of our Big Sections away from their conventional names.
     if !text.contains(INITIAL_HEADER) {
-        panic!("Your INITIAL_HEADER is not part of the input. Check your `SUMMARY.md` for {INITIAL_HEADER}");
+        panic!("Your INITIAL_HEADER ({INITIAL_HEADER:?}) is not part of the input. Check your `SUMMARY.md` for {INITIAL_HEADER}");
     }
     if !text.contains(LAST_HEADER) {
-        panic!("YOUR LAST_HEADER is not part of the text input. CHECK your `SUMMARY.md` for {LAST_HEADER}");
+        panic!("Your LAST_HEADER ({LAST_HEADER:?}) is not part of the text input. CHECK your `SUMMARY.md` for {LAST_HEADER}");
     }
 
     let Some(first_header) = text.find(INITIAL_HEADER) else {
@@ -149,11 +162,11 @@ fn focus_regions(text: &str) -> Vec<Vec<String>> {
 /// Convert a list of strings into a [`SlidesSection`]
 ///
 /// The first string is the heading and the test are slide deck titles
-fn extract_decks(chunk: &[String]) -> SlidesSection {
+fn list_of_strings_to_slide_section(chunk: &[String]) -> SlidesSection {
     assert!(chunk.len() >= 2);
     // '# Rust Fundamentals' -> 'Rust Fundamentals'
     let Some(header) = chunk[0].strip_prefix("# ") else {
-        panic!("Malformed header {:?}?!", chunk[0]);
+        panic!("Malformed header '{:?}'", chunk[0]);
     };
 
     let deck_titles = chunk[1..]
@@ -173,7 +186,10 @@ pub fn make_cheatsheet(lang: &str) -> Result<(), eyre::Report> {
     let text =
         read_to_string("./training-slides/src/SUMMARY.md").context("SUMMARY.md not found")?;
     let slide_texts = focus_regions(&text);
-    let slide_sections: Vec<SlidesSection> = slide_texts.iter().map(|l| extract_decks(l)).collect();
+    let slide_sections: Vec<SlidesSection> = slide_texts
+        .iter()
+        .map(|l| list_of_strings_to_slide_section(l))
+        .collect();
 
     // Check to see if a file exists
     let file_str = format!("./training-slides/src/{lang}-cheatsheet.md");
@@ -202,63 +218,82 @@ pub fn test_cheatsheet(lang: &str) -> Result<(), eyre::Report> {
     let text = read_to_string("./training-slides/src/SUMMARY.md")
         .context("could not read_to_string - SUMMARY.md not found")?;
     let slide_texts = focus_regions(&text);
-    let slide_sections: Vec<SlidesSection> = slide_texts.iter().map(|l| extract_decks(l)).collect();
+    let slide_sections: Vec<SlidesSection> = slide_texts
+        .iter()
+        .map(|l| list_of_strings_to_slide_section(l))
+        .collect();
 
-    // Collect Vec<String> from lang-cheatsheet.md
+    // Collect Vec<String> from lang-cheatsheet.md into chunks
     let file_name = format!("./training-slides/src/{lang}-cheatsheet.md");
     let cheatsheet_text = read_to_string(file_name)
         .with_context(|| eyre::eyre!("{lang}-cheatsheet.md not found."))?;
-    let cheatsheet_lines = cheatsheet_text
-        .lines()
-        // Tricky: We only care about entries that start with '#'
-        .filter(|l| l.starts_with("#"))
-        .map(|l| l.to_string())
-        .collect::<Vec<String>>();
 
-    let first_line = cheatsheet_lines
+    let mut chunked_cheatsheet: Vec<Vec<String>> = Vec::new();
+    let mut current_section: Vec<String> = Vec::new();
+
+    // Skip anything that doesn't start with '#', we don't care about them.
+    for line in cheatsheet_text.lines() {
+        if line.is_empty() || !line.starts_with('#') {
+            continue;
+        }
+        // We found a new header if it starts with "# ", so start a new section/Vec<String> we can slide names into
+        if line.starts_with("# ") && !current_section.is_empty() {
+            chunked_cheatsheet.push(current_section);
+            current_section = Vec::new();
+        }
+        current_section.push(line.to_string());
+    }
+
+    if !current_section.is_empty() {
+        chunked_cheatsheet.push(current_section);
+    }
+    // End collection
+
+    let _first_line = chunked_cheatsheet
         .first()
         .expect("Cheatsheet should not be empty");
 
-    //compare_slidesections_to_vec_strings(vs, vslides);
     let mut missing_files = false;
-    let mut idx = 0;
-    for line in cheatsheet_lines.iter() {
-        println!("{line}");
-        if line.starts_with("# ") {
-            if line != first_line {
-                idx += 1;
+    if chunked_cheatsheet.len() != _NUM_HEADERS {
+        eprintln!("You are missing headers in {lang}-cheatsheet.md");
+        missing_files = true;
+    }
 
-                // Check if people have added extra headers - leave them alone
-                // so that lang - specific advice doesn't have to correlate to slides
-                // if it goes at the end
-                if idx == slide_sections.len() {
-                    eprintln!("Neat! {lang}-cheatsheet.md is in sync AND contains some extra info at the end");
-                    return Ok(());
-                }
-            }
-            let header = line.strip_prefix("# ").unwrap();
-            if header != slide_sections[idx].header {
-                eprintln!("{} header should be {}", line, slide_sections[idx].header);
-                missing_files = true;
-            }
+    for (idx, section) in chunked_cheatsheet.iter().enumerate() {
+        // Check that headers from SUMMARY.md are in the lang-cheatsheet.md
+        if HEADERS[idx] != section[0] {
+            eprintln!(
+                "Header Error: '{}' should be in {lang}-cheatsheet.md",
+                HEADERS[idx]
+            );
+            missing_files = true;
         }
-        if line.starts_with("## ") {
-            //println!("line is {line}");
-            let slide_title = line
-                .strip_prefix("## ")
-                .context("Expected the line to start with `## `")?;
-            //println!("{:?}", slide_sections[idx]);
-            if !(slide_sections[idx].deck_titles).contains(&slide_title.to_string()) {
+
+        // If there's only a header, just skip the next part
+        if section.len() == 1 {
+            eprintln!(
+                "You are missing *ALL* the slide decks under the {} header",
+                HEADERS[idx]
+            );
+            missing_files = true;
+            continue;
+        }
+        // Check that slides from slide section are under correct header in lang-cheatsheet.md
+        for deck in &slide_sections[idx].deck_titles {
+            if !section[1..]
+                .iter()
+                .any(|l| *l == (String::from("## ") + deck))
+            {
                 eprintln!(
-                    "{} is not in {lang}-cheatsheet.md under expected header {}",
-                    slide_title, slide_sections[idx].header
+                    "Slide Section '{}' in {lang}-cheatsheet.md is not under header {}",
+                    deck, HEADERS[idx]
                 );
                 missing_files = true;
             }
         }
     }
     if missing_files {
-        panic!("You have missing slides");
+        panic!("You have missing slides in {lang}-cheatsheet.md");
     } else {
         eprintln!("Neat! {lang}-cheatsheet.md is in sync");
         Ok(())
@@ -364,7 +399,7 @@ Rust for the Linux Kernel and other no-std environments with an pre-existing C A
             deck_titles: slide_titles,
         };
         let region = focus_regions(test);
-        assert_eq!(extract_decks(&region[0]), res);
+        assert_eq!(list_of_strings_to_slide_section(&region[0]), res);
         assert!(true);
     }
 }
