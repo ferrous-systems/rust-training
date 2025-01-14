@@ -161,7 +161,7 @@ jobs:
     runs-on: ubuntu-20.04
     steps:
       - uses: actions/checkout@v4
-
+    
       - name: Install Critical Up
         run: |
           curl --proto '=https' --tlsv1.2 -LsSf https://github.com/ferrocene/criticalup/releases/download/v1.1.0/criticalup-installer.sh | sh
@@ -177,7 +177,7 @@ jobs:
           CRITICALUP_TOKEN: ${{ secrets.CRITICALUP_TOKEN }}
         run: |
           cd ./example-code && ./build-ferrocene.sh
-
+  
       - name: Assemble Artifacts
         run: |
           echo "Making ./rust-training-${{ env.slug }}..."
@@ -197,7 +197,7 @@ jobs:
     runs-on: ubuntu-20.04
     steps:
       - uses: actions/checkout@v4
-
+    
       - name: Add Rust Targets and Tools
         run: |
           rustup target add thumbv7em-none-eabihf
@@ -215,7 +215,7 @@ jobs:
       - name: Build example code
         run: |
           cd ./example-code && ./build.sh
-
+  
       - name: Assemble Artifacts
         run: |
           echo "Making ./rust-training-${{ env.slug }}..."
