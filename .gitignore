@@ -2,4 +2,4 @@ html
 mdbook
 mdbook-graphviz
 mdslides
-dot
+target

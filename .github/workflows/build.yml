@@ -39,6 +39,10 @@ jobs:
         run: |
           cd ./training-slides && ./build.sh
 
+      - name: Test all cheatsheets
+        run: |
+          cargo xtask test-all-cheatsheets
+
       - name: Assemble Artifacts
         run: |
           echo "Making ./rust-training-${{ env.slug }}..."
