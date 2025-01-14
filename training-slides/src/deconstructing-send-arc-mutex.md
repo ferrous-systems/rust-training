@@ -147,15 +147,15 @@ fn main() -> Result<(), io::Error> {
 
 ## Errors
 
-<pre><code data-trim data-noescape><span style="color:#FF0000"><b>error[E0373]</b></span><b>: closure may outlive the current function, but it borrows `log`, which is owned by the current function</b>
-<span style="color:#5C5CFF"><b>--&gt; </b></span>src/main.rs:26:23
-   <span style="color:#5C5CFF"><b>|</b></span>
-<span style="color:#5C5CFF"><b>26</b></span> <span style="color:#5C5CFF"><b>|</b></span>         thread::spawn(|| {
-   <span style="color:#5C5CFF"><b>|</b></span>                       <span style="color:#FF0000"><b>^^</b></span> <span style="color:#FF0000"><b>may outlive borrowed value `log`</b></span>
-<span style="color:#5C5CFF"><b>27</b></span> <span style="color:#5C5CFF"><b>|</b></span>             let _ = handle_client(stream.unwrap(), &amp;mut log);
-   <span style="color:#5C5CFF"><b>|</b></span>                                                         <span style="color:#5C5CFF"><b>---</b></span> <span style="color:#5C5CFF"><b>`log` is borrowed here</b></span>
-   <span style="color:#5C5CFF"><b>|</b></span>
-<span style="color:#73C48F"><b>note</b></span>: function requires argument type to outlive `&apos;static`
+<pre><code data-trim data-noescape><span class="er b">error[E0373]</span><span class="b">: closure may outlive the current function, but it borrows `log`, which is owned by the current function</span>
+<span class="eb b">--&gt; </span>src/main.rs:26:23
+<span class="eb b">  |</span>
+<span class="eb b">26|</span>         thread::spawn(|| {
+<span class="eb b">  |</span>                       <span class="er b">^^ may outlive borrowed value `log`</span>
+<span class="eb b">27|</span>             let _ = handle_client(stream.unwrap(), &amp;mut log);
+<span class="eb b">  |</span>                                                         <span class="eb b">--- `log` is borrowed here</span>
+<span class="eb b">  |</span>
+<span class="eg b">note</span>: function requires argument type to outlive `&apos;static`
 </code></pre>
 
 ## Lifetime problem
@@ -175,7 +175,7 @@ Solution:
 * `let mut thread_log = log.clone()` now doesn't clone the data, but simply increases the reference count
   * both variables now have *owned* type, and satisfy `F: 'static` requirement
 
-<pre><code data-trim data-noescape><span style="color:#FF0000"><b>error[E0277]</b></span><b>: `Rc<Vec<usize>>` cannot be sent between threads safely</b>
+<pre><code data-trim data-noescape><span class="er b">error[E0277]</span><b>: `Rc<Vec<usize>>` cannot be sent between threads safely</b>
 </code></pre>
 
 ## `Rc` in Rust Standard Library

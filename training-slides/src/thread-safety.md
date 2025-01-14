@@ -65,21 +65,21 @@ fn main() {
 
 ## Oh!
 
-<pre><code data-trim data-noescape><span style="color:#FF0000"><b>error[E0499]</b></span><b>: cannot borrow `value` as mutable more than once at a time</b>
-  <span style="color:#5C5CFF"><b>--&gt; </b></span>src/main.rs:11:17
-   <span style="color:#5C5CFF"><b>|</b></span>
-<span style="color:#5C5CFF"><b>9</b></span>  <span style="color:#5C5CFF"><b>|</b></span>     std::thread::scope(|s| {
-   <span style="color:#5C5CFF"><b>|</b></span>                         <span style="color:#5C5CFF"><b>-</b></span> <span style="color:#5C5CFF"><b>has type `&amp;&apos;1 Scope&lt;&apos;1, &apos;_&gt;`</b></span>
-<span style="color:#5C5CFF"><b>10</b></span> <span style="color:#5C5CFF"><b>|</b></span>         s.spawn(|| thread_function(&amp;mut value));
-   <span style="color:#5C5CFF"><b>|</b></span>         <span style="color:#5C5CFF"><b>---------------------------------------</b></span>
-   <span style="color:#5C5CFF"><b>|</b></span>         <span style="color:#5C5CFF"><b>|</b></span>       <span style="color:#5C5CFF"><b>|</b></span>                       <span style="color:#5C5CFF"><b>|</b></span>
-   <span style="color:#5C5CFF"><b>|</b></span>         <span style="color:#5C5CFF"><b>|</b></span>       <span style="color:#5C5CFF"><b>|</b></span>                       <span style="color:#5C5CFF"><b>first borrow occurs due to use of `value` in closure</b></span>
-   <span style="color:#5C5CFF"><b>|</b></span>         <span style="color:#5C5CFF"><b>|</b></span>       <span style="color:#5C5CFF"><b>first mutable borrow occurs here</b></span>
-   <span style="color:#5C5CFF"><b>|</b></span>         <span style="color:#5C5CFF"><b>argument requires that `value` is borrowed for `&apos;1`</b></span>
-<span style="color:#5C5CFF"><b>11</b></span> <span style="color:#5C5CFF"><b>|</b></span>         s.spawn(|| thread_function(&amp;mut value));
-   <span style="color:#5C5CFF"><b>|</b></span>                 <span style="color:#FF0000"><b>^^</b></span>                      <span style="color:#5C5CFF"><b>-----</b></span> <span style="color:#5C5CFF"><b>second borrow occurs due to use of `value` in closure</b></span>
-   <span style="color:#5C5CFF"><b>|</b></span>                 <span style="color:#FF0000"><b>|</b></span>
-   <span style="color:#5C5CFF"><b>|</b></span>                 <span style="color:#FF0000"><b>second mutable borrow occurs here</b></span>
+<pre><code data-trim data-noescape><span class="er b">error[E0499]</span><b>: cannot borrow `value` as mutable more than once at a time</b>
+  <span class="eb b">--&gt; </span>src/main.rs:11:17
+   <span class="eb b">|</span>
+<span class="eb b">9</span>  <span class="eb b">|</span>     std::thread::scope(|s| {
+   <span class="eb b">|</span>                         <span class="eb b">-</span> <span class="eb b">has type `&amp;&apos;1 Scope&lt;&apos;1, &apos;_&gt;`</span>
+<span class="eb b">10</span> <span class="eb b">|</span>         s.spawn(|| thread_function(&amp;mut value));
+   <span class="eb b">|</span>         <span class="eb b">---------------------------------------</span>
+   <span class="eb b">|</span>         <span class="eb b">|</span>       <span class="eb b">|</span>                       <span class="eb b">|</span>
+   <span class="eb b">|</span>         <span class="eb b">|</span>       <span class="eb b">|</span>                       <span class="eb b">first borrow occurs due to use of `value` in closure</span>
+   <span class="eb b">|</span>         <span class="eb b">|</span>       <span class="eb b">first mutable borrow occurs here</span>
+   <span class="eb b">|</span>         <span class="eb b">argument requires that `value` is borrowed for `&apos;1`</span>
+<span class="eb b">11</span> <span class="eb b">|</span>         s.spawn(|| thread_function(&amp;mut value));
+   <span class="eb b">|</span>                 <span class="er b">^^</span>                      <span class="eb b">-----</span> <span class="eb b">second borrow occurs due to use of `value` in closure</span>
+   <span class="eb b">|</span>                 <span class="er b">|</span>
+   <span class="eb b">|</span>                 <span class="er b">second mutable borrow occurs here</span>
 <b>For more information about this error, try `rustc --explain E0499`.</b>
 </code></pre>
 
@@ -107,30 +107,30 @@ fn main() {
 
 ## Oh come on...
 
-<pre><code data-trim data-noescape><span style="color:#FF0000"><b>error[E0277]</b></span><b>: `RefCell&lt;i32&gt;` cannot be shared between threads safely</b>
-   <span style="color:#5C5CFF"><b>--&gt; </b></span>src/main.rs:11:17
-    <span style="color:#5C5CFF"><b>|</b></span>
-<span style="color:#5C5CFF"><b>11</b></span>  <span style="color:#5C5CFF"><b>|</b></span>         s.spawn(|| thread_function(&amp;value));
-    <span style="color:#5C5CFF"><b>|</b></span>           <span style="color:#5C5CFF"><b>-----</b></span> <span style="color:#FF0000"><b>^^^^^^^^^^^^^^^^^^^^^^^^^^</b></span> <span style="color:#FF0000"><b>`RefCell&lt;i32&gt;` cannot be shared between threads safely</b></span>
-    <span style="color:#5C5CFF"><b>|</b></span>           <span style="color:#5C5CFF"><b>|</b></span>
-    <span style="color:#5C5CFF"><b>|</b></span>           <span style="color:#5C5CFF"><b>required by a bound introduced by this call</b></span>
-    <span style="color:#5C5CFF"><b>|</b></span>
-    <span style="color:#5C5CFF"><b>= </b></span><b>help</b>: the trait `Sync` is not implemented for `RefCell&lt;i32&gt;`, which is required by `{closure@src/main.rs:11:17: 11:19}: Send`
-    <span style="color:#5C5CFF"><b>= </b></span><b>note</b>: if you want to do aliasing and mutation between multiple threads, use `std::sync::RwLock` instead
-    <span style="color:#5C5CFF"><b>= </b></span><b>note</b>: required for `&amp;RefCell&lt;i32&gt;` to implement `Send`
-<span style="color:#00FF00"><b>note</b></span>: required because it&apos;s used within this closure
-   <span style="color:#5C5CFF"><b>--&gt; </b></span>src/main.rs:11:17
-    <span style="color:#5C5CFF"><b>|</b></span>
-<span style="color:#5C5CFF"><b>11</b></span>  <span style="color:#5C5CFF"><b>|</b></span>         s.spawn(|| thread_function(&amp;value));
-    <span style="color:#5C5CFF"><b>|</b></span>                 <span style="color:#00FF00"><b>^^</b></span>
-<span style="color:#00FF00"><b>note</b></span>: required by a bound in `Scope::&lt;&apos;scope, &apos;env&gt;::spawn`
-   <span style="color:#5C5CFF"><b>--&gt; </b></span>/home/mrg/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/lib/rustlib/src/rust/library/std/src/thread/scoped.rs:196:28
-    <span style="color:#5C5CFF"><b>|</b></span>
-<span style="color:#5C5CFF"><b>194</b></span> <span style="color:#5C5CFF"><b>|</b></span>     pub fn spawn&lt;F, T&gt;(&amp;&apos;scope self, f: F) -&gt; ScopedJoinHandle&lt;&apos;scope, T&gt;
-    <span style="color:#5C5CFF"><b>|</b></span>            <span style="color:#5C5CFF"><b>-----</b></span> <span style="color:#5C5CFF"><b>required by a bound in this associated function</b></span>
-<span style="color:#5C5CFF"><b>195</b></span> <span style="color:#5C5CFF"><b>|</b></span>     where
-<span style="color:#5C5CFF"><b>196</b></span> <span style="color:#5C5CFF"><b>|</b></span>         F: FnOnce() -&gt; T + Send + &apos;scope,
-    <span style="color:#5C5CFF"><b>|</b></span>                            <span style="color:#00FF00"><b>^^^^</b></span> <span style="color:#00FF00"><b>required by this bound in `Scope::&lt;&apos;scope, &apos;env&gt;::spawn`</b></span>
+<pre><code data-trim data-noescape><span class="er b">error[E0277]</span><b>: `RefCell&lt;i32&gt;` cannot be shared between threads safely</b>
+   <span class="eb b">--&gt; </span>src/main.rs:11:17
+    <span class="eb b">|</span>
+<span class="eb b">11</span>  <span class="eb b">|</span>         s.spawn(|| thread_function(&amp;value));
+    <span class="eb b">|</span>           <span class="eb b">-----</span> <span class="er b">^^^^^^^^^^^^^^^^^^^^^^^^^^</span> <span class="er b">`RefCell&lt;i32&gt;` cannot be shared between threads safely</span>
+    <span class="eb b">|</span>           <span class="eb b">|</span>
+    <span class="eb b">|</span>           <span class="eb b">required by a bound introduced by this call</span>
+    <span class="eb b">|</span>
+    <span class="eb b">= </span><b>help</b>: the trait `Sync` is not implemented for `RefCell&lt;i32&gt;`, which is required by `{closure@src/main.rs:11:17: 11:19}: Send`
+    <span class="eb b">= </span><b>note</b>: if you want to do aliasing and mutation between multiple threads, use `std::sync::RwLock` instead
+    <span class="eb b">= </span><b>note</b>: required for `&amp;RefCell&lt;i32&gt;` to implement `Send`
+<span class="eg">note</span>: required because it&apos;s used within this closure
+   <span class="eb b">--&gt; </span>src/main.rs:11:17
+    <span class="eb b">|</span>
+<span class="eb b">11</span>  <span class="eb b">|</span>         s.spawn(|| thread_function(&amp;value));
+    <span class="eb b">|</span>                 <span class="eg">^^</span>
+<span class="eg">note</span>: required by a bound in `Scope::&lt;&apos;scope, &apos;env&gt;::spawn`
+   <span class="eb b">--&gt; </span>/home/mrg/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/lib/rustlib/src/rust/library/std/src/thread/scoped.rs:196:28
+    <span class="eb b">|</span>
+<span class="eb b">194</span> <span class="eb b">|</span>     pub fn spawn&lt;F, T&gt;(&amp;&apos;scope self, f: F) -&gt; ScopedJoinHandle&lt;&apos;scope, T&gt;
+    <span class="eb b">|</span>            <span class="eb b">-----</span> <span class="eb b">required by a bound in this associated function</span>
+<span class="eb b">195</span> <span class="eb b">|</span>     where
+<span class="eb b">196</span> <span class="eb b">|</span>         F: FnOnce() -&gt; T + Send + &apos;scope,
+    <span class="eb b">|</span>                            <span class="eg">^^^^</span> <span class="eg">required by this bound in `Scope::&lt;&apos;scope, &apos;env&gt;::spawn`</span>
 <b>For more information about this error, try `rustc --explain E0277`.</b>
 </code></pre>
 

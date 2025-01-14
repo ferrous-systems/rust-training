@@ -229,15 +229,15 @@ The Rust Project, and pretty much the whole Community, follow a [Code of
 
 ## Compiler Error Driven Development works!
 
-<pre><code><span style="color:#F15D22"><b>error[E0502]</b></span><b>: cannot borrow `name` as mutable because it is also borrowed as immutable</b>
- <span style="color:#48B9C7"><b>--&gt; </b></span>src/main.rs:4:5
-  <span style="color:#48B9C7"><b>|</b></span>
-<span style="color:#48B9C7"><b>3</b></span> <span style="color:#48B9C7"><b>|</b></span>     let nickname = &amp;name[..3];
-  <span style="color:#48B9C7"><b>|</b></span>                     <span style="color:#48B9C7"><b>----</b></span> <span style="color:#48B9C7"><b>immutable borrow occurs here</b></span>
-<span style="color:#48B9C7"><b>4</b></span> <span style="color:#48B9C7"><b>|</b></span>     name.clear();
-  <span style="color:#48B9C7"><b>|</b></span>     <span style="color:#F15D22"><b>^^^^^^^^^^^^</b></span> <span style="color:#F15D22"><b>mutable borrow occurs here</b></span>
-<span style="color:#48B9C7"><b>5</b></span> <span style="color:#48B9C7"><b>|</b></span>     println!(&quot;Hello there, {}!&quot;, nickname);
-  <span style="color:#48B9C7"><b>|</b></span>                                  <span style="color:#48B9C7"><b>--------</b></span> <span style="color:#48B9C7"><b>immutable borrow later used here</b></span>
+<pre><code><span class="er b">error[E0502]</span><b>: cannot borrow `name` as mutable because it is also borrowed as immutable</b>
+ <span class="eb b">--&gt; </span>src/main.rs:4:5
+  <span class="eb b">|</span>
+<span class="eb b">3</span> <span class="eb b">|</span>     let nickname = &amp;name[..3];
+  <span class="eb b">|</span>                     <span class="eb b">----</span> <span class="eb b">immutable borrow occurs here</span>
+<span class="eb b">4</span> <span class="eb b">|</span>     name.clear();
+  <span class="eb b">|</span>     <span class="er b">^^^^^^^^^^^^</span> <span class="er b">mutable borrow occurs here</span>
+<span class="eb b">5</span> <span class="eb b">|</span>     println!(&quot;Hello there, {}!&quot;, nickname);
+  <span class="eb b">|</span>                                  <span class="eb b">--------</span> <span class="eb b">immutable borrow later used here</span>
 <b>Some errors have detailed explanations: E0502, E0596.</b>
 <b>For more information about an error, try `rustc --explain E0502`.</b>
 </code></pre>
