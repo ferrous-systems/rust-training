@@ -1,8 +1,6 @@
 name: Build sample material
 
 on:
-  schedule:
-    - cron: '0 0 * * Mon'
   push:
   pull_request:
 

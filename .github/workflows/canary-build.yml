@@ -1,11 +1,11 @@
-name: Build sample material
+name: Weekly Canary Build
 
 on:
   schedule:
     - cron: '0 0 * * Mon'
 
 jobs:
-  build-canary-weekly:
+  weekly-canary-build:
     strategy:
         matrix:
             rust-channel: [stable, beta, nightly]
@@ -26,7 +26,7 @@ jobs:
         run: |
           sudo apt-get update -y && sudo apt-get install -y graphviz
 
-      - name: Update Rust
+      - name: Update and set default Rust
         run: |
           rustup update ${{ matrix.rust-channel }}
           rustup default ${{ matrix.rust-channel }}
