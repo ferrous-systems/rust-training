@@ -194,7 +194,7 @@ let c2 = &x.c;
 println!("{} {} {} {}", a, b, c, c2);
 ```
 
-The code works, but you *have* to fallback on special cases the borrow checker understands, like shadowing with `let a = &mut x.a;` or else the compiler will error. The borrow checker is particularly frail here - replacing `Foo` with `x = [1,2,3]` and trying to borrow indexes will make it error out.
+The code works, but, once you have mutably borrowed a field you cannot mutably borrow the whole value (e.g. by calling a method on it) at the same time - otherwise you could get two mutable references to the same field at the same time.
 
 Here's an example where tuple fields are special-cased for the borrow checker:
 
