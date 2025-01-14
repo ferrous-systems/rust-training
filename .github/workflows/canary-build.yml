@@ -1,0 +1,46 @@
+name: Build sample material
+
+on:
+  schedule:
+    - cron: '0 0 * * Mon'
+
+jobs:
+  build-canary-weekly:
+    strategy:
+        matrix:
+            rust-channel: [stable, beta, nightly]
+    runs-on: ubuntu-20.04
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install tools
+        uses: taiki-e/install-action@v2
+        with:
+          tool: mdbook@0.4.42,mdbook-graphviz@0.2.1
+
+      - name: Add mdslides
+        run: |
+          curl --proto '=https' --tlsv1.2 -LsSf https://github.com/ferrous-systems/mdslides/releases/download/v0.5.0/mdslides-installer.sh | sh
+
+      - name: Add graphviz
+        run: |
+          sudo apt-get update -y && sudo apt-get install -y graphviz
+
+      - name: Update Rust
+        run: |
+          rustup update ${{ matrix.rust-channel }}
+          rustup default ${{ matrix.rust-channel }}
+
+      - name: Find slug name
+        run: |
+          slug=$(./describe.sh "${GITHUB_REF}")
+          echo "Building with slug '${slug}'"
+          echo "slug=${slug}" >> "${GITHUB_ENV}"
+
+      - name: Build book-and-slides
+        run: |
+          cd ./training-slides && ./build.sh
+
+      - name: Test all cheatsheets
+        run: |
+          cargo xtask test-all-cheatsheets
