@@ -2,7 +2,7 @@ name: Build sample material
 
 on:
   schedule:
-    - cron: "0 0 * * Mon"
+    - cron: '0 0 * * Mon'
   push:
   pull_request:
 
@@ -71,7 +71,7 @@ jobs:
 
   build-slides-weekly-beta:
     runs-on: ubuntu-20.04
-    if: needs.pr-check.outputs.number != null
+    if: needs.pr-check.outputs.number != null 
     steps:
       - uses: actions/checkout@v4
 
@@ -115,7 +115,7 @@ jobs:
 
   build-slides-weekly-nightly:
     runs-on: ubuntu-20.04
-    if: needs.pr-check.outputs.number != null
+    if: needs.pr-check.outputs.number != null 
     steps:
       - uses: actions/checkout@v4
 
