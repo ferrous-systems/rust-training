@@ -2,7 +2,7 @@ name: Build sample material
 
 on:
   schedule:
-    - cron: '0 0 * * Mon'
+    - cron: "0 0 * * Mon"
   push:
   pull_request:
 
@@ -39,6 +39,10 @@ jobs:
         run: |
           cd ./training-slides && ./build.sh
 
+      - name: Test all cheatsheets
+        run: |
+          cargo xtask test-all-cheatsheets
+
       - name: Assemble Artifacts
         run: |
           echo "Making ./rust-training-${{ env.slug }}..."
@@ -67,7 +71,7 @@ jobs:
 
   build-slides-weekly-beta:
     runs-on: ubuntu-20.04
-    if: needs.pr-check.outputs.number != null 
+    if: needs.pr-check.outputs.number != null
     steps:
       - uses: actions/checkout@v4
 
@@ -111,7 +115,7 @@ jobs:
 
   build-slides-weekly-nightly:
     runs-on: ubuntu-20.04
-    if: needs.pr-check.outputs.number != null 
+    if: needs.pr-check.outputs.number != null
     steps:
       - uses: actions/checkout@v4
 
@@ -157,7 +161,7 @@ jobs:
     runs-on: ubuntu-20.04
     steps:
       - uses: actions/checkout@v4
-     
+
       - name: Install Critical Up
         run: |
           curl --proto '=https' --tlsv1.2 -LsSf https://github.com/ferrocene/criticalup/releases/download/v1.1.0/criticalup-installer.sh | sh
@@ -173,7 +177,7 @@ jobs:
           CRITICALUP_TOKEN: ${{ secrets.CRITICALUP_TOKEN }}
         run: |
           cd ./example-code && ./build-ferrocene.sh
-  
+
       - name: Assemble Artifacts
         run: |
           echo "Making ./rust-training-${{ env.slug }}..."
@@ -193,7 +197,7 @@ jobs:
     runs-on: ubuntu-20.04
     steps:
       - uses: actions/checkout@v4
-     
+
       - name: Add Rust Targets and Tools
         run: |
           rustup target add thumbv7em-none-eabihf
@@ -211,7 +215,7 @@ jobs:
       - name: Build example code
         run: |
           cd ./example-code && ./build.sh
-  
+
       - name: Assemble Artifacts
         run: |
           echo "Making ./rust-training-${{ env.slug }}..."
