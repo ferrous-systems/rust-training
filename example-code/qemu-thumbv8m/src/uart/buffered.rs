@@ -117,6 +117,8 @@ impl<const QLEN: usize> BufferedUart<QLEN> {
 
     /// UART TX IRQ handler
     ///
+    /// # Safety
+    ///
     /// Only call this from a UART TX interrupt routine
     pub unsafe fn tx_isr(&self) {
         defmt::debug!("TX ISR");
