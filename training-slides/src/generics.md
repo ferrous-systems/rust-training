@@ -100,15 +100,15 @@ Are there some trait bounds we could place on `T` such that `T + T -> T` and `T 
 ## The error:
 
 <pre><code data-trim data-noescape><span class="er b">error[E0599]</span><b>: no method named `magnitude` found for struct `Vector&lt;{integer}&gt;` in the current scope</b>
-  <span class="eb b">--&gt; </span>src/main.rs:23:23
-   <span class="eb b">|</span>
-<span class="eb b">2</span>  <span class="eb b">|</span> struct Vector&lt;T&gt; {
-   <span class="eb b">|</span> <span class="eb b">----------------</span> <span class="eb b">method `magnitude` not found for this struct</span>
-<span class="eb b">...</span>
-<span class="eb b">23</span> <span class="eb b">|</span>     println!(&quot;{}&quot;, v2.magnitude());
-   <span class="eb b">|</span>                       <span class="er b">^^^^^^^^^</span> <span class="er b">method not found in `Vector&lt;{integer}&gt;`</span>
-   <span class="eb b">|</span>
-   <span class="eb b">= </span><b>note</b>: the method was found for
+<span class="eb b">  --&gt; </span>src/main.rs:23:23
+<span class="eb b">   |</span>
+<span class="eb b">2  |</span> struct Vector&lt;T&gt; {
+<span class="eb b">   |</span> <span class="eb b">----------------</span> <span class="eb b">method `magnitude` not found for this struct</span>
+<span class="eb b"> ...</span>
+<span class="eb b">23 |</span>     println!(&quot;{}&quot;, v2.magnitude());
+<span class="eb b">   |</span>                       <span class="er b">^^^^^^^^^</span> <span class="er b">method not found in `Vector&lt;{integer}&gt;`</span>
+<span class="eb b">   |</span>
+<span class="eb b">   = </span><b>note</b>: the method was found for
            - `Vector&lt;f32&gt;`
 <b>For more information about this error, try `rustc --explain E0599`.</b></code></pre>
 
@@ -272,7 +272,7 @@ Traits themselves can have type parameters too!
 trait HasArea<T> {
     fn area(&self) -> T;
 }
-
+ 
 // Here we only accept a shape where the `U` in `HasArea<Y>` is printable
 fn print_area<T, U>(shape: &T) where T: HasArea<U>, U: std::fmt::Debug {
     let area = shape.area();

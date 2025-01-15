@@ -42,10 +42,10 @@ fn producer() -> &str {
 No, we can't return a reference to local data...
 
 <pre><code data-trim data-noescape><span class="er b">error[E0515]</span><b>: cannot return reference to local variable `s`</b>
- <span class="eb b">--&gt; </span>src/lib.rs:3:5
-  <span class="eb b">|</span>
-<span class="eb b">3</span> <span class="eb b">|</span>     &amp;s
-  <span class="eb b">|</span>     <span class="er b">^^</span> <span class="er b">returns a reference to data owned by the current function</span>
+<span class="eb b"> --&gt; </span>src/lib.rs:3:5
+<span class="eb b">  |</span>
+<span class="eb b">3 |</span>     &amp;s
+<span class="eb b">  |</span>     <span class="er b">^^</span> <span class="er b">returns a reference to data owned by the current function</span>
 </code></pre>
 
 ## Local Data
@@ -53,11 +53,11 @@ No, we can't return a reference to local data...
 You will also see:
 
 <pre><code data-trim data-noescape><span class="er b">error[E0106]</span><b>: missing lifetime specifier</b>
- <span class="eb b">--&gt; </span>src/lib.rs:1:18
-  <span class="eb b">|</span>
-<span class="eb b">1</span> <span class="eb b">|</span> fn producer() -&gt; &amp;str {
-  <span class="eb b">|</span>                  <span class="er b">^</span> <span class="er b">expected named lifetime parameter</span>
-  <span class="eb b">|</span>
+<span class="eb b"> --&gt; </span>src/lib.rs:1:18
+<span class="eb b">  |</span>
+<span class="eb b">1 |</span> fn producer() -&gt; &amp;str {
+<span class="eb b">  |</span>                  <span class="er b">^</span> <span class="er b">expected named lifetime parameter</span>
+<span class="eb b">  |</span>
 </code></pre>
 
 ## Static Data
@@ -184,16 +184,16 @@ fn first_three_of_each<'a, 'b>(s1: &'a str, s2: &'b str) -> (&'a str, &'b str) {
 "The source you used in code doesn't match the tags"
 
 <pre><code data-trim data-noescape><span class="er b">error</span><b>: lifetime may not live long enough</b>
- <span class="eb b">--&gt; </span>src/lib.rs:2:5
-  <span class="eb b">|</span>
-<span class="eb b">1</span> <span class="eb b">|</span> fn first_three_of_each&lt;&apos;a, &apos;b&gt;(s1: &amp;&apos;a str, s2: &amp;&apos;b str) -&gt; (&amp;&apos;a str, &amp;&apos;b str) {
-  <span class="eb b">|</span>                        <span class="eb b">--</span>  <span class="eb b">--</span> <span class="eb b">lifetime `&apos;b` defined here</span>
-  <span class="eb b">|</span>                        <span class="eb b">|</span>
-  <span class="eb b">|</span>                        <span class="eb b">lifetime `&apos;a` defined here</span>
-<span class="eb b">2</span> <span class="eb b">|</span>     (&amp;s1[0..3], &amp;s1[0..3])
-  <span class="eb b">|</span>     <span class="er b">^^^^^^^^^^^^^^^^^^^^^^</span> <span class="er b">function was supposed to return data with lifetime `&apos;b` but it is returning data with lifetime `&apos;a`</span>
-  <span class="eb b">|</span>
-  <span class="eb b">= </span><b>help</b>: consider adding the following bound: `&apos;a: &apos;b`
+<span class="eb b"> --&gt; </span>src/lib.rs:2:5
+<span class="eb b">  |</span>
+<span class="eb b">1 |</span> fn first_three_of_each&lt;&apos;a, &apos;b&gt;(s1: &amp;&apos;a str, s2: &amp;&apos;b str) -&gt; (&amp;&apos;a str, &amp;&apos;b str) {
+<span class="eb b">  |</span>                        <span class="eb b">--</span>  <span class="eb b">--</span> <span class="eb b">lifetime `&apos;b` defined here</span>
+<span class="eb b">  |</span>                        <span class="eb b">|</span>
+<span class="eb b">  |</span>                        <span class="eb b">lifetime `&apos;a` defined here</span>
+<span class="eb b">2 |</span>     (&amp;s1[0..3], &amp;s1[0..3])
+<span class="eb b">  |</span>     <span class="er b">^^^^^^^^^^^^^^^^^^^^^^</span> <span class="er b">function was supposed to return data with lifetime `&apos;b` but it is returning data with lifetime `&apos;a`</span>
+<span class="eb b">  |</span>
+<span class="eb b">  = </span><b>help</b>: consider adding the following bound: `&apos;a: &apos;b`
 </code></pre>
 
 ## Annotations are used to validate reference lifetimes at a call site
@@ -201,19 +201,19 @@ fn first_three_of_each<'a, 'b>(s1: &'a str, s2: &'b str) -> (&'a str, &'b str) {
 "Produced reference *can't outlive* the source"
 
 <pre><code data-trim data-noescape><span class="er b">error[E0597]</span><b>: `amsterdam` does not live long enough</b>
-  <span class="eb b">--&gt; </span>src/main.rs:10:29
-   <span class="eb b">|</span>
-<span class="eb b">6</span>  <span class="eb b">|</span>     let amsterdam = format!(&quot;AMS Amsterdam&quot;);
-   <span class="eb b">|</span>         <span class="eb b">---------</span> <span class="eb b">binding `amsterdam` declared here</span>
-<span class="eb b">...</span>
-<span class="eb b">10</span> <span class="eb b">|</span>         first_three_of_each(&amp;amsterdam, &amp;denver)
-   <span class="eb b">|</span>         <span class="eb b">--------------------</span><span class="er b">^^^^^^^^^^</span><span class="eb b">----------</span>
-   <span class="eb b">|</span>         <span class="eb b">|</span>                   <span class="er b">|</span>
-   <span class="eb b">|</span>         <span class="eb b">|</span>                   <span class="er b">borrowed value does not live long enough</span>
-   <span class="eb b">|</span>         <span class="eb b">argument requires that `amsterdam` is borrowed for `&apos;static`</span>
-<span class="eb b">...</span>
-<span class="eb b">14</span> <span class="eb b">|</span> }
-   <span class="eb b">|</span> <span class="eb b">-</span> <span class="eb b">`amsterdam` dropped here while still borrowed</span>
+<span class="eb b">   --&gt; </span>src/main.rs:10:29
+<span class="eb b">    |</span>
+<span class="eb b">6   |</span>     let amsterdam = format!(&quot;AMS Amsterdam&quot;);
+<span class="eb b">    |</span>         <span class="eb b">---------</span> <span class="eb b">binding `amsterdam` declared here</span>
+<span class="eb b">  ...</span>
+<span class="eb b">10  |</span>         first_three_of_each(&amp;amsterdam, &amp;denver)
+<span class="eb b">    |</span>         <span class="eb b">--------------------</span><span class="er b">^^^^^^^^^^</span><span class="eb b">----------</span>
+<span class="eb b">    |</span>         <span class="eb b">|</span>                   <span class="er b">|</span>
+<span class="eb b">    |</span>         <span class="eb b">|</span>                   <span class="er b">borrowed value does not live long enough</span>
+<span class="eb b">    |</span>         <span class="eb b">argument requires that `amsterdam` is borrowed for `&apos;static`</span>
+<span class="eb b">  ...</span>
+<span class="eb b">14  |</span> }
+<span class="eb b">    |</span> <span class="eb b">-</span> <span class="eb b">`amsterdam` dropped here while still borrowed</span>
 </code></pre>
 
 ## Lifetime annotations help the compiler help you!

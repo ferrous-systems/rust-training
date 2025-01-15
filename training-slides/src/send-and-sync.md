@@ -56,32 +56,32 @@ fn main() {
 ## Example: `Rc`
 
 <pre><code data-trim data-noescape><span class="er b">error[E0277]</span><b>: `Rc&lt;bool&gt;` cannot be sent between threads safely</b>
-   <span class="eb b">--&gt; </span>src/main.rs:7:19
-    <span class="eb b">|</span>
-<span class="eb b">7</span>   <span class="eb b">|</span>       thread::spawn(move || {
-    <span class="eb b">|</span>       <span class="eb b">-------------</span> <span class="er b">^</span><span class="eb b">------</span>
-    <span class="eb b">|</span>       <span class="eb b">|</span>             <span class="er b">|</span>
-    <span class="eb b">|</span>  <span class="er b">_____</span><span class="eb b">|</span><span class="er b">_____________</span><span class="eb b">within this `{closure@src/main.rs:7:19: 7:26}`</span>
-    <span class="eb b">|</span> <span class="er b">|</span>     <span class="eb b">|</span>
-    <span class="eb b">|</span> <span class="er b">|</span>     <span class="eb b">required by a bound introduced by this call</span>
-<span class="eb b">8</span>   <span class="eb b">|</span> <span class="er b">|</span>         println!(&quot;{:?}&quot;, value);
-<span class="eb b">9</span>   <span class="eb b">|</span> <span class="er b">|</span>     }).join().unwrap();
-    <span class="eb b">|</span> <span class="er b">|_____^</span> <span class="er b">`Rc&lt;bool&gt;` cannot be sent between threads safely</span>
-    <span class="eb b">|</span>
-    <span class="eb b">= </span><b>help</b>: within `{closure@src/main.rs:7:19: 7:26}`, the trait `Send` is not implemented for `Rc&lt;bool&gt;`, which is required by `{closure@src/main.rs:7:19: 7:26}: Send`
+<span class="eb b">    --&gt; </span>src/main.rs:7:19
+<span class="eb b">     |</span>
+<span class="eb b">7    |</span>       thread::spawn(move || {
+<span class="eb b">     |</span>       <span class="eb b">-------------</span> <span class="er b">^</span><span class="eb b">------</span>
+<span class="eb b">     |</span>       <span class="eb b">|</span>             <span class="er b">|</span>
+<span class="eb b">     |</span>  <span class="er b">_____</span><span class="eb b">|</span><span class="er b">_____________</span><span class="eb b">within this `{closure@src/main.rs:7:19: 7:26}`</span>
+<span class="eb b">     |</span> <span class="er b">|</span>     <span class="eb b">|</span>
+<span class="eb b">     |</span> <span class="er b">|</span>     <span class="eb b">required by a bound introduced by this call</span>
+<span class="eb b">8    |</span> <span class="er b">|</span>         println!(&quot;{:?}&quot;, value);
+<span class="eb b">9    |</span> <span class="er b">|</span>     }).join().unwrap();
+<span class="eb b">     |</span> <span class="er b">|_____^</span> <span class="er b">`Rc&lt;bool&gt;` cannot be sent between threads safely</span>
+<span class="eb b">     |</span>
+<span class="eb b">     = </span><b>help</b>: within `{closure@src/main.rs:7:19: 7:26}`, the trait `Send` is not implemented for `Rc&lt;bool&gt;`, which is required by `{closure@src/main.rs:7:19: 7:26}: Send`
 <span class="eg">note</span>: required because it&apos;s used within this closure
-   <span class="eb b">--&gt; </span>src/main.rs:7:19
-    <span class="eb b">|</span>
-<span class="eb b">7</span>   <span class="eb b">|</span>     thread::spawn(move || {
-    <span class="eb b">|</span>                   <span class="eg">^^^^^^^</span>
+<span class="eb b">    --&gt; </span>src/main.rs:7:19
+<span class="eb b">     |</span>
+<span class="eb b">7    |</span>     thread::spawn(move || {
+<span class="eb b">     |</span>                   <span class="eg">^^^^^^^</span>
 <span class="eg">note</span>: required by a bound in `spawn`
-   <span class="eb b">--&gt; </span>/home/mrg/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/lib/rustlib/src/rust/library/std/src/thread/mod.rs:675:8
-    <span class="eb b">|</span>
-<span class="eb b">672</span> <span class="eb b">|</span> pub fn spawn&lt;F, T&gt;(f: F) -&gt; JoinHandle&lt;T&gt;
-    <span class="eb b">|</span>        <span class="eb b">-----</span> <span class="eb b">required by a bound in this function</span>
-<span class="eb b">...</span>
-<span class="eb b">675</span> <span class="eb b">|</span>     F: Send + &apos;static,
-    <span class="eb b">|</span>        <span class="eg">^^^^</span> <span class="eg">required by this bound in `spawn`</span>
+<span class="eb b">    --&gt; </span>/home/mrg/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/lib/rustlib/src/rust/library/std/src/thread/mod.rs:675:8
+<span class="eb b">     |</span>
+<span class="eb b">672  |</span> pub fn spawn&lt;F, T&gt;(f: F) -&gt; JoinHandle&lt;T&gt;
+<span class="eb b">     |</span>        <span class="eb b">-----</span> <span class="eb b">required by a bound in this function</span>
+<span class="eb b">   ...</span>
+<span class="eb b">675  |</span>     F: Send + &apos;static,
+<span class="eb b">     |</span>        <span class="eg">^^^^</span> <span class="eg">required by this bound in `spawn`</span>
 <b>For more information about this error, try `rustc --explain E0277`.</b>
 </code></pre>
 

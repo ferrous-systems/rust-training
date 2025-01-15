@@ -148,13 +148,20 @@ fn main() -> Result<(), io::Error> {
 ## Errors
 
 <pre><code data-trim data-noescape><span class="er b">error[E0373]</span><span class="b">: closure may outlive the current function, but it borrows `log`, which is owned by the current function</span>
-<span class="eb b">--&gt; </span>src/main.rs:26:23
-<span class="eb b">  |</span>
-<span class="eb b">26|</span>         thread::spawn(|| {
-<span class="eb b">  |</span>                       <span class="er b">^^ may outlive borrowed value `log`</span>
-<span class="eb b">27|</span>             let _ = handle_client(stream.unwrap(), &amp;mut log);
-<span class="eb b">  |</span>                                                         <span class="eb b">--- `log` is borrowed here</span>
-<span class="eb b">  |</span>
+<span class="eb b">  --&gt; </span>src/main.rs:26:23
+<span class="eb b">   |</span>
+<span class="eb b">26 |</span>         thread::spawn(|| {
+<span class="eb b">   |</span>                       <span class="er b">^^ may outlive borrowed value `log`</span>
+<span class="eb b">27 |</span>             let _ = handle_client(stream.unwrap(), &amp;mut log);
+<span class="eb b">   |</span>                                                         <span class="eb b">--- `log` is borrowed here</span>
+<span class="eb b">   |</span>
+<span class="eb b">  --&gt; </span>src/main.rs:26:23
+<span class="eb b">   |</span>
+<span class="eb b">26 |</span>         thread::spawn(|| {
+<span class="eb b">   |</span>                       <span class="er b">^^ may outlive borrowed value `log`</span>
+<span class="eb b">27 |</span>             let _ = handle_client(stream.unwrap(), &amp;mut log);
+<span class="eb b">   |</span>                                                         <span class="eb b">--- `log` is borrowed here</span>
+<span class="eb b">   |</span>
 <span class="eg b">note</span>: function requires argument type to outlive `&apos;static`
 </code></pre>
 
@@ -177,6 +184,7 @@ Solution:
 
 <pre><code data-trim data-noescape><span class="er b">error[E0277]</span><b>: `Rc<Vec<usize>>` cannot be sent between threads safely</b>
 </code></pre>
+
 
 ## `Rc` in Rust Standard Library
 

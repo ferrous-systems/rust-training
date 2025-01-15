@@ -66,20 +66,20 @@ fn main() {
 ## Oh!
 
 <pre><code data-trim data-noescape><span class="er b">error[E0499]</span><b>: cannot borrow `value` as mutable more than once at a time</b>
-  <span class="eb b">--&gt; </span>src/main.rs:11:17
-   <span class="eb b">|</span>
-<span class="eb b">9</span>  <span class="eb b">|</span>     std::thread::scope(|s| {
-   <span class="eb b">|</span>                         <span class="eb b">-</span> <span class="eb b">has type `&amp;&apos;1 Scope&lt;&apos;1, &apos;_&gt;`</span>
-<span class="eb b">10</span> <span class="eb b">|</span>         s.spawn(|| thread_function(&amp;mut value));
-   <span class="eb b">|</span>         <span class="eb b">---------------------------------------</span>
-   <span class="eb b">|</span>         <span class="eb b">|</span>       <span class="eb b">|</span>                       <span class="eb b">|</span>
-   <span class="eb b">|</span>         <span class="eb b">|</span>       <span class="eb b">|</span>                       <span class="eb b">first borrow occurs due to use of `value` in closure</span>
-   <span class="eb b">|</span>         <span class="eb b">|</span>       <span class="eb b">first mutable borrow occurs here</span>
-   <span class="eb b">|</span>         <span class="eb b">argument requires that `value` is borrowed for `&apos;1`</span>
-<span class="eb b">11</span> <span class="eb b">|</span>         s.spawn(|| thread_function(&amp;mut value));
-   <span class="eb b">|</span>                 <span class="er b">^^</span>                      <span class="eb b">-----</span> <span class="eb b">second borrow occurs due to use of `value` in closure</span>
-   <span class="eb b">|</span>                 <span class="er b">|</span>
-   <span class="eb b">|</span>                 <span class="er b">second mutable borrow occurs here</span>
+<span class="eb b">   --&gt; </span>src/main.rs:11:17
+<span class="eb b">    |</span>
+<span class="eb b">9   |</span>     std::thread::scope(|s| {
+<span class="eb b">    |</span>                         <span class="eb b">-</span> <span class="eb b">has type `&amp;&apos;1 Scope&lt;&apos;1, &apos;_&gt;`</span>
+<span class="eb b">10  |</span>         s.spawn(|| thread_function(&amp;mut value));
+<span class="eb b">    |</span>         <span class="eb b">---------------------------------------</span>
+<span class="eb b">    |</span>         <span class="eb b">|</span>       <span class="eb b">|</span>                       <span class="eb b">|</span>
+<span class="eb b">    |</span>         <span class="eb b">|</span>       <span class="eb b">|</span>                       <span class="eb b">first borrow occurs due to use of `value` in closure</span>
+<span class="eb b">    |</span>         <span class="eb b">|</span>       <span class="eb b">first mutable borrow occurs here</span>
+<span class="eb b">    |</span>         <span class="eb b">argument requires that `value` is borrowed for `&apos;1`</span>
+<span class="eb b">11  |</span>         s.spawn(|| thread_function(&amp;mut value));
+<span class="eb b">    |</span>                 <span class="er b">^^</span>                      <span class="eb b">-----</span> <span class="eb b">second borrow occurs due to use of `value` in closure</span>
+<span class="eb b">    |</span>                 <span class="er b">|</span>
+<span class="eb b">    |</span>                 <span class="er b">second mutable borrow occurs here</span>
 <b>For more information about this error, try `rustc --explain E0499`.</b>
 </code></pre>
 
@@ -108,29 +108,29 @@ fn main() {
 ## Oh come on...
 
 <pre><code data-trim data-noescape><span class="er b">error[E0277]</span><b>: `RefCell&lt;i32&gt;` cannot be shared between threads safely</b>
-   <span class="eb b">--&gt; </span>src/main.rs:11:17
-    <span class="eb b">|</span>
-<span class="eb b">11</span>  <span class="eb b">|</span>         s.spawn(|| thread_function(&amp;value));
-    <span class="eb b">|</span>           <span class="eb b">-----</span> <span class="er b">^^^^^^^^^^^^^^^^^^^^^^^^^^</span> <span class="er b">`RefCell&lt;i32&gt;` cannot be shared between threads safely</span>
-    <span class="eb b">|</span>           <span class="eb b">|</span>
-    <span class="eb b">|</span>           <span class="eb b">required by a bound introduced by this call</span>
-    <span class="eb b">|</span>
-    <span class="eb b">= </span><b>help</b>: the trait `Sync` is not implemented for `RefCell&lt;i32&gt;`, which is required by `{closure@src/main.rs:11:17: 11:19}: Send`
-    <span class="eb b">= </span><b>note</b>: if you want to do aliasing and mutation between multiple threads, use `std::sync::RwLock` instead
-    <span class="eb b">= </span><b>note</b>: required for `&amp;RefCell&lt;i32&gt;` to implement `Send`
+<span class="eb b">   --&gt; </span>src/main.rs:11:17
+<span class="eb b">    |</span>
+<span class="eb b">11  |</span>         s.spawn(|| thread_function(&amp;value));
+<span class="eb b">    |</span>           <span class="eb b">-----</span> <span class="er b">^^^^^^^^^^^^^^^^^^^^^^^^^^</span> <span class="er b">`RefCell&lt;i32&gt;` cannot be shared between threads safely</span>
+<span class="eb b">    |</span>           <span class="eb b">|</span>
+<span class="eb b">    |</span>           <span class="eb b">required by a bound introduced by this call</span>
+<span class="eb b">    |</span>
+<span class="eb b">    = </span><b>help</b>: the trait `Sync` is not implemented for `RefCell&lt;i32&gt;`, which is required by `{closure@src/main.rs:11:17: 11:19}: Send`
+<span class="eb b">    = </span><b>note</b>: if you want to do aliasing and mutation between multiple threads, use `std::sync::RwLock` instead
+<span class="eb b">    = </span><b>note</b>: required for `&amp;RefCell&lt;i32&gt;` to implement `Send`
 <span class="eg">note</span>: required because it&apos;s used within this closure
-   <span class="eb b">--&gt; </span>src/main.rs:11:17
-    <span class="eb b">|</span>
-<span class="eb b">11</span>  <span class="eb b">|</span>         s.spawn(|| thread_function(&amp;value));
-    <span class="eb b">|</span>                 <span class="eg">^^</span>
+<span class="eb b">   --&gt; </span>src/main.rs:11:17
+<span class="eb b">    |</span>
+<span class="eb b">11  |</span>         s.spawn(|| thread_function(&amp;value));
+<span class="eb b">    |</span>                 <span class="eg">^^</span>
 <span class="eg">note</span>: required by a bound in `Scope::&lt;&apos;scope, &apos;env&gt;::spawn`
-   <span class="eb b">--&gt; </span>/home/mrg/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/lib/rustlib/src/rust/library/std/src/thread/scoped.rs:196:28
-    <span class="eb b">|</span>
-<span class="eb b">194</span> <span class="eb b">|</span>     pub fn spawn&lt;F, T&gt;(&amp;&apos;scope self, f: F) -&gt; ScopedJoinHandle&lt;&apos;scope, T&gt;
-    <span class="eb b">|</span>            <span class="eb b">-----</span> <span class="eb b">required by a bound in this associated function</span>
-<span class="eb b">195</span> <span class="eb b">|</span>     where
-<span class="eb b">196</span> <span class="eb b">|</span>         F: FnOnce() -&gt; T + Send + &apos;scope,
-    <span class="eb b">|</span>                            <span class="eg">^^^^</span> <span class="eg">required by this bound in `Scope::&lt;&apos;scope, &apos;env&gt;::spawn`</span>
+<span class="eb b">   --&gt; </span>/home/mrg/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/lib/rustlib/src/rust/library/std/src/thread/scoped.rs:196:28
+<span class="eb b">    |</span>
+<span class="eb b">194 |</span>     pub fn spawn&lt;F, T&gt;(&amp;&apos;scope self, f: F) -&gt; ScopedJoinHandle&lt;&apos;scope, T&gt;
+<span class="eb b">    |</span>            <span class="eb b">-----</span> <span class="eb b">required by a bound in this associated function</span>
+<span class="eb b">195 |</span>     where
+<span class="eb b">196 |</span>         F: FnOnce() -&gt; T + Send + &apos;scope,
+<span class="eb b">    |</span>                            <span class="eg">^^^^</span> <span class="eg">required by this bound in `Scope::&lt;&apos;scope, &apos;env&gt;::spawn`</span>
 <b>For more information about this error, try `rustc --explain E0277`.</b>
 </code></pre>
 
