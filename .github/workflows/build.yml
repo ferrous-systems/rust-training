@@ -196,6 +196,7 @@ jobs:
      
       - name: Add Rust Targets and Tools
         run: |
+          rustup target add thumbv8m.main-none-eabihf
           rustup target add thumbv7em-none-eabihf
           rustup target add thumbv7em-none-eabi
           rustup target add armv7r-none-eabihf
