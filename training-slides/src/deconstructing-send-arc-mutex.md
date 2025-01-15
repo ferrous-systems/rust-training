@@ -182,7 +182,7 @@ Solution:
 * `let mut thread_log = log.clone()` now doesn't clone the data, but simply increases the reference count
   * both variables now have *owned* type, and satisfy `F: 'static` requirement
 
-<pre><code data-trim data-noescape><span class="er b">error[E0277]</span><b>: `Rc<Vec<usize>>` cannot be sent between threads safely</b>
+<pre><code data-trim data-noescape><span class="er b">error[E0277]</span><b>: `Rc&lt;&ZeroWidthSpace;Vec&lt;&ZeroWidthSpace;usize&ZeroWidthSpace;&gt;&ZeroWidthSpace;&gt;` cannot be sent between threads safely</b>
 </code></pre>
 
 
