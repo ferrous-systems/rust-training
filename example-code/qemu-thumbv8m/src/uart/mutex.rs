@@ -50,7 +50,7 @@ impl MutexUart {
     /// Returns Err(byte) if it's full.
     ///
     /// Returns `Ok(())` if not initialised
-    pub fn tx(&self, byte: u8) -> Result<(), u8> {
+    pub fn write(&self, byte: u8) -> Result<(), u8> {
         critical_section::with(|cs| {
             let mut guard = self.inner.borrow_ref_mut(cs);
             let Some(uart) = guard.as_mut() else {
@@ -64,7 +64,7 @@ impl MutexUart {
     }
 
     /// Turn TX interrupt on
-    pub fn tx_interrupts(&self, enabled: bool) {
+    pub fn set_tx_interrupt(&self, enabled: bool) {
         critical_section::with(|cs| {
             let mut guard = self.inner.borrow_ref_mut(cs);
             let Some(uart) = guard.as_mut() else {
@@ -85,7 +85,7 @@ impl MutexUart {
                 return;
             };
             defmt::debug!(
-                "Control {} Status {} IntStatus {}",
+                "Control {}, Status {}, IntStatus {}",
                 uart.read_control(),
                 uart.read_status(),
                 uart.read_intstatus()

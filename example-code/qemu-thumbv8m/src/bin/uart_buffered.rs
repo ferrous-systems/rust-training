@@ -19,7 +19,7 @@ use qemu_thumbv8m::interrupts::Interrupts as interrupt;
 const SYSTEM_CLOCK: u32 = 25_000_000;
 
 /// A global UART we can write to
-static UART0: BufferedUart<8> = BufferedUart::empty();
+static UART0: BufferedUart<256> = BufferedUart::empty();
 
 #[cortex_m_rt::entry]
 fn main() -> ! {
@@ -38,11 +38,16 @@ fn main() -> ! {
 
     unsafe {
         cortex_m::peripheral::NVIC::unmask(Interrupts::Uart0Tx);
-        cortex_m::peripheral::NVIC::unmask(Interrupts::Uart0Combined);
         cortex_m::interrupt::enable();
     }
 
     _ = write!(&UART0, "Hello, this is on a static UART0!\r\n");
+
+    // these should all be queued (don't send more than QLEN!)
+    critical_section::with(|_| {
+        _ = write!(&UART0, "Hello, this another string on a static UART0!\r\n");
+    });
+    // now they should transmit
 
     // Wait for the UART bytes to be send
     delay.delay_ms(2000);
@@ -53,17 +58,9 @@ fn main() -> ! {
 /// Called when UART0 has a TX interrupt
 #[interrupt]
 unsafe fn Uart0Tx() {
-    defmt::warn!("UART0 TX IRQ");
-    UART0.tx_poll();
-    cortex_m::asm::sev();
-}
-
-/// Called when UART0 has a combined interrupt
-#[interrupt]
-unsafe fn Uart0Combined() {
-    defmt::warn!("UART0 Combined IRQ");
-    UART0.tx_poll();
-    cortex_m::asm::sev();
+    unsafe {
+        UART0.tx_isr();
+    }
 }
 
 // End of file
