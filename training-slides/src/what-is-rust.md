@@ -229,19 +229,18 @@ The Rust Project, and pretty much the whole Community, follow a [Code of
 
 ## Compiler Error Driven Development works!
 
-```text
-error[E0502]: cannot borrow `name` as mutable because it is also borrowed as immutable
- --> a.rs:4:5
-  |
-3 |     let nickname = &name[..3];
-  |                     ---- immutable borrow occurs here
-4 |     name.clear();
-  |     ^^^^^^^^^^^^ mutable borrow occurs here
-5 |     println!("Hello there, {}!", nickname);
-  |                                  -------- immutable borrow later used here
-
-For more information about this error, try `rustc --explain E0502`.
-```
+<pre><code data-trim data-noescape><span class="er b">error[E0502]</span><b>: cannot borrow `name` as mutable because it is also borrowed as immutable</b>
+<span class="eb b"> --&gt; </span>src/main.rs:4:5
+<span class="eb b">  |</span>
+<span class="eb b">3 |</span>     let nickname = &amp;name[..3];
+<span class="eb b">  |</span>                     <span class="eb b">----</span> <span class="eb b">immutable borrow occurs here</span>
+<span class="eb b">4 |</span>     name.clear();
+<span class="eb b">  |</span>     <span class="er b">^^^^^^^^^^^^</span> <span class="er b">mutable borrow occurs here</span>
+<span class="eb b">5 |</span>     println!(&quot;Hello there, {}!&quot;, nickname);
+<span class="eb b">  |</span>                                  <span class="eb b">--------</span> <span class="eb b">immutable borrow later used here</span>
+<b>Some errors have detailed explanations: E0502, E0596.</b>
+<b>For more information about an error, try `rustc --explain E0502`.</b>
+</code></pre>
 
 ## What does Rust run on?
 
