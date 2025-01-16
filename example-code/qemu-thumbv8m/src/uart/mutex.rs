@@ -29,7 +29,7 @@ impl MutexUart {
         uart.init(baud_rate, system_clock)?;
         critical_section::with(|cs| {
             let mut guard = self.inner.borrow_ref_mut(cs);
-            *guard = Some(uart);
+            guard.replace(uart);
         });
         Ok(())
     }

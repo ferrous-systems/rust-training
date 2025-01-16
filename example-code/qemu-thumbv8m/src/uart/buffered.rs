@@ -1,6 +1,6 @@
 //! An interrupt-driven buffered CMSDK UART driver
 //!
-//! The CMSDK interrupt will fire an interrupt when the TX FIFO goes from full to not full.
+//! The CMSDK UART will fire an interrupt when the TX FIFO goes from full to not full.
 //!
 //! The trick is what we do when we send a byte and the UART is not currently sending.
 
@@ -43,7 +43,7 @@ impl<const QLEN: usize> BufferedUart<QLEN> {
         uart.init(baud_rate, system_clock)?;
         critical_section::with(|cs| {
             let mut guard = self.inner.borrow_ref_mut(cs);
-            *guard = Some(Inner {
+            guard.replace(Inner {
                 uart,
                 buffer: heapless::spsc::Queue::new(),
             });
@@ -75,7 +75,7 @@ impl<const QLEN: usize> BufferedUart<QLEN> {
         // OK, we definitely have space now
         self.with(|inner| {
             // If TX interrupts aren't on, turn them on. Because we're in a CS,
-            // we can't be interrupt between that buffer enqueue and turning
+            // we can't be interrupted between that buffer enqueue and turning
             // interrupts on
             if !inner.uart.read_control().contains(Control::TXIE) {
                 defmt::debug!("Sending 0x{=u8:02x} and turning TXIE on", byte);

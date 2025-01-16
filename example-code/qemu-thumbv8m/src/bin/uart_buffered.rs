@@ -18,14 +18,17 @@ use qemu_thumbv8m::interrupts::Interrupts as interrupt;
 /// Our system clock speed
 const SYSTEM_CLOCK: u32 = 25_000_000;
 
+/// Our UART buffer size
+///
+/// The [`heapless::spsc::Queue`] docs say that to get better performance we
+/// should use a value that is a power of 2.
+const QLEN: usize = 256;
+
 /// A global UART we can write to
-static UART0: BufferedUart<256> = BufferedUart::empty();
+static UART0: BufferedUart<QLEN> = BufferedUart::empty();
 
 #[cortex_m_rt::entry]
 fn main() -> ! {
-    let cm = cortex_m::Peripherals::take().unwrap();
-    let mut delay = cortex_m::delay::Delay::new(cm.SYST, SYSTEM_CLOCK);
-
     defmt::info!("Running uart_irq - printing to global UART0");
 
     UART0
@@ -43,14 +46,14 @@ fn main() -> ! {
 
     _ = write!(&UART0, "Hello, this is on a static UART0!\r\n");
 
-    // these should all be queued (don't send more than QLEN!)
+    // these should all be queued (don't send more than `QLEN` bytes!)
     critical_section::with(|_| {
         _ = write!(&UART0, "Hello, this another string on a static UART0!\r\n");
     });
     // now they should transmit
 
     // Wait for the UART bytes to be send
-    delay.delay_ms(2000);
+    UART0.flush();
 
     panic!("Got to end of fn main()!");
 }
