@@ -358,6 +358,14 @@ impl Vector {
     }
 }
 
+/// Our Cortex-M Interrupt Vector Table
+///
+/// The exceptions and other items in the first 16 entries are handled by the
+/// `cortex-m-rt` crate. These are the remaining vectors for the peripheral
+/// interrupts.
+///
+/// Normally you would use `svd2rust` to generate this, but we've done it by
+/// hand to show that it isn't magical.
 #[link_section = ".vector_table.interrupts"]
 #[no_mangle]
 #[used]
