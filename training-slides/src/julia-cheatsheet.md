@@ -26,8 +26,7 @@
 * Yes, indexes start at 0. Use the equal sign in `for i in 0..=10 {...}` to make an inclusive range.
 * Lots of useful constants are tucked away in stdlib modules, like `std::f64::consts::PI`. Import them with `std::f64::consts::*;` at the top of your file.
 * Rust has validated UTF8 strings by default.
-* Just use `String` when starting out. Then [use this](https://steveklabnik.com/writing/when-should-i-use-string-vs-str/) to decide when you need to care.
-* `String` is the owned variant, `&str` is the borrowed variant - it's easier to think that `&str` is  just "I'm getting an immutable string slice that I'm only reading from"
+* Just use `String` when starting out if you don't know what to do, but, as [Steve Klabnik recommends](https://steveklabnik.com/writing/when-should-i-use-string-vs-str/) prefer `&str` for function parameters. Return `&str` if you don't mutate the String, and avoid `&str`s in structs until you get more experience.
 * Read the standard library, it very much pays off to know methods like `.split_n`, `.bytes()` and many more other stdlib functions
 
 ## Control Flow
@@ -291,6 +290,8 @@ TODO: add link to video on rust-analyzer
 ## Lifetimes
 
 ## Lifetimes, Subtyping, Variance
+
+* Best video summary I know of lifetimes: [but what is 'a lifetime](https://www.youtube.com/watch?v=gRAVZv7V91Q)
 
 Actually, you can know **A LOT** about this system already if you know subtyping from Julia!
 Almost all beginner level explanations of lifetimes I know of punt on subtyping and variance until the much later advanced courses, which is a shame, because a small bit of it can be used to explain the internals of the borrowchecker.
