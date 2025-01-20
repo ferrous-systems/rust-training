@@ -11,7 +11,7 @@ extern crate alloc;
 
 use core::{fmt::Write, ptr::addr_of_mut};
 use embedded_alloc::Heap;
-use qemu_aarch32v78r::cmsdk_uart;
+use qemu_aarch32v78r::uart;
 
 #[global_allocator]
 static HEAP: Heap = Heap::empty();
@@ -45,8 +45,8 @@ pub extern "C" fn kmain() {
 ///
 /// Called by [`kmain`].
 fn main() -> Result<(), core::fmt::Error> {
-    let mut uart0 = unsafe { cmsdk_uart::Uart::new_uart0() };
-    uart0.enable(115200, PERIPHERAL_CLOCK);
+    let mut uart0 = unsafe { uart::CmsdkUart::new(uart::UART0_ADDR) };
+    uart0.init(115200, PERIPHERAL_CLOCK).unwrap();
 
     writeln!(uart0, "Hello, this is Rust!")?;
     for x in 1..=10 {
@@ -68,7 +68,7 @@ fn main() -> Result<(), core::fmt::Error> {
 fn panic(info: &core::panic::PanicInfo) -> ! {
     const SYS_REPORTEXC: u32 = 0x18;
     // We assume it is already enabled
-    let mut uart0 = unsafe { cmsdk_uart::Uart::new_uart0() };
+    let mut uart0 = unsafe { uart::CmsdkUart::new(uart::UART0_ADDR) };
     let _ = writeln!(uart0, "PANIC: {:?}", info);
     loop {
         // Exit, using semihosting

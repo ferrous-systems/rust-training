@@ -1,9 +1,0 @@
-[build]
-target = ["thumbv8m.main-none-eabihf"]
-
-[target.thumbv8m.main-none-eabihf]
-rustflags = [
-    "-Clink-arg=-Tlink.x",
-    "-Clink-arg=-Tdefmt.x",
-]
-runner = "./qemu_run.sh"

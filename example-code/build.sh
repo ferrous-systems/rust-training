@@ -35,8 +35,4 @@ popd
 pushd qemu-thumbv7em
 cargo build
 popd
-# Build qemu Armv8-M example
-pushd qemu-thumbv8m
-cargo build
-popd
 
