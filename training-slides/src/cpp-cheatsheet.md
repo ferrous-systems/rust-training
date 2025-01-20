@@ -20,6 +20,7 @@
 * Rust's `println!` [semantics for non-numerics follow those](https://locka99.gitbooks.io/a-guide-to-porting-c-to-rust/content/features_of_rust/strings.html) of `sprintf`, but with `{}`: `%-10s` to format a left aligned string padded to minimum 10 spaces becomes `{:<10}`, `%04` to pad a number with zeros up to a width of 4 becomes `{:04}`, etc.
 * Rust does not have user defined literals so you need a macro to make `let duration = 5_milliseconds;` work in Rust.
 * A Rust `enum` is most similar to an `std::variant`
+* `=` and `+=` like operators return the value that was set, whereas in Rust they do not.
 
 
 ## Control Flow
