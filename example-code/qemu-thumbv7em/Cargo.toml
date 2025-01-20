@@ -2,10 +2,24 @@
 name = "qemu-thumbv7em"
 version = "0.1.0"
 edition = "2021"
+authors = ["Ferrous Systems"]
+license = "MIT OR Apache-2.0"
+description = "Simple Armv7E-M demo applications that run in QEMU and compile with Ferrocene"
+default-run = "defmt"
 
 [dependencies]
-cortex-m-rt = "0.7.5"
+cortex-m = { version = "0.7.7", features = ["critical-section-single-core", "inline-asm"] }
+cortex-m-rt = { version =  "0.7.5", features = ["device"] }
 cortex-m-semihosting = "0.5.0"
-defmt = "0.3.9"
+critical-section = "1.2.0"
+defmt = "0.3.10"
 defmt-semihosting = "0.1.0"
+heapless = { version = "0.8.0", features = ["defmt-03"] }
+nb = { version = "1.1.0", features = ["defmt-0-3"] }
+qemu-common = { path = "../qemu-common" }
 
+[profile.dev]
+opt-level = 1
+
+[profile.release]
+debug = 2

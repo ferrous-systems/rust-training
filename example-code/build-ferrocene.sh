@@ -11,7 +11,6 @@ popd
 # And the qemu Aarch32 Armv8-R/Armv7-R example
 pushd ./qemu-aarch32v78r
 criticalup install
-./build.sh "$(criticalup which rustc)"
 criticalup run cargo build --release
 criticalup run cargo build --target=armv7r-none-eabihf --release
 popd
