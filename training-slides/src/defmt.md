@@ -211,7 +211,7 @@ Windows users will use different syntax for cmd.exe vs Powershell.
 ## Host tools
 
 * Knurling's `probe-run` was the first
-* The `probe-rs`` CLI now has support (recommended)
+* The `probe-rs` CLI now has support (recommended)
 * Or use `defmt-print`
 
 ## Using probe-rs
