@@ -77,6 +77,16 @@ Rust for the Linux Kernel and other no-std environments with an pre-existing C A
 * [Rust on an RTOS]()
 * [Writing a new target]()
 
+# Async Rust
+
+* [Intro To Async/Await](./async-await-intro.md)
+* [Async Building Blocks](./async-building-blocks.md)
+* [Intro to Tokio](./async-intro-to-tokio.md)
+* [Async Implementation Details](./async-implementation-details.md)
+* [Async Component Interaction](./async-component-interaction.md)
+* [Async: Avoiding Disaster and Unbounded Growth](./async-avoiding-disaster.md)
+* [Async/Await: Laziness in detail (Rust vs other languages)](./async-laziness-in-detail.md)
+
 # Bare-Metal Rust
 
 Topics about using Rust on ARM Cortex-M Microcontrollers (and similar). Requires [Applied Rust](#applied-rust).
