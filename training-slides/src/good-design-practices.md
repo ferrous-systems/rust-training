@@ -199,3 +199,114 @@ cargo fmt
 ```shell
 cargo clippy
 ```
+
+## Dealing with Unwrap
+
+It's common to fall into a comfortable "`.unwrap()` now, refactor later" pattern
+
+Let's see recurring deficient error handling patterns and how to address them
+
+## Prefer .expect()
+
+```rust [],ignore
+use std::fs::File;
+
+fn main() {
+    let file = File::open("hello.txt")
+        .unwrap();
+}
+```
+
+## Prefer .expect() 2
+
+```rust [],ignore
+use std::fs::File;
+
+fn main() {
+    let file = File::open("hello.txt")
+        .expect("hello.txt should be included in this project");
+}
+```
+
+Gives more context when assumptions are proven wrong.
+
+## Keeping Context Local
+
+```rust [], ignore
+let important_object = haystack.find(needle).unwrap();
+// A lot of code that doesn't use `important_object` gets committed.
+// ...
+// Even more code that doesn't use `important_object` gets committed.
+// ...
+if !important_object.contains(other_needle) {
+    panic!("important_object does not contain `other_needle`");
+}
+```
+
+Problematic: code that detects specific error drifts drifts away from code that detects it
+
+## Keeping Context Local 2
+
+```rust [], ignore
+let Some(important_object) = haystack.find(needle) else {
+    panic!("important_object does not contain `other_needle`");
+}
+```
+
+Couples finding the error to the place that finds it.
+
+## Unwraps in iterators
+
+```rust [], ignore
+let numeric_lines = bufreader.lines()
+    .map(|line| line.unwrap())
+    .filter(|line| line.ok())
+    .map(|stringy_num| string_num.parse::<i32>())
+    .filter(|elem| elem.ok())
+    .filter(|num| num % 2 != 0)
+    .collect::Vec<_>();
+```
+
+`map(|x| x.unwrap()` is a codesmell in an iterator, doubly so when followed by a `filter
+
+## Unwraps in iterators 2
+
+```rust [], ignore
+let numeric_lines = bufreader.lines()
+    .filter_map(|line| line.is_ok())
+    .filter_map(|stringy_num| string_num.parse::<i32>().ok())
+    .filter(|num| num % 2 != 0)
+    .collect::Vec<_>();
+```
+
+A [filter_map()](https://doc.rust-lang.org/stable/std/iter/trait.Iterator.html#method.filter_map) will compact your code.
+
+## Prefer `Result` to `Option`
+
+A `Result<T, E>` carries more context (`E`) than an `Option<T>`, so it's useful to know how to map `Option<T>` to `Result<T,E>`
+
+```rust [], ignore
+pub fn find_user(username: &str) -> Result<UserId, String> {
+    let f = match std::fs::File::open("/etc/passwd") {
+        Ok(f) => f,
+        Err(e) => {
+            return Err(format!("Failed to open password file: {:?}", e))
+        }
+    };
+    // ...
+}
+```
+
+## Prefer `Result` to `Option` 2
+
+```rust [], ignore
+pub fn find_user(username: &str) -> Result<UserId, String> {
+    let f = std::fs::File::open("/etc/passwd")
+        .map_err(|e| format!("Failed to open password file: {:?}", e))?;
+    // ...
+}
+```
+
+## Error, Result, Option
+
+![error-result-option](./images/error-result-option-transform-diagram.svg "Error and Result Transforms")
