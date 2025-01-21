@@ -3,10 +3,12 @@
 
 ## Concurrency
 
-```mermaid
-graph TD
-  A[Concurrency] --> B[Asynchrony]
-  A --> C[Parallelism]
+```dot process
+digraph {
+  node [shape=record, fontcolor=black, fontsize=14, width=3, fillcolor=green3, style=filled];
+  Concurrency -> Asynchrony;
+  Concurrency -> Parallelism;
+}
 ```
 
 ## Parallelism
@@ -75,7 +77,7 @@ async fn is_website_up(url: &str) -> Result<bool, Box<dyn Error + Send + Sync>> 
 async fn fetch_into_string(url: &str) -> Result<String, Box<dyn Error + Send + Sync>> {
     let url: hyper::Uri = url.parse()?;
 
-    let client = hyper::Client::new();
+    let client = hyper_util::Client::new();
     let res = client.get(url).await?;
 
     let bytes = hyper::body::to_bytes(res.into_body()).await?;

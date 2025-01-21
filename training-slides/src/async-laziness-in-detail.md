@@ -45,7 +45,7 @@ fn main() {
 include::./futures-vs-promises.js[]
 ----
 
-```mermaid
+```dot process
 sequenceDiagram
   participant main
   participant task
