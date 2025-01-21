@@ -1,7 +1,7 @@
 [build]
-target = ["thumbv7em-none-eabi"]
+target = ["thumbv7em-none-eabihf"]
 
-[target.thumbv7em-none-eabi]
+[target.thumbv7em-none-eabihf]
 rustflags = [
     "-Clink-arg=-Tlink.x",
     "-Clink-arg=-Tdefmt.x",

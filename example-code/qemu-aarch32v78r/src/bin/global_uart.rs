@@ -7,54 +7,15 @@
 #![no_std]
 #![no_main]
 
-use core::{cell::RefCell, fmt::Write};
-use critical_section::Mutex;
-use qemu_aarch32v78r::cmsdk_uart::Uart;
+use core::fmt::Write;
+use qemu_aarch32v78r::uart::{CmsdkUart, MutexUart, UART0_ADDR};
 
 /// The clock speed of the peripheral subsystem on an SSE-300 SoC an on MPS3 board.
 ///
 /// Probably right for an MPS3-AN536
 const PERIPHERAL_CLOCK: u32 = 25_000_000;
 
-static UART: GlobalUart = GlobalUart::new();
-
-struct GlobalUart {
-    inner: Mutex<RefCell<Option<Uart<0xe7c0_0000>>>>,
-}
-
-impl GlobalUart {
-    /// Create a new, empty, global UART wrapper
-    const fn new() -> GlobalUart {
-        GlobalUart {
-            inner: Mutex::new(RefCell::new(None)),
-        }
-    }
-
-    /// Store a new UART at run-time
-    ///
-    /// Gives you back the old one, if any.
-    fn store(&self, uart: Uart<0xe7c0_0000>) -> Option<Uart<0xe7c0_0000>> {
-        critical_section::with(|cs| {
-            let mut uart_ref = self.inner.borrow_ref_mut(cs);
-            uart_ref.replace(uart)
-        })
-    }
-}
-
-// Note that we're implementing for `&GlobalUart`, so we can write to a shared
-// reference instead of requiring an exclusive-mutable reference.
-impl core::fmt::Write for &GlobalUart {
-    /// Write the string to the inner UART, with a lock held
-    fn write_str(&mut self, s: &str) -> core::fmt::Result {
-        critical_section::with(|cs| {
-            let mut maybe_uart = self.inner.borrow_ref_mut(cs);
-            let Some(uart) = maybe_uart.as_mut() else {
-                return Err(core::fmt::Error);
-            };
-            uart.write_str(s)
-        })
-    }
-}
+static UART: MutexUart = MutexUart::empty();
 
 /// The entry-point to the Rust application.
 ///
@@ -70,9 +31,12 @@ pub extern "C" fn kmain() {
 ///
 /// Called by [`kmain`].
 fn main() -> Result<(), core::fmt::Error> {
-    let mut uart0 = unsafe { Uart::new_uart0() };
-    uart0.enable(115200, PERIPHERAL_CLOCK);
-    UART.store(uart0);
+    UART.init(
+        unsafe { CmsdkUart::new(UART0_ADDR) },
+        115200,
+        PERIPHERAL_CLOCK,
+    )
+    .unwrap();
 
     print_stuff()?;
     panic!("I am a panic");
