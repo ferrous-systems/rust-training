@@ -118,4 +118,5 @@ Topics around [Ferrocene](https://ferrous-systems.com/ferrocene/), the qualified
 
 # Cheatsheets
 
+* [How CheatSheets Work](./how-cheatsheets-work.md)
 * [C++](./cpp-cheatsheet.md)
