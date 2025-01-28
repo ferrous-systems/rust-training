@@ -63,7 +63,7 @@ const LAST_HEADER: &str = "# No-Std Rust";
 /// How many headers we are processing.
 ///
 /// We use this to split the cheatsheet into `NUM_HEADERS` headers
-const _NUM_HEADERS: usize = 4;
+const NUM_HEADERS: usize = 4;
 
 /// All the headers
 const HEADERS: [&str; 4] = [
@@ -202,14 +202,16 @@ pub fn make_cheatsheet(lang: &str) -> Result<(), eyre::Report> {
         }
         Err(_) => {
             eprintln!("File {lang}-cheatsheet.md already exists - checking it's in sync");
-            test_cheatsheet(lang)?;
+            setup_cheatsheet_tester(lang)?;
         }
     }
     Ok(())
 }
 
-/// Verify that a cheatsheet has all the right headings in the right order
-pub fn test_cheatsheet(lang: &str) -> Result<(), eyre::Report> {
+/// Verify that a cheatsheet has all the right headings in the right order.
+/// This function was refactored out of `cheatsheet_tester` to separate the file handling logic
+/// from the unit tests of `cheatsheet_tester`.
+pub fn setup_cheatsheet_tester(lang: &str) -> Result<(), eyre::Report> {
     // Collect Vec<SlideSection> from SUMMARY.md
     let text = read_to_string("./training-slides/src/SUMMARY.md")
         .context("could not read_to_string - SUMMARY.md not found")?;
@@ -219,7 +221,6 @@ pub fn test_cheatsheet(lang: &str) -> Result<(), eyre::Report> {
         .map(|l| list_of_strings_to_slide_section(l))
         .collect();
 
-    // Collect Vec<String> from lang-cheatsheet.md into chunks
     let file_name = format!("./training-slides/src/{lang}-cheatsheet.md");
     let cheatsheet_text = read_to_string(file_name)
         .with_context(|| eyre::eyre!("{lang}-cheatsheet.md not found."))?;
@@ -227,14 +228,24 @@ pub fn test_cheatsheet(lang: &str) -> Result<(), eyre::Report> {
     cheatsheet_tester(lang, slide_sections, &cheatsheet_text)
 }
 
+/// Test that the cheatsheet respects the following invariants:
+/// * It starts with `# MyLang Cheatsheet`
+/// * It contains all headers in `HEADERS`
+/// * It contains all subheaders in each header
+/// 
+/// It does this by 
+/// 1. Collecting the headings and subheadings into a `Vec<String>`
+/// 2. Checking that each heading has all its subheadings
+/// 3. Checking all `HEADERS` are present
 fn cheatsheet_tester(lang: &str, slide_sections: Vec<SlidesSection>, cheatsheet_text: &str) -> Result<(), eyre::Error> {
-    // Safety: We know `lang` is part of our blessed lang-names, so it must be at least of size 1.
+    // Unwrap note: We know `lang` is part of our blessed lang-names, so it must be at least of size 1.
     let lang_uppercase = lang.chars().nth(0).unwrap().to_uppercase().to_string() + &lang[1..];
     let cheatsheet_name = format!("# {lang_uppercase} Cheatsheet");
     if !cheatsheet_text.contains(&cheatsheet_name) {
         panic!("{lang}-cheatsheet.md does not contain a starting header `{cheatsheet_name}`");
     }
 
+    // Collect Vec<String> from lang-cheatsheet.md into chunks
     let mut chunked_cheatsheet: Vec<Vec<String>> = Vec::new();
     let mut current_section: Vec<String> = Vec::new();
 
@@ -262,11 +273,12 @@ fn cheatsheet_tester(lang: &str, slide_sections: Vec<SlidesSection>, cheatsheet_
         .expect("Cheatsheet should not be empty");
 
     let mut missing_files = false;
-    if chunked_cheatsheet.len() != _NUM_HEADERS {
+    if chunked_cheatsheet.len() != NUM_HEADERS {
         eprintln!("You are missing headers in {lang}-cheatsheet.md");
         missing_files = true;
     }
 
+    // Checking Logic
     for (idx, section) in chunked_cheatsheet.iter().enumerate() {
         // Check that headers from SUMMARY.md are in the lang-cheatsheet.md
         if HEADERS[idx] != section[0] {
@@ -300,6 +312,7 @@ fn cheatsheet_tester(lang: &str, slide_sections: Vec<SlidesSection>, cheatsheet_
             }
         }
     }
+
     if missing_files {
         panic!("You have missing slides in {lang}-cheatsheet.md");
     } else {
@@ -314,7 +327,7 @@ pub fn test_all_cheatsheets() -> Result<(), eyre::Report> {
         let file_name = format!("./training-slides/src/{lang}-cheatsheet.md");
         let file_path = Path::new(&file_name);
         if Path::exists(file_path) {
-            test_cheatsheet(lang)?;
+            setup_cheatsheet_tester(lang)?;
         } else {
             continue;
         }
