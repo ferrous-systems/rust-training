@@ -30,7 +30,7 @@
 //! The other half of the functionality is `test-cheatsheets`, which requires thinking
 //! about what would make our `cheatsheets` fall out of sync.
 //!
-//! Assume we have a folder with `src/*-cheatsheets.md`.
+//! Assume we have a folder with `src/mylang-cheatsheets.md`.
 //!
 //! In theory, the cheatsheets and the files in `SUMMARY.md` need to have
 //!
@@ -227,6 +227,15 @@ pub fn test_cheatsheet(lang: &str) -> Result<(), eyre::Report> {
     let file_name = format!("./training-slides/src/{lang}-cheatsheet.md");
     let cheatsheet_text = read_to_string(file_name)
         .with_context(|| eyre::eyre!("{lang}-cheatsheet.md not found."))?;
+    // TODO: Check for slide title for slide mode
+    // TODO: Add unit test for previous panic
+    // TODO: separate file handling from correctness logic
+    // Safety: We know `lang` is part of our blessed lang-names, so it must be at least of size 1.
+    let lang_uppercase = lang.chars().nth(1).unwrap().to_uppercase().to_string() + &lang[1..];
+    let cheatsheet_name = format!("# {lang_uppercase} Cheatsheet");
+    if !cheatsheet_text.contains(&cheatsheet_name) {
+        panic!("{lang}-cheatsheet.md does not contain a starting header `{cheatsheet_name}`");
+    }
 
     let mut chunked_cheatsheet: Vec<Vec<String>> = Vec::new();
     let mut current_section: Vec<String> = Vec::new();
@@ -295,7 +304,6 @@ pub fn test_cheatsheet(lang: &str) -> Result<(), eyre::Report> {
     if missing_files {
         panic!("You have missing slides in {lang}-cheatsheet.md");
     } else {
-        eprintln!("Neat! {lang}-cheatsheet.md is in sync");
         Ok(())
     }
 }
@@ -401,5 +409,14 @@ Rust for the Linux Kernel and other no-std environments with an pre-existing C A
         let region = focus_regions(test);
         assert_eq!(list_of_strings_to_slide_section(&region[0]), res);
         assert!(true);
+    }
+    #[test]
+    fn test_cheatsheet_lang() {
+
+    }
+    #[test]
+    #[should_panic]
+    fn test_no_opening_title() {
+
     }
 }
