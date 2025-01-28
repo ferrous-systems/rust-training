@@ -182,7 +182,7 @@ pub fn make_cheatsheet(lang: &str) -> Result<(), eyre::Report> {
     let text = read_to_string("./training-slides/src/SUMMARY.md").context("SUMMARY.md not found")?;
     let slide_texts = focus_regions(&text);
     let uppercase_lang_name = lang.chars().nth(0).unwrap().to_uppercase().to_string() + &lang[1..];
-    let mut slide_sections = vec![SlidesSection { header: format!("# {uppercase_lang_name} Cheatsheet"), deck_titles: vec!["\n".into()] }];
+    let mut slide_sections = vec![SlidesSection { header: format!("{uppercase_lang_name} Cheatsheet"), deck_titles: vec![] }];
     slide_texts
         .iter()
         .for_each(|l| slide_sections.push(list_of_strings_to_slide_section(l)));
