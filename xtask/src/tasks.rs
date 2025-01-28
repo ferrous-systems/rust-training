@@ -228,9 +228,6 @@ pub fn test_cheatsheet(lang: &str) -> Result<(), eyre::Report> {
 }
 
 fn cheatsheet_tester(lang: &str, slide_sections: Vec<SlidesSection>, cheatsheet_text: &str) -> Result<(), eyre::Error> {
-    // TODO: Check for slide title for slide mode
-    // TODO: Add unit test for previous panic
-    // TODO: separate file handling from correctness logic
     // Safety: We know `lang` is part of our blessed lang-names, so it must be at least of size 1.
     let lang_uppercase = lang.chars().nth(0).unwrap().to_uppercase().to_string() + &lang[1..];
     let cheatsheet_name = format!("# {lang_uppercase} Cheatsheet");
@@ -242,6 +239,7 @@ fn cheatsheet_tester(lang: &str, slide_sections: Vec<SlidesSection>, cheatsheet_
     let mut current_section: Vec<String> = Vec::new();
 
     // Skip anything that doesn't start with '#', we don't care about them.
+    // Also, skip the line if it's `# Mylang Cheatsheet`
     for line in cheatsheet_text.lines() {
         if line.is_empty() || !line.starts_with('#') || line == cheatsheet_name {
             continue;
@@ -305,6 +303,7 @@ fn cheatsheet_tester(lang: &str, slide_sections: Vec<SlidesSection>, cheatsheet_
     if missing_files {
         panic!("You have missing slides in {lang}-cheatsheet.md");
     } else {
+        eprintln!("Neat! {lang}-cheatsheet.md is in sync");
         Ok(())
     }
 }
