@@ -3,6 +3,7 @@
 //! Spawns varies tasks, according to the command-line arguments.
 
 #![deny(warnings)]
+#![deny(missing_docs)]
 
 mod tasks;
 
@@ -65,7 +66,7 @@ fn main() -> color_eyre::Result<()> {
 
     match &args[..] {
         ["make-cheatsheet", lang] => tasks::make_cheatsheet(lang),
-        ["test-cheatsheet", lang] => tasks::test_cheatsheet(lang),
+        ["test-cheatsheet", lang] => tasks::setup_cheatsheet_tester(lang),
         _ => Ok(()),
     }
 }

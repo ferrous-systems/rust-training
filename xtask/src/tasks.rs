@@ -30,7 +30,7 @@
 //! The other half of the functionality is `test-cheatsheets`, which requires thinking
 //! about what would make our `cheatsheets` fall out of sync.
 //!
-//! Assume we have a folder with `src/*-cheatsheets.md`.
+//! Assume we have a folder with `src/mylang-cheatsheets.md`.
 //!
 //! In theory, the cheatsheets and the files in `SUMMARY.md` need to have
 //!
@@ -46,11 +46,7 @@
 //! Lastly, `test-all-cheatsheets` is just a convinience function to test all existing cheatsheets at once.
 
 use eyre::WrapErr;
-use std::{
-    fs::{read_to_string, File},
-    io::Write,
-    path::Path,
-};
+use std::{fs::{read_to_string, File}, io::Write, path::Path};
 
 use crate::LANG_LIST;
 
@@ -67,7 +63,7 @@ const LAST_HEADER: &str = "# No-Std Rust";
 /// How many headers we are processing.
 ///
 /// We use this to split the cheatsheet into `NUM_HEADERS` headers
-const _NUM_HEADERS: usize = 4;
+const NUM_HEADERS: usize = 4;
 
 /// All the headers
 const HEADERS: [&str; 4] = [
@@ -183,13 +179,13 @@ fn list_of_strings_to_slide_section(chunk: &[String]) -> SlidesSection {
 /// Collect all the headers and write them out into a new `src/lang-cheatsheet.md`.
 pub fn make_cheatsheet(lang: &str) -> Result<(), eyre::Report> {
     // Collect slide sections, chunked by header
-    let text =
-        read_to_string("./training-slides/src/SUMMARY.md").context("SUMMARY.md not found")?;
+    let text = read_to_string("./training-slides/src/SUMMARY.md").context("SUMMARY.md not found")?;
     let slide_texts = focus_regions(&text);
-    let slide_sections: Vec<SlidesSection> = slide_texts
+    let uppercase_lang_name = lang.chars().nth(0).unwrap().to_uppercase().to_string() + &lang[1..];
+    let mut slide_sections = vec![SlidesSection { header: format!("{uppercase_lang_name} Cheatsheet"), deck_titles: vec![] }];
+    slide_texts
         .iter()
-        .map(|l| list_of_strings_to_slide_section(l))
-        .collect();
+        .for_each(|l| slide_sections.push(list_of_strings_to_slide_section(l)));
 
     // Check to see if a file exists
     let file_str = format!("./training-slides/src/{lang}-cheatsheet.md");
@@ -206,14 +202,16 @@ pub fn make_cheatsheet(lang: &str) -> Result<(), eyre::Report> {
         }
         Err(_) => {
             eprintln!("File {lang}-cheatsheet.md already exists - checking it's in sync");
-            test_cheatsheet(lang)?;
+            setup_cheatsheet_tester(lang)?;
         }
     }
     Ok(())
 }
 
-/// Verify that a cheatsheet has all the right headings in the right order
-pub fn test_cheatsheet(lang: &str) -> Result<(), eyre::Report> {
+/// Verify that a cheatsheet has all the right headings in the right order.
+/// This function was refactored out of `cheatsheet_tester` to separate the file handling logic
+/// from the unit tests of `cheatsheet_tester`.
+pub fn setup_cheatsheet_tester(lang: &str) -> Result<(), eyre::Report> {
     // Collect Vec<SlideSection> from SUMMARY.md
     let text = read_to_string("./training-slides/src/SUMMARY.md")
         .context("could not read_to_string - SUMMARY.md not found")?;
@@ -223,17 +221,38 @@ pub fn test_cheatsheet(lang: &str) -> Result<(), eyre::Report> {
         .map(|l| list_of_strings_to_slide_section(l))
         .collect();
 
-    // Collect Vec<String> from lang-cheatsheet.md into chunks
     let file_name = format!("./training-slides/src/{lang}-cheatsheet.md");
     let cheatsheet_text = read_to_string(file_name)
         .with_context(|| eyre::eyre!("{lang}-cheatsheet.md not found."))?;
+    
+    cheatsheet_tester(lang, slide_sections, &cheatsheet_text)
+}
 
+/// Test that the cheatsheet respects the following invariants:
+/// * It starts with `# MyLang Cheatsheet`
+/// * It contains all headers in `HEADERS`
+/// * It contains all subheaders in each header
+/// 
+/// It does this by 
+/// 1. Collecting the headings and subheadings into a `Vec<String>`
+/// 2. Checking that each heading has all its subheadings
+/// 3. Checking all `HEADERS` are present
+fn cheatsheet_tester(lang: &str, slide_sections: Vec<SlidesSection>, cheatsheet_text: &str) -> Result<(), eyre::Error> {
+    // Unwrap note: We know `lang` is part of our blessed lang-names, so it must be at least of size 1.
+    let lang_uppercase = lang.chars().nth(0).unwrap().to_uppercase().to_string() + &lang[1..];
+    let cheatsheet_name = format!("# {lang_uppercase} Cheatsheet");
+    if !cheatsheet_text.contains(&cheatsheet_name) {
+        panic!("{lang}-cheatsheet.md does not contain a starting header `{cheatsheet_name}`");
+    }
+
+    // Collect Vec<String> from lang-cheatsheet.md into chunks
     let mut chunked_cheatsheet: Vec<Vec<String>> = Vec::new();
     let mut current_section: Vec<String> = Vec::new();
 
     // Skip anything that doesn't start with '#', we don't care about them.
+    // Also, skip the line if it's `# Mylang Cheatsheet`
     for line in cheatsheet_text.lines() {
-        if line.is_empty() || !line.starts_with('#') {
+        if line.is_empty() || !line.starts_with('#') || line == cheatsheet_name {
             continue;
         }
         // We found a new header if it starts with "# ", so start a new section/Vec<String> we can slide names into
@@ -254,11 +273,12 @@ pub fn test_cheatsheet(lang: &str) -> Result<(), eyre::Report> {
         .expect("Cheatsheet should not be empty");
 
     let mut missing_files = false;
-    if chunked_cheatsheet.len() != _NUM_HEADERS {
+    if chunked_cheatsheet.len() != NUM_HEADERS {
         eprintln!("You are missing headers in {lang}-cheatsheet.md");
         missing_files = true;
     }
 
+    // Checking Logic
     for (idx, section) in chunked_cheatsheet.iter().enumerate() {
         // Check that headers from SUMMARY.md are in the lang-cheatsheet.md
         if HEADERS[idx] != section[0] {
@@ -292,6 +312,7 @@ pub fn test_cheatsheet(lang: &str) -> Result<(), eyre::Report> {
             }
         }
     }
+
     if missing_files {
         panic!("You have missing slides in {lang}-cheatsheet.md");
     } else {
@@ -306,7 +327,7 @@ pub fn test_all_cheatsheets() -> Result<(), eyre::Report> {
         let file_name = format!("./training-slides/src/{lang}-cheatsheet.md");
         let file_path = Path::new(&file_name);
         if Path::exists(file_path) {
-            test_cheatsheet(lang)?;
+            setup_cheatsheet_tester(lang)?;
         } else {
             continue;
         }
@@ -401,5 +422,98 @@ Rust for the Linux Kernel and other no-std environments with an pre-existing C A
         let region = focus_regions(test);
         assert_eq!(list_of_strings_to_slide_section(&region[0]), res);
         assert!(true);
+    }
+    #[test]
+    fn cheatsheet_tester_full_mock() {
+        let lang = "cpp";
+        let cheatsheet_text = "# Cpp Cheatsheet
+# Rust Fundamentals
+## Overview
+## Installation
+## Basic Types
+## Control Flow
+## Compound Types
+## Ownership and Borrowing
+## Error Handling
+## Collections
+## Iterators
+## Imports and Modules
+## Good Design Practices
+
+# Applied Rust
+## Methods and Traits
+## Rust I/O Traits
+## Generics
+## Lifetimes
+## Cargo Workspaces
+## Heap Allocation (Box and Rc)
+## Shared Mutability (Cell, RefCell, OnceCell)
+## Thread Safety (Send/Sync, Arc, Mutex)
+## Closures and the Fn/FnOnce/FnMut traits
+## Spawning Threads and Scoped Threads
+
+# Advanced Rust
+## Advanced Strings
+## Building Robust Programs with Kani
+## Debugging Rust
+## Deconstructing Send, Arc, and Mutex
+## Dependency Management with Cargo
+## Deref Coercions
+## Design Patterns
+## Documentation
+## Drop, Panic and Abort
+## Dynamic Dispatch
+## Macros
+## Property Testing
+## Rust Projects Build Time
+## Send and Sync
+## Serde
+## Testing
+## The stdlib
+## Using Cargo
+## Using Types to encode State
+
+# Rust and Web Assembly
+## WASM
+
+";
+    let slide_sections: Vec<_> = vec![
+        SlidesSection { header:"# Rust Fundamentals".into(), deck_titles: vec!["Overview".into(), "Installation".into(), "Basic Types".into(), "Control Flow".into(), "Compound Types".into(), "Ownership and Borrowing".into(), "Error Handling".into(), "Collections".into(), "Iterators".into(), "Imports and Modules".into(), "Good Design Practices".into()]} ,
+        SlidesSection {header:"# Applied Rust".into(), deck_titles: vec!["Methods and Traits".into(), "Rust I/O Traits".into(), "Generics".into(), "Lifetimes".into(), "Cargo Workspaces".into(), "Heap Allocation (Box and Rc)".into(), "Shared Mutability (Cell, RefCell, OnceCell)".into(), "Thread Safety (Send/Sync, Arc, Mutex)".into(), "Closures and the Fn/FnOnce/FnMut traits".into(), "Spawning Threads and Scoped Threads".into()]} ,
+        SlidesSection {header:"# Advanced Rust".into(), deck_titles: vec!["Advanced Strings".into(), "Building Robust Programs with Kani".into(), "Debugging Rust".into(), "Deconstructing Send, Arc, and Mutex".into(), "Dependency Management with Cargo".into(), "Deref Coercions".into(), "Design Patterns".into(), "Documentation".into(), "Drop, Panic and Abort".into(), "Dynamic Dispatch".into(), "Macros".into(), "Property Testing".into(), "Rust Projects Build Time".into(), "Send and Sync".into(), "Serde".into(), "Testing".into(), "The stdlib".into(), "Using Cargo".into(), "Using Types to encode State".into()]},
+        SlidesSection {header:"# Rust and Web Assembly".into(), deck_titles: vec!["WASM".into()] }];
+
+    let _ = cheatsheet_tester(lang, slide_sections, cheatsheet_text);
+
+    }
+
+    #[test]
+    #[should_panic]
+    fn test_no_opening_title() {
+        let test_str = "# notCpp Cheatsheet
+        
+        # Rust Fundamentals
+        ## Overview
+        ## Basic Types
+        ## Installation";
+        let dummy_vec: Vec<_> = Vec::new();
+        let lang = "cpp";
+
+        let _ = cheatsheet_tester(lang, dummy_vec, test_str);
+    }
+
+    #[test]
+    #[should_panic]
+    fn test_wrong_first_header() {
+        let test_str = "# Cpp Cheatsheet
+        
+        # CLEARLY WRONG TITLE SHOULD PANIC
+        ## Overview
+        ## Basic Types
+        ## Installation";
+        let dummy_vec: Vec<_> = Vec::new();
+        let lang = "cpp";
+
+        let _ = cheatsheet_tester(lang, dummy_vec, test_str);
     }
 }
