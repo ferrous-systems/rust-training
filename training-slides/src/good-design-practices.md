@@ -257,6 +257,7 @@ Couples finding the error to the place that finds it.
 
 ## Unwraps in iterators
 
+
 ```rust [], ignore
 let numeric_lines = bufreader.lines()
     .map(|line| line.unwrap())
