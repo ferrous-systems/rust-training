@@ -4,6 +4,8 @@ language = "en"
 multilingual = false
 src = "src"
 title = "Rust Training Slides by Ferrous Systems"
+
+[mdslides]
 skip_slides = ["how-cheatsheets-work.md"]
 
 [preprocessor.graphviz]
