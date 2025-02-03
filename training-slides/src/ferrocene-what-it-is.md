@@ -60,7 +60,11 @@ As of 3 September 2024, the Ferrocene releases are:
 Note:
 
 We strive to make each stable release available for two years, including
-tracking of Known Problems.
+tracking of Known Problems. The nightly, pre-rolling and rolling releases do not
+carry our stability or support guarantees - they only apply to our *stable-xxx*
+releases. See
+<https://public-docs.ferrocene.dev/main/qualification/plan/release.html> for
+details.
 
 ## Open Source
 
