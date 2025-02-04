@@ -17,7 +17,7 @@ jobs:
 
       - name: Add mdslides
         run: |
-          curl --proto '=https' --tlsv1.2 -LsSf https://github.com/ferrous-systems/mdslides/releases/download/v0.5.0/mdslides-installer.sh | sh
+          curl --proto '=https' --tlsv1.2 -LsSf https://github.com/ferrous-systems/mdslides/releases/download/v0.6.0/mdslides-installer.sh | sh
 
       - name: Add graphviz
         run: |
