@@ -89,7 +89,7 @@ We prefer using `?` instead of highly nested pattern matching
 
 ## Option into Result
 
-* Sometimes you find an error and you want to add more context to the handler
+* Sometimes we may have the absence of a value, but we want to add more context to the handler
 * In essence: we have `Option`, but we want a `Result`:
 
 ```rust [], ignore
