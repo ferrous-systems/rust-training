@@ -120,8 +120,8 @@ additional context of `Result<T, E>` over the simple `Option<T>`.
 
 ## Result to Result
 
-* We don't really want bare a `Err` - no information on how to proceed if you're handler
-* As you propagate your error, process the context to transform it
+* We want to avoid bare `Err`s  - the error type isn't conveying any information on how to proceed if you're the handler
+* As you propagate the error, process the context to transform the error type into something more precise
 * Basically, if we have `Result<_, A>` but want `Result<_, B>`, we can use `.map_err()`
 
 ```rust [], ignore
@@ -146,7 +146,6 @@ enum MyError {
     IncorrectID,
     // ...
 }
-
 pub fn find_user(username: &str) -> Result<UserId, MyError>  {
     let f = std::fs::File::open("/etc/passwd")
         .map_err(|e| MyError::BadPassword(format!("Failed to open password file: {:?}", e)))?;
