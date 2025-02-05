@@ -26,17 +26,7 @@ Let's see how we can get to `?` as quickly as possible in cases where
 
 `?` turns this
 
-```rust []
-use std::fs::File;
-use std::io::prelude::*;
-use std::io;
-
-struct Info {
-    name: String,
-    age: i32,
-    rating: i32,
-}
-
+```rust [], ignore
 fn write_info(info: &Info) -> io::Result<()> {
     // Early return on error
     let mut file = match File::create("my_best_friends.txt") {
@@ -60,17 +50,7 @@ fn write_info(info: &Info) -> io::Result<()> {
 
 Into this
 
-```rust []
-use std::fs::File;
-use std::io::prelude::*;
-use std::io;
-
-struct Info {
-    name: String,
-    age: i32,
-    rating: i32,
-}
-
+```rust [], ignore
 fn write_info(info: &Info) -> io::Result<()> {
     let mut file = File::create("my_best_friends.txt")?;
     // Early return on error
