@@ -199,7 +199,8 @@ let mut iter = a.iter().map(|s| s.parse()).filter(|s| s.is_ok()).map(|s| s.unwra
 
 ## Iterators and collecting errors
 
-If you want to process each error separately, use `Vec<Result<T, _>>`:
+* `Option` and `Result` support transposition: they can wrap collections or be elements of them
+* If you want to process each error separately, use `Vec<Result<T, _>>`:
 
 ```rust [], ignore
 let vec_of_results: Vec<Result<i32, _>> = inputs.iter()
@@ -209,13 +210,15 @@ let vec_of_results: Vec<Result<i32, _>> = inputs.iter()
 
 ## Iterators and collecting errors 2
 
-If you only care about all of them succeeding, wrap it with `Result<Vec<i32>, _>`
+* If you only care about all of them succeeding, wrap it with `Result<Vec<i32>, _>`:
 
 ```rust [], ignore
 let result_of_vec: Result<Vec<i32>, _> = inputs.iter()
     .map(|s| s.parse::<i32>())
     .collect()?;
 ```
+
+
 
 ## Which way to wrap?
 
