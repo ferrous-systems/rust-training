@@ -10,7 +10,7 @@
 
 ## Unwrap -> ?
 
-* `.unwrap()`'ing both `Option` and `Result` is the easy way out
+* `.unwrap()`'ing both `Option` and `Result` *seems* like an the easy way out
 * Cons: refactoring later never happens and leads to more brittle code
 
 Instead, prefer using the early return `?` operator where possible, or at least `.expect()`
@@ -114,7 +114,7 @@ We prefer using `?` instead of highly nested pattern matching
 
 ```rust [], ignore
 fn find_user(username: &str) -> Option<&str> {
-    let f = matchstd::fs::File::open("/etc/password") {
+    let f = match std::fs::File::open("/etc/password") {
 
     }
     // ...
@@ -210,7 +210,7 @@ If you only care about moving on in the happy path, try judicious pattern matchi
 let a = ["1", "two", "NaN", "four", "5"];
 
 // I don't care about bad results, I filter them out
-let mut iter = a.iter().filter_map(|s| s.parse().ok());
+let mut iter = a.iter().filter_map(|s| s.parse::<i32>().ok());
 // Instead of 
 let mut iter = a.iter().map(|s| s.parse()).filter(|s| s.is_ok()).map(|s| s.unwrap());
 ```
