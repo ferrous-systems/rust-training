@@ -115,3 +115,8 @@ Topics around [Ferrocene](https://ferrous-systems.com/ferrocene/), the qualified
 * [Safety, Performance, and Productivity](./safety-performance-productivity.md)
 * [Tradeoffs](./tradeoffs.md)
 * [Where Next](./where-next.md)
+
+# Cheatsheets
+
+* [How CheatSheets Work](./how-cheatsheets-work.md)
+* [C++](./cpp-cheatsheet.md)

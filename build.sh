@@ -15,7 +15,7 @@ if [ $(uname) == "Darwin" ]; then
     dot -V || brew install graphviz
     mdbook-graphviz --version || cargo install mdbook-graphviz
     ./mdbook-mermaid --version || curl -sSL https://github.com/badboy/mdbook-mermaid/releases/download/v0.13.0/mdbook-mermaid-v0.13.0-x86_64-apple-darwin.tar.gz | tar -xvzf -
-    ./mdslides --version || ( curl -sSL https://github.com/ferrous-systems/mdslides/releases/download/v0.5.0/mdslides-x86_64-apple-darwin.tar.xz | tar -xvJf - \
+    ./mdslides --version || ( curl -sSL https://github.com/ferrous-systems/mdslides/releases/download/v0.6.1/mdslides-x86_64-apple-darwin.tar.xz | tar -xvJf - \
         && mv ./mdslides-*/mdslides . \
         && rm -rf ./mdslides-*/ )
 else
@@ -26,7 +26,7 @@ else
         && rm mdbook-graphviz.zip \
         && chmod a+x ./mdbook-graphviz )
     ./mdbook-mermaid --version || curl -sSL https://github.com/badboy/mdbook-mermaid/releases/download/v0.13.0/mdbook-mermaid-v0.13.0-x86_64-unknown-linux-gnu.tar.gz | tar -xvzf -
-    ./mdslides --version || ( curl -sSL https://github.com/ferrous-systems/mdslides/releases/download/v0.5.0/mdslides-x86_64-unknown-linux-gnu.tar.xz | tar -xvJf - \
+    ./mdslides --version || ( curl -sSL https://github.com/ferrous-systems/mdslides/releases/download/v0.6.1/mdslides-x86_64-unknown-linux-gnu.tar.xz | tar -xvJf - \
         && mv ./mdslides-*/mdslides . \
         && rm -rf ./mdslides-*/ )
 fi
