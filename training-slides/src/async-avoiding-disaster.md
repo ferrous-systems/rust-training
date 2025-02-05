@@ -9,16 +9,16 @@ Your project is dynamic:
 
 ## Backpressure
 
-Backpressure is the process of "pushing back" on producers that are to fast.
+Backpressure is the process of "pushing back" on producers that are too fast.
 
 This throttles the system, but allows it to not fail.
 
 ## Bounded vs. unbounded growth
 
-* bounded channels are predictable
-* unbounded are more dynamic
-* bounded provide backpressure
-* unbounded are useful if you know they are never beyond a certain size
+* Bounded channels are predictable
+* Unbounded are more dynamic
+* Bounded provide backpressure
+* Unbounded are useful if you know they are never beyond a certain size
 
 ##  Holding state
 
@@ -27,7 +27,7 @@ This throttles the system, but allows it to not fail.
 
 ## Dropping futures
 
-* Dropping a futures means cancelling it
+* Dropping a future means cancelling it
 * Be aware of what happens if it is cancelled
 
 ## Shutting down
