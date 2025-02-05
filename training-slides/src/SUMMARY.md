@@ -45,6 +45,7 @@ Topics that go beyond [Applied Rust](#applied-rust).
 * [Deref Coercions](./deref-coercions.md)
 * [Design Patterns](./design-patterns.md)
 * [Documentation](./documentation.md)
+* [Dealing with Unwrap](./dealing-with-unwrap.md)
 * [Drop, Panic and Abort](./drop-panic-abort.md)
 * [Dynamic Dispatch](./dynamic-dispatch.md)
 * [Macros](./macros.md)
