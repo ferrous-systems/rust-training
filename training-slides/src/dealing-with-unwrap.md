@@ -155,8 +155,12 @@ pub fn find_user(username: &str) -> Result<UserId, MyError>  {
 
 ## To be `?` or not to be `?`
 
-* Using `?` means "stop what you are doing, deal with the error now"
+
+* Using `?` means we deal with the error right now, but not *right here*
+* Don't apply `?` blindly. There may be cases where other choices make sense
   * Undesirable for long-running processes, or if we don't care about the failure
+  * Handling the error instead instead of propagating it
+  * Combining multiple `Result`s/`Option`s via pattern matching
 
 ## When to not `?`
 
