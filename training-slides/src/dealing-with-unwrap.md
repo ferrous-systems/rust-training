@@ -108,7 +108,7 @@ fn find_user(username: &str) -> Option<&str> {
 ```rust [], ignore
 pub fn find_user(username: &str) -> Result<UserId, Err> {
     let f = std::fs::File::open("/etc/passwd")
-        .ok_or(|| Err(0))?;
+        .ok_or_else(|| Err(0))?;
     // ...
 }
 ```
