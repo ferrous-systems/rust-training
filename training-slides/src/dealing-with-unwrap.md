@@ -114,8 +114,8 @@ pub fn find_user(username: &str) -> Result<UserId, Err> {
 }
 ```
 
-* As application complexity grows (and examples would no longer fit on a slide), prefer the
-additional context of `Result<T, E>` over the simple `Option<T>`.
+* Because `Result<T, E>` provides more information than `Option<T>`, growing applications tend to encompass more `Result`s
+* This means there is a tendency to take `Option`s that arise in your code and you must transform them into `Result<T, E>`
 * There are stdlib functions to handle those transitions
 
 ## Result to Result
