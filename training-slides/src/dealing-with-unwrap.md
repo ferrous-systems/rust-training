@@ -1,7 +1,6 @@
 # Dealing with Unwrap
 
-
-## Handlng your errors
+## Handling your errors
 
 * Rust is *intentionally strict*: when failue modes happen, you have to decide how to handle them *right there*
 * Recall: 
@@ -18,9 +17,12 @@ Instead, prefer using the early return `?` operator where possible, or at least 
 
 ## `?` Examples
 
-Let's see how we can get to `?` as quickly as possible
+Let's see how we can get to `?` as quickly as possible in cases where
 
-## `?` in your function
+* You have many eager returns
+* You have `match` statements where all cases must succeed to go forward
+
+## `?` vs Eager Returns
 
 `?` turns this
 
@@ -54,7 +56,7 @@ fn write_info(info: &Info) -> io::Result<()> {
 }
 ```
 
-## `?` vs Pattern Matching
+## `?` vs Eager Returns 2
 
 Into this
 
@@ -79,7 +81,7 @@ fn write_info(info: &Info) -> io::Result<()> {
 }
 ```
 
-## `?` vs Pattern Matching 2
+## `?` vs Pattern Matching
 
 As well as this
 
@@ -95,7 +97,7 @@ fn add_last_numbers(stack: &mut Vec<i32>) -> Option<i32> {
 }
 ```
 
-## `?` in your function 4
+## `?` vs Pattern Matching 2
 
 ```rust []
 fn add_last_numbers(stack: &mut Vec<i32>) -> Option<i32> {
@@ -103,13 +105,12 @@ fn add_last_numbers(stack: &mut Vec<i32>) -> Option<i32> {
 }
 ```
 
-Takeaway: we prefer using `?` where possible instead of `match` expressions or elaborate pattern matching
+We prefer using `?` instead of highly nested pattern matching
 
 ## Option into Result
 
-Sometimes you find an error and you want to add more context to be handled.
-
-i.e., we have `Option`, but we want a `Result`:
+* Sometimes you find an error and you want to add more context to the handler
+* In essence: we have `Option`, but we want a `Result`:
 
 ```rust [], ignore
 fn find_user(username: &str) -> Option<&str> {
@@ -120,9 +121,9 @@ fn find_user(username: &str) -> Option<&str> {
 }
 ```
 
-## Option into Result 2
+* Use the `.ok_or_else()` function to change a `Option<T>` into `Result<T, E>` lazily
 
-Use the `.ok_or_else()` function to change a `Option<T>` into `Result<T, E>` lazily
+## Option into Result 2
 
 ```rust [], ignore
 pub fn find_user(username: &str) -> Result<UserId, Err> {
@@ -134,19 +135,12 @@ pub fn find_user(username: &str) -> Result<UserId, Err> {
 
 * As application complexity grows (and examples would no longer fit on a slide), prefer the
 additional context of `Result<T, E>` over the simple `Option<T>`.
-
 * Here are some functions to handle those transitions
-
-Note:
-
 
 ## Result to Result
 
-* We don't really want bare `Err` - no information on how to proceed if you're caller
-
-* As you propagate your error, process the context to transform the it.
-
-* Basically, if we have `Result<_, A>` but want `Result<_, B>`, we can use `.map_err()`
+* We don't really want bare a `Err` - no information on how to proceed if you're handler
+* As you propagate your error, process the context to transform it
 
 ```rust [], ignore
 pub fn find_user(username: &str) -> Result<UserId, String>  {
@@ -156,11 +150,14 @@ pub fn find_user(username: &str) -> Result<UserId, String>  {
 }
 ```
 
+* Basically, if we have `Result<_, A>` but want `Result<_, B>`, we can use `.map_err()`
+
 ## Result to Result 2
 
-The `String`y based error are not ideal - we prefer idiomatic error types:
+* The `String`y based errors are not ideal.
+* We prefer idiomatic error types:
 
-```rust [], ignore
+```rust [9], ignore
 pub type MyError = String;
 impl std::error::Error for MyError {}
 enum MyError {
@@ -176,17 +173,16 @@ pub fn find_user(username: &str) -> Result<UserId, MyError>  {
 }
 ```
 
-
-## When to not `?`
+## To be `?` or not to be `?`
 
 * Using `?` means "stop what you are doing, deal with the error now"
-  * Don't want that if we're doing long-running processing, or if we can't do anything about the failure
+  * Undesirable for long-running processes, or if we don't care about the failure
 
 ## When to not `?`
 
 ```rust [], ignore
 for stream in tcp_listener.incoming() {
-    // Should I stream? here? 
+    // Should I use `stream?` here? 
     // No, because my whole server would stop accepting connections
     let Ok(stream) = stream else {
         eprintln("Bad connection");
@@ -196,8 +192,6 @@ for stream in tcp_listener.incoming() {
 ```
 
 ## When to not `?` 2
-
-* Try instead
 
 ```rust [], ignore
 if let (Ok(a), Ok(b)) = (job_a(), job_b()) {
@@ -209,8 +203,8 @@ If you only care about moving on in the happy path, try judicious pattern matchi
 
 ## Iterators: `Result` into `Option`
 
-* Iterators usually just care about processing or finding certain elements and throwing out the rest
-* Use `.filter_map()`:
+* Iterators usually just care about processing or finding certain elements and throwing out the uninteresting data
+* Use `.filter_map()` for this:
 
 ```rust [], ignore
 let a = ["1", "two", "NaN", "four", "5"];
@@ -221,12 +215,11 @@ let mut iter = a.iter().filter_map(|s| s.parse().ok());
 let mut iter = a.iter().map(|s| s.parse()).filter(|s| s.is_ok()).map(|s| s.unwrap());
 ```
 
-* It's fine to lose context (uninteresting data) here, we only care if the entire process succeeded or not.
 * Concretely, this means turning `Result<T, E>` into an `Option<T>` by using the `.ok()` method
 
 ## Iterators and collecting errors
 
-If you want to process each error separately, have a `Vec<Result<T, _>>`:
+If you want to process each error separately, use `Vec<Result<T, _>>`:
 
 ```rust [], ignore
 let vec_of_results: Vec<Result<i32, _>> = inputs.iter()
@@ -249,19 +242,26 @@ let result_of_vec: Result<Vec<i32>, _> = inputs.iter()
 In general, we prefer wrapping the collection with an error (`Result<Vec<T>, _>` and `Option<Vec<T>>` )
 rather than the other way around
 
-## Diagrams
+## Recap
 
 We've gone over many transformations:
 
 * `Option<T>` to `Result<T, E>` and vice versa
 * `Result<T, E>` to `Result<T, U>`
 
-But many more variants exist depending on if you ignore the error, replace its value, provide a default, etc.
+Many more variants exist depending on if you ignore the error, replace its value, provide a default, etc.
 
-## Diagrams 2
+To deal with references, use `.as_ref()`.
+
+## Diagram
 
 ![error-result-option](./images/error-result-option-transform-diagram.svg "Error and Result Transforms")
 
 ## Conclusion
 
-Worry about `Result<T, E>` <=> `Option<T>` and `Result<T, E>` <=> `Result<T, F>` until you need something else
+Worry about
+
+* `Result<T, E>` <=> `Option<T>` and
+* `Result<T, E>` <=> `Result<T, F>`
+
+until you need something else
