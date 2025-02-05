@@ -241,9 +241,11 @@ Many more variants exist depending on if you ignore the error, replace its value
 
 To deal with references, use `.as_ref()`.
 
-## Diagram
+## Useful References
 
-![error-result-option](./images/error-result-option-transform-diagram.svg "Error and Result Transforms")
+* [Result's stdlib docs](https://doc.rust-lang.org/stable/std/result/index.html)
+* [Option's stdlib docs](https://doc.rust-lang.org/stable/std/option/index.html)
+* A **very useful** [diagram](https://docs.google.com/drawings/u/1/d/1EOPs0YTONo_FygWbuJGPfikO9Myt5HwtiFUHRuE1JVM/preview) is given in [the Effective Rust book](https://effective-rust.com/transform.html) for all these conversions and methods
 
 ## Conclusion
 
