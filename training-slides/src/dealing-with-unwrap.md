@@ -115,7 +115,7 @@ pub fn find_user(username: &str) -> Result<UserId, Err> {
 
 * As application complexity grows (and examples would no longer fit on a slide), prefer the
 additional context of `Result<T, E>` over the simple `Option<T>`.
-* Here are some functions to handle those transitions
+* There are stdlib functions to handle those transitions
 
 ## Result to Result
 
