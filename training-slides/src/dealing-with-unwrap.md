@@ -121,6 +121,7 @@ additional context of `Result<T, E>` over the simple `Option<T>`.
 
 * We don't really want bare a `Err` - no information on how to proceed if you're handler
 * As you propagate your error, process the context to transform it
+* Basically, if we have `Result<_, A>` but want `Result<_, B>`, we can use `.map_err()`
 
 ```rust [], ignore
 pub fn find_user(username: &str) -> Result<UserId, String>  {
@@ -130,7 +131,6 @@ pub fn find_user(username: &str) -> Result<UserId, String>  {
 }
 ```
 
-* Basically, if we have `Result<_, A>` but want `Result<_, B>`, we can use `.map_err()`
 
 ## Result to Result 2
 
