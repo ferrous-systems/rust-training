@@ -11,7 +11,8 @@
 ## Unwrap -> ?
 
 * `.unwrap()`'ing both `Option` and `Result` *seems* like an the easy way out
-* Cons: refactoring later never happens and leads to more brittle code
+* Switching from `.unwrap()` calls often leads to changes in function signatures, and the refactoring becomes
+wider and difficult with time and code
 
 Instead, prefer using the early return `?` operator where possible, or at least `.expect()`
 
