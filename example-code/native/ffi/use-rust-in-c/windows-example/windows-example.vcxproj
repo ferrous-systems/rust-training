@@ -113,7 +113,7 @@
     </Link>
     <PreBuildEvent>
       <Command>cd $(ProjectDir)\..
-cargo build
+cargo build --locked
 </Command>
     </PreBuildEvent>
     <PreBuildEvent>
@@ -139,7 +139,7 @@ cargo build
     </Link>
     <PreBuildEvent>
       <Command>cd $(ProjectPath)\..
-cargo build --release
+cargo build --release --locked
 </Command>
     </PreBuildEvent>
     <PreBuildEvent>

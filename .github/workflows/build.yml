@@ -4,6 +4,10 @@ on:
   push:
   pull_request:
 
+env:
+  CARGO_INCREMENTAL: 0
+  CARGO_PROFILE_TEST_DEBUG: 0
+
 jobs:
   build-slides:
     runs-on: ubuntu-20.04
