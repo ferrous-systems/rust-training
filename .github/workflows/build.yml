@@ -43,7 +43,7 @@ jobs:
 
       - name: Test all cheatsheets
         run: |
-          cargo xtask test-all-cheatsheets
+          cargo xtask test-all-cheatsheets --locked
 
       - name: Assemble Artifacts
         run: |
