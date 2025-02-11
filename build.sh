@@ -13,7 +13,7 @@ set -euo pipefail
 if [ $(uname) == "Darwin" ]; then
     ./mdbook --version || curl -sSL https://github.com/rust-lang/mdBook/releases/download/v0.4.40/mdbook-v0.4.40-x86_64-apple-darwin.tar.gz | tar -xvzf -
     dot -V || brew install graphviz
-    mdbook-graphviz --version || cargo install mdbook-graphviz
+    mdbook-graphviz --version || cargo install mdbook-graphviz --locked
     ./mdbook-mermaid --version || curl -sSL https://github.com/badboy/mdbook-mermaid/releases/download/v0.13.0/mdbook-mermaid-v0.13.0-x86_64-apple-darwin.tar.gz | tar -xvzf -
     ./mdslides --version || ( curl -sSL https://github.com/ferrous-systems/mdslides/releases/download/v0.6.1/mdslides-x86_64-apple-darwin.tar.xz | tar -xvJf - \
         && mv ./mdslides-*/mdslides . \
