@@ -31,7 +31,7 @@ jobs:
       # A `minimal` profile saves a couple seconds from not downloading `clippy` or `rustdocs` and friends
       - name: Update Rust
         run: |
-          rustup profile set minimal --no-self-update
+          rustup set profile minimal --no-self-update
           rustup update stable --no-self-update
 
       - name: Find slug name
