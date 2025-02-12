@@ -4,9 +4,11 @@ on:
   schedule:
     - cron: '0 0 * * Mon'
 
+
 env:
-  CARGO_INCREMENTAL: 0
-  CARGO_PROFILE_TEST_DEBUG: 0
+  CARGO_TERM_COLORS: always    # We want colors in our CI output
+  CARGO_INCREMENTAL: 0         # Don't waste time writing out incremental build files
+  CARGO_PROFILE_TEST_DEBUG: 0  # Same with debug info
 
 jobs:
   weekly-canary-build:
@@ -31,10 +33,13 @@ jobs:
         run: |
           sudo apt-get update -y && sudo apt-get install -y graphviz
 
+        # `minimal` profile avoids downloading `rustdocs` and other stuff we don't need in CI
+        # `--no-self-update` we don't need to update rustup, so we a network trip on that call
       - name: Update and set default Rust
         run: |
-          rustup update ${{ matrix.rust-channel }}
-          rustup default ${{ matrix.rust-channel }}
+          rustup profile set minimal --no-self-update
+          rustup update ${{ matrix.rust-channel }} --no-self-update
+          rustup default ${{ matrix.rust-channel }} --no-self-update
 
       - name: Find slug name
         run: |
