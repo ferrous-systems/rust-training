@@ -115,14 +115,13 @@ jobs:
     steps:
       - uses: actions/checkout@v4
      
-      # `--no-self-update` avoids rustup checking if it should update itself on each call
       - name: Add Rust Targets and Tools
         run: |
-          rustup target add thumbv7em-none-eabihf --no-self-update
-          rustup target add thumbv7em-none-eabi --no-self-update
-          rustup target add armv7r-none-eabihf --no-self-update
-          rustup target add aarch64-unknown-none --no-self-update
-          rustup component add llvm-tools-preview --no-self-update
+          rustup target add thumbv7em-none-eabihf
+          rustup target add thumbv7em-none-eabi
+          rustup target add armv7r-none-eabihf
+          rustup target add aarch64-unknown-none
+          rustup component add llvm-tools-preview
 
       - name: Find slug name
         run: |
