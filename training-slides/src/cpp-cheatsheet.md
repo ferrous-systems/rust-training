@@ -73,7 +73,6 @@ for value in &list {
 # Advanced Rust
 ## Advanced Strings
 ## Building Robust Programs with Kani
-## Dealing with Unwrap
 ## Debugging Rust
 ## Deconstructing Send, Arc, and Mutex
 ## Dependency Management with Cargo
