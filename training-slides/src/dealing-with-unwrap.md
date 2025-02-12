@@ -254,3 +254,4 @@ Worry about
 * `Result<T, E>` <=> `Result<T, F>`
 
 until you need something else
+
