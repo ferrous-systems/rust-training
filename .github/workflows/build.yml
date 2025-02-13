@@ -1,7 +1,10 @@
 name: Build sample material
 
+# Runs CI on pushing tags and pulls, but not both. Since we have branch protection on, these are our only cases to handle.
 on:
   push:
+    tags:
+      - '*'
   pull_request:
 
 env:
