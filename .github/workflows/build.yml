@@ -1,6 +1,7 @@
 name: Build sample material
 
-on: 
+# Runs CI on pushes and pulls, but not both. Also runs Jobs on new commits to the branch.
+on:
   push:
     branches:
       - main
