@@ -5,8 +5,9 @@ on:
   pull_request:
 
 env:
-  CARGO_INCREMENTAL: 0
-  CARGO_PROFILE_TEST_DEBUG: 0
+  CARGO_TERM_COLOR: always     # We want colors in our CI output
+  CARGO_INCREMENTAL: 0         # Don't waste time writing out incremental build files
+  CARGO_PROFILE_TEST_DEBUG: 0  # These are thrown away anyways, don't produce them
 
 jobs:
   build-slides:
@@ -27,9 +28,11 @@ jobs:
         run: |
           sudo apt-get update -y && sudo apt-get install -y graphviz
 
+      # A `minimal` profile saves a couple seconds from not downloading `clippy` or `rustdocs` and friends
       - name: Update Rust
         run: |
-          rustup update stable
+          rustup set profile minimal
+          rustup update stable --no-self-update
 
       - name: Find slug name
         run: |
