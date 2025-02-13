@@ -1,10 +1,10 @@
 name: Build sample material
 
-# Runs CI on pushes and pulls, but not both. Also runs Jobs on new commits to the branch.
+# Runs CI on pushing tags and pulls, but not both. Since we have branch protection on, these are our only cases to handle.
 on:
   push:
-    branches:
-      - main
+    tags:
+      - '*'
   pull_request:
 
 env:
