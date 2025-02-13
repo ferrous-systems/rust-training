@@ -1,8 +1,6 @@
 name: Build sample material
 
-on:
-  push:
-  pull_request:
+on: [push, pull_requests]
 
 env:
   CARGO_INCREMENTAL: 0
