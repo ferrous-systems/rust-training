@@ -10,7 +10,7 @@
 
 ## Unwrap -> ?
 
-* `.unwrap()`'ing both `Option` and `Result` *seems* like an the easy way out
+* `.unwrap()`'ing both `Option` and `Result` *seems* like an easy way out
 * Switching from `.unwrap()` calls often leads to changes in function signatures, and the refactoring becomes
 wider and difficult with time and code
 
