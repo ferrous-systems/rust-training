@@ -11,8 +11,8 @@ env:
 jobs:
   weekly-canary-build:
     strategy:
+        fail-fast: false
         matrix:
-            fail-fast: false
             rust-channel: [stable, beta, nightly]
     runs-on: ubuntu-20.04
     steps:
