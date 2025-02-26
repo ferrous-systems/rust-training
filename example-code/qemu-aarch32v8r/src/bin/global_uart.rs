@@ -8,7 +8,7 @@
 #![no_main]
 
 use core::fmt::Write;
-use qemu_aarch32v78r::uart::{CmsdkUart, MutexUart, UART0_ADDR};
+use qemu_aarch32v8r::uart::{CmsdkUart, MutexUart, UART0_ADDR};
 
 /// The clock speed of the peripheral subsystem on an SSE-300 SoC an on MPS3 board.
 ///
@@ -19,12 +19,13 @@ static UART: MutexUart = MutexUart::empty();
 
 /// The entry-point to the Rust application.
 ///
-/// It is called by the start-up code in `lib.rs`.
+/// It is called by the start-up code in `cortex-r-rt`.
 #[no_mangle]
 pub extern "C" fn kmain() {
     if let Err(e) = main() {
         panic!("main returned {:?}", e);
     }
+    semihosting::process::exit(0);
 }
 
 /// The main function of our Rust application.
@@ -60,18 +61,9 @@ fn print_stuff() -> Result<(), core::fmt::Error> {
 /// breakpoint.
 #[panic_handler]
 fn panic(info: &core::panic::PanicInfo) -> ! {
-    const SYS_REPORTEXC: u32 = 0x18;
     let _ = writeln!(&UART, "PANIC: {:?}", info);
-    loop {
-        // Exit, using semihosting
-        unsafe {
-            core::arch::asm!(
-                "svc 0x123456",
-                in("r0") SYS_REPORTEXC,
-                in("r1") 0x20026
-            )
-        }
-    }
+    // Exit, using semihosting
+    semihosting::process::exit(1);
 }
 
 // End of file

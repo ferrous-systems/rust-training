@@ -12,7 +12,7 @@ Ferrocene 24.05 is supported on *x86-64 Linux (glibc)*
 (`x86_64-unknown-linux-gnu`) as the host platform, and *Armv8-A bare-metal*
 (`aarch64-unknown-none`) as a cross-compilation target. This demo uses the
 early-access 'experimental' *Aarch32 Armv8-R bare-metal* (`armv8r-none-eabihf`)
-and *Armv7-R bare-metal* (`armv7r-none-eabihf`) targets.
+target.
 
 You must first install Ferrocene by executing `criticalup install` inside this
 folder. This will require a valid CriticalUp token - please see the [CriticalUp
@@ -54,21 +54,18 @@ file configures the default target as `armv8r-none-eabihf`. It also sets up the
 linker arguments to ensure that [`./linker.ld`](./linker.ld) is used as the
 linker script.
 
-You can optionally pass `--target=armv7r-none-eabihf` to build an Aarch32
-Armv7-R binary instead. It will still run on an emulated Cortex-R52, but that
-CPU is almost 100% Armv7-R compatible.
-
 Before the build, `cargo` will compile and execute `build.rs`, which will copy
 the linker script to the `cargo` temporary output directory where the linker
 will look for it.
 
-The compiled outputs will go into `./target/armv?r-none-eabihf/<profile>`, where
-`?` is 7 or 8, and `<profile>` is `debug` or `release`. The binary is called
-`qemu-aarch32v78r`, because that's the name given in the `Cargo.toml` file.
+The compiled outputs will go into `./target/armv8r-none-eabihf/<profile>`, where
+and `<profile>` is `debug` or `release`. The package contains multiple binary
+crates, and the output binary name will match the name of the source file in
+`./src/bin` that was compiled.
 
 ```console
 $ criticalup run cargo run --release -bin no_heap
-   Compiling qemu-aarch32v78r v0.1.0 (/Users/jonathan/work/qemu-aarch32v78r)
+   Compiling qemu-aarch32v8r v0.1.0 (/Users/jonathan/work/qemu-aarch32v8r)
     Finished release [optimized] target(s) in 0.16s
      Running `qemu-system-arm -machine mps3-an536 -cpu cortex-r52 -semihosting -nographic -kernel target/armv8r-none-eabihf/release/no_heap`
 Hello, this is Rust!

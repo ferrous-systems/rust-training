@@ -121,6 +121,25 @@ dependencies = [
 ]
 
 [[package]]
+name = "derive-mmio"
+version = "0.2.0"
+source = "git+https://github.com/knurling-rs/derive-mmio?rev=d2152029ed1892a24dbbfd47bcb29ee46691838b#d2152029ed1892a24dbbfd47bcb29ee46691838b"
+dependencies = [
+ "derive-mmio-macro",
+]
+
+[[package]]
+name = "derive-mmio-macro"
+version = "0.2.0"
+source = "git+https://github.com/knurling-rs/derive-mmio?rev=d2152029ed1892a24dbbfd47bcb29ee46691838b#d2152029ed1892a24dbbfd47bcb29ee46691838b"
+dependencies = [
+ "proc-macro-error2",
+ "proc-macro2",
+ "quote",
+ "syn",
+]
+
+[[package]]
 name = "embedded-hal"
 version = "0.2.7"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -205,6 +224,7 @@ version = "0.1.0"
 dependencies = [
  "critical-section",
  "defmt",
+ "derive-mmio",
  "heapless",
  "nb 1.1.0",
 ]
@@ -265,9 +285,9 @@ checksum = "a8f112729512f8e442d81f95a8a7ddf2b7c6b8a1a6f509a95864142b30cab2d3"
 
 [[package]]
 name = "syn"
-version = "2.0.96"
+version = "2.0.98"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "d5d0adab1ae378d7f53bdebc67a39f1f151407ef230f0ce2883572f5d8985c80"
+checksum = "36147f1a48ae0ec2b5b3bc5b537d267457555a10dc06f3dbc8cb11ba3006d3b1"
 dependencies = [
  "proc-macro2",
  "quote",
@@ -296,9 +316,9 @@ dependencies = [
 
 [[package]]
 name = "unicode-ident"
-version = "1.0.14"
+version = "1.0.17"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "adb9e6ca4f869e1180728b7950e35922a7fc6397f7b641499e8f3ef06e50dc83"
+checksum = "00e2473a93778eb0bad35909dff6a10d28e63f792f16ed15e404fca9d5eeedbe"
 
 [[package]]
 name = "vcell"
