@@ -122,9 +122,9 @@ jobs:
         run: |
           rustup target add thumbv7em-none-eabihf
           rustup target add thumbv7em-none-eabi
-          rustup target add armv7r-none-eabihf
           rustup target add aarch64-unknown-none
           rustup component add llvm-tools-preview
+          rustup component add rust-src
 
       - name: Find slug name
         run: |
