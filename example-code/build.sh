@@ -26,7 +26,7 @@ cargo build --locked
 popd
 # Build qemu Aarch32 Armv8-Rexample
 pushd ./qemu-aarch32v8r
-RUSTC_BOOSTRAP=1 cargo build --target=armv8r-none-eabihf --locked -Zbuild-std=core
+RUSTC_BOOTSTRAP=1 cargo build --target=armv8r-none-eabihf --locked -Zbuild-std=core
 popd
 # Build qemu Armv7E-M example
 pushd qemu-thumbv7em
