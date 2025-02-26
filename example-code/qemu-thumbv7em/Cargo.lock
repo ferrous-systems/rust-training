@@ -122,16 +122,18 @@ dependencies = [
 
 [[package]]
 name = "derive-mmio"
-version = "0.2.0"
-source = "git+https://github.com/knurling-rs/derive-mmio?rev=d2152029ed1892a24dbbfd47bcb29ee46691838b#d2152029ed1892a24dbbfd47bcb29ee46691838b"
+version = "0.3.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "9ba87c072fbbe8d2ebb935fde9d6dc326fad734f39055e1b2c27b3fe408a649c"
 dependencies = [
  "derive-mmio-macro",
 ]
 
 [[package]]
 name = "derive-mmio-macro"
-version = "0.2.0"
-source = "git+https://github.com/knurling-rs/derive-mmio?rev=d2152029ed1892a24dbbfd47bcb29ee46691838b#d2152029ed1892a24dbbfd47bcb29ee46691838b"
+version = "0.3.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "0500c475a83c5a51a53163be2e18137ce9de3a71dc9be1f23eff451e69463951"
 dependencies = [
  "proc-macro-error2",
  "proc-macro2",
