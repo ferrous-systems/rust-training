@@ -9,5 +9,7 @@ description = "Common drivers for Arm QEMU hardware"
 [dependencies]
 critical-section = "1.2.0"
 defmt = "0.3.10"
+# derive-mmio = "0.2.0"
+derive-mmio = { git = "https://github.com/knurling-rs/derive-mmio", rev = "d2152029ed1892a24dbbfd47bcb29ee46691838b" }
 heapless = "0.8.0"
 nb = "1.1.0"

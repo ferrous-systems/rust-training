@@ -41,7 +41,7 @@ impl MutexUart {
             let Some(uart) = guard.as_mut() else {
                 return true;
             };
-            uart.read_status().contains(Status::TXF)
+            uart.registers.read_status().contains(Status::TXF)
         })
     }
 
@@ -70,8 +70,9 @@ impl MutexUart {
             let Some(uart) = guard.as_mut() else {
                 panic!("tx_interrupts_on on uninit MutexUart");
             };
-            uart.modify_control(|c| {
+            uart.registers.modify_control(|mut c| {
                 c.set(Control::TXIE, enabled);
+                c
             });
         })
     }
@@ -86,9 +87,9 @@ impl MutexUart {
             };
             defmt::debug!(
                 "Control {}, Status {}, IntStatus {}",
-                uart.read_control(),
-                uart.read_status(),
-                uart.read_intstatus()
+                uart.registers.read_control(),
+                uart.registers.read_status(),
+                uart.registers.read_int_status()
             );
         });
     }

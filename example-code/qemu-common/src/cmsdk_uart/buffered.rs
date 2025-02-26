@@ -77,10 +77,11 @@ impl<const QLEN: usize> BufferedUart<QLEN> {
             // If TX interrupts aren't on, turn them on. Because we're in a CS,
             // we can't be interrupted between that buffer enqueue and turning
             // interrupts on
-            if !inner.uart.read_control().contains(Control::TXIE) {
+            if !inner.uart.registers.read_control().contains(Control::TXIE) {
                 defmt::debug!("Sending 0x{=u8:02x} and turning TXIE on", byte);
-                inner.uart.modify_control(|c| {
+                inner.uart.registers.modify_control(|mut c| {
                     c.set(Control::TXIE, true);
+                    c
                 });
                 _ = inner.uart.write(byte);
             } else {
@@ -107,7 +108,8 @@ impl<const QLEN: usize> BufferedUart<QLEN> {
             }
         }
         loop {
-            let is_txing = self.with(|inner| inner.uart.read_status().contains(Status::TXF));
+            let is_txing =
+                self.with(|inner| inner.uart.registers.read_status().contains(Status::TXF));
             if is_txing {
                 // sleep and try again
                 unsafe {
@@ -131,10 +133,11 @@ impl<const QLEN: usize> BufferedUart<QLEN> {
             if inner.buffer.is_empty() {
                 // cancel TX interrupt
                 defmt::debug!("Turning TXIE off");
-                inner.uart.modify_control(|c| {
+                inner.uart.registers.modify_control(|mut c| {
                     c.set(Control::TXIE, false);
+                    c
                 });
-            } else if !inner.uart.read_status().contains(Status::TXF) {
+            } else if !inner.uart.registers.read_status().contains(Status::TXF) {
                 // load UART with next byte
                 let byte = unsafe { inner.buffer.dequeue_unchecked() };
                 defmt::debug!("Auto send 0x{=u8:02x}", byte);

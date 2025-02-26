@@ -24,12 +24,9 @@ pushd ./qemu-aarch64v8a
 ./build.sh
 cargo build --locked
 popd
-# Build qemu Aarch32 Armv8-R/Armv7-R example
-pushd ./qemu-aarch32v78r
-# Can't use the shell script or the default target becuase armv8r isn't available
-# outside Ferrocene
-# ./build.sh
-cargo build --target=armv7r-none-eabihf --locked
+# Build qemu Aarch32 Armv8-Rexample
+pushd ./qemu-aarch32v8r
+RUSTC_BOOTSTRAP=1 cargo build --target=armv8r-none-eabihf --locked -Zbuild-std=core,alloc
 popd
 # Build qemu Armv7E-M example
 pushd qemu-thumbv7em

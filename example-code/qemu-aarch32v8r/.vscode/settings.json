@@ -1,0 +1,14 @@
+{
+    "rust-analyzer.server.extraEnv": {
+        // Use these settings on macOS:
+        // "CARGO": "${userHome}/Library/Application Support/criticalup/bin/cargo",
+        // "RUSTC": "${userHome}/Library/Application Support/criticalup/bin/rustc",
+        // Use these settings on Linux:
+        // "CARGO": "${userHome}/.criticalup/bin/cargo",
+        // "RUSTC": "${userHome}/.criticalup/bin/rustc",
+        // Use these settings on Windows:
+        // "CARGO": "${userHome}/AppData/Roaming/criticalup/bin/cargo",
+        // "RUSTC": "${userHome}/AppData/Roaming/criticalup/bin/rustc",
+    },
+    "rust-analyzer.procMacro.enable": false
+}
