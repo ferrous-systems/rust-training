@@ -2,8 +2,8 @@
 
 ## Handling your errors
 
-* Rust is *intentionally strict*: when failue modes happen, you have to decide how to handle them *right there*
-* Recall: 
+* Rust is *intentionally strict*: when failure modes happen, you have to decide how to handle them *right there*
+* Recall:
   * `Option<T>` gives you information on if your operation produced something or nothing
   * `Result<T, E>` lets you know if something succeeded or something else (`E`) happened
 * We can propagate the appropriate error context by transforming one into the other and vice versa
@@ -14,7 +14,9 @@
 * Switching from `.unwrap()` calls often leads to changes in function signatures, and the refactoring becomes
 wider and difficult with time and code
 
-Instead, prefer using the early return `?` operator where possible, or at least `.expect()`
+## If you must .unwrap()
+
+...at least use `.expect()`
 
 ## `?` Examples
 
@@ -34,13 +36,13 @@ fn write_info(info: &Info) -> io::Result<()> {
            Err(e) => return Err(e),
            Ok(f) => f,
     };
-    if let Err(e) = file.write_all(format!("name: {}\n", info.name).as_bytes()) {
+    if let Err(e) = writeln!(file, "name: {}", info.name) {
         return Err(e)
     }
-    if let Err(e) = file.write_all(format!("age: {}\n", info.age).as_bytes()) {
+    if let Err(e) = writeln!(file, "age: {}", info.age) {
         return Err(e)
     }
-    if let Err(e) = file.write_all(format!("rating: {}\n", info.rating).as_bytes()) {
+    if let Err(e) = writeln!(file, "rating: {}", info.rating) {
         return Err(e)
     }
     Ok(())
@@ -55,9 +57,9 @@ Into this
 fn write_info(info: &Info) -> io::Result<()> {
     let mut file = File::create("my_best_friends.txt")?;
     // Early return on error
-    file.write_all(format!("name: {}\n", info.name).as_bytes())?;
-    file.write_all(format!("age: {}\n", info.age).as_bytes())?;
-    file.write_all(format!("rating: {}\n", info.rating).as_bytes())?;
+    file.writeln!("name: {}", info.name)?;
+    file.writeln!("age: {}", info.age)?;
+    file.writeln!("rating: {}", info.rating)?;
     Ok(())
 }
 ```
@@ -85,6 +87,8 @@ fn add_last_numbers(stack: &mut Vec<i32>) -> Option<i32> {
     Some(stack.pop()? + stack.pop()?)
 }
 ```
+
+<br>
 
 We prefer using `?` instead of highly nested pattern matching
 
@@ -131,7 +135,6 @@ pub fn find_user(username: &str) -> Result<UserId, String>  {
     // ...
 }
 ```
-
 
 ## Result to Result 2
 
@@ -193,10 +196,14 @@ If you only care about moving on in the happy path, try judicious pattern matchi
 ```rust [], ignore
 let a = ["1", "two", "NaN", "four", "5"];
 
-// I don't care about bad results, I filter them out
-let mut iter = a.iter().filter_map(|s| s.parse::<i32>().ok());
+// We don't care about bad results - filter them out
+let mut iter = a.iter()
+    .filter_map(|s| s.parse::<i32>().ok());
 // Instead of 
-let mut iter = a.iter().map(|s| s.parse()).filter(|s| s.is_ok()).map(|s| s.unwrap());
+let mut iter = a.iter()
+    .map(|s| s.parse())
+    .filter(|s| s.is_ok())
+    .map(|s| s.unwrap());
 ```
 
 * Concretely, this means turning `Result<T, E>` into an `Option<T>` by using the `.ok()` method
@@ -214,15 +221,13 @@ let vec_of_results: Vec<Result<i32, _>> = inputs.iter()
 
 ## Iterators and collecting errors 2
 
-* If you only care about all of them succeeding, wrap it with `Result<Vec<i32>, _>`:
+* If you only care about all of them succeeding, encase it in a `Result<Vec<i32>, _>`:
 
 ```rust [], ignore
 let result_of_vec: Result<Vec<i32>, _> = inputs.iter()
     .map(|s| s.parse::<i32>())
     .collect()?;
 ```
-
-
 
 ## Which way to wrap?
 
