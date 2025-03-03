@@ -37,9 +37,9 @@ jobs:
         # `--no-self-update` we don't need to update rustup, so we a network trip on that call
       - name: Update and set default Rust
         run: |
-          rustup set profile minimal --no-self-update
+          rustup set profile minimal
           rustup update ${{ matrix.rust-channel }} --no-self-update
-          rustup default ${{ matrix.rust-channel }} --no-self-update
+          rustup default ${{ matrix.rust-channel }}
 
       - name: Find slug name
         run: |
