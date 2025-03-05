@@ -48,7 +48,7 @@ Do the logging strings even need to be in Flash?
   * Is not in Flash
 * Arguments are packed in binary format
 * Tools to reconstruct log messages on the host side
-  
+
 ## Benefits
 
 * Uses less flash space
@@ -216,25 +216,27 @@ Windows users will use different syntax for cmd.exe vs Powershell.
 
 ## Using probe-rs
 
-```console
+<pre><code data-trim data-noescape>
 $ probe-rs run --chip nRF52840_xxAA target/thumbv7em-none-eabihf/debug/radio-puzzle-solution
-      Erasing ✔ [00:00:00] [#########################] 16.00 KiB/16.00 KiB @ 35.52 KiB/s (eta 0s )
-  Programming ✔ [00:00:00] [#########################] 16.00 KiB/16.00 KiB @ 49.90 KiB/s (eta 0s )    Finished in 0.79s
+<span class="eg b">      Erasing</span> ✔ [00:00:00] [#########################] 16.00 KiB/16.00 KiB @ 35.52 KiB/s (eta 0s )
+<span class="eg b">  Programming</span> ✔ [00:00:00] [#########################] 16.00 KiB/16.00 KiB @ 49.90 KiB/s (eta 0s )
+<span class="eg b">     Finished</span> in 0.79s
 0 DEBUG Initializing the board
-└─ dk::init @ /Users/jonathan/Documents/ferrous-systems/rust-exercises/nrf52-code/boards/dk/src/lib.rs:208
+└─ dk::init @ /Users/jp/ferrous-systems/rust-exercises/nrf52-code/boards/dk/src/lib.rs:208
 1 DEBUG Clocks configured
-└─ dk::init @ /Users/jonathan/Documents/ferrous-systems/rust-exercises/nrf52-code/boards/dk/src/lib.rs:219
-```
+└─ dk::init @ /Users/jp/ferrous-systems/rust-exercises/nrf52-code/boards/dk/src/lib.rs:219
+</code></pre>
 
 ## Customise the format
 
-```console
+<pre><code data-trim data-noescape>
 $ probe-rs run --chip nRF52840_xxAA ... --log-format "{t} {f}:{l} {L} {s}"
-      Erasing ✔ [00:00:00] [#########################] 16.00 KiB/16.00 KiB @ 35.52 KiB/s (eta 0s )
-  Programming ✔ [00:00:00] [#########################] 16.00 KiB/16.00 KiB @ 49.90 KiB/s (eta 0s )    Finished in 0.79s
+<span class="eg b">      Erasing</span> ✔ [00:00:00] [#########################] 16.00 KiB/16.00 KiB @ 35.52 KiB/s (eta 0s )
+<span class="eg b">  Programming</span> ✔ [00:00:00] [#########################] 16.00 KiB/16.00 KiB @ 49.90 KiB/s (eta 0s )
+<span class="eg b">     Finished</span> in 0.79s
 0 lib.rs:208  DEBUG Initializing the board
 1 lib.rs:219  DEBUG Clocks configured
-```
+</code></pre>
 
 ## Set it as your runner
 
@@ -243,17 +245,18 @@ $ probe-rs run --chip nRF52840_xxAA ... --log-format "{t} {f}:{l} {L} {s}"
 runner = "probe-rs run --chip nRF52840_xxAA"
 ```
 
-```console
+<pre><code data-trim data-noescape>
 $ cargo run
-    Finished dev [optimized + debuginfo] target(s) in 0.03s
-     Running `probe-rs run --chip nRF52840_xxAA target/thumbv7em-none-eabihf/debug/radio-puzzle-solution`
-      Erasing ✔ [00:00:00] [#########################] 16.00 KiB/16.00 KiB @ 35.52 KiB/s (eta 0s )
-  Programming ✔ [00:00:00] [#########################] 16.00 KiB/16.00 KiB @ 49.90 KiB/s (eta 0s )    Finished in 0.79s
+<span class="eg b">    Finished</span> dev [optimized + debuginfo] target(s) in 0.03s
+<span class="eg b">     Running</span> `probe-rs run --chip nRF52840_xxAA target/thumbv7em-none-eabihf/debug/radio-puzzle-solution`
+<span class="eg b">     Erasing</span> ✔ [00:00:00] [#########################] 16.00 KiB/16.00 KiB @ 35.52 KiB/s (eta 0s )
+<span class="eg b"> Programming</span> ✔ [00:00:00] [#########################] 16.00 KiB/16.00 KiB @ 49.90 KiB/s (eta 0s )
+<span class="eg b">    Finished</span> in 0.79s
 0 DEBUG Initializing the board
-└─ dk::init @ /Users/jonathan/Documents/ferrous-systems/rust-exercises/nrf52-code/boards/dk/src/lib.rs:208
+└─ dk::init @ /Users/jp/ferrous-systems/rust-exercises/nrf52-code/boards/dk/src/lib.rs:208
 1 DEBUG Clocks configured
-└─ dk::init @ /Users/jonathan/Documents/ferrous-systems/rust-exercises/nrf52-code/boards/dk/src/lib.rs:219
-```
+└─ dk::init @ /Users/jp/ferrous-systems/rust-exercises/nrf52-code/boards/dk/src/lib.rs:219
+</code></pre>
 
 ## More info
 
