@@ -57,9 +57,9 @@ Into this
 fn write_info(info: &Info) -> io::Result<()> {
     let mut file = File::create("my_best_friends.txt")?;
     // Early return on error
-    file.writeln!("name: {}", info.name)?;
-    file.writeln!("age: {}", info.age)?;
-    file.writeln!("rating: {}", info.rating)?;
+    file.writeln!(file, "name: {}", info.name)?;
+    file.writeln!(file, "age: {}", info.age)?;
+    file.writeln!(file, "rating: {}", info.rating)?;
     Ok(())
 }
 ```
@@ -81,6 +81,8 @@ fn add_last_numbers(stack: &mut Vec<i32>) -> Option<i32> {
 ```
 
 ## `?` vs Pattern Matching 2
+
+Into this
 
 ```rust []
 fn add_last_numbers(stack: &mut Vec<i32>) -> Option<i32> {
@@ -111,9 +113,9 @@ fn find_user(username: &str) -> Option<&str> {
 ## Option into Result 2
 
 ```rust [], ignore
-pub fn find_user(username: &str) -> Result<UserId, Err> {
+pub fn find_user(username: &str) -> Result<UserId, ()> {
     let f = std::fs::File::open("/etc/passwd")
-        .ok_or_else(|| Err(0))?;
+        .ok_or_else(|| Err(()))?;
     // ...
 }
 ```
@@ -169,7 +171,7 @@ pub fn find_user(username: &str) -> Result<UserId, MyError>  {
 
 ```rust [], ignore
 for stream in tcp_listener.incoming() {
-    // Should I use `stream?` here? 
+    // Should I use `stream?` here?
     // No, because my whole server would stop accepting connections
     let Ok(stream) = stream else {
         eprintln("Bad connection");
@@ -186,7 +188,11 @@ if let (Ok(a), Ok(b)) = (job_a(), job_b()) {
 }
 ```
 
+<br>
+
 If you only care about moving on in the happy path, try judicious pattern matching with `if let`s
+
+*N.B.:* we're *explicitly* throwing away any errors from `job_a()` and `job_b()`, which is often not desirable!
 
 ## Iterators: `Result` into `Option`
 
@@ -199,7 +205,7 @@ let a = ["1", "two", "NaN", "four", "5"];
 // We don't care about bad results - filter them out
 let mut iter = a.iter()
     .filter_map(|s| s.parse::<i32>().ok());
-// Instead of 
+// Instead of
 let mut iter = a.iter()
     .map(|s| s.parse())
     .filter(|s| s.is_ok())
@@ -221,7 +227,7 @@ let vec_of_results: Vec<Result<i32, _>> = inputs.iter()
 
 ## Iterators and collecting errors 2
 
-* If you only care about all of them succeeding, encase it in a `Result<Vec<i32>, _>`:
+* If you only care about all of them succeeding, tell `.collect()` you want a `Result<Vec<i32>, _>`:
 
 ```rust [], ignore
 let result_of_vec: Result<Vec<i32>, _> = inputs.iter()
