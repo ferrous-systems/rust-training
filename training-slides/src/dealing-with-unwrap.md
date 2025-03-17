@@ -92,7 +92,7 @@ We prefer using `?` instead of highly nested pattern matching
 
 ## Option into Result: Before
 
-* Sometimes we have `Option`, but we want a `Result` because it adds context with types
+* Sometimes we return `Option`, but we want a `Result` because it adds more context:
 
 ```rust [], ignore
 struct UserId {
@@ -106,7 +106,7 @@ fn find_user(username: &str) -> Option<&str> {
 }
 ```
 
-* Here we will use the `or_else()` function to change a `Option<T>` into a `Result<T, E>`
+* We will use `or_else()` to change `Option<T>` into `Result<T, E>`
 
 ## Option into Result: After
 
@@ -127,7 +127,7 @@ pub fn find_user(username: &str) -> Result<UserId, i32> {
 ## Result to Result: Before
 
 * We can process the context of the error to produce something more meaningful than `i32`
-* Concretely: We can use `map_err()` on a `Result<_, A>` to get a `Result<_, B>`
+* Concretely: use `map_err()` on a `Result<_, A>` to get a `Result<_, B>`
 
 ```rust [], ignore
 pub fn find_user(username: &str) -> Result<UserId, String>  {
@@ -189,7 +189,7 @@ if let (Ok(a), Ok(b)) = (job_a(), job_b()) {
 
 * If you only care about moving on in the happy path, try judicious pattern matching with `if let`s
 
-* This throws away and ignores errors from `job_a()` and `job_b()`!
+* *Note*: This throws away and ignores errors from `job_a()` and `job_b()`!
 
 ## Iterators: `Result` into `Option`
 
