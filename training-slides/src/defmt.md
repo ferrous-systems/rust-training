@@ -230,12 +230,13 @@ $ probe-rs run --chip nRF52840_xxAA target/thumbv7em-none-eabihf/debug/radio-puz
 ## Customise the format
 
 <pre><code data-trim data-noescape>
-$ probe-rs run --chip nRF52840_xxAA ... --log-format "{t} {f}:{l} {L} {s}"
+$ probe-rs run --chip nRF52840_xxAA ... --log-format oneline
 <span class="eg b">      Erasing</span> ✔ [00:00:00] [#########################] 16.00 KiB/16.00 KiB @ 35.52 KiB/s (eta 0s )
 <span class="eg b">  Programming</span> ✔ [00:00:00] [#########################] 16.00 KiB/16.00 KiB @ 49.90 KiB/s (eta 0s )
 <span class="eg b">     Finished</span> in 0.79s
-0 lib.rs:208  DEBUG Initializing the board
-1 lib.rs:219  DEBUG Clocks configured
+00:00:00.000000 <span class="b">[DEBUG]</span> Initializing the board (<span class="gr">dk</span> dk/src/lib.rs:317)
+00:00:00.000000 <span class="b">[DEBUG]</span> Clocks configured (<span class="gr">dk</span> dk/src/lib.rs:335)
+00:00:00.000000 <span class="b">[DEBUG]</span> RTC started (<span class="gr">dk</span> dk/src/lib.rs:354)
 </code></pre>
 
 ## Set it as your runner
@@ -252,10 +253,9 @@ $ cargo run
 <span class="eg b">     Erasing</span> ✔ [00:00:00] [#########################] 16.00 KiB/16.00 KiB @ 35.52 KiB/s (eta 0s )
 <span class="eg b"> Programming</span> ✔ [00:00:00] [#########################] 16.00 KiB/16.00 KiB @ 49.90 KiB/s (eta 0s )
 <span class="eg b">    Finished</span> in 0.79s
-0 DEBUG Initializing the board
-└─ dk::init @ /Users/jp/ferrous-systems/rust-exercises/nrf52-code/boards/dk/src/lib.rs:208
-1 DEBUG Clocks configured
-└─ dk::init @ /Users/jp/ferrous-systems/rust-exercises/nrf52-code/boards/dk/src/lib.rs:219
+00:00:00.000000 <span class="b">[DEBUG]</span> Initializing the board (<span class="gr">dk</span> dk/src/lib.rs:317)
+00:00:00.000000 <span class="b">[DEBUG]</span> Clocks configured (<span class="gr">dk</span> dk/src/lib.rs:335)
+00:00:00.000000 <span class="b">[DEBUG]</span> RTC started (<span class="gr">dk</span> dk/src/lib.rs:354)
 </code></pre>
 
 ## More info
