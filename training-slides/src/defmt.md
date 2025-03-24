@@ -234,9 +234,9 @@ $ probe-rs run --chip nRF52840_xxAA ... --log-format oneline
 <span class="eg b">      Erasing</span> ✔ [00:00:00] [#########################] 16.00 KiB/16.00 KiB @ 35.52 KiB/s (eta 0s )
 <span class="eg b">  Programming</span> ✔ [00:00:00] [#########################] 16.00 KiB/16.00 KiB @ 49.90 KiB/s (eta 0s )
 <span class="eg b">     Finished</span> in 0.79s
-00:00:00.000000 <span class="b">[DEBUG]</span> Initializing the board (<span class="gr">dk</span> dk/src/lib.rs:317)
-00:00:00.000000 <span class="b">[DEBUG]</span> Clocks configured (<span class="gr">dk</span> dk/src/lib.rs:335)
-00:00:00.000000 <span class="b">[DEBUG]</span> RTC started (<span class="gr">dk</span> dk/src/lib.rs:354)
+00:00:00.000000 <span class="b">[DEBUG]</span> Initializing the board (<span class="gr b">dk</span> dk/src/lib.rs:317)
+00:00:00.000000 <span class="b">[DEBUG]</span> Clocks configured (<span class="gr b">dk</span> dk/src/lib.rs:335)
+00:00:00.000000 <span class="b">[DEBUG]</span> RTC started (<span class="gr b">dk</span> dk/src/lib.rs:354)
 </code></pre>
 
 ## Set it as your runner
