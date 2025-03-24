@@ -2,7 +2,7 @@
 
 ## Handling your errors
 
-* Rust is *intentionally strict*: when failue modes happen, you have to decide how to handle them *right there*
+* Rust is *intentionally strict*: when failure modes happen, you have to decide how to handle them *right there*
 * Recall:
   * `Option<T>` gives you information on if your operation produced something or nothing
   * `Result<T, E>` lets you know if something succeeded or something else (`E`) happened
