@@ -243,13 +243,13 @@ $ probe-rs run --chip nRF52840_xxAA ... --log-format oneline
 
 ```toml
 [target.thumbv7em-none-eabihf]
-runner = "probe-rs run --chip nRF52840_xxAA"
+runner = "probe-rs run --chip nRF52840_xxAA --log-format oneline"
 ```
 
 <pre><code data-trim data-noescape>
 $ cargo run
 <span class="eg b">    Finished</span> dev [optimized + debuginfo] target(s) in 0.03s
-<span class="eg b">     Running</span> `probe-rs run --chip nRF52840_xxAA target/thumbv7em-none-eabihf/debug/radio-puzzle-solution`
+<span class="eg b">     Running</span> `probe-rs run --chip nRF52840_xxAA  --log-format oneline target/thumbv7em-none-eabihf/debug/radio-puzzle-solution`
 <span class="eg b">     Erasing</span> ✔ [00:00:00] [#########################] 16.00 KiB/16.00 KiB @ 35.52 KiB/s (eta 0s )
 <span class="eg b"> Programming</span> ✔ [00:00:00] [#########################] 16.00 KiB/16.00 KiB @ 49.90 KiB/s (eta 0s )
 <span class="eg b">    Finished</span> in 0.79s
