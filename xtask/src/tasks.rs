@@ -43,10 +43,14 @@
 //! Any condition that fails will emit a message as to why it did, but we'll continue listing the other ones
 //! to streamline UX.
 //!
-//! Lastly, `test-all-cheatsheets` is just a convinience function to test all existing cheatsheets at once.
+//! Lastly, `test-all-cheatsheets` is just a convenience function to test all existing cheatsheets at once.
 
 use eyre::WrapErr;
-use std::{fs::{read_to_string, File}, io::Write, path::Path};
+use std::{
+    fs::{read_to_string, File},
+    io::Write,
+    path::Path,
+};
 
 use crate::LANG_LIST;
 
@@ -179,10 +183,14 @@ fn list_of_strings_to_slide_section(chunk: &[String]) -> SlidesSection {
 /// Collect all the headers and write them out into a new `src/lang-cheatsheet.md`.
 pub fn make_cheatsheet(lang: &str) -> Result<(), eyre::Report> {
     // Collect slide sections, chunked by header
-    let text = read_to_string("./training-slides/src/SUMMARY.md").context("SUMMARY.md not found")?;
+    let text =
+        read_to_string("./training-slides/src/SUMMARY.md").context("SUMMARY.md not found")?;
     let slide_texts = focus_regions(&text);
     let uppercase_lang_name = lang.chars().nth(0).unwrap().to_uppercase().to_string() + &lang[1..];
-    let mut slide_sections = vec![SlidesSection { header: format!("{uppercase_lang_name} Cheatsheet"), deck_titles: vec![] }];
+    let mut slide_sections = vec![SlidesSection {
+        header: format!("{uppercase_lang_name} Cheatsheet"),
+        deck_titles: vec![],
+    }];
     slide_texts
         .iter()
         .for_each(|l| slide_sections.push(list_of_strings_to_slide_section(l)));
@@ -224,7 +232,7 @@ pub fn setup_cheatsheet_tester(lang: &str) -> Result<(), eyre::Report> {
     let file_name = format!("./training-slides/src/{lang}-cheatsheet.md");
     let cheatsheet_text = read_to_string(file_name)
         .with_context(|| eyre::eyre!("{lang}-cheatsheet.md not found."))?;
-    
+
     cheatsheet_tester(lang, slide_sections, &cheatsheet_text)
 }
 
@@ -232,12 +240,16 @@ pub fn setup_cheatsheet_tester(lang: &str) -> Result<(), eyre::Report> {
 /// * It starts with `# MyLang Cheatsheet`
 /// * It contains all headers in `HEADERS`
 /// * It contains all subheaders in each header
-/// 
-/// It does this by 
+///
+/// It does this by
 /// 1. Collecting the headings and subheadings into a `Vec<String>`
 /// 2. Checking that each heading has all its subheadings
 /// 3. Checking all `HEADERS` are present
-fn cheatsheet_tester(lang: &str, slide_sections: Vec<SlidesSection>, cheatsheet_text: &str) -> Result<(), eyre::Error> {
+fn cheatsheet_tester(
+    lang: &str,
+    slide_sections: Vec<SlidesSection>,
+    cheatsheet_text: &str,
+) -> Result<(), eyre::Error> {
     // Unwrap note: We know `lang` is part of our blessed lang-names, so it must be at least of size 1.
     let lang_uppercase = lang.chars().nth(0).unwrap().to_uppercase().to_string() + &lang[1..];
     let cheatsheet_name = format!("# {lang_uppercase} Cheatsheet");
@@ -477,21 +489,76 @@ Rust for the Linux Kernel and other no-std environments with an pre-existing C A
 ## WASM
 
 ";
-    let slide_sections: Vec<_> = vec![
-        SlidesSection { header:"# Rust Fundamentals".into(), deck_titles: vec!["Overview".into(), "Installation".into(), "Basic Types".into(), "Control Flow".into(), "Compound Types".into(), "Ownership and Borrowing".into(), "Error Handling".into(), "Collections".into(), "Iterators".into(), "Imports and Modules".into(), "Good Design Practices".into()]} ,
-        SlidesSection {header:"# Applied Rust".into(), deck_titles: vec!["Methods and Traits".into(), "Rust I/O Traits".into(), "Generics".into(), "Lifetimes".into(), "Cargo Workspaces".into(), "Heap Allocation (Box and Rc)".into(), "Shared Mutability (Cell, RefCell, OnceCell)".into(), "Thread Safety (Send/Sync, Arc, Mutex)".into(), "Closures and the Fn/FnOnce/FnMut traits".into(), "Spawning Threads and Scoped Threads".into()]} ,
-        SlidesSection {header:"# Advanced Rust".into(), deck_titles: vec!["Advanced Strings".into(), "Building Robust Programs with Kani".into(), "Debugging Rust".into(), "Deconstructing Send, Arc, and Mutex".into(), "Dependency Management with Cargo".into(), "Deref Coercions".into(), "Design Patterns".into(), "Documentation".into(), "Drop, Panic and Abort".into(), "Dynamic Dispatch".into(), "Macros".into(), "Property Testing".into(), "Rust Projects Build Time".into(), "Send and Sync".into(), "Serde".into(), "Testing".into(), "The stdlib".into(), "Using Cargo".into(), "Using Types to encode State".into()]},
-        SlidesSection {header:"# Rust and Web Assembly".into(), deck_titles: vec!["WASM".into()] }];
+        let slide_sections: Vec<_> = vec![
+            SlidesSection {
+                header: "# Rust Fundamentals".into(),
+                deck_titles: vec![
+                    "Overview".into(),
+                    "Installation".into(),
+                    "Basic Types".into(),
+                    "Control Flow".into(),
+                    "Compound Types".into(),
+                    "Ownership and Borrowing".into(),
+                    "Error Handling".into(),
+                    "Collections".into(),
+                    "Iterators".into(),
+                    "Imports and Modules".into(),
+                    "Good Design Practices".into(),
+                ],
+            },
+            SlidesSection {
+                header: "# Applied Rust".into(),
+                deck_titles: vec![
+                    "Methods and Traits".into(),
+                    "Rust I/O Traits".into(),
+                    "Generics".into(),
+                    "Lifetimes".into(),
+                    "Cargo Workspaces".into(),
+                    "Heap Allocation (Box and Rc)".into(),
+                    "Shared Mutability (Cell, RefCell, OnceCell)".into(),
+                    "Thread Safety (Send/Sync, Arc, Mutex)".into(),
+                    "Closures and the Fn/FnOnce/FnMut traits".into(),
+                    "Spawning Threads and Scoped Threads".into(),
+                ],
+            },
+            SlidesSection {
+                header: "# Advanced Rust".into(),
+                deck_titles: vec![
+                    "Advanced Strings".into(),
+                    "Building Robust Programs with Kani".into(),
+                    "Debugging Rust".into(),
+                    "Deconstructing Send, Arc, and Mutex".into(),
+                    "Dependency Management with Cargo".into(),
+                    "Deref Coercions".into(),
+                    "Design Patterns".into(),
+                    "Documentation".into(),
+                    "Drop, Panic and Abort".into(),
+                    "Dynamic Dispatch".into(),
+                    "Macros".into(),
+                    "Property Testing".into(),
+                    "Rust Projects Build Time".into(),
+                    "Send and Sync".into(),
+                    "Serde".into(),
+                    "Testing".into(),
+                    "The stdlib".into(),
+                    "Using Cargo".into(),
+                    "Using Types to encode State".into(),
+                ],
+            },
+            SlidesSection {
+                header: "# Rust and Web Assembly".into(),
+                deck_titles: vec!["WASM".into()],
+            },
+        ];
 
-    let _ = cheatsheet_tester(lang, slide_sections, cheatsheet_text);
-
+        let _ = cheatsheet_tester(lang, slide_sections, cheatsheet_text);
     }
 
     #[test]
     #[should_panic]
     fn test_no_opening_title() {
         let test_str = "# notCpp Cheatsheet
-        
+
         # Rust Fundamentals
         ## Overview
         ## Basic Types
@@ -506,7 +573,7 @@ Rust for the Linux Kernel and other no-std environments with an pre-existing C A
     #[should_panic]
     fn test_wrong_first_header() {
         let test_str = "# Cpp Cheatsheet
-        
+
         # CLEARLY WRONG TITLE SHOULD PANIC
         ## Overview
         ## Basic Types
