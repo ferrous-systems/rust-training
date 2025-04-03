@@ -1,7 +1,7 @@
 /* Memory Configuration Linker Script
 
 This file is imported by cortex-m-rt's link.x script, and should be placed
-somwhere in the linker's search path.
+somewhere in the linker's search path.
 */
 
 /*

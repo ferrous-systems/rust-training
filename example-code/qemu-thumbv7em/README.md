@@ -18,7 +18,7 @@ Demonstrates use of globally-allocated CMSDK UART object from Rust. The UART wri
 
 ### `uart_buffered`
 
-Demonstrates use of globally-allocated CMSDK UART object from Rust alongside a circular buffer. The UART writes are copied into the ring-buffer (blocking is space is exhausted) and the ring-buffer is empted byte-by-byte under interrupt.
+Demonstrates use of globally-allocated CMSDK UART object from Rust alongside a circular buffer. The UART writes are copied into the ring-buffer (blocking is space is exhausted) and the ring-buffer is emptied byte-by-byte under interrupt.
 
 ## Target Hardware
 
