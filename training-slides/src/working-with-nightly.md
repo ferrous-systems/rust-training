@@ -29,7 +29,7 @@ $ cat rust-toolchain.toml
 channel = "nightly-2024-02-01"
 ```
 
-## Langauge features
+## Language features
 
 [Language features](https://doc.rust-lang.org/unstable-book/language-features.html) are parts of Rust we haven't quite agreed on yet, but there's an implementation there to be tested. Each one has a tracking issue.
 
@@ -113,7 +113,7 @@ build-std = ["core", "alloc"]
 
 ## Availability
 
-* Nightly doesn't always succesfully build
+* Nightly doesn't always successfully build
 * rustup can go back in time and find a working build
 * [rustup-component-history](https://rust-lang.github.io/rustup-components-history/) can help
 
