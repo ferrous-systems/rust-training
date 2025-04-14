@@ -4,12 +4,19 @@ on:
   schedule:
     - cron: '0 0 * * Mon'
 
+
+env:
+  CARGO_TERM_COLORS: always    # We want colors in our CI output
+  CARGO_INCREMENTAL: 0         # Don't waste time writing out incremental build files
+  CARGO_PROFILE_TEST_DEBUG: 0  # Same with debug info
+
 jobs:
   weekly-canary-build:
     strategy:
+        fail-fast: false
         matrix:
             rust-channel: [stable, beta, nightly]
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@v4
 
@@ -26,9 +33,12 @@ jobs:
         run: |
           sudo apt-get update -y && sudo apt-get install -y graphviz
 
+        # `minimal` profile avoids downloading `rustdocs` and other stuff we don't need in CI
+        # `--no-self-update` we don't need to update rustup, so we a network trip on that call
       - name: Update and set default Rust
         run: |
-          rustup update ${{ matrix.rust-channel }}
+          rustup set profile minimal
+          rustup update ${{ matrix.rust-channel }} --no-self-update
           rustup default ${{ matrix.rust-channel }}
 
       - name: Find slug name
@@ -43,4 +53,4 @@ jobs:
 
       - name: Test all cheatsheets
         run: |
-          cargo xtask test-all-cheatsheets
+          cargo xtask test-all-cheatsheets --locked

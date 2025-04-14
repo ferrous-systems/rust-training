@@ -99,21 +99,18 @@ Are there some trait bounds we could place on `T` such that `T + T -> T` and `T 
 
 ## The error:
 
-```text
-error[E0599]: no method named `magnitude` found for struct `Vector<{integer}>` in the current scope
-  --> src/main.rs:22:23
-   |
-1  | struct Vector<T> {
-   | ---------------- method `magnitude` not found for this struct
-...
-22 |     println!("{}", v2.magnitude());
-   |                       ^^^^^^^^^ method not found in `Vector<{integer}>`
-   |
-   = note - the method was found for
-           - `Vector<f32>`
-
-For more information about this error, try `rustc --explain E0599`.
-```
+<pre><code data-trim data-noescape><span class="er b">error[E0599]</span><b>: no method named `magnitude` found for struct `Vector&lt;{integer}&gt;` in the current scope</b>
+<span class="eb b">  --&gt; </span>src/main.rs:23:23
+<span class="eb b">   |</span>
+<span class="eb b">2  |</span> struct Vector&lt;T&gt; {
+<span class="eb b">   |</span> <span class="eb b">----------------</span> <span class="eb b">method `magnitude` not found for this struct</span>
+<span class="eb b"> ...</span>
+<span class="eb b">23 |</span>     println!(&quot;{}&quot;, v2.magnitude());
+<span class="eb b">   |</span>                       <span class="er b">^^^^^^^^^</span> <span class="er b">method not found in `Vector&lt;{integer}&gt;`</span>
+<span class="eb b">   |</span>
+<span class="eb b">   = </span><b>note</b>: the method was found for
+           - `Vector&lt;f32&gt;`
+<b>For more information about this error, try `rustc --explain E0599`.</b></code></pre>
 
 ## Adding Bounds
 
@@ -289,7 +286,6 @@ impl HasArea<f64> for UnitSquare {
         1.0
     }
 }
-
 fn main() {
     let u = UnitSquare;
     print_area(&u);
@@ -315,4 +311,3 @@ Things that don't have sizes known at compile time (but which may or may not imp
 
 * String Slices
 * Closures
-

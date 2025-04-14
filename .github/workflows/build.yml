@@ -1,12 +1,20 @@
 name: Build sample material
 
+# Runs CI on pushing tags and pulls, but not both. Since we have branch protection on, these are our only cases to handle.
 on:
   push:
+    tags:
+      - '*'
   pull_request:
+
+env:
+  CARGO_TERM_COLOR: always     # We want colors in our CI output
+  CARGO_INCREMENTAL: 0         # Don't waste time writing out incremental build files
+  CARGO_PROFILE_TEST_DEBUG: 0  # These are thrown away anyways, don't produce them
 
 jobs:
   build-slides:
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@v4
 
@@ -17,15 +25,17 @@ jobs:
 
       - name: Add mdslides
         run: |
-          curl --proto '=https' --tlsv1.2 -LsSf https://github.com/ferrous-systems/mdslides/releases/download/v0.5.0/mdslides-installer.sh | sh
+          curl --proto '=https' --tlsv1.2 -LsSf https://github.com/ferrous-systems/mdslides/releases/download/v0.6.1/mdslides-installer.sh | sh
 
       - name: Add graphviz
         run: |
           sudo apt-get update -y && sudo apt-get install -y graphviz
 
+      # A `minimal` profile saves a couple seconds from not downloading `clippy` or `rustdocs` and friends
       - name: Update Rust
         run: |
-          rustup update stable
+          rustup set profile minimal
+          rustup update stable --no-self-update
 
       - name: Find slug name
         run: |
@@ -39,7 +49,7 @@ jobs:
 
       - name: Test all cheatsheets
         run: |
-          cargo xtask test-all-cheatsheets
+          cargo xtask test-all-cheatsheets --locked
 
       - name: Assemble Artifacts
         run: |
@@ -112,9 +122,9 @@ jobs:
         run: |
           rustup target add thumbv7em-none-eabihf
           rustup target add thumbv7em-none-eabi
-          rustup target add armv7r-none-eabihf
           rustup target add aarch64-unknown-none
           rustup component add llvm-tools-preview
+          rustup component add rust-src
 
       - name: Find slug name
         run: |

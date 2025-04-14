@@ -39,6 +39,7 @@ Topics that go beyond [Applied Rust](#applied-rust).
 
 * [Advanced Strings](./advanced-strings.md)
 * [Building Robust Programs with Kani](./kani.md)
+* [Dealing with Unwrap](./dealing-with-unwrap.md)
 * [Debugging Rust](./debugging-rust.md)
 * [Deconstructing Send, Arc, and Mutex](./deconstructing-send-arc-mutex.md)
 * [Dependency Management with Cargo](./dependency-management.md)
@@ -77,6 +78,14 @@ Rust for the Linux Kernel and other no-std environments with an pre-existing C A
 * [Rust on an RTOS]()
 * [Writing a new target]()
 
+# Async Rust
+
+* [Async Building Blocks](./async-building-blocks.md)
+* [Intro to Tokio](./async-intro-to-tokio.md)
+* [Async Implementation Details](./async-implementation-details.md)
+* [Async Component Interaction](./async-component-interaction.md)
+* [Async: Avoiding Disaster and Unbounded Growth](./async-avoiding-disaster.md)
+
 # Bare-Metal Rust
 
 Topics about using Rust on ARM Cortex-M Microcontrollers (and similar). Requires [Applied Rust](#applied-rust).
@@ -110,4 +119,6 @@ Topics around [Ferrocene](https://ferrous-systems.com/ferrocene/), the qualified
 
 # Cheatsheets
 
+* [How CheatSheets Work](./how-cheatsheets-work.md)
+* [C++](./cpp-cheatsheet.md)
 * [Julia](./julia-cheatsheet.md)

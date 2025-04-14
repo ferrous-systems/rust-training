@@ -53,20 +53,31 @@ fn print_string(s: String) {
 }
 ```
 
-## It does not...
+## It does not!
 
-```text
-error[E0382]: use of moved value: `s`
- --> src/main.rs:4:18
-  |
-2 |     let s = String::from("Hello 😀");
-  |         - move occurs because `s` has type `String`, which does not implement the `Copy` trait
-3 |     print_string(s);
-  |                  - value moved here
-4 |     print_string(s);
-  |                  ^ value used here after move
-  |
-```
+<pre><code data-trim data-noescape><span class="er b">error[E0382]</span><b>: use of moved value: `s`</b>
+<span class="eb b"> --&gt; </span>src/main.rs:4:18
+<span class="eb b">  |</span>
+<span class="eb b">2 |</span>     let s = String::from(&quot;Hello 😀&quot;);
+<span class="eb b">  |</span>         <span class="eb b">-</span> <span class="eb b">move occurs because `s` has type `String`, which does not implement the `Copy` trait</span>
+<span class="eb b">3 |</span>     print_string(s);
+<span class="eb b">  |</span>                  <span class="eb b">-</span> <span class="eb b">value moved here</span>
+<span class="eb b">4 |</span>     print_string(s);
+<span class="eb b">  |</span>                  <span class="er b">^</span> <span class="er b">value used here after move</span>
+<span class="eb b">  |</span>
+<span class="eg">note</span>: consider changing this parameter type in function `print_string` to borrow instead if owning the value isn&apos;t necessary
+<span class="eb b"> --&gt; </span>src/main.rs:7:20
+<span class="eb b">  |</span>
+<span class="eb b">7 |</span> fn print_string(s: String) {
+<span class="eb b">  |</span>    <span class="eb b">------------</span>    <span class="eg">^^^^^^</span> <span class="eg">this parameter takes ownership of the value</span>
+<span class="eb b">  |</span>    <span class="eb b">|</span>
+<span class="eb b">  |</span>    <span class="eb b">in this function</span>
+<span class="help">help</span>: consider cloning the value if the performance cost is acceptable
+<span class="eb b">  |</span>
+<span class="eb b">3 | </span>    print_string(s<span class="eg">.clone()</span>);
+<span class="eb b">  |</span>                   <span class="eg">++++++++</span>
+<b>For more information about this error, try `rustc --explain E0382`.</b>
+</code></pre>
 
 ## Background
 

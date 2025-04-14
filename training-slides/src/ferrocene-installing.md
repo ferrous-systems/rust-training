@@ -51,6 +51,9 @@ Examples of releases include:
 * stable-24.08.0
 * etc
 
+See <https://public-docs.ferrocene.dev/main/qualification/plan/release.html>
+for details about our release channels.
+
 ---
 
 ![Portal](./images/portal-docs.png)
