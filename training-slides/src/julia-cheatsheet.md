@@ -9,7 +9,7 @@
 
 ----
 
-* Julians are used to thinking about memory footprint and layout in perf-sensitive code, as well as subtyping relations - two lynchpins for understanding the ownership and borrowsing system where the role of subtyping and variance are very commonly ommitted. This topic can therefore be explained much clearer and earlier in the curriculum.
+* Julians are used to thinking about memory footprint and layout in perf-sensitive code, as well as subtyping relations - two lynchpins for understanding the ownership and borrowsing system where the role of subtyping and variance are very commonly omitted. This topic can therefore be explained much clearer and earlier in the curriculum.
 * Materials for Rust beginners normally cater for C++ expertise (which skip error handling as philosophy) or Python/Go/Javascripters and spend too much importance on memory layouts (which Julians may know from designing faster algorithms)
 * Julia has a rich generics vocabulary and a JIT that mirror Rust's trait -> monomorphize approach.
 
@@ -85,8 +85,8 @@ enum House {
 * Recursive types recquire `Box<T>` - You can't define types in Rust without communicating their size at compile time or opting out (by boxing them somehow, the easiest case is with `Box<T>`).
 
 ## Pattern matching
-* It happened to all of us who didn't come from ML style languages - you'll start writing "C-style" Rust until you master the succinctness offered by idiomatic pattern matching. Take some good notes and read the exmaples [in the Rust By Example](https://doc.rust-lang.org/rust-by-example/flow_control/match/destructuring/destructure_enum.html) guide.
-* Remember, Rust is also an expression based language, which means you can match on tuples (`match (x % 3, x % 5) {...}`) and destructure them in the same line: `let (Some(b), Some(a)) = (stack.pop(), stack.pop()) else { ... }` will only enter the inner scope if both `pop.()`s were succesful.
+* It happened to all of us who didn't come from ML style languages - you'll start writing "C-style" Rust until you master the succinctness offered by idiomatic pattern matching. Take some good notes and read the examples [in the Rust By Example](https://doc.rust-lang.org/rust-by-example/flow_control/match/destructuring/destructure_enum.html) guide.
+* Remember, Rust is also an expression based language, which means you can match on tuples (`match (x % 3, x % 5) {...}`) and destructure them in the same line: `let (Some(b), Some(a)) = (stack.pop(), stack.pop()) else { ... }` will only enter the inner scope if both `pop.()`s were successful.
 * The following constructs are basic but welcome syntax sugar once you start wrangling matches:
     * `let else` - pattern match on a binding, and handle the remaining cases. 
 ```rust
@@ -96,7 +96,7 @@ if let Shape::Circle(radius) = shape {
 ```
 **Note:** The syntax here is challenging when starting if you think of it as normal "left to right code" and not as an attempt to get a binding like `let x = 3+3;` - the equal sign binds weakest, so we know to resolve the expressions on the right before knowing that `x` is a valid binding in the remaining scope. If you think of the following cases as similar to those parsing rules, you will save yourself some headaches.
     * `let if` - pattern match on a binding, and ignore the remaining cases.
-    * `while let` - try pattern matching on a binding, and if succesful, enter the loop body, otherwise exit. These are fundamental for async code, as `for` loops don't work with `async`/`await`.
+    * `while let` - try pattern matching on a binding, and if successful, enter the loop body, otherwise exit. These are fundamental for async code, as `for` loops don't work with `async`/`await`.
     * `match!` - if you only need to know if a match happened (a boolean), this macro is your friend.
 You'll get a lot of benefit from revisiting your code or getting peers to review your code - it's not unheard of to de-nest your Rust code by 1 or 2 levels with judicious (and clearer) idiomatic pattern matching.
 * Option (absence of a value), Result(Ok or Error) -> aka how to not need `nullptr`
@@ -110,7 +110,7 @@ Rust didn't "invent" the ownership system ex nihilo.
 * There's only 3 things: `T`, `&T`, `&mut T`
 * Ownership system and where it came from - like multiple dispatch there was an adhoc, informally spec'd... same for ownership system.
 * Most of your functions should take &T, not T
-* Operators are secretly funcitons, and they take references, may be created behind your back (yes, even `+=` or `==`)
+* Operators are secretly functions, and they take references, may be created behind your back (yes, even `+=` or `==`)
 * avoid indexing!
 * TODO Quiz
 
@@ -248,7 +248,7 @@ TODO: add link to video on rust-analyzer
 * `using Test` -> unit tests, comes preinstalled, can be written in any file, not just inside a `test/` folder.
 * `TestItemRunner.jl` -> with `rust-analyzer`: click on the `Run Test` button atop the `#[test]`
 * `juliaup` -> `rustup`! We actually stole the name from them
-* `Documenter.jl` -> `rustdoc`, comes preinstalled (and hence why all Rust docs tend to look the same). You could also consider `mdbook` for serving a website. You can save yourselve some clicks if you to `std.rs/foo` in your browser search.
+* `Documenter.jl` -> `rustdoc`, comes preinstalled (and hence why all Rust docs tend to look the same). You could also consider `mdbook` for serving a website. You can save yourself some clicks if you do `std.rs/foo` in your browser search.
 * `LanguageServer.jl` -> `rust-analyzer`, with the VSCode extension getting the most support
 * REPL snippets -> [A Rust playground link](https://play.rust-lang.org/) is the easiest way to share Rust snippets others can run. Cool note: They have the top ~100 crates preinstalled in the VMs, so you can use the `rand` crate. DevFlow: `cargo new foo` -> `examples` -> setup `divan` -> bench function / test just below it
 * Julia Slack/Zulip/Discourse: Rust people tend to use [Discord]() for the larger community, a [Discourse for devs](), a [Discourse for users](), and a [Zulip for rustc development itself](). You'll likely not find as dedicated applied maths / scientific channels in any one given Rust forum as you would in Julia. If you do, let me know! I'd love to find them.
@@ -275,7 +275,7 @@ TODO: add link to video on rust-analyzer
 * TODO: type piracy and Orphan rule
 * Social vs systemic
 * Huge blog posts on [traits](https://github.com/pretzelhammer/rust-blog/blob/master/posts/tour-of-rusts-standard-library-traits.md)
-* TODO opting into interaces with `.next()` example + rust-analyzer trick for populating them
+* TODO opting into interfaces with `.next()` example + rust-analyzer trick for populating them
 * TODO defaults vs necessary methods
 
 ## Rust I/O Traits
@@ -385,7 +385,7 @@ TODO: flesh this out
 ## Dynamic Dispatch
 ## Macros
 
-* `rust-analyzer` lets you put your cursor on a macro and then `Ctrl+Shift+p` will let you expand it recursively. If you're using Rust Rover, it has a macro expansion stepper! These are *very* useful when debuggin macros.
+* `rust-analyzer` lets you put your cursor on a macro and then `Ctrl+Shift+p` will let you expand it recursively. If you're using Rust Rover, it has a macro expansion stepper! These are *very* useful when debugging macros.
 * macros don't operate on symbols, but rather on syntactic elements (more specifically, fully formed ASTs). This lets Rust only produce valid Rust code from its macros.
 
 ## Property Testing
