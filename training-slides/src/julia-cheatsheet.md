@@ -73,7 +73,7 @@ This would normally be a trivial iterator invalidation bug (we'd be modifying a 
 
 * Don't forget the `..p` syntax for initializing a struct:
 
-```rust
+```rust [], ignore
 let p2 = Point {x: 0, ..p1}; // will copy over remaining fields from `..p1`
 ```
 
@@ -99,7 +99,7 @@ enum House {
 * The following constructs are basic but welcome syntax sugar once you start become more comfortable wrangling matches:
   * `let else` - pattern match on a binding, and handle the remaining cases.
 
-```rust
+```rust [], ignore
 if let Shape::Circle(radius) = shape {
     // radius is a valid binding here if it pattern matched on Shape::Circle(___) 
 }
@@ -164,14 +164,16 @@ int parse_message(char* buf) {
 }
 ```
 
-Which has all sorts of sharp ends:
-    * You are returning an `int` and then doing a lot of additional bit manipulation to pull out the behaviour. This becomes tedious and error-prone. This also means that you can inadvertently promote the returned int and misuse your own API silently.
-    * If you ever discover a new corner case (say, presence of non-ASCII characters), you're responsible for updating at least 3 different places: a new `#define` for the new error condition, new control flow `parse_message` to handle this additional case, and, worst of all, every other call site across your codebase.
+Which has many sharp ends:
+
+* You are returning an `int` and then doing a lot of additional bit manipulation to pull out the behaviour. This becomes tedious and error-prone. This also means that you can inadvertently promote the returned int and misuse your own API silently.
+* If you ever discover a new corner case (say, presence of non-ASCII characters), you're responsible for updating at least 3 different places: a new `#define` for the new error condition, new control flow `parse_message` to handle this additional case, and, worst of all, every other call site across your codebase.
 
 ... just to name a few.
 
 Compare this with the Rust approach:
-```rust
+
+```rust [], ignore
 enum ParseError {
     NoEndingNewLine,
     TooManyNewLines,
@@ -196,7 +198,7 @@ Most Rust tutorials on error handling would be glad to finish the lesson here wi
 
 A more mature version of the code would look like
 
-```rust
+```rust [], ignore
 //fn handle_message(buf: &str) -> Result<Result(), CompareAndSwapError>, Error>
 let result = handle_message(buf)?;
 
@@ -230,7 +232,7 @@ This last line is the key - Rust is not the language to let you "get away with i
 
 * For debugging an iterator, you don't need to pepper in `dbg!` randomly, just use [.inspect()](https://doc.rust-lang.org/std/iter/trait.Iterator.html#method.inspect):
 
-```rust
+```rust [], ignore
 let sum = a.iter()
     .cloned()
     .inspect(|x| println!("about to filter: {x}"))
@@ -325,7 +327,8 @@ Almost all beginner level explanations of lifetimes I know of punt on subtyping 
 	- that a reference must be valid for
 - vs
 -
-  ```rust
+
+```rust [], ignore
   fn example _2() {
   let foo = 69;
   let mut r;
@@ -336,7 +339,8 @@ Almost all beginner level explanations of lifetimes I know of punt on subtyping 
   }
   r = &foo;
   println!("{}", *r);
-  ```
+```
+
 - liveness: a variable is live if its current value may be used later in the program
 - Refs have 2 properties: when they must be valid, what they can point to
 	- as in, which region of memory / which resource
@@ -344,7 +348,8 @@ Almost all beginner level explanations of lifetimes I know of punt on subtyping 
 	- `'a: 'b ⟺ 'a ⊆ 'b`
 - Thanks to subtyping and variance, this
 	-
-	  ```rust
+
+	  ```rust [], ignore
 	  fn longest<'s1, 's2, 'out>(s1: &'s1 str, s2: &'s2 str) -> &'out str 
 	  where
 	  	's1: 'out,
@@ -353,9 +358,11 @@ Almost all beginner level explanations of lifetimes I know of punt on subtyping 
 	  
 	  fn longest<'a>(s1: &'a str, s2: &'a str) -> &'a str
 	  ```
+
 	- Note how if this wasn't true then this would be the most annoying code ever:
 	-
-	  ```rust
+
+	  ```rust [], ignore
 	  fn main() {
 	    let x: &'x str = "hi";
 	    let y: &'y str = "hello";
@@ -365,6 +372,7 @@ Almost all beginner level explanations of lifetimes I know of punt on subtyping 
 	    let l2: &'l2 str = longest(l1, z);
 	  }
 	  ```
+
 	- this creates a new smallest possible region `&'l1` that contains both `'x` and `'y`.
 	-
 
