@@ -37,16 +37,15 @@ use std::cell::UnsafeCell;
 
 fn main() {
     let x: UnsafeCell<i32> = UnsafeCell::new(42);
-    let (p1, p2) = (&x, &x);
 
-    let p1_exclusive: &mut i32 = unsafe { &mut *p1.get() };
-    *p1_exclusive += 27;
-    drop(p1_exclusive);
+    let mut exc_ref: &mut i32 = unsafe { &mut *x.get() };
+    *exc_ref += 27;
+    drop(exc_ref);
 
-    let p2_shared: &i32 = unsafe { &*p2.get() };
-    assert_eq!(*p2_shared, 42 + 27);
-    let p1_shared: &i32 = unsafe { &*p1.get() };
-    assert_eq!(*p1_shared, *p2_shared);
+    let shared_1: &i32 = unsafe { &*x.get() };
+    assert_eq!(*shared_1, 42 + 27);
+    let shared_2: &i32 = unsafe { &*x.get() };
+    assert_eq!(*shared_1, *shared_2);
 }
 ```
 
@@ -224,21 +223,21 @@ The borrow checking is deferred to *run-time*
 
 ```rust []
 use std::cell::RefCell;
-
+ 
 fn main() {
     let x: RefCell<i32> = RefCell::new(42);
-    let (p1, p2) = (&x, &x);
-
-    let mut p1_exclusive = p1.borrow_mut();
-    *p1_exclusive += 27;
-    drop(p1_exclusive);
-
-    let p2_shared = p2.borrow();
-    assert_eq!(*p2_shared, 42 + 27);
+ 
+    let mut exc_ref = x.borrow_mut();
+    *exc_ref += 27;
+    drop(exc_ref);
+ 
+    let shared_1 = x.borrow();
     // This isn't allowed here:
-    // let p2_mutable = p2.borrow_mut();
-    let p1_shared = p1.borrow();
-    assert_eq!(*p1_shared, *p2_shared);
+    // let exc_ref = x.borrow_mut();
+    assert_eq!(*shared_1, 42 + 27);
+    let shared_2 = x.borrow();
+    assert_eq!(*shared_1, *shared_2);
+}
 }
 ```
 
