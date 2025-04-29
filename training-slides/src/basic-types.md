@@ -78,7 +78,7 @@ fn main() {
 
 ## Boolean
 
-Boolean in Rust is represented by either of two values: `true` or
+`bool` in Rust is represented by either of two values: `true` or
 `false`
 
 ## Character
