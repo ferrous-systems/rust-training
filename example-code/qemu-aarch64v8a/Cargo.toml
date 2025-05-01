@@ -13,9 +13,3 @@ embedded-alloc = "0.5.1"
 
 [profile.release]
 opt-level = "s"
-
-[source.crates-io]
-replace-with = "vendored-sources"
-
-[source.vendored-sources]
-directory = "vendor"

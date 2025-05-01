@@ -8,3 +8,9 @@ runner = "qemu-system-aarch64 -machine virt -cpu cortex-a57 -semihosting -nograp
 
 [build]
 target = ["aarch64-unknown-none"]
+
+[source.crates-io]
+replace-with = "vendored-sources"
+
+[source.vendored-sources]
+directory = "vendor"
