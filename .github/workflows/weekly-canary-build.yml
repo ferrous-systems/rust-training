@@ -41,12 +41,6 @@ jobs:
           rustup update ${{ matrix.rust-channel }} --no-self-update
           rustup default ${{ matrix.rust-channel }}
 
-      - name: Find slug name
-        run: |
-          slug=$(./describe.sh "${GITHUB_REF}")
-          echo "Building with slug '${slug}'"
-          echo "slug=${slug}" >> "${GITHUB_ENV}"
-
       - name: Build book-and-slides
         run: |
           cd ./training-slides && ./build.sh
