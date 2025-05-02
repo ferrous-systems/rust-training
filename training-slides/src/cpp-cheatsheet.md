@@ -153,8 +153,8 @@ Like C++, Rust fundamentally has three ways to pass ownership around:
 
 The difference is in the defaults:
 
-Taking something by-value in Rust always means **moving** the value, not copying.
-In comparison, copying is explicit with `.clone()` and references are explicit with `&` and `&mut`.
+Taking something by-value in Rust by default means **moving** the value, not copying.
+In comparison, copying is usually explicit with `.clone()` and references are explicit with `&` and `&mut`.
 
 The second important difference is that a move does not leave an object behind, when moving out of an object, the moved-from object is no longer accessible.
 
@@ -177,6 +177,14 @@ Rust's references are similar to C++ references, but many rules/best-practices t
 
 In C++, these were already good to adhere to, in Rust they are mandatory - a safe Rust program will not compile otherwise.
 
+### Copy trait
+
+The `Copy` trait changes Rust's default semantics back.
+
+If a type implements `Copy`, it does not use move semantics, but copy semantics for assignment, passing by value, etc.
+`Copy` types behave very closely to the C++ defaults, but without the ability to be moved (i.e. similar to pre-C++11).
+
+`Copy` is usually only used for plain-old-data types that are cheap to copy.
 
 ### RAII and Drop
 
@@ -216,7 +224,7 @@ However, `panic!` should be used rarely and documented well in public API.
 
 Iterators in Rust are self-contained. No need for an end iterator.
 
-Most algorithms are implemented directly on Iterator trait, not as separate functions.
+Most algorithms are implemented directly on the Iterator trait, not as separate functions.
 
 So this C++ code:
 
@@ -251,7 +259,7 @@ if let Some(odd) = odd {
 
 Rust modules work like C++ modules, not like `#include` files.
 They export certain symbols (i.e. types/functions) under a given name.
-They and are not included as in-place text.
+They are not included as in-place text.
 
 Modules are also important for scoping in Rust.
 Unlike namespaces, modules and all items in them have their own visibility (e.g. `pub` or not).
@@ -286,8 +294,8 @@ mod config {
 
 ### Operator Overloading with Traits
 
-Traits like `PartialEq`, `PartialOrd`, etc. are Rusts way of operator overloading.
-If a type implements the right trait, the operator (e.g. `==`, `<`, etc.) are available for the type.
+Traits like `PartialEq`, `PartialOrd`, etc. are Rust's way of operator overloading.
+If a type implements the right trait, the corresponding operator (e.g. `==`, `<`, etc.) is available for the type.
 
 `#[derive(...)]`, implements traits automatically (comparable to `= default` in C++).
 You can also implement them manually.
