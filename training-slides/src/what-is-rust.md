@@ -267,10 +267,10 @@ The Rust Project, and pretty much the whole Community, follow a [Code of
 
 ## Hosts
 
-* Windows (__x86__, Arm)
-* macOS (__x86__, Arm)
-* Linux (__x86__, __Arm__, RISC-V, MIPS, Power, S390x, SPARC...)
-* FreeBSD, NetBSD, Illumos, ...
+* Windows (__x86-64__, __x86__, AArch64)
+* Linux (__x86-64__, __x86__, __AArch64__, AArch32, RISC-V, PowerPC, S390)
+* macOS (__x86-64__, __AArch64__)
+* plus FreeBSD, NetBSD and Illumos
 
 ## Targets
 
