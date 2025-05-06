@@ -85,7 +85,7 @@ Want to use `zlib`, `OpenSSL`, `SomeSpecialDriverLib`? Sure!
 
 ## Rust can *export* C-compatible libraries
 
-* Python extension modules? [Ok!](https://crates.io/crates/arrow)
+* Python extension modules? [Ok!](https://pypi.org/project/polars)
 * Android native libraries? [No problem.](https://cs.android.com/android/platform/superproject/main/+/main:packages/modules/DnsResolver/doh/encoding.rs)
 * Replace the file parser in your Very Large C++ Application? [Can-do.](https://wiki.mozilla.org/Oxidation)
 
