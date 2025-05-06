@@ -395,13 +395,14 @@ Generally built following a standard, like ISO 26262:
 
 * To produce Ferrocene, we first wrote the *Ferrocene Language Specification*
   * See <https://spec.ferrocene.dev>
+  * It's [being upstreamed](https://blog.rust-lang.org/2025/03/26/adopting-the-fls/) as the official spec
 * Ferrocene is based on the open-source Rust compiler
   * Additional testing and run-time checks in the toolchain
   * Lots of documentation!
 * Ferrocene itself is open-source software
   * <https://github.com/ferrocene/ferrocene>
 * Pricing and support options at <https://ferrocene.dev>
-* Other companies have similar offerings (ask them!)
+* Other companies have similar offerings
 
 ---
 
