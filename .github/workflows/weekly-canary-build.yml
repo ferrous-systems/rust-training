@@ -2,7 +2,7 @@ name: Weekly Canary Build
 
 on:
   schedule:
-    - cron: '50 8 * * *'
+    - cron: '45 7 * * Mon' # 07:45 UTC on Monday
 
 env:
   CARGO_TERM_COLORS: always    # We want colors in our CI output
