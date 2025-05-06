@@ -2,8 +2,7 @@ name: Weekly Canary Build
 
 on:
   schedule:
-    - cron: '0 0 * * Mon'
-
+    - cron: '50 8 * * *'
 
 env:
   CARGO_TERM_COLORS: always    # We want colors in our CI output
@@ -41,10 +40,10 @@ jobs:
           rustup update ${{ matrix.rust-channel }} --no-self-update
           rustup default ${{ matrix.rust-channel }}
 
-      - name: Build book-and-slides
+      - name: Execute render-material
         run: |
-          cd ./training-slides && ./build.sh
+          ./localbuild.sh render-material
 
-      - name: Test all cheatsheets
+      - name: Execute test-cheatsheets
         run: |
-          cargo xtask test-all-cheatsheets --locked
+          ./localbuild.sh test-cheatsheets
