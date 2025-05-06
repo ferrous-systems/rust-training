@@ -1,5 +1,15 @@
 # What is Rust?
 
+---
+
+* The 100-foot view
+* Where did Rust come from?
+* Who's in charge now?
+* Is this a community I can engage with?
+* What does Rust run on?
+* What does Rust cost?
+* Can I build safety-critical systems?
+
 ## The 100-foot view
 
 ## A free and open-source __systems programming__ language
@@ -392,3 +402,13 @@ Generally built following a standard, like ISO 26262:
   * <https://github.com/ferrocene/ferrocene>
 * Pricing and support options at <https://ferrocene.dev>
 * Other companies have similar offerings (ask them!)
+
+---
+
+* The 100-foot view
+* Where did Rust come from?
+* Who's in charge now?
+* Is this a community I can engage with?
+* What does Rust run on?
+* What does Rust cost?
+* Can I build safety-critical systems?
