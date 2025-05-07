@@ -56,17 +56,17 @@ It's applicable at *every point* in the stack!
 -   Performance <!-- .element: class="fragment" -->
 -   Productivity <!-- .element: class="fragment" -->
 
-## It's increasingly popular!
+## It's enduringly popular
 
- [Stack Overflow Survey 2023](https://survey.stackoverflow.co/2023/#technology-admired-and-desired):
+ [Stack Overflow Survey 2024](https://survey.stackoverflow.co/2024/technology#admired-and-desired):
 
-> Rust is on its eighth year as the most ~~loved~~ *admired* language with 85% of developers saying they want to
-> continue using it.
+> Rust continues to be the most-admired programming language with an 83% score this year
 
 Note:
 
-Stack Overflow used to use the term *most loved*, which Rust won seven years in a row. In 2023 they changed the terms to
-*desired* and *admired*. Rust was the *most admired* language in 2023.
+Stack Overflow used to use the term *most loved*, which Rust won seven years in
+a row. In 2023 they changed the terms to *desired* and *admired*. Rust was the
+*most admired* language in 2023 and 2024.
 
 ## Cross-platform
 
