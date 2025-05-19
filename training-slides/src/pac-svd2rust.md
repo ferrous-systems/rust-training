@@ -61,7 +61,7 @@ unsafe { UARTE0_INTEN.write_volatile(0x0000_0003); }
 But this still seems very error-prone. Nothing stops you putting the wrong value
 at the wrong address.
 
-## Adding structure
+## Structures in C
 
 In C, the various registers for a peripheral can also be grouped into a `struct`:
 
@@ -94,17 +94,17 @@ pub struct Uart0 {
 let p_uart: &Uart0 = unsafe { &*(0x40002000 as *const Uart0) };    
 ```
 
+<p>&nbsp;<!-- spacer for "run" button --></p>
+
 The
 [`vcell::VolatileCell`](https://docs.rs/vcell/0.1.3/vcell/struct.VolatileCell.html)
-type ensures the compiler emits volatile pointer read/writes.
+type ensures the compiler emits volatile pointer read/writes. But, the reference is unsound.
 
 Note:
 
-There is some discussion about whether `VolatileCell` technically breaks Rust's
-rules around references. It works in practice, but it might be technically
-unsound.
+svd2rust (later) generates structures that look like this.
 
-## Other approaches
+## Access via functions
 
 ```rust []
 pub struct Uart { base: *mut u32 } // now has no fields
@@ -132,9 +132,7 @@ Note:
 
 The pointer is a `*mut u32` so the offsets are all in 32-bit words, not bytes.
 
-## Zero Sized Types
-
-We could handle the address as part of the type instead...
+## Access via functions (with ZSTs)
 
 ```rust []
 pub struct Uart<const ADDR: usize> {}
@@ -164,6 +162,10 @@ Note:
 By itself this seems a small change, but imagine a struct which represents 75
 individual peripherals. That's not impossible for a modern microcontroller.
 Holding one word for each now takes up valuable RAM!
+
+## Code Generation
+
+Can we just generate all this code, automatically?
 
 ## CMSIS-SVD Files
 
@@ -207,11 +209,11 @@ digraph {
     node [shape=record, width=1.5, fillcolor=lightblue, style=filled];
     Peripherals;
     uarte1 [label=".UARTE1: UARTE1"];
-    uarte1_baudrate [label=".baudrate: BAUDATE"];
-    uarte1_inten [label=".inten: INTEN"];
+    uarte1_baudrate [label="baudrate() -&gt; BAUDRATE"];
+    uarte1_inten [label="inten\(\) -&gt; INTEN"];
     uarte2 [label=".UARTE2: UARTE2"];
-    uarte2_baudrate [label=".baudrate: BAUDATE"];
-    uarte2_inten [label=".inten: INTEN"];
+    uarte2_baudrate [label="baudrate() -&gt; BAUDRATE"];
+    uarte2_inten [label="inten() -&gt; INTEN"];
 
     Peripherals -> uarte1;
     uarte1 -> uarte1_baudrate;
@@ -227,11 +229,18 @@ digraph {
 
 * The crate has a top-level `struct Peripherals` with members for each *Peripheral*
 * Each *Peripheral* gets a `struct`, like `UARTE0`, `SPI1`, etc.
-* Each *Peripheral* `struct` has members for each *Register*
+* Each *Peripheral* `struct` has methods for each *Register*
 * Each *Register* gets a `struct`, like `BAUDRATE`, `INTEN`, etc.
 * Each *Register* `struct` has `read()`, `write()` and `modify()` methods
 * Each *Register* also has a Read Type (`R`) and a Write Type (`W`)
   * Those Read/Write Types give you access to the *Bitfields*
+
+Note:
+
+Earlier versions of svd2rust gave you an API where you'd access the registers
+using `struct.field` syntax, which forced the use of unsound peripheral
+references. Now they use a function-based API, but they still have the unsound
+peripheral references under the hood.
 
 ## The `svd2rust` generated API (2)
 
@@ -246,11 +255,10 @@ digraph {
 
 ```rust ignore []
 let p = nrf52840_pac::Peripherals::take().unwrap();
-// Reading the 'baudrate' field
-let contents = p.UARTE1.baudrate.read();
-let current_baud_rate = contents.baudrate();
+// Reading the 'baudrate' bitfield from the 'baudrate' register
+let baudrate = p.UARTE1.baudrate().read().baudrate();
 // Modifying multiple fields in one go
-p.UARTE1.inten.modify(|_r, w| {
+p.UARTE1.inten().modify(|_r, w| {
     w.cts().enabled();
     w.ncts().enabled();
     w.rxrdy().enabled();
@@ -281,7 +289,7 @@ function. We see this used [all
 What are the three steps here?
 
 ```rust ignore []
-p.UARTE1.inten.modify(|_r, w| {
+p.UARTE1.inten().modify(|_r, w| {
     w.cts().enabled();
     w.ncts().enabled();
     w.rxrdy().enabled();
@@ -308,3 +316,70 @@ or a field on the `Peripherals` struct.
 
 * Is it weird that it produces `UPPER_CASE` fields and types?
 * There's now [a config file for that](https://github.com/rust-embedded/svd2rust/pull/794)
+
+## Alternatives
+
+* [`chiptool`](https://crates.io/crates/chiptool) - forked from svd2rust, but without the singletons
+* [`derive-mmio`](https://docs.rs/derive-mmio) - one struct at a time, with derive-macros
+* [`safe-mmio`](https://docs.rs/safe-mmio) - one struct at a time, with projection macros!
+
+Note:
+
+Chiptool is used by the embassy project.
+
+---
+
+The [`derive-mmio`](https://docs.rs/derive-mmio) crate is from Knurling.
+
+```rust []
+#[derive(derive_mmio::Mmio)]
+#[repr(C)]
+struct Registers {
+    #[mmio(Read, Write)]
+    data: u32,
+    #[mmio(ReadPure)]
+    state: State,
+    #[mmio(ReadPure, Write)]
+    control: Control,
+}
+
+let mut uart_registers = unsafe { Registers::new_mmio_at(0x900_0000) };
+uart_registers.write_data(b'x' as u32);
+```
+
+See [an example](https://github.com/ferrous-systems/rust-training/tree/main/example-code/qemu-common/src/cmsdk_uart/basic.rs).
+
+Note:
+
+The `data` register is marked `(Read, Write)` because the default is `(PureRead,
+Write)` and reading from the `data` register has side-effects (it reads from a
+hardware FIFO). Fields that are `PureRead` can be read through `&self`
+references (writes and non-pure reads require `&mut self`).
+
+---
+
+The [`safe-mmio`](https://docs.rs/safe-mmio) crate is from Google.
+
+```rust []
+#[repr(C)]
+use safe_mmio::{ReadWrite, ReadPureWrite, ReadPure, UniqueMmioPointer, field};
+
+struct UartRegisters {
+    data: ReadWrite<u8>,
+    status: ReadPure<u8>,
+    control: ReadPureWrite<u8>,
+}
+
+let mut uart_registers: UniqueMmioPointer<UartRegisters> =
+    unsafe { UniqueMmioPointer::new(NonNull::new(0x900_0000 as _).unwrap()) };
+field!(uart_registers, data).write(b'x');
+```
+
+## Non-Integer Fields
+
+Support is available for bitfields within registers.
+
+* [`bitflags::bitflags!`](https://docs.rs/bitflags/2.9.1/bitflags/)
+* [`#[bitbybit::bitfield(u32)]`](https://crates.io/crates/bitbybit)
+
+Using `bitfield` for the [Arm CPSR](https://github.com/rust-embedded/cortex-ar/blob/cortex-ar-v0.1.0/cortex-ar/src/register/cpsr.rs) ([docs](https://docs.rs/cortex-ar/0.1.0/cortex_ar/register/cpsr/struct.Cpsr.html))
