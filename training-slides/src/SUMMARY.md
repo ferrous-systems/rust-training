@@ -27,10 +27,10 @@ Using Rust on Windows/macOS/Linux. Requires [Rust Fundamentals](#rust-fundamenta
 * [Generics](./generics.md)
 * [Lifetimes](./lifetimes.md)
 * [Cargo Workspaces](./cargo-workspaces.md)
+* [Closures and the Fn/FnOnce/FnMut traits](./closures.md)
 * [Heap Allocation (Box and Rc)](./heap.md)
 * [Shared Mutability (Cell, RefCell, OnceCell)](./shared-mutability.md)
 * [Thread Safety (Send/Sync, Arc, Mutex)](./thread-safety.md)
-* [Closures and the Fn/FnOnce/FnMut traits](./closures.md)
 * [Spawning Threads and Scoped Threads](./spawning-threads.md)
 
 # Advanced Rust
