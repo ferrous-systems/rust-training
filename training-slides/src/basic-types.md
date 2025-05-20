@@ -1,5 +1,19 @@
 # Basic Types
 
+## The Basics
+
+```rust
+fn main() {
+    let x = 10;
+    let y = process(x);
+    println!("{x} {y}");
+}
+
+fn process(param1: i32) -> i32 {
+    param1 + 1
+}
+```
+
 ## Integers
 
 Rust comes with all standard int types, with and without sign
@@ -151,7 +165,7 @@ Note:
 * It is *undefined behaviour* to create one that isn't valid UTF-8
 * Slicing must be done on *character boundaries*
 
-```rust []
+```rust
 fn main() {
     let hello_world: &str = "Hello 😀";
     println!("Start = {}", &hello_world[0..5]);
