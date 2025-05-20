@@ -29,7 +29,7 @@ Tests typically end up in 1 of 4 possible locations:
 
 ## `tests` Submodule
 
-```rust []
+```rust
 enum Direction { North, South, East, West }
 
 fn is_north(dir: Direction) -> bool {
@@ -69,7 +69,7 @@ test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured
 
 ## Documentation Tests
 
-```rust []
+```rust
 /// ```rust
 /// use example::Direction;
 /// let way_home = Direction::North;

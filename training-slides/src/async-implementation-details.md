@@ -15,7 +15,7 @@
 
 ## Tasks example
 
-```rust [], ignore
+```rust, ignore
 async fn learn_and_sing() {
     let song = learn_song().await;  // 1
     sing_song(song).await;          // 2
@@ -42,7 +42,7 @@ async fn learn_and_sing() {
 
 ## Pin Example
 
-```rust [], ignore
+```rust, ignore
 #[tokio::main]
 async fn main() {
     let mut stream = async_stream();

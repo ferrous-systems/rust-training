@@ -32,7 +32,7 @@ There is only *one* way to modify data through a `&T` reference:
 
 ## `UnsafeCell`
 
-```rust []
+```rust
 use std::cell::UnsafeCell;
 
 fn main() {
@@ -72,7 +72,7 @@ Ideally, we would have a `fn view(&self) -> &str` to return the content, and inc
 
 ## Without `Cell` s
 
-```rust []
+```rust
 #[derive(Debug, Default)]
 struct Post {
     content: String,
@@ -92,7 +92,7 @@ impl Post {
 
 This isn't ideal! `view` takes a `&mut self`, meaning this won't work:
 
-```rust []
+```rust
 fn main() {
     let post = Post { content: "Blah".into(), ..Post::default() };
     // This line is a compile error!
@@ -118,7 +118,7 @@ impl Post {
 
 ## Without `Cell`
 
-```rust []
+```rust
 fn main() {
     // We need to make the entire struct mutable!
     let mut post = Post { content: "Blah".into(), ..Post::default() };
@@ -147,7 +147,7 @@ impl Post {
 
 Let's see our previous example with `Cell`.
 
-```rust []
+```rust
 fn main() {
     let post = Post {
         content: "Blah".into(),
@@ -221,7 +221,7 @@ The borrow checking is deferred to *run-time*
 
 ## Using `RefCell`
 
-```rust []
+```rust
 use std::cell::RefCell;
  
 fn main() {
@@ -244,7 +244,7 @@ fn main() {
 
 Let's see our previous example with `RefCell`.
 
-```rust []
+```rust
 fn main() {
     let post = Post { content: "Blah".into(), ..Post::default() };
     println!("{}", post.view());

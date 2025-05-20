@@ -19,7 +19,7 @@ Ownership is the basis for the memory management of Rust.
 
 ## Example
 
-```rust [1-9|2|3|7-9|4]
+```rust
 fn main() {
     let s = String::from("Hello 😀");
     print_string(s);
@@ -120,7 +120,7 @@ pointers may or may not be, depending on what they point at.
 
 ## Making a Reference
 
-```rust []
+```rust
 fn main() {
     let s = String::from("Hello 😀");
     // A reference to a String
@@ -177,7 +177,7 @@ fn print_string(s: &String) {
 
 ## Making an Exclusive Reference
 
-```rust []
+```rust
 fn main() {
     let mut s = String::from("Hello 😀");
     let s_ref = &mut s;
@@ -201,7 +201,7 @@ fn add_excitement(s: &mut String) {
 
 ## Full Example
 
-```rust []
+```rust
 fn main() {
     let mut s = String::from("Hello 😀");
     add_excitement(&mut s);
@@ -238,7 +238,7 @@ Why are there two types of Borrowed string types (`&String` and `&str`)? The fir
 * The first argument of the method is either `self`, `&self` or `&mut self`
 * They are converted to function calls by the compiler
 
-```rust []
+```rust
 fn main() {
     let mut s = String::from("Hello 😀");
     // This method call...
@@ -266,7 +266,7 @@ Some types have a `.clone()` method.
 
 It makes a new object, which looks just like the original object.
 
-```rust []
+```rust
 fn main() {
     let s = String::from("Hello 😀");
     let mut s_clone = s.clone();
@@ -282,7 +282,7 @@ You can mark your `struct` or `enum` with `#[derive(Clone)]`
 
 (But only if every value in your `struct`/`enum` itself is `Clone`)
 
-```rust []
+```rust
 #[derive(Clone)]
 struct Square {
     width: i32
@@ -300,7 +300,7 @@ fn main() {
 * Compiler copies these objects automatically
 * If cloning is very cheap, you could make your type `Copy`
 
-```rust []
+```rust
 fn main() {
     let x = 6;
     do_stuff(x);
@@ -328,7 +328,7 @@ You can define a specific behaviour to happen on *drop* using the *Drop* trait (
 
 For example, the memory used by a `String` is freed when dropped:
 
-```rust []
+```rust
 fn main() {
     // String created here (some memory is allocated on the heap)
     let s = String::from("Hello 😀");

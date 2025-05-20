@@ -121,7 +121,7 @@ the `new` functions you provide!
 
 ## Generic Pin Modes?
 
-```rust []
+```rust
 pub trait PinMode {}
 
 pub struct Output {}
@@ -158,7 +158,7 @@ let pin: Pin<OnFire> = ...;
 
 ## Sealing traits
 
-```rust []
+```rust
 mod private { pub trait Sealed {} }
 pub trait PinMode: private::Sealed {}
 

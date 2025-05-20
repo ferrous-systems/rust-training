@@ -53,7 +53,7 @@ digraph {
 
 ## Creation
 
-```rust []
+```rust
 fn main() {
     // &'static str
     let this = "Hello";
@@ -74,7 +74,7 @@ fn main() {
 
 Just because multiple types exist doesn't mean they can't work in harmony.
 
-```rust []
+```rust
 fn main() {
     let part_one = String::from("Hello ");
     let part_two = String::from("there ");
@@ -123,7 +123,7 @@ It is strongly recommended you read *all* of the [documentation](https://doc.rus
 
 Splitting:
 
-```rust []
+```rust
 fn main() {
     let words = "Cow says moo";
     let each: Vec<_> = words.split(" ").collect();
@@ -135,7 +135,7 @@ fn main() {
 
 Concatenation:
 
-```rust []
+```rust
 fn main() {
     let animal = String::from("Cow");
     let sound = String::from("moo");
@@ -148,7 +148,7 @@ fn main() {
 
 Replacing:
 
-```rust []
+```rust
 fn main() {
     let words = "Cow says moo";
     let replaced = words.replace("moo", "roar");
@@ -160,7 +160,7 @@ fn main() {
 
 It's possible to accept either rather painlessly:
 
-```rust []
+```rust
 fn accept_either<S>(thing: S) -> String
 where S: AsRef<str> {
     String::from("foo") + thing.as_ref()
@@ -179,7 +179,7 @@ fn main() {
 -   Can span multiple lines, leading spaces become part of the line
 -   Escape sequences are not processed
 
-```rust []
+```rust
 fn main () {
     let json = r##"
 {
@@ -196,7 +196,7 @@ fn main () {
 * not really strings
 * used to declare static byte slices (have a `&[u8]` type)
 
-```rust []
+```rust
 fn main() {
     let byte_string: &[u8] = b"allows ASCII and \xF0\x9F\x98\x80 only";
     println!("Can Debug fmt but not Display fmt: {:?}", byte_string);

@@ -18,7 +18,7 @@ It's hard to determine for a full program if _all instances of a task are stayin
 
 * `spawn_blocking` is usually the solution for dealing with slightly longer tasks
 
-```rust [], ignore
+```rust, ignore
 task::spawn_blocking(async {
     std::thread::sleep(Duration::from_secs(1000));
 });
@@ -50,7 +50,7 @@ task::spawn_blocking(async {
 
 ## Example
 
-```rust [], ignore
+```rust, ignore
 let (s, r) = mpsc::channel(32);
 
 assert_eq!(s.send("Hello").await, Ok(()));

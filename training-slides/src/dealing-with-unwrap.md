@@ -27,7 +27,7 @@ Let's see how we can get to `?` as quickly as possible in cases where
 
 `?` turns this
 
-```rust [], ignore
+```rust, ignore
 fn write_info(info: &Info) -> io::Result<()> {
     // Early return on error
     let mut file = match File::create("my_best_friends.txt") {
@@ -51,7 +51,7 @@ fn write_info(info: &Info) -> io::Result<()> {
 
 Into this
 
-```rust [], ignore
+```rust, ignore
 fn write_info(info: &Info) -> io::Result<()> {
     let mut file = File::create("my_best_friends.txt")?;
     // Early return on error
@@ -68,7 +68,7 @@ fn write_info(info: &Info) -> io::Result<()> {
 
 As well as this
 
-```rust []
+```rust
 fn add_last_numbers(stack: &mut Vec<i32>) -> Option<i32> {
     let a = stack.pop();
     let b = stack.pop();
@@ -82,7 +82,7 @@ fn add_last_numbers(stack: &mut Vec<i32>) -> Option<i32> {
 
 ## `?` vs Pattern Matching 2
 
-```rust []
+```rust
 fn add_last_numbers(stack: &mut Vec<i32>) -> Option<i32> {
     Some(stack.pop()? + stack.pop()?)
 }
@@ -94,7 +94,7 @@ We prefer using `?` instead of highly nested pattern matching
 
 * Sometimes we return `Option`, but we want a `Result` because it adds more context:
 
-```rust [], ignore
+```rust, ignore
 struct UserId {
     name: String,
     num: u32,
@@ -110,7 +110,7 @@ fn find_user(username: &str) -> Option<&str> {
 
 ## Option into Result: After
 
-```rust [], ignore
+```rust, ignore
 struct UserId {
     name: String,
     num: u32,
@@ -129,7 +129,7 @@ pub fn find_user(username: &str) -> Result<UserId, i32> {
 * We can process the context of the error to produce something more meaningful than `i32`
 * Concretely: use `map_err()` on a `Result<_, A>` to get a `Result<_, B>`
 
-```rust [], ignore
+```rust, ignore
 pub fn find_user(username: &str) -> Result<UserId, String>  {
     let f = std::fs::File::open("/etc/passwd")
         .map_err(|e| format!("Failed to open password file: {:?}", e))?;
@@ -143,7 +143,7 @@ pub fn find_user(username: &str) -> Result<UserId, String>  {
 * However, `String`y based errors are a code smell
 * Prefer idiomatic error types that use `enum`s:
 
-```rust [9], ignore
+```rust, ignore
 enum MyError {
     BadPassword(String),
     IncorrectID,
@@ -168,7 +168,7 @@ pub fn find_user(username: &str) -> Result<UserId, MyError>  {
 
 ## When to not `?`: Before
 
-```rust [], ignore
+```rust, ignore
 for stream in tcp_listener.incoming() {
     // Should I use `stream?` here?
     // No, because my whole server would stop accepting connections
@@ -181,7 +181,7 @@ for stream in tcp_listener.incoming() {
 
 ## When to not `?`: After
 
-```rust [], ignore
+```rust, ignore
 if let (Ok(a), Ok(b)) = (job_a(), job_b()) {
     // run this code only when both jobs succeeded
 }
@@ -196,7 +196,7 @@ if let (Ok(a), Ok(b)) = (job_a(), job_b()) {
 * Iterators usually just care about processing or finding certain elements and throwing out the uninteresting data
 * Use `.filter_map()` for this:
 
-```rust [], ignore
+```rust, ignore
 let a = ["1", "two", "NaN", "four", "5"];
 
 // I don't care about bad results, I filter them out
@@ -217,7 +217,7 @@ let mut iter = a.iter()
 * `Option` and `Result` support transposition: they can wrap collections or be elements of them
 * If you want to process each error separately, use `Vec<Result<T, _>>`:
 
-```rust [], ignore
+```rust, ignore
 let vec_of_results: Vec<Result<i32, _>> = inputs.iter()
     .map(|s| s.parse::<i32>())
     .collect();
@@ -227,7 +227,7 @@ let vec_of_results: Vec<Result<i32, _>> = inputs.iter()
 
 * If you only care about all of them succeeding, you can `.collect()` them into a `Result<Vec<i32>, _>`:
 
-```rust [], ignore
+```rust, ignore
 let result_of_vec: Result<Vec<i32>, _> = inputs.iter()
     .map(|s| s.parse::<i32>())
     .collect()?;

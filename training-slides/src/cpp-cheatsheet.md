@@ -45,7 +45,7 @@ for (const auto &: list) {
 
 is equivalent to
 
-```rust [], ignore
+```rust, ignore
 for value in &list {
     //...
 }

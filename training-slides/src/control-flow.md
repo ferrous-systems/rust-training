@@ -15,7 +15,7 @@
 - Parentheses around the conditional are not necessary
 - Blocks need brackets, no shorthand
 
-```rust []
+```rust
 fn main() {
     if 1 == 2 {
         println!("integers are broken");
@@ -32,7 +32,7 @@ fn main() {
 - Every block is an expression
 - Note the final `;` to terminate the `let` statement.
 
-```rust []
+```rust
 fn main() {
     let x = if 1 == 2 {
         100
@@ -48,7 +48,7 @@ fn main() {
 
 Now the `if` expression is the result of the function:
 
-```rust []
+```rust
 fn some_function() -> i32 {
     if 1 == 2 {
         100
@@ -64,7 +64,7 @@ fn some_function() -> i32 {
 
 `loop` is used for (potentially) infinite loops
 
-```rust []
+```rust
 fn main() {
     let mut i = 0;
     loop {
@@ -78,7 +78,7 @@ fn main() {
 
 `loop` blocks are also expressions...
 
-```rust []
+```rust
 fn main() {
     let mut i = 0;
     let loop_result = loop {
@@ -95,7 +95,7 @@ fn main() {
 - `while` is used for conditional loops.
 - Loops while the boolean expression is `true`
 
-```rust []
+```rust
 fn main() {
     let mut i = 0;
     while i < 10 {
@@ -112,7 +112,7 @@ fn main() {
 - The first arm to match, wins
 - `_` means *match anything*
 
-```rust []
+```rust
     fn main() {
         let a = 4;
         match a % 3 {
@@ -127,7 +127,7 @@ fn main() {
 - `for` is used for iteration
 - Here `0..10` creates a `Range`, which you can iterate
 
-```rust []
+```rust
 fn main() {
     for num in 0..10 {
         println!("{}", num);
@@ -139,7 +139,7 @@ fn main() {
 
 Lots of things are *iterable*
 
-```rust []
+```rust
 fn main() {
     for ch in "Hello".chars() {
         println!("{}", ch);
@@ -152,7 +152,7 @@ fn main() {
 - What Rust actually does is more like...
 - (More on this in the section on *Iterators*)
 
-```rust []
+```rust
 fn main() {
     let mut iter = "Hello".chars().into_iter();
     loop {
@@ -168,7 +168,7 @@ fn main() {
 
 If you have nested loops, you can label them to indicate which one you want to break out of.
 
-```rust []
+```rust
 fn main() {
     'cols: for x in 0..5 {
         'rows: for y in 0..5 {
@@ -185,7 +185,7 @@ fn main() {
 
 Means go around the loop again, rather than break out of the loop
 
-```rust []
+```rust
 fn main() {
     'cols: for x in 0..5 {
         'rows: for y in 0..5 {
@@ -203,7 +203,7 @@ fn main() {
 - `return` can be used for early returns
 - The result of the last expression of a function is always returned
 
-```rust []
+```rust
 fn get_number(x: bool) -> i32 {
     if x {
         return 42;
