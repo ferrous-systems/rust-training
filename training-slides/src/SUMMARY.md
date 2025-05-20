@@ -22,11 +22,11 @@
 
 Using Rust on Windows/macOS/Linux. Requires [Rust Fundamentals](#rust-fundamentals).
 
+* [Cargo Workspaces](./cargo-workspaces.md)
 * [Methods and Traits](./methods-traits.md)
 * [Rust I/O Traits](./io.md)
 * [Generics](./generics.md)
 * [Lifetimes](./lifetimes.md)
-* [Cargo Workspaces](./cargo-workspaces.md)
 * [Closures and the Fn/FnOnce/FnMut traits](./closures.md)
 * [Heap Allocation (Box and Rc)](./heap.md)
 * [Shared Mutability (Cell, RefCell, OnceCell)](./shared-mutability.md)
