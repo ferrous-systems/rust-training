@@ -4,7 +4,7 @@
 
 Arrays (`[T; N]`) have a fixed size.
 
-```rust []
+```rust
 fn main() {
     let array = [1, 2, 3, 4, 5];
     println!("array = {:?}", array);
@@ -29,7 +29,7 @@ digraph {
 
 How do you know how many 'slots' you've used?
 
-```rust []
+```rust
 fn main() {
     let mut array = [0u8; 10];
     for idx in 0..5 {
@@ -57,7 +57,7 @@ digraph {
 
 A view into *some other data*. Written as `&[T]` (or `&mut [T]`).
 
-```rust [1-8|6]
+```rust
 fn main() {
     let mut array = [0u8; 10];
     for idx in 0..5 {
@@ -93,7 +93,7 @@ Slices are *unsized* types and can only be access via a reference. This referenc
 
 `Vec` is a growable, heap-allocated, array-like type.
 
-```rust []
+```rust
 fn process_data(input: &[u32]) {
     let mut vector = Vec::new();
     for value in input {
@@ -193,7 +193,7 @@ A string slice is tied to the lifetime of the data that it refers to.
 * String Literals produce a string slice "with static lifetime"
 * Points at some bytes that live in read-only memory with your code
 
-```rust []
+```rust
 fn main() {
     let s: &'static str = "Hello!";
     println!("s = {}", s);
@@ -263,7 +263,7 @@ The green block of data is heap allocated.
 
 ## Making a String
 
-```rust [1-7|2|3|4|5|6]
+```rust
 fn main() {
     let s1 = "String literal up-conversion".to_string();
     let s2: String = "Into also works".into();
@@ -275,7 +275,7 @@ fn main() {
 
 ## Appending to a String
 
-```rust [1-7|2|3|4|5-6]
+```rust
 fn main() {
     let mut start = "Mary had a ".to_string();
     start.push_str("little");
@@ -287,7 +287,7 @@ fn main() {
 
 ## Joining pieces of String
 
-```rust [1-5|2|3|4]
+```rust
 fn main() {
     let pieces = ["Mary", "had", "a", "little", "lamb"];
     let rhyme = pieces.join(" ");
@@ -299,7 +299,7 @@ fn main() {
 
 A ring-buffer, also known as a Double-Ended Queue:
 
-```rust []
+```rust
 use std::collections::VecDeque;
 fn main() {
     let mut queue = VecDeque::new();
@@ -367,7 +367,7 @@ fn entry(&mut self, key: K) -> Entry<K, V> {
 
 ## Entry API Example
 
-```rust []
+```rust
 use std::collections::HashMap;
  
 fn update_connection(map: &mut HashMap<i32, u64>, id: i32) {

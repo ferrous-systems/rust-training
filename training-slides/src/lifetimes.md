@@ -271,7 +271,7 @@ This function body does not *force* the two inputs to live for the same amount o
 
 ## Example
 
-```rust []
+```rust
 fn coin_flip() -> bool { false }
 
 fn pick_one<'a>(s1: &'a str, s2: &'a str) -> &'a str {

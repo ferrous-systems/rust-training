@@ -51,7 +51,7 @@ This is trivial to do in C++ and causes silent corruption.
 
 ## Iter Example (fixed)
 
-```rust []
+```rust
 /// Adds 0x00 padding for every 0xCC found
 fn process(data: &mut Vec<u8>) {
     let padding_byte_count = data.iter().filter(|&&x| x == 0xCC).count();
@@ -99,7 +99,7 @@ Note:
 
 ## Thread Example (Fixed)
 
-```rust []
+```rust
 use std::sync::atomic::{AtomicU32, Ordering};
 fn main() {
     let total = AtomicU32::new(0);

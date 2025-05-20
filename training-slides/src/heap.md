@@ -2,7 +2,7 @@
 
 ## Where do Rust variables live?
 
-```rust []
+```rust
 struct Square {
     width: f32
 }
@@ -23,7 +23,7 @@ Note:
 
 ## Let's see some addresses...
 
-```rust []
+```rust
 struct Square {
     width: f32
 }
@@ -93,7 +93,7 @@ Because `Box<T>`:
 
 The `Deref` and `DerefMut` trait implementations let us use a Box quite naturally:
 
-```rust []
+```rust
 fn main() {
     let x: Box<f64> = Box::new(1.0_f64);
     let y: f64 = x.sin() * 2.0;
@@ -111,7 +111,7 @@ fn main() {
 
 ## Boxed Traits
 
-```rust []
+```rust
 fn make_stuff(want_integer: bool) -> Box<dyn std::fmt::Debug> {
     if want_integer {
         Box::new(42_i32)
@@ -140,7 +140,7 @@ We have the *reference counted* `Rc<T>` type for that!
 
 ## Using `Rc<T>`
 
-```rust []
+```rust
 use std::rc::Rc;
 
 struct Point { x: i32, y: i32 }
@@ -177,7 +177,7 @@ because each will always have at least one owner (the other).
 
 NB: `Rc` allows *sharing*, but not *mutability*...
 
-```rust []
+```rust
 use std::rc::{Rc, Weak};
 
 struct Dog { name: String, owner: Weak<Human> }
@@ -213,7 +213,7 @@ Why do you want this structure? Because given some `&Dog` you might very well wa
 
 We have more on this later...
 
-```rust []
+```rust
 use std::rc::{Rc, Weak};
 use std::cell::RefCell;
 

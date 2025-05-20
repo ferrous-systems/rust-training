@@ -41,7 +41,7 @@ fn main() {
 
 ## Pattern: What does `?` do?
 
-```rust []
+```rust
 use std::fs::File;
 use std::io::{self, Write};
 
@@ -81,7 +81,7 @@ Reference-to-reference-conversion. Indicates that a type can easily produce refe
 
 ## Pattern: `AsRef<T>` - Example
 
-```rust []
+```rust
 use std::fs::File;
 use std::path::Path;
 use std::path::PathBuf;
@@ -104,7 +104,7 @@ fn open_file<P: AsRef<Path>>(p: &P) {
 - An associated function to construct new "instances".
 - Use [`Default` trait](https://doc.rust-lang.org/stable/std/default/trait.Default.html). Try using `#[derive(Default)]` first.
 
-```rust []
+```rust
 pub struct Stuff {
     value: i64,
 }
@@ -123,7 +123,7 @@ impl Stuff {
 - Especially for Types that should be similar to other Types.
 - Also used to `impl` external Traits on external Types
 
-```rust []
+```rust
 struct MyString(String);
 
 impl MyString {
@@ -136,7 +136,7 @@ impl MyString {
 - Recall that at least one of Trait or Type should be local to `impl`.
 - This pattern allows you to extend external Type using a local Trait.
 
-```rust []
+```rust
 trait VecExt {
     fn magic_number(&self) -> usize;
 }

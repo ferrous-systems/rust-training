@@ -58,7 +58,7 @@ It's so important, it is special-cased within the compiler so you can say `None`
 
 When the result of a function is *either* __Ok__, or some __Error__ value, we use `Result`:
 
-```rust []
+```rust
 enum MyError {
     BadHeader
 }

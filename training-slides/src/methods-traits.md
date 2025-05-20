@@ -10,7 +10,7 @@
 
 ## Example
 
-```rust []
+```rust
 struct Square(f64);
 
 impl Square {
@@ -73,7 +73,7 @@ This slide is only intended to show that there's lots of complexity behind the c
 * You call these with normal *function call* syntax.
 * Typically we provide a function called `new`
 
-```rust []
+```rust
 pub struct Square(f64);
 
 impl Square {
@@ -96,7 +96,7 @@ Question - can anyone just call `Square(5.0)` instead of `Square::new(5.0)`? Eve
 
 `impl` blocks can also have `const` values:
 
-```rust []
+```rust
 pub struct Square(f64);
 
 impl Square {
@@ -115,7 +115,7 @@ impl Square {
 * A trait is a list of methods and functions that a type must have.
 * A trait can provide *default* implementations if desired.
 
-```rust []
+```rust
 trait HasArea {
     /// Get the area, in m².
     fn area_m2(&self) -> f64;
@@ -129,7 +129,7 @@ trait HasArea {
 
 ## An example
 
-```rust []
+```rust
 trait HasArea {
     fn area_m2(&self) -> f64;
 }
@@ -233,7 +233,7 @@ The I/O traits do this.
 
 ## Using Traits Statically: Example
 
-```rust []
+```rust
 trait HasArea {
     fn area_m2(&self) -> f64;
 }
@@ -266,7 +266,7 @@ The total function says "I will give you a value you can display (with `println`
 
 ## Using Traits Dynamically: Example
 
-```rust []
+```rust
 trait HasArea {
     fn area_m2(&self) -> f64;
 }
@@ -300,7 +300,7 @@ In earlier editions, it was just `&Trait`, [but it was changed to `&dyn Trait`](
 
 * Traits can also *require* other traits to also be implemented
 
-```rust []
+```rust
 trait Printable: std::fmt::Debug { 
     fn print(&self) {
         println!("I am {:?}", self);
