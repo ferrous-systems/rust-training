@@ -130,7 +130,8 @@ The green block of data is heap allocated.
 
 ```rust
 fn main() {
-    let mut vector = vec![1, 2, 3, 4];
+    let vector = vec![1, 2, 3, 4];
+    let buffer = vec![0u8; 128];
 }
 ```
 
