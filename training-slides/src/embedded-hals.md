@@ -2,10 +2,10 @@
 
 ## These things are different
 
-* STM32F030 UART Driver
-* nRF52840 UART Driver
+* STM32F030 I²C Driver
+* nRF52840 I²C Driver
 * But I want to write a library which is generic!
-  * e.g. an AT Command Parser
+  * e.g. a Sensor Driver
 
 ## How does Rust allow generic behaviour?
 
@@ -17,47 +17,53 @@
 An example:
 
 ```rust
-trait GenericSerial {
+pub trait I2c {
     type Error;
-    fn read(&mut self, buffer: &mut [u8]) -> Result<usize, Self::Error>;
-    fn write(&mut self, buffer: &[u8]) -> Result<usize, Self::Error>;
+
+    fn write_read(
+        &mut self,
+        address: u8,
+        write: &[u8],
+        read: &mut [u8],
+    ) -> Result<(), Self::Error>;
 }
 ```
 
 ## My Library
 
 ```rust ignore []
-struct AtCommandParser<T> {
-    uart: T,
+struct Co2Sensor<T> {
+    i2c_bus: T,
     ...
 }
 
-impl<T> AtCommandParser<T> where T: GenericSerial {
-    fn new(uart: T) -> AtCommandParser<T> { ... }
-    fn get_command(&mut self) -> Result<Option<AtCommand>, Error> { ... }
+impl<T> Co2Sensor<T> where T: I2c {
+    fn new(i2c_bus: T) -> Co2Sensor<T> { ... }
+    fn read_sensor(&mut self) -> Result<f32, Error> { ... }
 }
 ```
 
-Note how `AtCommandParser` *owns* the object which meets the `GenericSerial` trait.
+Note how `Co2Sensor` *owns* the value whose type implements the `I2c` trait.
 
 ## My Application
 
 ```rust ignore []
-let uart = stm32_hal::Uart::new(...);
-let at_parser = at_library::AtCommandParser::new(uart);
-while let Some(cmd) = at_parser.get_command().unwrap() {
-    ...
-}
+let i2c = stm32f0xx_hal::i2c::i2c1(...);
+let sensor = sensor_lib::Co2Sensor::new(i2c);
+let Ok(reading) = sensor.read_sensor() else {
+    // did you unplug it?
+};
 ```
 
 ## My Application (2)
 
 ```rust ignore []
-let uart = nrf52_hal::Uart::new(...);
-let at_parser = at_library::AtCommandParser::new(uart);
-while let Some(cmd) = at_parser.get_command().unwrap() {
-    ...
-}
+let i2c = nrf52840_hal::twim::Twim::new(...);
+let sensor = sensor_lib::Co2Sensor::new(i2c);
+let Ok(reading) = sensor.read_sensor() else {
+    // did you unplug it?
+};
+
 ```
 
 ## How do we agree on the traits?
@@ -71,10 +77,15 @@ while let Some(cmd) = at_parser.get_command().unwrap() {
 
 * Should a trait API stall your CPU until the data is ready?
 * Or should it return early, saying "not yet ready"
-  * So you can go an do something else in the mean time?
+  * So you can go and do something else in the mean time?
   * Or sleep?
-* `embedded_hal::blocking::serial::Write`, vs
-* `embedded_hal::serial::Write`
+* Or should it be an `async fn`
+
+## Blocking vs Non-blocking
+
+* https://crates.io/crates/embedded-hal
+* https://crates.io/crates/embedded-hal-nb
+* https://crates.io/crates/embedded-hal-async
 
 ## Trade-offs
 
