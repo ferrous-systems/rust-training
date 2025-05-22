@@ -171,6 +171,6 @@ See [Cortex-M Quickstart](https://github.com/rust-embedded/cortex-m-quickstart)
 
 ## Linker scripts
 
-* In Rust, they work exactly like they do in C.
+* In Rust, they work exactly like they do in clang or gcc.
 * Same `.text`, `.rodata`, `.data`, `.bss` sections
-* `cortex-m-rt` provides `link.x`, which pulls in `memory.x` you supply.
+* `cortex-m-rt` provides `link.x`, which pulls in a `memory.x` you supply.
