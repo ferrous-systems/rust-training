@@ -695,9 +695,11 @@ Tools usually have to add Rust support for:
 
 Some common C/C++ tools that support Rust out-of-the-box:
 
-- [Hotspot](https://github.com/KDAB/hotspot) - Linux Perf GUI
-- [Heaptrack](https://github.com/KDE/heaptrack/)
-<!-- TODO: Elaborate -->
+- [Hotspot](https://github.com/KDAB/hotspot) - Perf GUI
+- [Heaptrack](https://github.com/KDE/heaptrack/) - Memory Usage Analyzer
+- [Valgrind](https://valgrind.org/) - Memory Safety Analyzer
+- [rr](https://rr-project.org/) - Reverse Debugger
+- [Sanitizers](https://doc.rust-lang.org/beta/unstable-book/compiler-flags/sanitizer.html) - Note: Needs nightly Rust at the moment
 
 ## Deconstructing Send, Arc, and Mutex
 ## Dependency Management with Cargo
