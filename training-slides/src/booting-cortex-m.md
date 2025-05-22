@@ -27,15 +27,26 @@ Other Arm processors, and processors from other companies may vary.
 
 ## Booting a Cortex-M
 
-The [Arm Architecture Reference Manual](https://developer.arm.com/documentation/ddi0403/ee/?lang=en) explains:
+The [Arm Architecture Reference Manual](https://developer.arm.com/documentation/ddi0403/ee/?lang=en) explains we must provide:
 
-* The CPU boots at a well-defined address
-* That word should contain a 32-bit RAM address for the stack pointer
-* The word after should contain a 32-bit code address for the 'Reset' function
-* The following fourteen 32-bit words are the Arm exception handler addresses 
-* After that comes one 32-bit words are the SoC interrupt handler addresses
- 
+```dot process
+digraph {
+    node [shape=plaintext, fontcolor=black, fontsize=24];
+    graph [
+        rankdir = "LR"
+    ];
+    "node0" [
+        label = "Stack Pointer | Reset Pointer | Exception Pointers | ... | Interrupt Pointers | ..."
+        shape = "record"
+    ];
+}
+```
+
 The chip does everything else.
+
+Note:
+
+There are fourteen defined Exception Handlers (if the chip does not support a particular Exception, you must use the special value `0x0000_0000`). The number of interrupt handlers is defined by the SoC - the Arm NVIC can handle up to 240 interrupts in Armv7-M or 480 interrupts in Armv8-M.
 
 ## The steps
 
