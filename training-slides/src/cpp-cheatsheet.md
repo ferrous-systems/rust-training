@@ -61,6 +61,22 @@
 
 ## Control Flow
 
+Note that Rust does not split functions into declaration and corresponding definition.
+Usually a function is simply defined.
+Rust can hoist everything and does not use a text-based include system.
+There is no need to "forward-declare" anything.
+
+The only way to "declare" a function is if the function is a foreign function.
+Foreign functions are declared in an `extern "..."` block (usually `extern "C"`).
+
+This looks very similar to a declaration of an extern function in C/C++:
+
+```rust
+extern "C" {
+    fn cpp_function(value: i32) -> i32;
+}
+```
+
 ### `if` statements
 
 * No ternary operator in Rust
