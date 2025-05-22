@@ -646,24 +646,190 @@ let closure = {
 
 # Advanced Rust
 ## Advanced Strings
+
+String is Rust's equivalent to `std::string`. `&str` is closest to a `std::string_view`.
+
+Key differences:
+
+- `String`&`&str` are guaranteed to be valid UTF-8
+    - Don't assume ASCII characters inside
+    - Iterating over the bytes is usually not what you want!
+    - Use `chars()` to iterate over the characters
+- `String`&`&str` are **not nul-terminated**!
+    - Do not use `String`/`&str` data as `const char*` when calling C functions!
+    - Use CString/CStr instead, they are nul-terminated
+- [`char`](https://doc.rust-lang.org/std/primitive.char.html) in Rust is **not one byte**!
+    - It actually represents a "Unicode character"
+    - Specifically one "Unicode scalar value"
+
 ## Building Robust Programs with Kani
 ## Dealing with Unwrap
 ## Debugging Rust
+
+Rust emits a very similar binaries and debug information to C/C++ binaries.
+
+=> Most C/C++ tooling will work for Rust debugging/profiling to some extent
+
+Tools usually have to add Rust support for:
+
+- Syntax highlighting Rust code
+- Symbol demangling
+- Layout information for instance introspection
+- Pretty-printing for common types (e.g. String)
+
+Some common C/C++ tools that support Rust out-of-the-box:
+
+- [Hotspot](https://github.com/KDAB/hotspot) - Linux Perf GUI
+- [Heaptrack](https://github.com/KDE/heaptrack/)
+<!-- TODO: Elaborate -->
+
 ## Deconstructing Send, Arc, and Mutex
 ## Dependency Management with Cargo
+
+Cargo uses Toml files to describe packages.
+These files are not "executed" like CMake files, they provide static data.
+
+If you need to "compute" something at build time, Cargo allows you to run Rust scripts that can configure certain parts of the build process (e.g. to discover C libraries to link, etc.).
+No need to learn a second programming language for your build system.
+
 ## Deref Coercions
+
+Deref is comparable to a mix of `operator->` and inheritance.
+
+The way it works is basically like an `operator->` overload, but instead of overloading the `->` operator, you can directly overload method and field access (`.`).
+`Deref` and `DerefMut` are therefore usually implemented on smart pointer types (e.g. `Box`, `Rc`, `Arc`).
+
+This is a convenient way to "inherit" behavior by using composition.
+Instead of inheriting from a type `T`, you store an instance of `T` inside the struct and add `Deref` and `DerefMut` implementations that dereference to the `T` value.
+From the outside it almost looks like the outer types supports all the same operations as `T`, similar to inheritance in C++.
+
+A prominent example of this is `String`, which "inherits" all methods from `str` by dereferencing to it.
+
 ## Design Patterns
+
+### Notes on Cloning 
+
+These Design guidelines recommend using `.clone()` in many cases.
+You may worry that this is slow, especially compared to C++.
+
+However, remember that in C++ copy-construction is often the default!
+For example, think of all constructors that take `const std::string&` - these usually end up copying the whole string!
+
+So even if you use `.clone()` liberally in Rust, your program will likely still **clone less often than a similar C++ program!**
+In Rust move-semantics are the default, if you take a `String` by-value, it does not incur a copy operation.
+
+Takeaway: Don't be afraid of `.clone()`, C++ clones all the time anyway, your Rust code will probably still end up cloning less often that C++.
+
+### `From<>` and `Into<>`
+
+Like with `.clone()`, Rust is explicit whenever a conversion occurs.
+
+A `From<>` implementation is similar to an `explicit` conversion constructor in C++.
+
 ## Documentation
+
+Rustdoc is the default in Rust, please do use it.
+
+Rustdoc uses Markdown for documentation.
+Unlike Doxygen, documentation is largely free-form and does not use "tags" like `@param`/`@return`/etc.
+
+This style of documentation is less repetitive - the function name and signature should already be descriptive.
+Use the documentation to provide important context, not just repeat the list of arguments.
+
 ## Drop, Panic and Abort
+
+Rusts concept of RAII is very similar to C++ and intuition about both is largely the same.
+A resource is initialized when it is acquired and cleaned up when it is dropped (Rust terminology for "destructed").
+The `Drop` trait is akin to the C++ destructor.
+
+Like in C++, the members inside a struct/enum run their `drop` function after the `drop` function of the struct/enum itself.
+
+Because of the way Rust handles dynamic dispatch, there is no such thing as a `virtual` function.
+Destructors do not have to be `virtual` and will work correctly with dynamic dispatch out of the box.
+
+### Panic vs. Exceptions
+
+Even though a panic internally works similarly to a C++ exception, **do not use panics for recoverable errors!**
+
+Think of panic as something that is so critical that aborting the program immediately is a valid response to the error (even if it may unwind in reality).
+
 ## Dynamic Dispatch
+
+Trait Objects are the closest thing Rust has to "virtual inheritance".
+
+When used via a trait object, the trait is comparable to an abstract base class.
+Any type that implements the trait "inherits" from the "abstract base class".
+
+Dynamic Dispatch via a Trait object differs to inheritance in where the vtable is referenced.
+In C++, the vtable is referenced inside the struct/class instance.
+In a trait object, the vtable is referenced inside the (smart) pointer to the struct/enum.
+
+For this reason the pointer itself *is* the trait object, not the struct that implements the trait!
+
+This also means a `dyn` pointer/reference is actually two pointers:
+
+1. Pointer to the data
+2. Pointer to the vtable
+
+```rust
+use std::{fmt::Display, mem::size_of};
+
+assert_eq!(size_of::<&dyn Display>(),       2 * size_of::<&String>());
+assert_eq!(size_of::<*const dyn Display>(), 2 * size_of::<*const String>());
+assert_eq!(size_of::<Box<dyn Display>>(),   2 * size_of::<Box<String>>());
+```
+
+Because dynamic dispatch can only happen via a trait object, the compiler always knows when to use dynamic or static dispatch.
+In Rust, it is therefore not necessary to specify something like "virtual" on each function, all functions can be used with dynamic dispatch, as long as the trait is dyn-compatible.
+If the type is not `dyn`, Rust uses static dispatch automatically!
+
 ## Macros
+
+Disclaimer: Rust macros are way saner than C preprocessor macros!
+
+Some important differences:
+
+* Are always explicitly invoked with `my_macro!` or `#[my_macro]`
+    * Cannot accidentally be invoked 🥳
+* Don't just do text replacement, but operate on "tokens"
+    * Closer, safer integration with the compiler
+    * Operate somewhat like "compiler plugins/extensions"
+
+For these reasons, Rust macros are a lot saner and easier to use.
+Then can and will still rewrite your code, so they should still be used sparingly.
+
 ## Property Testing
 ## Rust Projects Build Time
+
+At the time of writing (May 2025), the Rust compiler is still largely single-threaded.
+
+In Rust, the compilation unit is a whole crate, not a single file!
+To achieve parallelization, Cargo can schedule multiple crates to be compiled at the same time, as long as they are independent of each other.
+
+Takeaway: Do not be afraid to split your project into more crates (and therefore compilation units) - this can improve compile time.
+
 ## Send and Sync
+
+`Send` and `Sync` are like lifetimes in the sense that they allow Rust to encode and enforce properties of types that have always existed, but could only be documented in plain text, not in the language itself (at least in C++).
+
 ## Serde
 ## Testing
 ## The stdlib
+
+Note that in Rust Zero-sized types are actually 0 bytes in size, they do not change the size or alignment of your type.
+In C/C++, even an empty struct has a non-zero size.
+
 ## Using Cargo
+
+Almost always you will use Cargo to work on Rust projects.
+
+It is a front for "all things Rust" and will delegate many tasks to other tools, like the Rust compiler (rustc), clippy, etc.
+The Rust ecosystem is far more integrated around Cargo than the C++ ecosystem is around any build system or even compiler.
+
+Cargo's build system is intentionally more limited than e.g. CMake.
+It focuses on doing one thing and doing it well: Compile Rust code and manage Rust dependencies.
+This has the advantage that almost all crates adhere to what Cargo expects and are therefore easy to understand and include in your project.
+
 ## Using Types to encode State
 
 # Rust and Web Assembly
