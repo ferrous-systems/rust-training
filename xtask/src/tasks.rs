@@ -260,11 +260,18 @@ fn cheatsheet_tester(
     // Collect Vec<String> from lang-cheatsheet.md into chunks
     let mut chunked_cheatsheet: Vec<Vec<String>> = Vec::new();
     let mut current_section: Vec<String> = Vec::new();
+    let mut in_code_block = false;
 
-    // Skip anything that doesn't start with '#', we don't care about them.
-    // Also, skip the line if it's `# Mylang Cheatsheet`
     for line in cheatsheet_text.lines() {
-        if line.is_empty() || !line.starts_with('#') || line == cheatsheet_name {
+        // Code blocks start and end with ```
+        // Make sure to recognize these blocks so we can ignore anything inside
+        if line.starts_with("```") {
+            in_code_block = !in_code_block;
+        }
+
+        // Skip anything that doesn't start with '#', we don't care about them.
+        // Also, skip the line if it's `# Mylang Cheatsheet` or inside a code block
+        if line.is_empty() || !line.starts_with('#') || line == cheatsheet_name || in_code_block {
             continue;
         }
         // We found a new header if it starts with "# ", so start a new section/Vec<String> we can slide names into

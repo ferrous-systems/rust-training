@@ -3,7 +3,7 @@
 ## Understanding Rust projects build time
 
 * Cargo keeps track of changes you make and only rebuilds what is necessary
-* when building a crate `rustc` can do most of work in parallel, but some steps still require synchronization
+* when building a crate `rustc` can do most of code generation in parallel, but many frontend steps still require synchronization
 * depending on the type of build, times spent in different build phases may be vastly different.
     * debug vs release
     * various flags for `rustc` and LLVM
