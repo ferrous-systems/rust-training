@@ -20,6 +20,12 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
+      # A `minimal` profile saves a couple seconds from not downloading `clippy` or `rustdocs` and friends
+      - name: Update Rust
+        run: |
+          rustup set profile minimal
+          rustup update stable --no-self-update
+
       - name: Install tools
         uses: taiki-e/install-action@v2
         with:
@@ -32,12 +38,6 @@ jobs:
       - name: Add graphviz
         run: |
           sudo apt-get update -y && sudo apt-get install -y graphviz
-
-      # A `minimal` profile saves a couple seconds from not downloading `clippy` or `rustdocs` and friends
-      - name: Update Rust
-        run: |
-          rustup set profile minimal
-          rustup update stable --no-self-update
 
       - name: Find slug name
         run: |
@@ -74,6 +74,33 @@ jobs:
         uses: ncipollo/release-action@v1
         with:
           artifacts: ./rust-training-${{ env.slug }}.zip
+
+  test-material:
+    name: Test Material
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install tools
+        uses: taiki-e/install-action@v2
+        with:
+          tool: mdbook@0.4.42,mdbook-graphviz@0.2.1
+
+      # A `minimal` profile saves a couple seconds from not downloading `clippy` or `rustdocs` and friends
+      - name: Update Rust
+        run: |
+          rustup set profile minimal
+          rustup update stable --no-self-update
+
+      - name: Set up cache
+        uses: Swatinem/rust-cache@v2
+        with:
+          workspaces: xtask
+
+      - name: Execute
+        run: |
+          ./localbuild.sh test-material
 
   test-cheatsheets:
     name: Test Cheatsheets
