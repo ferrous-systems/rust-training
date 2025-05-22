@@ -32,8 +32,8 @@ The [Arm Architecture Reference Manual](https://developer.arm.com/documentation/
 * The CPU boots at a well-defined address
 * That word should contain a 32-bit RAM address for the stack pointer
 * The word after should contain a 32-bit code address for the 'Reset' function
-* The following 14 32-bit words are the exception handlers
-* After that comes words for each interrupt handler
+* The following fourteen 32-bit words are the Arm exception handler addresses 
+* After that comes one 32-bit words are the SoC interrupt handler addresses
  
 The chip does everything else.
 
