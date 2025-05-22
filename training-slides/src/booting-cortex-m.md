@@ -81,7 +81,7 @@ pub static ISR_VECTORS: [Option<Handler>; 155] = [
 
 Note:
 
-The cortex-m-rt crate does it more nicely than this. Stuffing the `_stack_top` address in an array of function-pointers - yuck!
+The cortex-m-rt crate does it more nicely than this. Unlike in C, it's actually not easy at all to put both a `*mut u32` for the stack pointer, and a `unsafe extern "C" fn() -> !` for the reset function into the same array!
 
 ## C Reset Handler
 
@@ -125,36 +125,37 @@ extern "C" {
 ## Rust Reset Handler (2)
 
 ```rust ignore
-#[no_mangle]
+use core::ptr::{addr_of, addr_of_mut};
+
+#[unsafe(no_mangle)]
 pub unsafe extern "C" fn rst_handler() {
-    let mut src: *mut usize = &mut _start_data_flash;
-    let mut dest: *mut usize = &mut _start_data;
-    while dest < &mut _end_data as *mut usize {
-        dest.volatile_write(src.read());
-        dest = dest.add(1);
-        src = src.add(1);
+    unsafe {
+        let src = addr_of!(_start_data_flash);
+        let dest = addr_of_mut!(_start_data);
+        let size = addr_of_mut!(_end_data).offset_from(dest);
+        for i in 0..size {
+            dest.offset(i).write_volatile(src.offset(i).read());
+        }
+        let dest = addr_of_mut!(_bss_start);
+        let size = addr_of_mut!(_bss_end).offset_from(dest);
+        for i in 0..size {
+            dest.offset(i).write_volatile(0);
+        }
     }
-    dest = &mut _bss_start as *mut usize;
-    while dest < &mut _end_data as *mut usize {
-        dest.volatile_write(0);
-        dest = dest.add(1);
-    }
-    main();
 }
 ```
 
+Sadly, this is UB.
+
 Note:
 
-This is technically undefined behaviour because globals haven't been initialised yet.
+This is Undefined Behaviour because globals haven't been initialised yet and it is illegal to execute any Rust code in the presence of global variables with invalid values (e.g. a `bool` with an integer value of `2`). It's also arguably UB because you're using `write_volatile` to write outside the bounds the objects we have declared to Rust (we said that `_start_data` was *only* a single `u32`).
 
-## Linker scripts
-
-* In Rust, they work exactly like they do in C.
-* Same `.text`, `.rodata`, `.data`, `.bss` sections
+It is now reasonably settled that this is bad in theory, but it's debatable whether it's currently bad in practice (cortex-m-rt got away with it for years). I believe that in time it will get *worse* in practice, so don't do it.
 
 ## The cortex-m-rt crate
 
-Does all this work for you, in raw Arm assembly language to avoid UB.
+Does all this work for you, in raw Arm assembly language - so it's actually sound.
 
 See [Reset](https://github.com/rust-embedded/cortex-m/blob/c-m-rt-v0.7.3/cortex-m-rt/src/lib.rs#L501), [Linker script](https://github.com/rust-embedded/cortex-m/blob/c-m-rt-v0.7.3/cortex-m-rt/link.x.in), and [Vector table](https://github.com/rust-embedded/cortex-m/blob/c-m-rt-v0.7.3/cortex-m-rt/src/lib.rs#L1130)
 
@@ -167,3 +168,9 @@ See [Reset](https://github.com/rust-embedded/cortex-m/blob/c-m-rt-v0.7.3/cortex-
 ## Using the crate
 
 See [Cortex-M Quickstart](https://github.com/rust-embedded/cortex-m-quickstart)
+
+## Linker scripts
+
+* In Rust, they work exactly like they do in C.
+* Same `.text`, `.rodata`, `.data`, `.bss` sections
+* `cortex-m-rt` provides `link.x`, which pulls in `memory.x` you supply.
