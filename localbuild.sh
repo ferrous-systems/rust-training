@@ -145,7 +145,6 @@ function render-material() {
     RUST_LOG=info mdbook build
     RUST_LOG=debug mdslides --template ./template.html --output-dir ./slides --mdbook-path . --index-template ./index-template.html
     cp -r ./book/images ./slides
-    RUST_LOG=info mdbook test
     popd
 }
 
@@ -155,6 +154,14 @@ function render-material() {
 function test-cheatsheets() {
     echo "Running test-cheatsheets..."
     cargo xtask test-all-cheatsheets --locked
+}
+
+# Runs the mdbook tests.
+function test-material() {
+    echo "Running test-material..."
+    pushd training-slides
+    RUST_LOG=info mdbook test
+    popd
 }
 
 # Build and Format Check the xtask
@@ -186,6 +193,7 @@ if [ $# -ge 1 ]; then
             echo "ferrocene-qemu-thumbv7em"
             echo "render-material"
             echo "test-cheatsheets"
+            echo "test-material"
             echo "xtask"
         else
             $cmd
@@ -205,5 +213,6 @@ else
     ferrocene-qemu-thumbv7em
     render-material
     test-cheatsheets
+    test-material
     xtask
 fi
