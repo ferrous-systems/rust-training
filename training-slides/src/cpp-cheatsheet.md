@@ -104,7 +104,7 @@ do {
 
 becomes
 
-```rust
+```rust,ignore
 # fn do_thing() {}
 # fn condition() -> bool { false }
 loop {
@@ -172,7 +172,7 @@ The difference is in the defaults:
 Taking something by-value in Rust by default means **moving** the value, not copying.
 In comparison, copying is usually explicit with `.clone()` and references are explicit with `&` and `&mut`.
 
-The second important difference is that a move does not leave an object behind, when moving out of an object, the moved-from object is no longer accessible.
+The second important difference is that a move does not leave an object behind; when moving out of an object, the moved-from object is no longer accessible.
 
 ### References Cheat Sheet
 
@@ -551,7 +551,7 @@ Package management is considerably easier compared to C++, do not be afraid to s
 Heap allocation in Rust is almost always done via smart pointers.
 
 Rust smart pointers are very similar to the C++ equivalents, but cannot be null!
-If you need a nullable smart pointer use them together with `Option<T>`, e.g. `Box<Option<T>>`.
+If you need a nullable smart pointer use them together with `Option<T>`, e.g. `Option<Box<T>>`.
 
 | C++                  | Rust                                                              |
 |----------------------|-------------------------------------------------------------------|
@@ -594,7 +594,7 @@ In C++ you must take care to never mutate a `shared_ptr` from multiple threads, 
 ### Atomics
 
 Atomics in Rust are pretty much the same as in C++.
-However, they are generic types, but multiple concrete types.
+However, they are not generic types, but multiple concrete types.
 
 So instead of `std::atomic<int>`, use `std::sync::atomic::AtomicI32`, etc.
 
@@ -651,7 +651,7 @@ let closure = {
     // let by_reference = &mut by_reference; // or mutable reference
     let by_copy = by_copy.clone(); // or explicit clone
 
-    // The rest is captured by move
+    // The closure now captures the references by move, not the values themselves
     move || {
         // ...
     }
