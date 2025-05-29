@@ -6,7 +6,7 @@ src = "src"
 title = "Rust Training Slides by Ferrous Systems"
 
 [mdslides]
-skip_slides = ["how-cheatsheets-work.md"]
+skip_slides = ["how-cheatsheets-work.md", "cpp-cheatsheet.md"]
 
 [preprocessor.graphviz]
 command = "mdbook-graphviz"

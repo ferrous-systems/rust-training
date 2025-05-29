@@ -212,6 +212,7 @@ These actively fetch every item from the old Iterator and produce a single value
 * `max()` and `min()`
 * `fold(initial, func)`
 * `partition(func)`
+* `find(func)`
 
 Note:
 
@@ -221,6 +222,7 @@ Note:
 * `max` and `min` find the largest/smallest item
 * `fold` will maintain an accumulator, and call `func` with each item and the current value of the accumulator
 * `partition` will create two new collections by taking every item from the iterator and stuffing it into one of two new collections
+* `find` will only fetch items until `func` returns `true` for the given item. It returns an `Option<T>`.
 
 ## Call chaining (1)
 
