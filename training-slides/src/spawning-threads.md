@@ -46,7 +46,7 @@ where
 * You *could* pass a function to `std::thread::spawn`.
 * In almost all cases you pass a *closure*
 
-```rust []
+```rust
 use std::{thread, time};
 
 fn main() {
@@ -63,7 +63,7 @@ fn main() {
 
 There's no `void* p_context` argument, because *closures* can *close-over* local variables.
 
-```rust []
+```rust
 use std::thread;
 
 fn main() {
@@ -86,7 +86,7 @@ Try changing this *move* closure to a regular referencing closure.
 
 However, the thread might live forever...
 
-```rust []
+```rust
 use std::{sync::Mutex, thread};
 
 fn main() {
@@ -108,7 +108,7 @@ fn main() {
 
 If a thread can live forever, we need its context to live just as long.
 
-```rust []
+```rust
 use std::{sync::{Arc, Mutex}, thread};
 
 fn main() {
@@ -165,7 +165,7 @@ This clearly limits the visual scope of the `thread_buffer` variable, to match t
 
 As of 1.63, we can say the threads will all have ended before we carry on our calling function.
 
-```rust []
+```rust
 use std::{sync::Mutex, thread};
 
 fn main() {

@@ -36,7 +36,7 @@ It starts with some examples, then lists any `struct`s, traits, or functions the
 
 `//!` and `///` comments are read as Markdown.
 
-```rust []
+```rust
 //! Module documentation. (e.g. the 'Examples' part of `std::vec`).
 
 /// Document functions, structs, traits and values.

@@ -58,7 +58,7 @@ Safe Rust is the worst language to implement linked lists. There's a full [text 
 
 Unsafe code must *always* be marked `unsafe`.
 
-```rust []
+```rust
 fn main() {
     let mut x = 1;
     let p = &raw mut x;
@@ -96,7 +96,7 @@ Rust allows you to shoot yourself in the foot, it just requires you to take your
 
 As Rust forbids aliasing, it is impossible in safe Rust to split a slice into 2 non-overlapping parts.
 
-```rust []
+```rust
 #[inline]
 fn split_at_mut<T>(value: &mut [T], mid: usize) -> (&mut [T], &mut [T]) {
     let len = value.len();

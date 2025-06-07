@@ -2,7 +2,7 @@
 
 ---
 
-```rust []
+```rust
 fn main() {
     let random_number = generate_random_number();
     let mut my_choice = 10;
