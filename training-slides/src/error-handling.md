@@ -84,7 +84,7 @@ You can handle `Result` like any other `enum`:
 use std::io::prelude::*;
 
 fn read_file(filename: &str) -> Result<String, std::io::Error> {
-    let mut file = match std::fs::File::open("data.txt") {
+    let mut file = match std::fs::File::open(filename) {
         Ok(f) => f,
         Err(e) => {
             return Err(e);
@@ -106,7 +106,7 @@ It is idiomatic Rust to use `?` to handle errors.
 use std::io::prelude::*;
 
 fn read_file(filename: &str) -> Result<String, std::io::Error> {
-    let mut file = std::fs::File::open("data.txt")?;
+    let mut file = std::fs::File::open(filename)?;
     let mut contents = String::new();
     file.read_to_string(&mut contents)?;
     Ok(contents)
