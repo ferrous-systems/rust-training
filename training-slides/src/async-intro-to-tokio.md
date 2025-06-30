@@ -21,7 +21,7 @@
 
 ## Example Mio
 
-```rust [], ignore
+```rust, ignore
 let addr = "127.0.0.1:13265".parse()?;
 let mut server = TcpListener::bind(addr)?;
 // Start listening for incoming connections.
@@ -43,7 +43,7 @@ poll.registry()
 
 ## Example Tokio
 
-```rust [], ignore
+```rust, ignore
 #[tokio::main]
 async fn main() {
     // Bind the listener to the address
@@ -64,7 +64,7 @@ async fn main() {
 
 ## Example Hyper
 
-```rust [], ignore
+```rust, ignore
 #[tokio::main]
 async fn main() {
     // We'll bind to 127.0.0.1:3000

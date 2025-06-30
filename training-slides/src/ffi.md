@@ -42,7 +42,7 @@ CPUs have registers, and they have a pointer to the stack (in RAM)
 
 Where does this function find its arguments? Where does the return value go?
 
-```rust []
+```rust
 struct SomeStruct(u32, f64);
 
 fn hello(param1: i32, param2: f64) -> SomeStruct { todo!() }
@@ -62,7 +62,7 @@ There are no conversion costs moving from C to Rust or vice-versa
 
 We have this amazing Rust library, we want to use in our existing C project.
 
-```rust []
+```rust
 struct MagicAdder {
 	amount: u32
 }
@@ -90,7 +90,7 @@ impl MagicAdder {
 
 ## C-flavoured Rust Code
 
-```rust []
+```rust
 #[repr(C)]
 struct MagicAdder {
 	amount: u32
@@ -219,7 +219,7 @@ Disables some Rust naming lints
 unsigned int cool_library_function(const char* p);
 ```
 
-```rust []
+```rust
 use std::ffi::c_char; // also in core::ffi
 
 extern "C" {
@@ -313,7 +313,7 @@ fn main() {
 
 When not knowing (or caring) about internal layout, [opaque structs](https://doc.rust-lang.org/nomicon/ffi.html#representing-opaque-structs) can be used.
 
-```rust []
+```rust
 /// This is like a 'struct FoobarContext;' in C
 #[repr(C)]
 pub struct FoobarContext { _priv: [i32; 0] }

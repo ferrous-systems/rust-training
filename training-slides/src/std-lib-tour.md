@@ -14,7 +14,7 @@ Zero-sized types are used to mark things that "act like" they own a `T`.
 
 These are useful for types which require markers, generics, or use unsafe code.
 
-```rust []
+```rust
 use std::marker::PhantomData;
 
 struct HttpRequest<ResponseValue> {
@@ -33,7 +33,7 @@ A process builder, providing fine-grained control over how a new process should 
 
 Used for interacting with other executables.
 
-```rust []
+```rust
 use std::process::Command;
 
 fn example() {
@@ -50,7 +50,7 @@ fn example() {
 
 Path handling and file manipulation.
 
-```rust []
+```rust
 use std::fs::{File, canonicalize};
 use std::io::Write;
 

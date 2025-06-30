@@ -102,7 +102,7 @@ fn main() {
 * But why is this useful?
 * It makes iterators really powerful!
 
-```rust []
+```rust
 fn main() {
     let items = [1, 2, 3, 4, 5, 6];
     let n = 2;
@@ -120,7 +120,7 @@ It's also very powerful if you have something you need to clean up.
 2. You want do some work (defined by the caller)
 3. You want to clean up after.
 
-```rust []
+```rust
 fn setup_teardown<F, T>(f: F) -> T where F: FnOnce(&mut Vec<u32>) -> T {
     let mut state = Vec::new();
     println!("> Setting up state");
@@ -132,7 +132,7 @@ fn setup_teardown<F, T>(f: F) -> T where F: FnOnce(&mut Vec<u32>) -> T {
 
 ## Cleaning up
 
-```rust []
+```rust
 fn setup_teardown<F, T>(f: F) -> T where F: FnOnce(&mut Vec<u32>) -> T {
     let mut state = Vec::new();
     println!("> Setting up state");

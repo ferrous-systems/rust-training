@@ -13,7 +13,7 @@
 
 ## An async Rust function
 
-```rust [], ignore
+```rust, ignore
 use tokio::{fs::File, io::AsyncReadExt};
 
 async fn read_from_disk(path: &str) -> std::io::Result<String> {
@@ -27,7 +27,7 @@ async fn read_from_disk(path: &str) -> std::io::Result<String> {
 
 ## (sketch) Desugaring return type
 
-```rust [], ignore
+```rust, ignore
 use std::future::Future;
 
 use tokio::{fs::File, io::AsyncReadExt};
@@ -69,7 +69,7 @@ They can be checked if they are _done_, and are usually mapped to readiness base
 
 ## .await registers interest in completion
 
-```rust [], ignore
+```rust, ignore
 use tokio::{fs::File, io::AsyncReadExt};
 
 async fn read_from_disk(path: &str) -> std::io::Result<String> {
@@ -83,7 +83,7 @@ async fn read_from_disk(path: &str) -> std::io::Result<String> {
 
 ## Futures are cold
 
-```rust [], ignore
+```rust, ignore
 fn main() {
     let read_from_disk_future = read_from_disk();
 }
@@ -91,7 +91,7 @@ fn main() {
 
 ## Futures need to be executed
 
-```rust [], ignore
+```rust, ignore
 use tokio::{fs::File, io::AsyncReadExt};
 
 #[tokio::main]
@@ -124,7 +124,7 @@ async fn read_from_disk(path: &str) -> std::io::Result<String> {
 
 ## Futures all the way down: Combining Futures
 
-```rust [], ignore
+```rust, ignore
 use tokio::fs::File;
 use tokio::io::AsyncReadExt;
 use tokio::time::Duration;
@@ -184,7 +184,7 @@ async fn main() {
 
 ## Async iteration
 
-```rust [], ignore
+```rust, ignore
 while let Some(item) = stream.next().await {
     //...
 }

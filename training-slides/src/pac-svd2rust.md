@@ -106,7 +106,7 @@ svd2rust (later) generates structures that look like this.
 
 ## Access via functions
 
-```rust []
+```rust
 pub struct Uart { base: *mut u32 } // now has no fields
 
 impl Uart {
@@ -134,7 +134,7 @@ The pointer is a `*mut u32` so the offsets are all in 32-bit words, not bytes.
 
 ## Access via functions (with ZSTs)
 
-```rust []
+```rust
 pub struct Uart<const ADDR: usize> {}
 
 impl<const ADDR: usize> Uart<ADDR> {
@@ -331,7 +331,7 @@ Chiptool is used by the embassy project.
 
 The [`derive-mmio`](https://docs.rs/derive-mmio) crate is from Knurling.
 
-```rust []
+```rust,ignore
 #[derive(derive_mmio::Mmio)]
 #[repr(C)]
 struct Registers {
@@ -360,7 +360,7 @@ references (writes and non-pure reads require `&mut self`).
 
 The [`safe-mmio`](https://docs.rs/safe-mmio) crate is from Google.
 
-```rust []
+```rust,ignore
 #[repr(C)]
 use safe_mmio::{ReadWrite, ReadPureWrite, ReadPure, UniqueMmioPointer, field};
 
