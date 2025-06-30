@@ -96,4 +96,6 @@ This work is licensed under a [Creative Commons Attribution-ShareAlike 4.0 Inter
 
 We encourage the use of this material, under the terms of the above license, in the production and/or delivery of commercial or open-source Rust training programmes.
 
+We unfortunately cannot accept copyrightable contributions from third parties unless they enter into a Contributors' License Agreement with us. Please contact <training@ferrous-systems.com> if you would like to collaborate with us on this material.
+
 Copyright (c) Ferrous Systems, 2025
