@@ -17,52 +17,26 @@ jobs:
     name: Render Material
     runs-on: ubuntu-24.04
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-
-      - name: Install tools
-        uses: taiki-e/install-action@v2
+      - uses: actions/checkout@v4
+      - uses: ./.github/actions/setup
+      - uses: taiki-e/install-action@v2
         with:
           tool: mdbook@0.4.42,mdbook-graphviz@0.2.1
-
-      - name: Add mdslides
-        run: |
-          curl --proto '=https' --tlsv1.2 -LsSf https://github.com/ferrous-systems/mdslides/releases/download/v0.6.1/mdslides-installer.sh | sh
-
-      - name: Add graphviz
-        run: |
-          sudo apt-get update -y && sudo apt-get install -y graphviz
-
-      - uses: extractions/setup-just@v3
-        with:
-          just-version: 1.42
-
-      # A `minimal` profile saves a couple seconds from not downloading `clippy` or `rustdocs` and friends
-      - name: Update Rust
-        run: |
-          rustup set profile minimal
-          rustup update stable --no-self-update
-
-      - name: Find slug name
-        run: |
+      - run: |
           slug=$(./describe.sh "${GITHUB_REF}")
           echo "Building with slug '${slug}'"
           echo "slug=${slug}" >> "${GITHUB_ENV}"
-
-      - name: Assemble Artifacts
-        run: just assemble ${{ env.slug }}
-
-      - name: Upload Artifacts
-        uses: actions/upload-artifact@v4
+          curl --proto '=https' --tlsv1.2 -LsSf https://github.com/ferrous-systems/mdslides/releases/download/v0.6.1/mdslides-installer.sh | sh
+          sudo apt-get update -y && sudo apt-get install -y graphviz
+      - run: just assemble ${{ env.slug }}
+      - uses: actions/upload-artifact@v4
         if: ${{success()}}
         with:
           name: Material
           if-no-files-found: error
           path: |
             ./rust-training-*/
-
-      - name: Create and Upload Release
-        if: github.event_name == 'push' && startswith(github.ref, 'refs/tags/')
+      - if: github.event_name == 'push' && startswith(github.ref, 'refs/tags/')
         id: create_release
         uses: ncipollo/release-action@v1
         with:
@@ -72,39 +46,21 @@ jobs:
     name: Test Cheatsheets
     runs-on: ubuntu-24.04
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-
-      - uses: extractions/setup-just@v3
+      - uses: actions/checkout@v4
+      - uses: ./.github/actions/setup
         with:
-          just-version: 1.42
-
-      - name: Set up cache
-        uses: Swatinem/rust-cache@v2
-        with:
-          workspaces: xtask
-
-      - name: Execute
-        run: |
-          just test-all-cheatsheets
+          cache: xtask
+      - run: just test-all-cheatsheets
 
   ferrocene-qemu-aarch64v8a:
     name: Build qemu-aarch64v8a with Ferrocene
     runs-on: ubuntu-24.04
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-
-      - uses: extractions/setup-just@v3
+      - uses: actions/checkout@v4
+      - uses: ./.github/actions/setup
         with:
-          just-version: 1.42
-
-      - name: Install Critical Up
-        run: |
-          curl --proto '=https' --tlsv1.2 -LsSf https://github.com/ferrocene/criticalup/releases/download/v1.1.0/criticalup-installer.sh | sh
-
-      - name: Execute
-        env:
+          criticalup: v1.1.0
+      - env:
           CRITICALUP_TOKEN: ${{ secrets.CRITICALUP_TOKEN }}
         run: |
          just ferrocene-qemu-aarch64v8a
@@ -113,19 +69,11 @@ jobs:
     name: Build qemu-aarch32v8r with Ferrocene
     runs-on: ubuntu-24.04
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-
-      - uses: extractions/setup-just@v3
+      - uses: actions/checkout@v4
+      - uses: ./.github/actions/setup
         with:
-          just-version: 1.42
-
-      - name: Install Critical Up
-        run: |
-          curl --proto '=https' --tlsv1.2 -LsSf https://github.com/ferrocene/criticalup/releases/download/v1.1.0/criticalup-installer.sh | sh
-
-      - name: Execute
-        env:
+          criticalup: v1.1.0
+      - env:
           CRITICALUP_TOKEN: ${{ secrets.CRITICALUP_TOKEN }}
         run: |
          just ferrocene-qemu-aarch32v8r
@@ -134,19 +82,11 @@ jobs:
     name: Build qemu-thumbv7em with Ferrocene
     runs-on: ubuntu-24.04
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-
-      - uses: extractions/setup-just@v3
+      - uses: actions/checkout@v4
+      - uses: ./.github/actions/setup
         with:
-          just-version: 1.42
-
-      - name: Install Critical Up
-        run: |
-          curl --proto '=https' --tlsv1.2 -LsSf https://github.com/ferrocene/criticalup/releases/download/v1.1.0/criticalup-installer.sh | sh
-
-      - name: Execute
-        env:
+          criticalup: v1.1.0
+      - env:
           CRITICALUP_TOKEN: ${{ secrets.CRITICALUP_TOKEN }}
         run: |
          just ferrocene-qemu-thumbv7em
@@ -155,205 +95,93 @@ jobs:
     name: Build Example ffi-use-c-in-rust
     runs-on: ubuntu-24.04
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-
-      - uses: extractions/setup-just@v3
+      - uses: actions/checkout@v4
+      - uses: ./.github/actions/setup
         with:
-          just-version: 1.42
-
-      - name: Add Rust Targets and Tools
-        run: rustup set profile minimal
-
-      - name: Set up cache
-        uses: Swatinem/rust-cache@v2
-        with:
-          workspaces: example-code/native/ffi/use-c-in-rust
-
-      - name: Execute
-        run: |
-          just build-native-ffi-use-c-in-rust
+          cache: example-code/native/ffi/use-c-in-rust
+      - run: just build-native-ffi-use-c-in-rust
 
   eg-native-ffi-use-rust-in-c:
     name: Build Example ffi-use-rust-in-c
     runs-on: ubuntu-24.04
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-
-      - uses: extractions/setup-just@v3
+      - uses: actions/checkout@v4
+      - uses: ./.github/actions/setup
         with:
-          just-version: 1.42
-  
-      - name: Add Rust Targets and Tools
-        run: rustup set profile minimal
-
-      - name: Set up cache
-        uses: Swatinem/rust-cache@v2
-        with:
-          workspaces: example-code/native/ffi/use-rust-in-c
-
-      - name: Execute
-        run: |
-          just build-native-ffi-use-rust-in-c
+          cache: example-code/native/ffi/use-rust-in-c
+      - run: just build-native-ffi-use-rust-in-c
 
   eg-native-stdout:
     name: Build Example native-stdout
     runs-on: ubuntu-24.04
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-
-      - uses: extractions/setup-just@v3
+      - uses: actions/checkout@v4
+      - uses: ./.github/actions/setup
         with:
-          just-version: 1.42
-
-      - name: Add Rust Targets and Tools
-        run: rustup set profile minimal
-
-      - name: Set up cache
-        uses: Swatinem/rust-cache@v2
-        with:
-          workspaces: example-code/native/stdout
-
-      - name: Execute
-        run: |
-          just build-native-stdout
+          cache: example-code/native/stdout
+      - run: just build-native-stdout
 
   eg-nrf52-bsp-demo:
     name: Build Example nrf52-bsp-demo
     runs-on: ubuntu-24.04
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-
-      - uses: extractions/setup-just@v3
+      - uses: actions/checkout@v4
+      - uses: ./.github/actions/setup
         with:
-          just-version: 1.42
-
-      - name: Add Rust Targets and Tools
-        run: |
-          rustup set profile minimal
-          rustup target add thumbv7em-none-eabihf
-
-      - name: Set up cache
-        uses: Swatinem/rust-cache@v2
-        with:
-          workspaces: example-code/nrf52/bsp_demo
-
-      - name: Execute
-        run: |
-          just build-nrf52-bsp-demo
+          cache: example-code/nrf52/bsp_demo
+          target: thumbv7em-none-eabihf
+      - run: just build-nrf52-bsp-demo
 
   eg-qemu-aarch64v8a:
     name: Build Example qemu-aarch64v8a
     runs-on: ubuntu-24.04
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-
-      - uses: extractions/setup-just@v3
+      - uses: actions/checkout@v4
+      - uses: ./.github/actions/setup
         with:
-          just-version: 1.42
-
-      - name: Add Rust Targets and Tools
-        run: |
-          rustup set profile minimal
-          rustup target add aarch64-unknown-none
+          cache: example-code/qemu-aarch64v8a
+          target: aarch64-unknown-none
+      - run: |
           rustup component add llvm-tools-preview
           rustup component add rust-src
-
-      - name: Set up cache
-        uses: Swatinem/rust-cache@v2
-        with:
-          workspaces: example-code/qemu-aarch64v8a
-
-      - name: Execute
-        run: |
-          just build-qemu-aarch64v8a
+      - run: just build-qemu-aarch64v8a
 
   eg-qemu-aarch32v8r:
     name: Build Example qemu-aarch32v8r
     runs-on: ubuntu-24.04
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-
-      - uses: extractions/setup-just@v3
+      - uses: actions/checkout@v4
+      - uses: ./.github/actions/setup
         with:
-          just-version: 1.42
-
-      - name: Add Rust Targets and Tools
-        run: |
-          rustup set profile minimal
+          cache: example-code/qemu-aarch32v8r
+      - run: |
           rustup component add rust-src
-
-      - name: Set up cache
-        uses: Swatinem/rust-cache@v2
-        with:
-          workspaces: example-code/qemu-aarch32v8r
-
-      - name: Execute
-        run: |
-          just build-qemu-aarch32v8r
+      - run: just build-qemu-aarch32v8r
 
   eg-qemu-thumbv7em:
     name: Build Example qemu-thumbv7em
     runs-on: ubuntu-24.04
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-
-      - uses: extractions/setup-just@v3
+      - uses: actions/checkout@v4
+      - uses: ./.github/actions/setup
         with:
-          just-version: 1.42
-
-      - name: Add Rust Targets and Tools
-        run: |
-          rustup set profile minimal
-          rustup target add thumbv7em-none-eabihf
-
-      - name: Set up cache
-        uses: Swatinem/rust-cache@v2
-        with:
-          workspaces: example-code/qemu-thumbv7em
-
-      - name: Execute
-        run: |
-          just build-qemu-thumbv7em
+          cache: example-code/qemu-thumbv7em
+          target: thumbv7em-none-eabihf
+      - run: just build-qemu-thumbv7em
 
   build-windows-examples:
     name: Build Example ffi-use-rust-in-c on Windows
     runs-on: windows-2022
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-
-      - uses: extractions/setup-just@v3
-        with:
-          just-version: 1.42
-
-      - name: Add msbuild to PATH
-        uses: microsoft/setup-msbuild@v2
-
-      - name: Execute
-        run:  just msbuild
+      - uses: actions/checkout@v4
+      - uses: ./.github/actions/setup
+      - uses: microsoft/setup-msbuild@v2
+      - run:  just msbuild
 
   check-format:
     name: Check formatting
     runs-on: ubuntu-24.04
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-
-      - uses: extractions/setup-just@v3
-        with:
-          just-version: 1.42
-
-      - name: Add Rust Targets and Tools
-        run: |
-          rustup set profile minimal
-
-      - name: Execute
-        run: |
-          just format-check
+      - uses: actions/checkout@v4
+      - uses: ./.github/actions/setup
+      - run: just format-check
