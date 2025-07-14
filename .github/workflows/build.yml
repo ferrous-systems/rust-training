@@ -33,6 +33,10 @@ jobs:
         run: |
           sudo apt-get update -y && sudo apt-get install -y graphviz
 
+      - uses: extractions/setup-just@v3
+        with:
+          just-version: 1.42
+
       # A `minimal` profile saves a couple seconds from not downloading `clippy` or `rustdocs` and friends
       - name: Update Rust
         run: |
@@ -45,19 +49,8 @@ jobs:
           echo "Building with slug '${slug}'"
           echo "slug=${slug}" >> "${GITHUB_ENV}"
 
-      - name: Execute
-        run: |
-          ./localbuild.sh render-material
-
       - name: Assemble Artifacts
-        run: |
-          echo "Making ./rust-training-${{ env.slug }}..."
-          mkdir -p ./rust-training-${{ env.slug }}
-          mv ./training-slides/slides ./rust-training-${{ env.slug }}/training-slides-presentation
-          mv ./training-slides/book ./rust-training-${{ env.slug }}/training-slides-book
-          cp -r ./example-code ./rust-training-${{ env.slug }}
-          echo "Compressing ./rust-training-${{ env.slug }}.zip..."
-          zip -r ./rust-training-${{ env.slug }}.zip ./rust-training-${{ env.slug }}
+        run: just assemble ${{ env.slug }}
 
       - name: Upload Artifacts
         uses: actions/upload-artifact@v4
@@ -82,6 +75,10 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
+      - uses: extractions/setup-just@v3
+        with:
+          just-version: 1.42
+
       - name: Set up cache
         uses: Swatinem/rust-cache@v2
         with:
@@ -89,7 +86,7 @@ jobs:
 
       - name: Execute
         run: |
-          ./localbuild.sh test-cheatsheets
+          just test-all-cheatsheets
 
   ferrocene-qemu-aarch64v8a:
     name: Build qemu-aarch64v8a with Ferrocene
@@ -98,6 +95,10 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
+      - uses: extractions/setup-just@v3
+        with:
+          just-version: 1.42
+
       - name: Install Critical Up
         run: |
           curl --proto '=https' --tlsv1.2 -LsSf https://github.com/ferrocene/criticalup/releases/download/v1.1.0/criticalup-installer.sh | sh
@@ -106,7 +107,7 @@ jobs:
         env:
           CRITICALUP_TOKEN: ${{ secrets.CRITICALUP_TOKEN }}
         run: |
-          ./localbuild.sh ferrocene-qemu-aarch64v8a
+         just ferrocene-qemu-aarch64v8a
 
   ferrocene-qemu-aarch32v8r:
     name: Build qemu-aarch32v8r with Ferrocene
@@ -115,6 +116,10 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
+      - uses: extractions/setup-just@v3
+        with:
+          just-version: 1.42
+
       - name: Install Critical Up
         run: |
           curl --proto '=https' --tlsv1.2 -LsSf https://github.com/ferrocene/criticalup/releases/download/v1.1.0/criticalup-installer.sh | sh
@@ -123,7 +128,7 @@ jobs:
         env:
           CRITICALUP_TOKEN: ${{ secrets.CRITICALUP_TOKEN }}
         run: |
-          ./localbuild.sh ferrocene-qemu-aarch32v8r
+         just ferrocene-qemu-aarch32v8r
 
   ferrocene-qemu-thumbv7em:
     name: Build qemu-thumbv7em with Ferrocene
@@ -132,6 +137,10 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
+      - uses: extractions/setup-just@v3
+        with:
+          just-version: 1.42
+
       - name: Install Critical Up
         run: |
           curl --proto '=https' --tlsv1.2 -LsSf https://github.com/ferrocene/criticalup/releases/download/v1.1.0/criticalup-installer.sh | sh
@@ -140,7 +149,7 @@ jobs:
         env:
           CRITICALUP_TOKEN: ${{ secrets.CRITICALUP_TOKEN }}
         run: |
-          ./localbuild.sh ferrocene-qemu-thumbv7em
+         just ferrocene-qemu-thumbv7em
 
   eg-native-ffi-use-c-in-rust:
     name: Build Example ffi-use-c-in-rust
@@ -148,6 +157,10 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+
+      - uses: extractions/setup-just@v3
+        with:
+          just-version: 1.42
 
       - name: Add Rust Targets and Tools
         run: rustup set profile minimal
@@ -159,7 +172,7 @@ jobs:
 
       - name: Execute
         run: |
-          ./localbuild.sh eg-native-ffi-use-c-in-rust
+          just build-native-ffi-use-c-in-rust
 
   eg-native-ffi-use-rust-in-c:
     name: Build Example ffi-use-rust-in-c
@@ -168,6 +181,10 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
+      - uses: extractions/setup-just@v3
+        with:
+          just-version: 1.42
+  
       - name: Add Rust Targets and Tools
         run: rustup set profile minimal
 
@@ -178,7 +195,7 @@ jobs:
 
       - name: Execute
         run: |
-          ./localbuild.sh eg-native-ffi-use-rust-in-c
+          just build-native-ffi-use-rust-in-c
 
   eg-native-stdout:
     name: Build Example native-stdout
@@ -186,6 +203,10 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+
+      - uses: extractions/setup-just@v3
+        with:
+          just-version: 1.42
 
       - name: Add Rust Targets and Tools
         run: rustup set profile minimal
@@ -197,7 +218,7 @@ jobs:
 
       - name: Execute
         run: |
-          ./localbuild.sh eg-native-stdout
+          just build-native-stdout
 
   eg-nrf52-bsp-demo:
     name: Build Example nrf52-bsp-demo
@@ -205,6 +226,10 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+
+      - uses: extractions/setup-just@v3
+        with:
+          just-version: 1.42
 
       - name: Add Rust Targets and Tools
         run: |
@@ -218,7 +243,7 @@ jobs:
 
       - name: Execute
         run: |
-          ./localbuild.sh eg-nrf52-bsp-demo
+          just build-nrf52-bsp-demo
 
   eg-qemu-aarch64v8a:
     name: Build Example qemu-aarch64v8a
@@ -226,6 +251,10 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+
+      - uses: extractions/setup-just@v3
+        with:
+          just-version: 1.42
 
       - name: Add Rust Targets and Tools
         run: |
@@ -241,7 +270,7 @@ jobs:
 
       - name: Execute
         run: |
-          ./localbuild.sh eg-qemu-aarch64v8a
+          just build-qemu-aarch64v8a
 
   eg-qemu-aarch32v8r:
     name: Build Example qemu-aarch32v8r
@@ -249,6 +278,10 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+
+      - uses: extractions/setup-just@v3
+        with:
+          just-version: 1.42
 
       - name: Add Rust Targets and Tools
         run: |
@@ -262,7 +295,7 @@ jobs:
 
       - name: Execute
         run: |
-          ./localbuild.sh eg-qemu-aarch32v8r
+          just build-qemu-aarch32v8r
 
   eg-qemu-thumbv7em:
     name: Build Example qemu-thumbv7em
@@ -270,6 +303,10 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+
+      - uses: extractions/setup-just@v3
+        with:
+          just-version: 1.42
 
       - name: Add Rust Targets and Tools
         run: |
@@ -283,7 +320,7 @@ jobs:
 
       - name: Execute
         run: |
-          ./localbuild.sh eg-qemu-thumbv7em
+          just build-qemu-thumbv7em
 
   build-windows-examples:
     name: Build Example ffi-use-rust-in-c on Windows
@@ -292,13 +329,31 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
+      - uses: extractions/setup-just@v3
+        with:
+          just-version: 1.42
+
       - name: Add msbuild to PATH
         uses: microsoft/setup-msbuild@v2
 
       - name: Execute
+        run:  just msbuild
+
+  check-format:
+    name: Check formatting
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - uses: extractions/setup-just@v3
+        with:
+          just-version: 1.42
+
+      - name: Add Rust Targets and Tools
         run: |
-          cd example-code\native\ffi\use-rust-in-c\windows-example
-          msbuild.exe windows-example.sln /p:Configuration=Debug
-          .\x64\Debug\windows-example.exe
-          msbuild.exe windows-example.sln /p:Configuration=Release
-          .\x64\Release\windows-example.exe
+          rustup set profile minimal
+
+      - name: Execute
+        run: |
+          just format-check

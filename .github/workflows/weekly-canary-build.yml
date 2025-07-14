@@ -24,6 +24,10 @@ jobs:
         with:
           tool: mdbook@0.4.42,mdbook-graphviz@0.2.1
 
+      - uses: extractions/setup-just@v3
+        with:
+          just-version: 1.42
+
       - name: Add mdslides
         run: |
           curl --proto '=https' --tlsv1.2 -LsSf https://github.com/ferrous-systems/mdslides/releases/download/v0.5.0/mdslides-installer.sh | sh
@@ -39,11 +43,13 @@ jobs:
           rustup set profile minimal
           rustup update ${{ matrix.rust-channel }} --no-self-update
           rustup default ${{ matrix.rust-channel }}
+          rustup component add llvm-tools-preview
+          rustup component add rust-src
+          rustup target add aarch64-unknown-none
+          rustup target add thumbv7em-none-eabihf
 
       - name: Execute render-material
-        run: |
-          ./localbuild.sh render-material
+        run: just build-book build-slides build-rust
 
       - name: Execute test-cheatsheets
-        run: |
-          ./localbuild.sh test-cheatsheets
+        run:  just test-all-cheatsheets
