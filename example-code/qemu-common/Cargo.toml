@@ -8,7 +8,7 @@ description = "Common drivers for Arm QEMU hardware"
 
 [dependencies]
 critical-section = "1.2.0"
-defmt = "0.3.10"
+defmt = "1.0"
 derive-mmio = "0.3.0"
 heapless = "0.8.0"
 nb = "1.1.0"
