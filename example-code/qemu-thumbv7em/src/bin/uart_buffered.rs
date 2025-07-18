@@ -60,7 +60,7 @@ fn main() -> ! {
 
 /// Called when UART0 has a TX interrupt
 #[interrupt]
-unsafe fn Uart0Tx() {
+fn Uart0Tx() {
     unsafe {
         UART0.tx_isr();
     }

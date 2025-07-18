@@ -2,26 +2,33 @@
 
 use super::{Control, Error, IntStatus, Status};
 
+/// Represents the MMIO registers for a CMSDK UART Peripheral
+///
+/// We use the `derive_mmio::Mmio` macro to automatically generate the
+/// [`MmioRegisters`] wrapper type, which has methods for reading/writing each
+/// of these registers.
 #[derive(derive_mmio::Mmio)]
 #[repr(C)]
 struct Registers {
+    #[mmio(Read, Write)]
     data: u32,
+    #[mmio(PureRead)]
     status: Status,
+    #[mmio(Read, Write, Modify)]
     control: Control,
+    #[mmio(Read, Write)]
     int_status: IntStatus,
     _reserved: [u32; 1012],
-    pid0: u32,
-    pid1: u32,
+    #[mmio(Read)]
+    pid: [u32; 2],
     _reserved2: [u32; 2],
-    cid0: u32,
-    cid1: u32,
-    cid2: u32,
-    cid3: u32,
+    #[mmio(Read)]
+    cid: [u32; 4],
 }
 
 /// A CMSDK UART driver
 pub struct CmsdkUart {
-    pub(crate) registers: MmioRegisters,
+    pub(crate) registers: MmioRegisters<'static>,
 }
 
 impl CmsdkUart {
@@ -35,7 +42,8 @@ impl CmsdkUart {
     ///
     /// # Safety
     ///
-    /// * Ensure only one driver exists for any UART at a time.
+    /// * Ensure only one driver exists for any UART at a time, or that you
+    ///   never race on register accesses if multiple drivers exist.
     /// * Ensure the base address points to a valid CMSDK MMIO instance, with
     ///   at least 32-bit alignment.
     pub const unsafe fn new(base_addr: usize) -> CmsdkUart {
@@ -62,18 +70,15 @@ impl CmsdkUart {
             return Err(Error::InvalidBaudRate);
         }
         // enable TX and RX
-        self.registers.modify_control(|mut c| {
-            c.set(Control::TXE, true);
-            c.set(Control::RXE, true);
-            c
-        });
+        self.registers
+            .modify_control(|c| c.with_txe(true).with_rxe(true));
         Ok(())
     }
 
     /// Write a byte, if possible
     pub fn write(&mut self, byte: u8) -> nb::Result<(), Error> {
         let status = self.registers.read_status();
-        if status.contains(Status::TXF) {
+        if status.txf() {
             defmt::debug!(
                 "Blocking on UART @ {=usize:08x} Status: {}",
                 self.registers.pointer_to_data() as usize,
@@ -97,17 +102,17 @@ impl CmsdkUart {
             self.registers.pointer_to_data() as usize
         );
         let cid_read = [
-            self.registers.read_cid0(),
-            self.registers.read_cid1(),
-            self.registers.read_cid2(),
-            self.registers.read_cid3(),
+            self.registers.read_cid(0).unwrap(),
+            self.registers.read_cid(1).unwrap(),
+            self.registers.read_cid(2).unwrap(),
+            self.registers.read_cid(3).unwrap(),
         ];
         defmt::debug!("CIDS: {:?} vs {:?}", cid_read, Self::VALID_CID);
         if cid_read != Self::VALID_CID {
             return Err(Error::InvalidInstance);
         }
-        let pid0 = self.registers.read_pid0() as u8;
-        let pid1 = self.registers.read_pid1() as u8 & 0x0F;
+        let pid0 = self.registers.read_pid(0).unwrap() as u8;
+        let pid1 = self.registers.read_pid(1).unwrap() as u8 & 0x0F;
         let pid = u16::from_be_bytes([pid1, pid0]);
         defmt::trace!(
             "PID0 {=u8:02x} PID1 {=u8:02X} PID {=u16:04x}",
