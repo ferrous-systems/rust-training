@@ -24,7 +24,7 @@ fn main() -> ! {
 
     _ = write!(&UART0, "Hello, this is on a static UART0!\r\n");
 
-    panic!("Got to end of fn main()!");
+    semihosting::process::exit(0);
 }
 
 // End of file

@@ -81,15 +81,6 @@ dependencies = [
 ]
 
 [[package]]
-name = "cortex-m-semihosting"
-version = "0.5.0"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "c23234600452033cc77e4b761e740e02d2c4168e11dbf36ab14a0f58973592b0"
-dependencies = [
- "cortex-m",
-]
-
-[[package]]
 name = "critical-section"
 version = "1.2.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -138,13 +129,14 @@ dependencies = [
 
 [[package]]
 name = "defmt-semihosting"
-version = "0.1.0"
+version = "0.3.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "fbd17987293760ae1b90ec42ee12765a9bdf104883458ee0ecc9a203247cc5db"
+checksum = "63b0302c696f9080df24a40eed6d34e34de9a610723b8176df52272798971250"
 dependencies = [
  "cortex-m",
- "cortex-m-semihosting",
- "defmt 0.3.100",
+ "critical-section",
+ "defmt 1.0.1",
+ "semihosting",
 ]
 
 [[package]]
@@ -266,13 +258,13 @@ version = "0.1.0"
 dependencies = [
  "cortex-m",
  "cortex-m-rt",
- "cortex-m-semihosting",
  "critical-section",
  "defmt 1.0.1",
  "defmt-semihosting",
  "heapless",
  "nb 1.1.0",
  "qemu-common",
+ "semihosting",
 ]
 
 [[package]]
@@ -298,6 +290,12 @@ name = "rustversion"
 version = "1.0.21"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "8a0d197bd2c9dc6e53b84da9556a69ba4cdfab8619eb41a8bd1cc2027a0f6b1d"
+
+[[package]]
+name = "semihosting"
+version = "0.1.20"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "c3e1c7d2b77d80283c750a39c52f1ab4d17234e8f30bca43550f5b2375f41d5f"
 
 [[package]]
 name = "semver"

@@ -30,7 +30,7 @@ fn main() -> ! {
         _ = write!(uart, "Hello, UART{}!\r\n", idx);
     }
 
-    panic!("Got to end of fn main()!");
+    semihosting::process::exit(0);
 }
 
 // End of file
