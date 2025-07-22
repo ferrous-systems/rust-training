@@ -119,26 +119,27 @@ impl<const QLEN: usize> BufferedUart<QLEN> {
 
     /// UART TX IRQ handler
     ///
-    /// # Safety
-    ///
-    /// Only call this from a UART TX interrupt routine
-    pub unsafe fn tx_isr(&self) {
+    /// Checks if the TX interrupt flag is set, and if so, loads as much
+    /// data as it can into the UART, and turns off the TX interrupt if
+    /// the buffer runs out.
+    pub fn tx_isr(&self) {
+        const TXI_FLAG: IntStatus = IntStatus::DEFAULT.with_txi(true);
         defmt::debug!("TX ISR");
         self.with(|inner| {
-            inner
-                .uart
-                .clear_interrupts(IntStatus::default().with_txi(true));
-            if inner.buffer.is_empty() {
-                // cancel TX interrupt
-                defmt::debug!("Turning TXIE off");
-                inner.uart.registers.modify_control(|c| c.with_txie(false));
-            } else if !inner.uart.registers.read_status().txf() {
-                // load UART with next byte
-                let byte = unsafe { inner.buffer.dequeue_unchecked() };
-                defmt::debug!("Auto send 0x{=u8:02x}", byte);
-                inner.uart.write(byte).expect("TX space");
-            } else {
-                defmt::warn!("Duff ISR - TX is full");
+            let int_status = inner.uart.registers.read_int_status();
+            if int_status.txi() {
+                inner.uart.clear_interrupts(TXI_FLAG);
+                while !inner.uart.registers.read_status().txf() && !inner.buffer.is_empty() {
+                    // UART is not full - load UART with next byte
+                    let byte = unsafe { inner.buffer.dequeue_unchecked() };
+                    defmt::debug!("Auto send 0x{=u8:02x}", byte);
+                    inner.uart.write(byte).expect("TX space");
+                }
+                if inner.buffer.is_empty() {
+                    // cancel TX interrupt
+                    defmt::debug!("Turning TXIE off");
+                    inner.uart.registers.modify_control(|c| c.with_txie(false));
+                }
             }
         });
     }
