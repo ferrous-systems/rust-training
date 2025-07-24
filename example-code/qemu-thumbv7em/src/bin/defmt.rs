@@ -16,7 +16,7 @@ fn main() -> ! {
     // unsafe {
     //     core::arch::asm!("udf 0");
     // }
-    panic!("Failure in fn main");
+    panic!("Testing panic!() in fn main");
 }
 
 // End of file

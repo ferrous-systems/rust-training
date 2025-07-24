@@ -1,7 +1,5 @@
 #![no_std]
 
-use cortex_m_semihosting::debug as cmsd;
-
 pub mod interrupts;
 pub mod uart;
 
@@ -18,18 +16,14 @@ fn panic(info: &core::panic::PanicInfo) -> ! {
     } else {
         defmt::error!("Panic! {}", defmt::Debug2Format(&info.message()));
     }
-    loop {
-        cmsd::exit(cmsd::EXIT_FAILURE);
-    }
+    semihosting::process::exit(1);
 }
 
 /// A Hard Fault handler which logs to defmt and then does a semihosting exit.
 #[cortex_m_rt::exception(trampoline = true)]
 unsafe fn HardFault(frame: &cortex_m_rt::ExceptionFrame) -> ! {
     defmt::error!("HardFault: {}", defmt::Debug2Format(frame));
-    loop {
-        cmsd::exit(cmsd::EXIT_FAILURE);
-    }
+    semihosting::process::exit(1);
 }
 
 // End of file

@@ -55,15 +55,13 @@ fn main() -> ! {
     // Wait for the UART bytes to be send
     UART0.flush();
 
-    panic!("Got to end of fn main()!");
+    semihosting::process::exit(0);
 }
 
 /// Called when UART0 has a TX interrupt
 #[interrupt]
-unsafe fn Uart0Tx() {
-    unsafe {
-        UART0.tx_isr();
-    }
+fn Uart0Tx() {
+    UART0.tx_isr();
 }
 
 // End of file

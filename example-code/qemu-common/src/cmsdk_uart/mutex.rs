@@ -2,7 +2,7 @@
 
 use core::cell::RefCell;
 
-use super::{CmsdkUart, Control, Error, Status};
+use super::{CmsdkUart, Error};
 
 /// A CMSDK UART you can store as a static variable
 pub struct MutexUart {
@@ -41,7 +41,7 @@ impl MutexUart {
             let Some(uart) = guard.as_mut() else {
                 return true;
             };
-            uart.registers.read_status().contains(Status::TXF)
+            uart.registers.read_status().txf()
         })
     }
 
@@ -70,10 +70,7 @@ impl MutexUart {
             let Some(uart) = guard.as_mut() else {
                 panic!("tx_interrupts_on on uninit MutexUart");
             };
-            uart.registers.modify_control(|mut c| {
-                c.set(Control::TXIE, enabled);
-                c
-            });
+            uart.registers.modify_control(|c| c.with_txie(enabled));
         })
     }
 

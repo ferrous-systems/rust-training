@@ -19,17 +19,12 @@ static UART0: uart::MutexUart = uart::MutexUart::empty();
 fn main() -> ! {
     defmt::info!("Running uart_mutex - printing to global UART0");
 
-    UART0
-        .init(
-            unsafe { uart::CmsdkUart::new(uart::UART0_ADDR) },
-            115200,
-            SYSTEM_CLOCK,
-        )
-        .unwrap();
+    let uart_handle = unsafe { uart::CmsdkUart::new(uart::UART0_ADDR) };
+    UART0.init(uart_handle, 115200, SYSTEM_CLOCK).unwrap();
 
     _ = write!(&UART0, "Hello, this is on a static UART0!\r\n");
 
-    panic!("Got to end of fn main()!");
+    semihosting::process::exit(0);
 }
 
 // End of file

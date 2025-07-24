@@ -7,8 +7,9 @@ license = "MIT OR Apache-2.0"
 description = "Common drivers for Arm QEMU hardware"
 
 [dependencies]
+bitbybit = "1.3.3"
 critical-section = "1.2.0"
-defmt = "0.3.10"
-derive-mmio = "0.3.0"
+defmt = "1.0"
+derive-mmio = "0.6.0"
 heapless = "0.8.0"
 nb = "1.1.0"
