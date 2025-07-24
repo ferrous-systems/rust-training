@@ -23,9 +23,7 @@ fn panic(info: &core::panic::PanicInfo) -> ! {
 #[cortex_m_rt::exception(trampoline = true)]
 unsafe fn HardFault(frame: &cortex_m_rt::ExceptionFrame) -> ! {
     defmt::error!("HardFault: {}", defmt::Debug2Format(frame));
-    loop {
-        semihosting::process::exit(1);
-    }
+    semihosting::process::exit(1);
 }
 
 // End of file
