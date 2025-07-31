@@ -6,7 +6,7 @@ A `struct` groups and names data of different types.
 
 ## Definition
 
-```rust []
+```rust
 struct Point {
     x: i32,
     y: i32,
@@ -22,7 +22,7 @@ you ask the compiler to [ensure that they are](https://doc.rust-lang.org/nomicon
 
 - there is no partial initialization
 
-```rust [1-4|6-8]
+```rust
 struct Point {
     x: i32,
     y: i32,
@@ -37,7 +37,7 @@ fn main() {
 
 - but you can copy from an existing variable of the same type
 
-```rust [8]
+```rust
 struct Point {
     x: i32,
     y: i32,
@@ -51,7 +51,7 @@ fn main() {
 
 ## Field Access
 
-```rust [1-4|7|8-9]
+```rust
 struct Point {
     x: i32,
     y: i32,
@@ -69,7 +69,7 @@ fn main() {
 - Holds values of different types together.
 - Like an anonymous `struct`, with fields numbered 0, 1, etc.
 
-```rust [2|3-4]
+```rust
 fn main() {
     let p = (1, 2);
     println!("{}", p.0);
@@ -93,7 +93,7 @@ fn prints_but_returns_nothing(data: &str) -> () {
 
 - Like a `struct`, with fields numbered 0, 1, etc.
 
-```rust [1|4|5-6]
+```rust
 struct Point(i32,i32);
 
 fn main() {
@@ -117,7 +117,7 @@ fn main() {
 
 ## enum: Definition and Construction
 
-```rust [1-6|9]
+```rust
 enum Shape {
     Square,
     Circle,
@@ -132,7 +132,7 @@ fn main() {
 
 ## Enums with Values
 
-```rust [1-6|2-4|5|9|10]
+```rust
 enum Movement {
     Right(i32),
     Left(i32),
@@ -165,7 +165,7 @@ and a `union`.
 - When an `enum` has variants, you use `match` to extract the data
 - New variables are created from the *pattern* (e.g. `radius`)
 
-```rust [1-4|7-14|8|11]
+```rust
 enum Shape {
     Circle(i32),
     Rectangle(i32, i32),
@@ -186,18 +186,17 @@ fn check_shape(shape: Shape) {
 ## Doing a `match` on an `enum`
 
 - There are two variables called `radius`
-- The binding of `radius` in the pattern on line 9 hides the `radius` variable on line 7
 
-```rust [7|9]
+```rust
 enum Shape {
     Circle(i32),
     Rectangle(i32, i32),
 }
 
 fn check_shape(shape: Shape) {
-    let radius = 10;
+    let radius = 10; /* gets hidden */
     match shape {
-        Shape::Circle(radius) => {
+        Shape::Circle(radius) => { /* by this **new** variable */
             println!("It's a circle, with radius {}", radius);
         }
         _ => {
@@ -211,7 +210,7 @@ fn check_shape(shape: Shape) {
 
 Match guards allow further refining of a `match`
 
-```rust [8]
+```rust
 enum Shape {
     Circle(i32),
     Rectangle(i32, i32),
@@ -233,7 +232,7 @@ fn check_shape(shape: Shape) {
 
 - You can use the `|` operator to join patterns together
 
-```rust [1-16|9]
+```rust
 enum Shape {
     Circle(i32),
     Rectangle(i32, i32),
@@ -257,7 +256,7 @@ fn test_shape(shape: Shape) {
 - You can use `if let` if only one case is of interest.
 - Still *pattern matching*
 
-```rust []
+```rust
 enum Shape {
     Circle(i32),
     Rectangle(i32, i32),
@@ -275,7 +274,7 @@ fn test_shape(shape: Shape) {
 - If you expect it to match, but want to handle the error...
 - The `else` block must *diverge*
 
-```rust []
+```rust
 enum Shape {
     Circle(i32),
     Rectangle(i32, i32),

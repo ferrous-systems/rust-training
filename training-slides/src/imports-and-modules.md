@@ -35,7 +35,7 @@
 
 We've been using modules from the Rust Standard Library...
 
-```rust []
+```rust
 use std::fs;
 use std::io::prelude::*;
 
@@ -130,7 +130,7 @@ The example is from the Knurling tool [`probe-run`](https://github.com/knurling-
 
 Choosing whether to import the parent module, or each of the types contained within, is something of an art form.
 
-```rust []
+```rust
 use std::fs;
 use std::collections::VecDeque;
 use std::io::prelude::*;
@@ -140,7 +140,7 @@ use std::io::prelude::*;
 
 There's also a more compact syntax for imports.
 
-```rust []
+```rust
 use std::{fs, io::prelude::*};
 
 fn main() -> std::io::Result<()> {

@@ -29,7 +29,7 @@ Macros can be used to things such as:
 
 ## The `vec!` macro
 
-```rust [1-10|2-3|4-11]
+```rust
 fn main() {
     // You write:
     let v = vec![1, 2, 3];
@@ -48,7 +48,7 @@ fn main() {
 
 "Match zero or more expressions, and paste each into into a `temp_vec.push()` call"
 
-```rust [1-12|1|2|3|4-10|6-8]
+```rust
 #[macro_export]
 macro_rules! vec {
     ( $( $x:expr ),* ) => {

@@ -42,7 +42,7 @@ Technically, all iterators calculate things on-the-fly. Some own another iterato
 1. You need to make an iterator
 2. You need to pump it in a loop
 
-```rust []
+```rust
 fn main() {
     let data = vec![1, 2, 3, 4, 5];
     let mut iterator = data.iter();
@@ -60,7 +60,7 @@ fn main() {
 
 Same thing, but with `while let`.
 
-```rust []
+```rust
 fn main() {
     let data = vec![1, 2, 3, 4, 5];
     let mut iterator = data.iter();
@@ -74,7 +74,7 @@ fn main() {
 
 Same thing, but with `for`
 
-```rust []
+```rust
 fn main() {
     let data = vec![1, 2, 3, 4, 5];
     // for <variable> in <iterator>
@@ -88,7 +88,7 @@ fn main() {
 
 Same thing, but we let `for` call `.into_iter()` for us.
 
-```rust []
+```rust
 fn main() {
     let data = vec![1, 2, 3, 4, 5];
     // for <variable> in <implements IntoIterator>
@@ -124,7 +124,7 @@ digraph {
 
 If a `for` loop calls `.into_iter()` how did we get a borrowed iterator?
 
-```rust []
+```rust
 fn main() {
     let data = vec![1, 2, 3, 4, 5];
     for item in &data {
@@ -138,7 +138,7 @@ fn main() {
 
 The `&` is load-bearing...
 
-```rust [1-9|2|3|4-5]
+```rust
 fn main() {
     let data = vec![1, 2, 3, 4, 5];
     let temp = &data;
@@ -228,7 +228,7 @@ Note:
 
 This style of code is idiomatic in Rust:
 
-```rust [1-13|1-8|3|4|5|6|7]
+```rust
 /// Sum the squares of the even numbers given
 fn process_data(data: &[u32]) -> u32 {
     data.iter()
@@ -252,7 +252,7 @@ Note:
 
 What really happened:
 
-```rust [1-13|1-8|3|4|5|6|7]
+```rust
 /// Sum the squares of the even numbers given
 fn process_data(data: &[u32]) -> u32 {
     let ref_iter = data.iter();

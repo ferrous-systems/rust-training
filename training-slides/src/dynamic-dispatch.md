@@ -10,7 +10,7 @@ There's two approaches.
 
 If the number of possible choices is limited, an Enum can be used:
 
-```rust []
+```rust
 enum Operation {
     Get,
     Set(String),
@@ -28,7 +28,7 @@ fn execute(op: Operation) {
 
 ## Alternative Form
 
-```rust []
+```rust
 enum Operation {
     Get,
     Set(String),
@@ -112,7 +112,7 @@ See <https://godbolt.org/z/cheWrvM45>
 
 Closure traits are dyn-compatible.
 
-```rust []
+```rust
 fn factory() -> Box<dyn Fn(i32) -> i32> {
     let num = 5;
 
@@ -126,7 +126,7 @@ Any type that is `'static + Sized` implements [`std::any::Any`](https://doc.rust
 
 We can use this to ask "is this reference actually a reference to *this specific type*?"
 
-```rust []
+```rust
 fn print_if_string(value: &dyn std::any::Any) {
     if let Some(s) = value.downcast_ref::<String>() {
         println!("It's a string({}): '{}'", s.len(), s);

@@ -8,7 +8,7 @@ Generics are fundamental for Rust.
 
 Structs can have type parameters.
 
-```rust []
+```rust
 struct Point<Precision> {
     x: Precision,
     y: Precision,
@@ -34,7 +34,7 @@ The part `<Precision>` introduces a *type parameter* called `Precision`. Often p
 
 Enums can have type parameters.
 
-```rust []
+```rust
 enum Either<T, X> {
     Left(T),
     Right(X),
@@ -53,7 +53,7 @@ What happens if I leave out the `<i32, f64>` specifier? What would type paramete
 
 Functions can have type parameters.
 
-```rust []
+```rust
 fn print_stuff<X>(value: X) {
     // What can you do with `value` here?
 }
@@ -65,7 +65,7 @@ Default bounds are `Sized`, so finding the size of the type is one thing that yo
 
 ## Generic Implementations
 
-```rust []
+```rust
 struct Vector<T> {
     x: T,
     y: T,
@@ -120,7 +120,7 @@ Are there some trait bounds we could place on `T` such that `T + T -> T` and `T 
 
 ## Adding Bounds - Example
 
-```rust []
+```rust
 trait HasArea {
     fn area(&self) -> f32;
 }
@@ -146,7 +146,7 @@ fn main() {
 
 ## Adding Bounds - Alt. Example
 
-```rust []
+```rust
 trait HasArea {
     fn area(&self) -> f32;
 }
@@ -185,7 +185,7 @@ the line.
 
 You can specify multiple bounds.
 
-```rust []
+```rust
 trait HasArea {
     fn area(&self) -> f32;
 }
@@ -212,7 +212,7 @@ fn main() {
 * The `impl Trait` syntax in argument position was just *syntactic sugar*.
 * (It does something special in the return position though)
 
-```rust []
+```rust
 trait HasArea {
     fn area_m2(&self) -> f64;
 }
@@ -243,7 +243,7 @@ Some types that cannot be written out, like the closure, can be expressed as ret
 
 In Rust 1.51, we gained the ability to be generic over *constant values* too.
 
-```rust []
+```rust
 struct Polygon<const SIDES: u8> {
     colour: u32
 }
@@ -268,7 +268,7 @@ values of that type at run-time - the constant is pasted in wherever it is used.
 
 Traits themselves can have type parameters too!
 
-```rust []
+```rust
 trait HasArea<T> {
     fn area(&self) -> T;
 }
@@ -297,7 +297,7 @@ fn main() {
 * Some bounds apply automatically
 * Special syntax to *turn them off*
 
-```rust []
+```rust
 fn print_debug<T: std::fmt::Debug + ?Sized>(value: &T) {
     println!("value is {:?}", value);
 }

@@ -44,7 +44,7 @@ To provide a common API, Rust offers some basic abstractions:
 
 <https://doc.rust-lang.org/std/io/trait.Read.html>
 
-```rust []
+```rust
 use std::io::Result;
 
 pub trait Read {
@@ -90,7 +90,7 @@ See the [std::io::File docs](https://doc.rust-lang.org/std/fs/struct.File.html#i
   * Owns a `R: Read`, and `impl BufRead`
   * Has a buffer in RAM and reads in large-ish chunks
 
-```rust []
+```rust
 use std::io::BufRead;
 
 fn print_file() -> std::io::Result<()> {

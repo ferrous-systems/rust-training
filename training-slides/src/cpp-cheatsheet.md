@@ -128,7 +128,7 @@ for (const auto &value: list) {
 
 is equivalent to this Rust loop
 
-```rust [], ignore
+```rust, ignore
 for value in &list {
     //...
 }
