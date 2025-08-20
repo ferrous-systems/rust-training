@@ -133,16 +133,17 @@ fn main() {
 ## Enums with Values
 
 ```rust [1-6|2-4|5|9|10]
-enum Movement {
-    Right(i32),
-    Left(i32),
-    Up(i32),
-    Down { speed: i32, excitement: u8 },
+enum Fruit {
+    Apple(u8),
+    Kiwi(u8),
+    Banana { sweetness: u8, curvature: f32 },
+    Lemon
 }
 
 fn main() {
-    let movement = Movement::Left(12);
-    let movement = Movement::Down { speed: 12, excitement: 5 };
+    let apple = Fruit::Apple(12);
+    let banana = Fruit::Banana { sweetness: 10, curvature: 0.6 };
+    let lemon = Fruit::Lemon;
 }
 ```
 
