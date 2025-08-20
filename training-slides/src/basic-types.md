@@ -24,7 +24,7 @@ Rust comes with all standard int types, with and without sign
 * `i64`, `u64`
 * `i128`, `u128`
 
-## Kinds of variable
+## Kinds of variables
 
 ```rust
 static X: i32 = 42;
@@ -37,6 +37,8 @@ fn some_function() {
     let mut x: i32 = 42;
 }
 ```
+
+For constants and statics, the type always needs to be specified.
 
 Note:
 
@@ -157,6 +159,7 @@ Note:
 
 * Use `.get()` method on the slice to avoid panics instead of accessing via index.
 * The range syntax include the first value but excludes the last value. Use `0..=1` to include both ends.
+* Comparable to combination of raw C `uint8_t *` pointer and `size_t` array size or C++ `std::span`.
 
 ## String Slices
 
@@ -175,5 +178,6 @@ fn main() {
 
 Note:
 
-Use [`std::str::from_utf8`](https://doc.rust-lang.org/std/str/fn.from_utf8.html) to make an `&str` from a `&[u8]`
-Let trainees know that Strings are covered over many slides in the training and that an `Advanced Strings` slides exist for completeness' sake
+* Use [`std::str::from_utf8`](https://doc.rust-lang.org/std/str/fn.from_utf8.html) to make an `&str` from a `&[u8]`
+* Let trainees know that Strings are covered over many slides in the training and that an `Advanced Strings` slides exist for completeness' sake
+* `&str` is comparable to combination of raw C `char *` pointer and `size_t` string size or C++ `std::string_view`.
