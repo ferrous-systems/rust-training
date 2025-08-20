@@ -153,12 +153,12 @@ fn main() {
 
 Note:
 
-The tag in an enum specifies which variant is currently valid, and is stored as the
-smallest integer the compiler can get away with - it depends how many variants you
-have. Of course, if none of the variants have any data, the enum is *just* the tag.
-
-If you have a C background, you can think of this as being a `struct` containing an `int`
-and a `union`.
+* From a computer science perspective, `enum`s are tagged unions.
+* The tag in an enum specifies which variant is currently valid, and is stored as the
+  smallest integer the compiler can get away with - it depends how many variants you
+  have. Of course, if none of the variants have any data, the enum is *just* the tag.
+* If you have a C background, you can think of this as being a `struct` containing an `int`
+  and a `union`.
 
 ## Doing a `match` on an `enum`
 
@@ -206,6 +206,10 @@ fn check_shape(shape: Shape) {
     }
 }
 ```
+
+Note:
+
+* Rust allows the variable shadowing shown above in general
 
 ## Match guards
 
@@ -266,6 +270,23 @@ enum Shape {
 fn test_shape(shape: Shape) {
     if let Shape::Circle(radius) = shape {
         println!("Shape is a Circle with radius {}", radius);
+    }
+}
+```
+
+- Newer Rust versions (edition 2024) allow `if let` chaining, for example:
+
+```rust
+enum Shape {
+    Circle(i32),
+    Rectangle(i32, i32),
+}
+
+fn test_shape(shape: Shape) {
+    // Harcoded here, but could be determined by other logic.
+    let ignore_rectangle = true;
+    if !ignore_rectangle && let Shape::Rectangle(length, height) = shape {
+        println!("Shape is a Rectangle with {length} x {height}");
     }
 }
 ```
