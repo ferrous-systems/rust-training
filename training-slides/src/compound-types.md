@@ -132,12 +132,12 @@ fn main() {
 
 ## Enums with Values
 
-```rust [1-6|2-4|5|9|10]
+```rust [1-6|2|3-4|5|9|10|11]
 enum Fruit {
+    Lemon,
     Apple(u8),
     Kiwi(u8),
     Banana { sweetness: u8, curvature: f32 },
-    Lemon
 }
 
 fn main() {
