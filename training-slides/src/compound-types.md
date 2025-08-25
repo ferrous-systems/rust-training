@@ -285,7 +285,7 @@ enum Shape {
 }
 
 fn test_shape(shape: Shape) {
-    // Harcoded here, but could be determined by other logic.
+    // Hardcoded here, but could be determined by other logic.
     let ignore_rectangle = true;
     if !ignore_rectangle && let Shape::Rectangle(length, height) = shape {
         println!("Shape is a Rectangle with {length} x {height}");
