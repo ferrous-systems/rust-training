@@ -5,16 +5,31 @@ import subprocess
 import sys
 import webbrowser
 import socket
+import shutil
 import time
 from pathlib import Path
 
 
+def require_cmd(cmd: str, hint: str = "") -> None:
+    if shutil.which(cmd) is None:
+        msg = f"Error: '{cmd}' is not installed or not on PATH."
+        if hint:
+            msg += f" {hint}"
+        print(msg, file=sys.stderr)
+        sys.exit(127)
+
+
 def build_book() -> None:
+    require_cmd(
+        "mdbook",
+        "See https://rust-lang.github.io/mdBook/ for installation instructions.",
+    )
     print("Building book with mdBook…")
     subprocess.run(["mdbook", "build"], check=True)
 
 
 def build_slides() -> None:
+    require_cmd("mdslides", "Install with 'cargo install mdslides'.")
     print("Building slides with mdslides…")
     subprocess.run(
         [
