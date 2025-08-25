@@ -274,7 +274,9 @@ fn test_shape(shape: Shape) {
 }
 ```
 
-- Newer Rust versions (edition 2024) allow `if let` chaining, for example:
+## `if let` chains in newer Rust versions
+
+Newer Rust versions (edition 2024) allow `if let` chaining, for example:
 
 ```rust
 enum Shape {
