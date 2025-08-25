@@ -1,4 +1,23 @@
 #!/usr/bin/env python3
+"""This is a small helper script to build both the mdbook and the slides version
+of the training material.
+
+Usage example:
+
+Build and open the book:
+
+```
+./build-local.py -b -o
+```
+
+Build, serve and open the slides:
+
+```
+./build-local.py -s -S -o
+```
+
+"""
+
 import argparse
 import threading
 import subprocess
@@ -113,7 +132,8 @@ def serve_slides_foreground(open_after_start: bool = False, port: int = 8000) ->
 
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(
-        description="Build mdBook and slides, and optionally open them in a browser."
+        description="Build the training material mdbook or/and slides, and optionally "
+        "open them in a browser."
     )
     parser.add_argument(
         "-b",
@@ -128,6 +148,7 @@ def parse_args() -> argparse.Namespace:
         help="Build the slides (mdslides …).",
     )
     parser.add_argument(
+        "-S",
         "--serve",
         action="store_true",
         help="Serve slides in the foreground (http://localhost:8000).",
