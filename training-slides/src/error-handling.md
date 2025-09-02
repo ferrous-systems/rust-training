@@ -100,7 +100,8 @@ fn read_file(filename: &str) -> Result<String, std::io::Error> {
 
 ## Handling Results with ?
 
-It is idiomatic Rust to use `?` to handle errors.
+It is idiomatic Rust to use `?` to let the caller handle errors while continuing
+for the regular happy path.
 
 ```rust
 use std::io::prelude::*;
@@ -118,6 +119,8 @@ Note:
 This was added in Rust 1.39.
 
 The ? operator will evaluate to the `Ok` value if the `Result` is `Ok`, and it will cause an early return with the error value if it is `Err`. It will also call `.into()` to perform a type conversion if necessary (and if possible).
+
+The `?` operator allows exception like behaviour: Errors can be bubbled up, similar to exceptions.
 
 ## What kind of Error?
 
@@ -250,7 +253,9 @@ fn main() -> Result<(), anyhow::Error> {
 Note:
 
 * Use `anyhow` if you do not care what error type your function returns, just that it captures something.
-* Use `thiserror` if you must design your own error types but want easy `Error` trait impl.
+  This oftentimes applies to applications.
+* Use `thiserror` if you must design your own error types but want easy `Error` trait impl. This
+  oftentimes applies to libraries.
 
 ## Panicking
 
