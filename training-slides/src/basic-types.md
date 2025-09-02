@@ -38,6 +38,8 @@ fn some_function() {
 }
 ```
 
+<p>&nbsp<!-- run-button placeholder --></p>
+
 For constants and statics, the type always needs to be specified.
 
 Note:
