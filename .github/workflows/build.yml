@@ -6,6 +6,7 @@ on:
     tags:
       - "*"
   pull_request:
+  merge_group:
 
 env:
   CARGO_TERM_COLOR: always # We want colors in our CI output
