@@ -166,6 +166,7 @@ Note:
 * A [String slice](https://doc.rust-lang.org/std/primitive.str.html) (to get [chars](https://doc.rust-lang.org/std/primitive.str.html#method.chars), or [bytes](https://doc.rust-lang.org/std/primitive.str.html#method.bytes), or [lines](https://doc.rust-lang.org/std/primitive.str.html#method.lines), or [words](https://doc.rust-lang.org/std/primitive.str.html#method.split_whitespace)...)
 * A [Buffered I/O Reader](https://doc.rust-lang.org/std/io/trait.BufRead.html), to get [Lines of text](https://doc.rust-lang.org/std/io/trait.BufRead.html#method.lines)
 * A [TCP Listener](https://doc.rust-lang.org/std/net/struct.TcpListener.html#method.incoming), to get [TCP Streams](https://doc.rust-lang.org/std/net/struct.TcpStream.html)
+* Your own types!
 * Much more!
 
 Note:
