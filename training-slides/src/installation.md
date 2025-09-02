@@ -82,6 +82,6 @@ For details, check the [Cargo Manifest docs](http://doc.crates.io/manifest.html)
     - Now the official VS Code extension for Rust!
     - Open Source, funded by donations
 -   JetBrains Rust IDE: RustRover
--   IntelliJ Rust plugin for their IDEs (CLion, Idea, etc.):
+-   JetBrains Rust plugin for their other IDEs (CLion, Idea, etc.):
     <https://www.jetbrains.com/rust/>
 
