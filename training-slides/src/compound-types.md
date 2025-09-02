@@ -132,18 +132,17 @@ fn main() {
 
 ## Enums with Values
 
-```rust [1-6|2|3-4|5|9|10|11]
-enum Fruit {
-    Lemon,
-    Apple(u8),
-    Kiwi(u8),
-    Banana { sweetness: u8, curvature: f32 },
+```rust [1-5|2|3|4|8|9|10]
+pub enum Shapes {
+    Dot,
+    Square(u32),
+    Rectangle { width: u32, length: u32 }
 }
 
 fn main() {
-    let apple = Fruit::Apple(12);
-    let banana = Fruit::Banana { sweetness: 10, curvature: 0.6 };
-    let lemon = Fruit::Lemon;
+    let dot = Shapes::Dot;
+    let square = Shapes::Square(10);
+    let rectangle = Shapes::Rectangle { width: 10, length: 20 };
 }
 ```
 
@@ -166,19 +165,20 @@ and a `union`.
 - When an `enum` has variants, you use `match` to extract the data
 - New variables are created from the *pattern* (e.g. `radius`)
 
-```rust [1-4|7-14|8|11]
-enum Shape {
-    Circle(i32),
-    Rectangle(i32, i32),
+```rust [1-5|7-16|10|13]
+pub enum Shape {
+    Dot,
+    Square(u32),
+    Rectangle { width: u32, length: u32 }
 }
 
 fn check_shape(shape: Shape) {
     match shape {
-        Shape::Circle(radius) => {
-            println!("It's a circle, with radius {}", radius);
+        Shape::Square(width) => {
+            println!("It's a square, with the width {}", width);
         }
         _ => {
-            println!("Try a circle instead");
+            println!("Try a square instead");
         }
     }
 }
@@ -186,23 +186,24 @@ fn check_shape(shape: Shape) {
 
 ## Doing a `match` on an `enum`
 
-- There are two variables called `radius`
-- The binding of `radius` in the pattern on line 9 hides the `radius` variable on line 7
+- There are two variables called `width`
+- The binding of `width` in the pattern on line 10 hides the `width` variable on line 8
 
-```rust [7|9]
-enum Shape {
-    Circle(i32),
-    Rectangle(i32, i32),
+```rust [8|10]
+pub enum Shape {
+    Dot,
+    Square(u32),
+    Rectangle { width: u32, length: u32 }
 }
 
 fn check_shape(shape: Shape) {
-    let radius = 10;
+    let width = 10;
     match shape {
-        Shape::Circle(radius) => {
-            println!("It's a circle, with radius {}", radius);
+        Shape::Square(width) => {
+            println!("It's a square, with width {}", width);
         }
         _ => {
-            println!("Try a circle instead");
+            println!("Try a square instead");
         }
     }
 }
@@ -212,19 +213,20 @@ fn check_shape(shape: Shape) {
 
 Match guards allow further refining of a `match`
 
-```rust [8]
-enum Shape {
-    Circle(i32),
-    Rectangle(i32, i32),
+```rust [9]
+pub enum Shape {
+    Dot,
+    Square(u32),
+    Rectangle { width: u32, length: u32 }
 }
 
 fn check_shape(shape: Shape) {
     match shape {
-        Shape::Circle(radius) if radius > 10 => {
-            println!("It's a BIG circle, with radius {}", radius);
+        Shape::Square(width) if width > 10 => {
+            println!("It's a BIG square, with width {}", width);
         }
         _ => {
-            println!("Try a big circle instead");
+            println!("Try a big square instead");
         }
     }
 }
@@ -235,19 +237,19 @@ fn check_shape(shape: Shape) {
 - You can use the `|` operator to join patterns together
 
 ```rust [1-16|9]
-enum Shape {
-    Circle(i32),
-    Rectangle(i32, i32),
-    Square(i32),
+pub enum Shape {
+    Dot,
+    Square(u32),
+    Rectangle { width: u32, length: u32 }
 }
 
 fn test_shape(shape: Shape) {
     match shape {
-        Shape::Circle(size) | Shape::Square(size) => {
-            println!("Shape has single size field {}", size);
+        Shape::Rectangle { width, .. } | Shape::Square(width) => {
+            println!("Shape has a width of {}", width);
         }
         _ => {
-            println!("Not a circle, nor a square");
+            println!("Not a rectangle, nor a square");
         }
     }
 }
@@ -259,14 +261,15 @@ fn test_shape(shape: Shape) {
 - Still *pattern matching*
 
 ```rust []
-enum Shape {
-    Circle(i32),
-    Rectangle(i32, i32),
+pub enum Shape {
+    Dot,
+    Square(u32),
+    Rectangle { width: u32, length: u32 }
 }
 
 fn test_shape(shape: Shape) {
-    if let Shape::Circle(radius) = shape {
-        println!("Shape is a Circle with radius {}", radius);
+    if let Shape::Square(width) = shape {
+        println!("Shape is a Square with width {}", width);
     }
 }
 ```
@@ -277,17 +280,18 @@ fn test_shape(shape: Shape) {
 - The `else` block must *diverge*
 
 ```rust []
-enum Shape {
-    Circle(i32),
-    Rectangle(i32, i32),
+pub enum Shape {
+    Dot,
+    Square(u32),
+    Rectangle { width: u32, length: u32 }
 }
 
 fn test_shape(shape: Shape) {
-    let Shape::Circle(radius) = shape else {
-        println!("I only like circles");
+    let Shape::Square(width) = shape else {
+        println!("I only like squares");
         return;
     };
-    println!("Shape is a Circle with radius {}", radius);
+    println!("Shape is a square with width {}", width);
 }
 ```
 
@@ -296,14 +300,15 @@ fn test_shape(shape: Shape) {
 - Keep looping whilst the pattern still matches
 
 ```rust should_panic []
-enum Shape {
-    Circle(i32),
-    Rectangle(i32, i32),
+pub enum Shape {
+    Dot,
+    Square(u32),
+    Rectangle { width: u32, length: u32 }
 }
 
 fn main() {
-    while let Shape::Circle(radius) = make_shape() {
-        println!("got circle, radius {}", radius);
+    while let Shape::Square(width) = make_shape() {
+        println!("got square, width {}", width);
     }
 }
 
