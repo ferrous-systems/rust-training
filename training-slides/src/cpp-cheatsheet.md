@@ -42,7 +42,11 @@
 * `char` in Rust represents an actual Unicode Scalar Value (21-bit)
     * It cannot be used to represent plain "bytes" - use `u8`/`i8` instead
     * For C/C++ FFI, use `std::os::raw::c_char`
+* Rust slice type `&[T]` is comparable to combination of `T *` pointer and `size_t` array size or
+  `std::span`.
 * Rust Strings and string slices
+    * `&str` is comparable to combination of raw C `char *` pointer and `size_t` string size or
+      C++ `std::string_view`.
     * No nul-terminator! - Not compatible with C strings!
         * Use [`std::ffi::CStr`](https://doc.rust-lang.org/std/ffi/struct.CStr.html)/[`CString`](https://doc.rust-lang.org/std/ffi/struct.CString.html) for C compatibility
     * String is not Small String optimized, like in C++
@@ -725,7 +729,7 @@ A prominent example of this is `String`, which "inherits" all methods from `str`
 
 ## Design Patterns
 
-### Notes on Cloning 
+### Notes on Cloning
 
 These Design guidelines recommend using `.clone()` in many cases.
 You may worry that this is slow, especially compared to C++.
