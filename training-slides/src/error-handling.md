@@ -142,6 +142,49 @@ fn enums() -> Result<(), Error> {
 enum Error { BadThing, OtherThing }
 ```
 
+## `Result` value conversions
+
+```rust [|1,4,6-9|1-4,11-15]
+struct OhNo;
+struct ThisIsBad;
+
+fn result_u32() -> Result<u32, OhNo> { Ok(1) }
+
+fn result_but_its_u64() -> Result<u64, OhNo> {
+    // `map` expects a closure which maps the value to another value.
+    result_u32().map(|v| v as u64)
+}
+
+fn result_u32_but_error_is_bad() -> Result<u32, ThisIsBad> {
+    // `map` expects a closure which maps the error to another error.
+    // We ignore the previous error here by using _
+    result_u32().map_err(|_| ThisIsBad)
+}
+```
+
+## Convert `Result` to `Option`
+
+```rust
+struct OhNo;
+
+fn fallible_operation() -> Result<u32, OhNo> {
+    Ok(1)
+}
+
+fn opt_operation() -> Option<u32> {
+    fallible_operation().ok()
+}
+```
+
+## Convert `Option::None` to value
+
+```rust
+fn none_should_be_zero() {
+    let mut opt_val: Option<u32> = None;
+    let none_becomes_zero = opt_val.unwrap_or(0);
+}
+```
+
 ## Using String Literals as the Err Type
 
 Setting `E` to be `&'static str` lets you use `"String literals"`
