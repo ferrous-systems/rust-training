@@ -147,6 +147,72 @@ fn enums() -> Result<(), Error> {
 enum Error { BadThing, OtherThing }
 ```
 
+## `Result` value conversions
+
+```rust [|1,4,6-9|1-4,11-15]
+struct OhNoError;
+struct ThisIsBadError;
+
+fn result_u32() -> Result<u32, OhNoError> { Ok(1) }
+
+fn result_but_its_u64() -> Result<u64, OhNoError> {
+    // `map` expects a closure which maps the value to another value.
+    result_u32().map(|v| v as u64)
+}
+
+fn result_u32_but_error_is_bad() -> Result<u32, ThisIsBadError> {
+    // `map` expects a closure which maps the error to another error.
+    // We ignore the previous error here by using _
+    result_u32().map_err(|_| ThisIsBadError)
+}
+```
+
+## Convert `Result` and `Option` into each other
+
+```rust
+struct OhNoError;
+
+fn option_to_result() -> Result<u32, OhNoError> {
+    let option = None;
+    option.ok_or(OhNoError)
+}
+
+fn result_to_option() -> Option<u32> {
+    let result: Result<u32, OhNoError> = Ok(2);
+    result.ok()
+}
+```
+
+## Convert `Option::None` or `Result::Err(E)` to value
+
+```rust
+struct OhNoError;
+
+fn none_becomes_be_zero() -> u32 {
+    let opt_val: Option<u32> = None;
+    opt_val.unwrap_or(0)
+}
+
+fn error_becomes_zero() -> u32 {
+    let fail_val: Result<u32, OhNoError> = Err(OhNoError);
+    fail_val.unwrap_or(0)
+}
+```
+
+## There is more
+
+* `Result` and `Option` have a lot more methods available!
+* [`Result` documenation](https://doc.rust-lang.org/std/result/enum.Result.html)
+* [`Option` documentation](https://doc.rust-lang.org/std/option/enum.Option.html)
+* These methods can reduce a lot of boilerplate code, especially when
+  combined with the `From` and `Into` value conversion traits.
+
+Note:
+
+* Example for combining this with `From` / `Into`: Mapping a child error into a parent error can
+  be simply achieved by using `child_err.map_err(|e| e.into())` as long a `From<ChildError>` is
+  implemented for `ParentError`
+
 ## Using String Literals as the Err Type
 
 Setting `E` to be `&'static str` lets you use `"String literals"`
