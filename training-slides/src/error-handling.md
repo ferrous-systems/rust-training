@@ -185,6 +185,11 @@ fn none_should_be_zero() {
 }
 ```
 
+<p>&nbsp<!-- run-button placeholder --></p>
+
+`Result` and `Option` have a lot more methods available! See <https://doc.rust-lang.org/std/result/enum.Result.html>
+and <https://doc.rust-lang.org/std/option/enum.Option.html>
+
 ## Using String Literals as the Err Type
 
 Setting `E` to be `&'static str` lets you use `"String literals"`
