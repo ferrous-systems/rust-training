@@ -1,6 +1,6 @@
 //! Basic CMSDK UART driver
 
-use super::{Control, Error, IntStatus, Status};
+use super::{Error, registers::{IntStatus, Status, Control}};
 
 /// Represents the MMIO registers for a CMSDK UART Peripheral
 ///
@@ -72,6 +72,8 @@ impl CmsdkUart {
         // enable TX and RX
         self.registers
             .modify_control(|c| c.with_txe(true).with_rxe(true));
+        // show the settings
+        defmt::debug!("{}", self.registers.read_control());
         Ok(())
     }
 
@@ -80,7 +82,7 @@ impl CmsdkUart {
         let status = self.registers.read_status();
         if status.txf() {
             defmt::debug!(
-                "Blocking on UART @ {=usize:08x} Status: {}",
+                "Blocking on UART @ {=usize:08x}, {}",
                 self.registers.pointer_to_data() as usize,
                 status
             );
