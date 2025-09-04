@@ -65,6 +65,7 @@ jobs:
           CRITICALUP_TOKEN: ${{ secrets.CRITICALUP_TOKEN }}
         run: |
          just ferrocene-qemu-aarch64v8a
+         just ferrocene-qemu-aarch64v8a-no-cargo
 
   ferrocene-qemu-aarch32v8r:
     name: Build qemu-aarch32v8r with Ferrocene

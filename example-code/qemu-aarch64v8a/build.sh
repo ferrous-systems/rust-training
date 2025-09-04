@@ -3,7 +3,7 @@
 set -euo pipefail
 
 TARGET_DIR=target/production
-RUSTC="${1:-rustc}"
+RUSTC="${RUSTC:-rustc}"
 SYSROOT=$("${RUSTC}" --print sysroot)
 OBJDUMP=$(ls "${SYSROOT}"/lib/rustlib/*/bin/llvm-objdump)
 RUSTC_FLAGS="--target aarch64-unknown-none -Copt-level=s"

@@ -16,12 +16,7 @@ You must first install Ferrocene by executing `criticalup install` inside this
 folder. This will require a valid CriticalUp token - please see the [CriticalUp
 documentation](https://criticalup.ferrocene.dev).
 
-To view the project inside VS Code, set your `RUSTC` environment variable to
-point at your `criticalup` rustc proxy. On macOS, that can be done with:
-
-```bash
-RUSTC=~/Library/Application\ Support/criticalup/bin/rustc code .
-```
+You should also run `criticalup link create` to set up `+ferrocene` as a valid option for `cargo`. The provided [`rust-toolchain.toml`](./rust-toolchain.toml) file assumes that this toolchain link exists within `rustup`.
 
 ## Demo contents
 
