@@ -57,7 +57,7 @@ Alternatively, you can skip steps 2 and 3, and execute `criticalup run cargo run
 
 ## Running
 
-QEMU has been configured to redirect the UART data to a telnet server on `localhost:4321`. QEMU will therefore pause on start-up until you run `telnet localhost 4321` or similar.
+QEMU has been configured to redirect the UART data to a telnet server on `localhost:4321` so you can see the UART output separate from any `defmt` output. If QEMU pauses on start-up then it is waiting for you to run `telnet localhost 4321` to open a connection and start receiving the UART data.
 
 ## License
 
