@@ -15,6 +15,10 @@ inputs:
     description: "Extra target for rustup to install"
     required: false
     default: ""
+  graphviz:
+    description: 'Install Graphviz'
+    required: false
+    default: ""
 
 runs:
   using: "composite"
@@ -26,6 +30,12 @@ runs:
         CRITICALUP_VERSION: ${{ inputs.criticalup }}
       run: |
         curl --proto '=https' --tlsv1.2 -LsSf https://github.com/ferrocene/criticalup/releases/download/${CRITICALUP_VERSION}/criticalup-installer.sh | sh
+    - name: Install Graphviz (optional)
+      if: ${{ inputs.graphviz != '' }}
+      shell: bash
+      run: |
+        sudo apt -y update
+        sudo apt -y install graphviz
     - name: Install Just 1.42
       uses: extractions/setup-just@v3
       with:

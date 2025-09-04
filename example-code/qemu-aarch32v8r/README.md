@@ -10,17 +10,13 @@ This repository contains a small example application that can be built using the
 
 Ferrocene 24.05 is supported on *x86-64 Linux (glibc)*
 (`x86_64-unknown-linux-gnu`) as the host platform, and *Armv8-A bare-metal*
-(`aarch64-unknown-none`) as a cross-compilation target. This demo uses the
-early-access 'experimental' *Aarch32 Armv8-R bare-metal* (`armv8r-none-eabihf`)
-target.
+(`aarch64-unknown-none`) as a cross-compilation target.
 
 You must first install Ferrocene by executing `criticalup install` inside this
 folder. This will require a valid CriticalUp token - please see the [CriticalUp
 documentation](https://criticalup.ferrocene.dev).
 
-To view the project inside VS Code, edit the
-[`.vscode/settings.json`](.vscode/settings.json) file to include the appropriate
-path to the criticalup proxy binaries.
+You should also run `criticalup link create` to set up `+ferrocene` as a valid option for `cargo`. The provided [`rust-toolchain.toml`](./rust-toolchain.toml) file assumes that this toolchain link exists within `rustup`.
 
 ## Demo contents
 

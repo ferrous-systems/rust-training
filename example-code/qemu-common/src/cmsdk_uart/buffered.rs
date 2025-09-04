@@ -4,7 +4,7 @@
 
 use core::cell::RefCell;
 
-use crate::cmsdk_uart::IntStatus;
+use super::registers::IntStatus;
 
 use super::{CmsdkUart, Error};
 

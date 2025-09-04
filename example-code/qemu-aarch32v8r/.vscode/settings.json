@@ -1,18 +1,4 @@
 {
-    // Configure rust-analyzer to use Ferrocene, via criticalup
-    "rust-analyzer.server.extraEnv": {
-        // Use these settings on macOS:
-        // "CARGO": "${userHome}/Library/Application Support/criticalup/bin/cargo",
-        // "RUSTC": "${userHome}/Library/Application Support/criticalup/bin/rustc",
-        // Use these settings on Linux:
-        // "CARGO": "${userHome}/.local/share/criticalup/bin/cargo",
-        // "RUSTC": "${userHome}/.local/share/criticalup/bin/rustc",
-        // Use these settings on Windows:
-        // "CARGO": "${userHome}/AppData/Roaming/criticalup/bin/cargo",
-        // "RUSTC": "${userHome}/AppData/Roaming/criticalup/bin/rustc",
-    },
-    // The proc-macro server is not supported in Ferrocene 25.02
-    // "rust-analyzer.procMacro.enable": false,
     // override the default setting (`cargo check --all-targets`) which produces the following error
     // "can't find crate for `test`" when the default compilation target is a no_std target
     // with these changes RA will call `cargo check --bins` on save

@@ -36,7 +36,6 @@ mod buffered;
 pub use buffered::*;
 
 mod registers;
-use registers::*;
 
 /// Error codes from this module
 #[derive(Debug, defmt::Format)]
