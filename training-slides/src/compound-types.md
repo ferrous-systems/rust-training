@@ -282,7 +282,7 @@ fn test_shape(shape: Shape) {
 
 Newer Rust versions (edition 2024) allow `if let` chaining, for example:
 
-```rust
+```rust,ignore
 enum Shape {
     Circle(i32),
     Rectangle(i32, i32),

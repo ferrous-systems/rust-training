@@ -20,6 +20,8 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: ./.github/actions/setup
+        with:
+          graphviz: true
       - uses: taiki-e/install-action@v2
         with:
           tool: mdbook@0.4.42,mdbook-graphviz@0.2.1
@@ -28,7 +30,6 @@ jobs:
           echo "Building with slug '${slug}'"
           echo "slug=${slug}" >> "${GITHUB_ENV}"
           curl --proto '=https' --tlsv1.2 -LsSf https://github.com/ferrous-systems/mdslides/releases/download/v0.6.1/mdslides-installer.sh | sh
-          sudo apt-get update -y && sudo apt-get install -y graphviz
       - run: just assemble ${{ env.slug }}
       - uses: actions/upload-artifact@v4
         if: ${{success()}}
@@ -42,6 +43,19 @@ jobs:
         uses: ncipollo/release-action@v1
         with:
           artifacts: ./rust-training-${{ env.slug }}.zip
+
+  test-book:
+    name: Test Book
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - uses: ./.github/actions/setup
+        with:
+          graphviz: true
+      - uses: taiki-e/install-action@v2
+        with:
+          tool: mdbook@0.4.42,mdbook-graphviz@0.2.1
+      - run: just test-book
 
   test-cheatsheets:
     name: Test Cheatsheets
