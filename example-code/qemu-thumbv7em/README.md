@@ -39,6 +39,26 @@ The MPS-AN386 is described in Arm [Application Note AN386]. This image is based 
 
 [Application Note AN386]: https://developer.arm.com/documentation/dai0386/latest/
 
+## Ferrocene
+
+This project has been setup to build with the standard Rust Project toolchain. You can also build it with Ferrocene.
+
+Ferrocene 24.05 is supported on *x86-64 Linux (glibc)*
+(`x86_64-unknown-linux-gnu`) as the host platform, and *Armv8-A bare-metal*
+(`aarch64-unknown-none`) as a cross-compilation target. To use Ferrocene with this project:
+
+1. Install Ferrocene by executing `criticalup install` inside this
+folder. This will require a valid CriticalUp token - please see the [CriticalUp
+documentation](https://criticalup.ferrocene.dev).
+2. Run `criticalup link create` to set up `+ferrocene` as a valid option for `cargo`.
+3. Copy [`rust-toolchain.hide.toml`](./rust-toolchain.hide.toml) to `rust-toolchain.toml` to set the default toolchain to be `+ferrocene`.
+
+Alternatively, you can skip steps 2 and 3, and execute `criticalup run cargo run`. However, if you have an editor open using Rust Analyzer it will continue to build the code in the background with the standard Rust Project toolchain, and this may cause conflicts.
+
+## Running
+
+QEMU has been configured to redirect the UART data to a telnet server on `localhost:4321` so you can see the UART output separate from any `defmt` output. If QEMU pauses on start-up then it is waiting for you to run `telnet localhost 4321` to open a connection and start receiving the UART data.
+
 ## License
 
 Licensed under either of

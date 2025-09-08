@@ -16,12 +16,7 @@ You must first install Ferrocene by executing `criticalup install` inside this
 folder. This will require a valid CriticalUp token - please see the [CriticalUp
 documentation](https://criticalup.ferrocene.dev).
 
-To view the project inside VS Code, set your `RUSTC` environment variable to
-point at your `criticalup` rustc proxy. On macOS, that can be done with:
-
-```bash
-RUSTC=~/Library/Application\ Support/criticalup/bin/rustc code .
-```
+You should also run `criticalup link create` to set up `+ferrocene` as a valid option for `cargo`. The provided [`rust-toolchain.toml`](./rust-toolchain.toml) file assumes that this toolchain link exists within `rustup`.
 
 ## Demo contents
 
@@ -88,9 +83,9 @@ This demo includes a [`build.sh`](./build.sh) shell script to build our binary
 by calling `rustc` directly. This script will:
 
 1. Find the location of the tools it needs
-2. Call `criticalup run rustc --crate-type=lib` repeatedly, to compile all the
+2. Call `rustc --crate-type=lib` repeatedly, to compile all the
    various dependencies (from the `./vendor` folder)
-3. Call `criticalup run rustc --crate-type=bin` to compile `src/bin/no_heap.rs`
+3. Call `rustc --crate-type=bin` to compile `src/bin/no_heap.rs`
    into `<output>/no_heap`
 4. Generate `asm` and `map` files from the `<output>/no_heap` binary using LLVM
    tools shipped with Ferrocene
@@ -131,6 +126,11 @@ Hello, this is Rust!
    10.00    20.00    30.00    40.00    50.00    60.00    70.00    80.00    90.00   100.00
 PANIC: PanicInfo { payload: Any { .. }, message: Some(I am a panic), location: Location { file: "src/bin/with_heap.rs", line: 61, col: 5 }, can_unwind: true, force_no_backtrace: false }
 ```
+
+This folder contains a `rust-toolchain.toml` file, so if you are using
+`rustup`, then `./build.sh` will automatically use Ferrocene. You can remove
+or modify the `rust-toolchain.toml` file if you wish to use a different Rust
+compiler, or you can set the `RUSTC` environment variable.
 
 Rather than type out the full QEMU command line, you can also use `qemu.sh`:
 
