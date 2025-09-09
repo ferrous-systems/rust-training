@@ -156,13 +156,14 @@ struct ThisIsBadError;
 fn result_u32() -> Result<u32, OhNoError> { Ok(1) }
 
 fn result_but_its_u64() -> Result<u64, OhNoError> {
-    // `map` expects a closure which maps the value to another value.
+    // `map` expects a function which maps the value to another value.
+    // It takes any function which implements [core::ops::FnOnce].
     result_u32().map(|v| v as u64)
 }
 
 fn result_u32_but_error_is_bad() -> Result<u32, ThisIsBadError> {
-    // `map` expects a closure which maps the error to another error.
-    // We ignore the previous error here by using _
+    // `map_err` expects a function which maps the error to another error.
+    // It takes any function which implements [core::ops::FnOnce].
     result_u32().map_err(|_| ThisIsBadError)
 }
 ```
