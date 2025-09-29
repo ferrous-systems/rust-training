@@ -90,13 +90,13 @@ build-nrf52-bsp-demo:
 	cd example-code/nrf52/bsp_demo && cargo build --release
 
 build-qemu-aarch32v8r:
-	cd example-code/qemu-aarch32v8r && RUSTC_BOOTSTRAP=1 cargo +stable build --release -Zbuild-std=core,alloc
+	cd example-code/qemu-aarch32v8r && RUSTC_BOOTSTRAP=1 cargo build --release -Zbuild-std=core,alloc
 
 build-qemu-aarch64v8a:
-	cd example-code/qemu-aarch64v8a && cargo +stable build --release
+	cd example-code/qemu-aarch64v8a && cargo build --release
 
 build-qemu-aarch64v8a-no-cargo:
-	cd example-code/qemu-aarch64v8a && RUSTC=$(rustup which rustc --toolchain=stable) ./build.sh
+	cd example-code/qemu-aarch64v8a && RUSTC=$(rustup which rustc) ./build.sh
 
 build-qemu-thumbv7em:
 	cd example-code/qemu-thumbv7em && cargo build --release

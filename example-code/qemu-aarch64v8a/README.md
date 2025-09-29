@@ -16,7 +16,10 @@ You must first install Ferrocene by executing `criticalup install` inside this
 folder. This will require a valid CriticalUp token - please see the [CriticalUp
 documentation](https://criticalup.ferrocene.dev).
 
-You should also run `criticalup link create` to set up `+ferrocene` as a valid option for `cargo`. The provided [`rust-toolchain.toml`](./rust-toolchain.toml) file assumes that this toolchain link exists within `rustup`.
+You should also run `criticalup link create` to set up `+ferrocene` as a valid
+option for `cargo`. You may also want a `rust-toolchain.toml` file to set
+`ferrocene` as the default toolchain for this directory. You can copy
+`rust-toolchain.toml.ferrocene` as a starting point.
 
 ## Demo contents
 
