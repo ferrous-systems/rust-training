@@ -182,8 +182,8 @@ jobs:
       - uses: ./.github/actions/setup
         with:
           cache: example-code/qemu-aarch32v8r
-      - run: |
-          rustup component add rust-src
+          channel: nightly
+          target: armv8r-none-eabihf
       - run: just build-qemu-aarch32v8r
 
   eg-qemu-thumbv7em:
