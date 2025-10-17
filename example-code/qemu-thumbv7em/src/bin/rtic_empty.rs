@@ -31,7 +31,7 @@ mod app {
     #[task]
     async fn hello(_cx: hello::Context) -> ! {
         loop {
-            defmt::println!("Hello from RTIC");
+            defmt::info!("Hello from RTIC");
             Mono::delay(1000.millis()).await;
         }
     }

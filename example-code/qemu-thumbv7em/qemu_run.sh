@@ -26,7 +26,7 @@ echo "ELF_BINARY=$ELF_BINARY"
 shift
 rm target/uart*.log
 echo "Writing UART output to target/uart*.log"
-if [[ $TELNET == true ]]; then
+if [[ $TELNET == true || `basename $ELF_BINARY` == "uart_echo" ]]; then
   echo "Except UART0, which is waiting for telnet connection on localhost:4321..."
   SERIAL_PORT_0="-serial telnet:localhost:4321,server,wait"
 else
