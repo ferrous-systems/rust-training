@@ -3,14 +3,10 @@
 #![no_std]
 #![no_main]
 
-extern crate defmt_semihosting;
-
+use defmt_semihosting as _;
 use core::fmt::Write as _;
 
-use qemu_thumbv7em::uart;
-
-/// Our system clock speed
-const SYSTEM_CLOCK: u32 = 25_000_000;
+use qemu_thumbv7em::{uart, SYSTEM_CLOCK};
 
 /// A global UART we can write to
 static UART0: uart::MutexUart = uart::MutexUart::empty();
@@ -19,7 +15,8 @@ static UART0: uart::MutexUart = uart::MutexUart::empty();
 fn main() -> ! {
     defmt::info!("Running uart_mutex - printing to global UART0");
 
-    let uart_handle = unsafe { uart::CmsdkUart::new(uart::UART0_ADDR) };
+    let peripherals = qemu_thumbv7em::Peripherals::take().unwrap();
+    let uart_handle = uart::CmsdkUart::new(peripherals.uart0);
     UART0.init(uart_handle, 115200, SYSTEM_CLOCK).unwrap();
 
     _ = write!(&UART0, "Hello, this is on a static UART0!\r\n");
