@@ -1,6 +1,9 @@
 //! Basic CMSDK UART driver
 
-use super::{Error, registers::{IntStatus, Status, Control}};
+use super::{
+    registers::{Control, IntStatus, Status},
+    Error,
+};
 
 /// Represents the MMIO registers for a CMSDK UART Peripheral
 ///
@@ -39,9 +42,7 @@ impl CmsdkUart {
     const VALID_PID: u16 = 0x821;
 
     pub const fn new(regs: MmioRegisters<'static>) -> CmsdkUart {
-        Self {
-            registers: regs,
-        }
+        Self { registers: regs }
     }
     /// Create a new CMSDK UART driver.
     ///
@@ -80,6 +81,22 @@ impl CmsdkUart {
         // show the settings
         defmt::debug!("{}", self.registers.read_control());
         Ok(())
+    }
+
+    #[inline]
+    pub fn enable_rx_interrupt(&mut self) {
+        self.registers.modify_control(|mut c| {
+            c.set_rxie(true);
+            c
+        });
+    }
+
+    pub fn read(&mut self) -> nb::Result<u8, Error> {
+        let status = self.registers.read_status();
+        if !status.rxf() {
+            return Err(nb::Error::WouldBlock);
+        }
+        Ok(self.registers.read_data() as u8)
     }
 
     /// Write a byte, if possible
@@ -131,6 +148,10 @@ impl CmsdkUart {
             return Err(Error::InvalidInstance);
         }
         Ok(())
+    }
+
+    pub fn read_int_status(&mut self) -> IntStatus {
+        self.registers.read_int_status()
     }
 
     /// Clear interrupts

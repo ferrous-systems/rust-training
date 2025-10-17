@@ -27,6 +27,9 @@ shift
 
 if [ `basename $ELF_BINARY` == "defmt" ]; then
   SERIAL_PORT=""
+elif [ `basename $ELF_BINARY` == "uart_echo" ]; then
+  echo "Waiting for telnet connection on port 4321"
+  SERIAL_PORT="-serial telnet:localhost:4321,server,nowait"
 else
   if [[ $TELNET == true ]]; then
     echo "Waiting for telnet connection on localhost:4321"
