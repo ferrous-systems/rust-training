@@ -11,5 +11,6 @@ bitbybit = "1.4"
 critical-section = "1.2"
 defmt = "1"
 derive-mmio = "0.6"
+# TODO: Bump to v0.9 as soon as newer ferrocene with MSRV 1.87 is released.
 heapless = "0.8"
 nb = "1.1"
