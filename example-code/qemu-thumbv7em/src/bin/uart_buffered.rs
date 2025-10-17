@@ -1,4 +1,6 @@
 //! Print to the UART on an MPS2-AN505, using interrupts and a buffer.
+//!
+//! The UART output will be routed to log file logs/uart0.log
 
 #![no_std]
 #![no_main]
@@ -7,16 +9,14 @@ extern crate defmt_semihosting;
 
 use core::fmt::Write as _;
 
-use qemu_thumbv7em::{interrupts::Interrupts, uart, uart::BufferedUart};
-
-// Yes, these two must be imported with the same name
-// this is a macro
-use cortex_m_rt::interrupt;
-// this is an enum that the macro uses
-use qemu_thumbv7em::interrupts::Interrupts as interrupt;
-
-/// Our system clock speed
-const SYSTEM_CLOCK: u32 = 25_000_000;
+use embedded_hal::delay::DelayNs;
+use qemu_thumbv7em::{
+    interrupt,
+    interrupts::Interrupts,
+    timer,
+    uart::{self, BufferedUart},
+    SYSTEM_CLOCK,
+};
 
 /// Our UART buffer size
 ///
@@ -31,9 +31,12 @@ static UART0: BufferedUart<QLEN> = BufferedUart::empty();
 fn main() -> ! {
     defmt::info!("Running uart_irq - printing to global UART0");
 
+    let peripherals = qemu_thumbv7em::Peripherals::take().unwrap();
+    let mut delay_timer =
+        timer::DelayTimer::new(timer::Timer::new(peripherals.timer0), SYSTEM_CLOCK);
     UART0
         .init(
-            unsafe { uart::CmsdkUart::new(uart::UART0_ADDR) },
+            uart::CmsdkUart::new(peripherals.uart0),
             115200,
             SYSTEM_CLOCK,
         )
@@ -54,6 +57,9 @@ fn main() -> ! {
 
     // Wait for the UART bytes to be send
     UART0.flush();
+
+    // Some time for the telnet server to receive the data.
+    delay_timer.delay_ms(100);
 
     semihosting::process::exit(0);
 }

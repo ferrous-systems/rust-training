@@ -1,6 +1,9 @@
 //! Basic CMSDK UART driver
 
-use super::{Error, registers::{IntStatus, Status, Control}};
+use super::{
+    registers::{Control, IntStatus, Status},
+    Error,
+};
 
 /// Represents the MMIO registers for a CMSDK UART Peripheral
 ///
@@ -9,7 +12,7 @@ use super::{Error, registers::{IntStatus, Status, Control}};
 /// of these registers.
 #[derive(derive_mmio::Mmio)]
 #[repr(C)]
-struct Registers {
+pub struct Registers {
     #[mmio(Read, Write)]
     data: u32,
     #[mmio(PureRead)]
@@ -38,6 +41,9 @@ impl CmsdkUart {
     /// What we expect in the PID0 and half of PID1
     const VALID_PID: u16 = 0x821;
 
+    pub const fn new(regs: MmioRegisters<'static>) -> CmsdkUart {
+        Self { registers: regs }
+    }
     /// Create a new CMSDK UART driver.
     ///
     /// # Safety
@@ -46,8 +52,8 @@ impl CmsdkUart {
     ///   never race on register accesses if multiple drivers exist.
     /// * Ensure the base address points to a valid CMSDK MMIO instance, with
     ///   at least 32-bit alignment.
-    pub const unsafe fn new(base_addr: usize) -> CmsdkUart {
-        CmsdkUart {
+    pub const unsafe fn new_with_raw_addr(base_addr: usize) -> CmsdkUart {
+        Self {
             registers: unsafe { Registers::new_mmio_at(base_addr) },
         }
     }
@@ -75,6 +81,22 @@ impl CmsdkUart {
         // show the settings
         defmt::debug!("{}", self.registers.read_control());
         Ok(())
+    }
+
+    #[inline]
+    pub fn enable_rx_interrupt(&mut self) {
+        self.registers.modify_control(|mut c| {
+            c.set_rxie(true);
+            c
+        });
+    }
+
+    pub fn read(&mut self) -> nb::Result<u8, Error> {
+        let status = self.registers.read_status();
+        if !status.rxf() {
+            return Err(nb::Error::WouldBlock);
+        }
+        Ok(self.registers.read_data() as u8)
     }
 
     /// Write a byte, if possible
@@ -126,6 +148,10 @@ impl CmsdkUart {
             return Err(Error::InvalidInstance);
         }
         Ok(())
+    }
+
+    pub fn read_int_status(&mut self) -> IntStatus {
+        self.registers.read_int_status()
     }
 
     /// Clear interrupts
