@@ -1,8 +1,7 @@
 #![no_std]
 #![no_main]
 
-extern crate defmt_semihosting;
-
+use defmt_semihosting as _;
 use qemu_thumbv7em as _;
 
 #[cortex_m_rt::entry]

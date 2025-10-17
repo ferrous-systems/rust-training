@@ -1,7 +1,5 @@
 [workspace]
-members = [
-    "xtask",
-]
+members = ["xtask"]
 exclude = ["example-code/"]
 
 resolver = "2"

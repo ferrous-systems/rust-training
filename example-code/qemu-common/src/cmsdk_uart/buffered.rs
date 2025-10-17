@@ -6,12 +6,12 @@ use core::cell::RefCell;
 
 use super::registers::IntStatus;
 
-use super::{CmsdkUart, Error};
+use super::{Uart, Error};
 
 /// Our context, stored inside a lock
 struct Inner<const QLEN: usize> {
     /// Our UART
-    uart: CmsdkUart,
+    uart: Uart,
     /// Our buffer
     buffer: heapless::spsc::Queue<u8, QLEN>,
 }
@@ -34,7 +34,7 @@ impl<const QLEN: usize> BufferedUart<QLEN> {
     /// Pass in a `CmsdkUart` and it will be stored within and available at a later time.
     pub fn init(
         &self,
-        mut uart: CmsdkUart,
+        mut uart: Uart,
         baud_rate: u32,
         system_clock: u32,
     ) -> Result<(), Error> {
@@ -77,9 +77,9 @@ impl<const QLEN: usize> BufferedUart<QLEN> {
             // If TX interrupts aren't on, turn them on. Because we're in a CS,
             // we can't be interrupted between that buffer enqueue and turning
             // interrupts on
-            if !inner.uart.registers.read_control().txie() {
+            if !inner.uart.regs().read_control().txie() {
                 defmt::debug!("Sending 0x{=u8:02x} and turning TXIE on", byte);
-                inner.uart.registers.modify_control(|c| c.with_txie(true));
+                inner.uart.regs().modify_control(|c| c.with_txie(true));
                 _ = inner.uart.write(byte);
             } else {
                 // we know we have space - we checked earlier
@@ -105,7 +105,7 @@ impl<const QLEN: usize> BufferedUart<QLEN> {
             }
         }
         loop {
-            let is_txing = self.with(|inner| inner.uart.registers.read_status().txf());
+            let is_txing = self.with(|inner| inner.uart.regs().read_status().txf());
             if is_txing {
                 // sleep and try again
                 unsafe {
@@ -126,10 +126,10 @@ impl<const QLEN: usize> BufferedUart<QLEN> {
         const TXI_FLAG: IntStatus = IntStatus::DEFAULT.with_txi(true);
         defmt::debug!("TX ISR");
         self.with(|inner| {
-            let int_status = inner.uart.registers.read_int_status();
+            let int_status = inner.uart.regs().read_int_status();
             if int_status.txi() {
                 inner.uart.clear_interrupts(TXI_FLAG);
-                while !inner.uart.registers.read_status().txf() && !inner.buffer.is_empty() {
+                while !inner.uart.regs().read_status().txf() && !inner.buffer.is_empty() {
                     // UART is not full - load UART with next byte
                     let byte = unsafe { inner.buffer.dequeue_unchecked() };
                     defmt::debug!("Auto send 0x{=u8:02x}", byte);
@@ -138,7 +138,7 @@ impl<const QLEN: usize> BufferedUart<QLEN> {
                 if inner.buffer.is_empty() {
                     // cancel TX interrupt
                     defmt::debug!("Turning TXIE off");
-                    inner.uart.registers.modify_control(|c| c.with_txie(false));
+                    inner.uart.regs().modify_control(|c| c.with_txie(false));
                 }
             }
         });
