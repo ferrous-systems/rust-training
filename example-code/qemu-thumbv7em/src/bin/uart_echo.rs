@@ -1,13 +1,12 @@
-//! Print to the UART on an MPS2-AN505, using interrupts and a buffer.
+//! UART echo application using an CMSDK UART.
 //!
-//! The UART output will be routed to log file logs/uart0.log
+//! You can connect to this app via telnet and you should see all sent characters echoed back.
 
 #![no_std]
 #![no_main]
 
-extern crate defmt_semihosting;
-
-use core::fmt::Write as _;
+use defmt_semihosting as _;
+use embedded_io::Write as _;
 
 use qemu_thumbv7em::{interrupt, interrupts::Interrupts, uart, uart::BufferedUart, SYSTEM_CLOCK};
 
@@ -22,7 +21,7 @@ static UART0: BufferedUart<QLEN> = BufferedUart::empty();
 
 #[cortex_m_rt::entry]
 fn main() -> ! {
-    defmt::info!("Running uart_irq - printing to global UART0");
+    defmt::info!("-- QEMU UART Echo example --");
 
     let peripherals = qemu_thumbv7em::Peripherals::take().unwrap();
     UART0
@@ -35,27 +34,32 @@ fn main() -> ! {
 
     unsafe {
         cortex_m::peripheral::NVIC::unmask(Interrupts::Uart0Tx);
+        cortex_m::peripheral::NVIC::unmask(Interrupts::Uart0Rx);
         cortex_m::interrupt::enable();
     }
 
-    _ = write!(&UART0, "Hello, this is on a static UART0!\r\n");
+    let mut rx_buffer: [u8; QLEN] = [0; QLEN];
 
-    // these should all be queued (don't send more than `QLEN` bytes!)
-    critical_section::with(|_| {
-        _ = write!(&UART0, "Hello, this another string on a static UART0!\r\n");
-    });
-    // now they should transmit
-
-    // Wait for the UART bytes to be send
-    UART0.flush();
-
-    semihosting::process::exit(0);
+    loop {
+        let read_bytes = UART0.read(&mut rx_buffer);
+        if read_bytes > 0 {
+            (&UART0).write_all(&rx_buffer[0..read_bytes]).unwrap();
+        }
+        // Go to sleep until data is received.
+        cortex_m::asm::wfi();
+    }
 }
 
 /// Called when UART0 has a TX interrupt
 #[interrupt]
 fn Uart0Tx() {
     UART0.tx_isr();
+}
+
+/// Called when UART0 has a RX interrupt
+#[interrupt]
+fn Uart0Rx() {
+    UART0.rx_isr();
 }
 
 // End of file
