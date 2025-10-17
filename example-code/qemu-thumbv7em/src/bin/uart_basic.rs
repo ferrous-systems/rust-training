@@ -5,10 +5,11 @@
 #![no_std]
 #![no_main]
 
-use defmt_semihosting as _;
 use core::fmt::Write;
+use defmt_semihosting as _;
+use embedded_hal::delay::DelayNs;
 
-use qemu_thumbv7em::{uart, SYSTEM_CLOCK};
+use qemu_thumbv7em::{timer, uart, SYSTEM_CLOCK};
 
 #[cortex_m_rt::entry]
 fn main() -> ! {
@@ -22,6 +23,8 @@ fn main() -> ! {
         uart::CmsdkUart::new(peripherals.uart3),
         uart::CmsdkUart::new(peripherals.uart4),
     ];
+    let mut delay_timer =
+        timer::DelayTimer::new(timer::Timer::new(peripherals.timer0), SYSTEM_CLOCK);
 
     for (idx, uart) in uarts.iter_mut().enumerate() {
         uart.check().unwrap();
@@ -30,7 +33,7 @@ fn main() -> ! {
     }
 
     // Some time for the telnet server to receive the data.
-    cortex_m::asm::delay(500_000_000);
+    delay_timer.delay_ms(100);
 
     semihosting::process::exit(0);
 }

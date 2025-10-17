@@ -9,7 +9,14 @@ extern crate defmt_semihosting;
 
 use core::fmt::Write as _;
 
-use qemu_thumbv7em::{interrupt, interrupts::Interrupts, uart, uart::BufferedUart, SYSTEM_CLOCK};
+use embedded_hal::delay::DelayNs;
+use qemu_thumbv7em::{
+    interrupt,
+    interrupts::Interrupts,
+    timer,
+    uart::{self, BufferedUart},
+    SYSTEM_CLOCK,
+};
 
 /// Our UART buffer size
 ///
@@ -25,6 +32,8 @@ fn main() -> ! {
     defmt::info!("Running uart_irq - printing to global UART0");
 
     let peripherals = qemu_thumbv7em::Peripherals::take().unwrap();
+    let mut delay_timer =
+        timer::DelayTimer::new(timer::Timer::new(peripherals.timer0), SYSTEM_CLOCK);
     UART0
         .init(
             uart::CmsdkUart::new(peripherals.uart0),
@@ -48,6 +57,9 @@ fn main() -> ! {
 
     // Wait for the UART bytes to be send
     UART0.flush();
+
+    // Some time for the telnet server to receive the data.
+    delay_timer.delay_ms(100);
 
     semihosting::process::exit(0);
 }

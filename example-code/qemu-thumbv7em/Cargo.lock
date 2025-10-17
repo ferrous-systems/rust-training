@@ -354,6 +354,7 @@ dependencies = [
  "critical-section",
  "defmt 1.0.1",
  "derive-mmio",
+ "embedded-hal 1.0.0",
  "heapless",
  "nb 1.1.0",
 ]
@@ -367,6 +368,7 @@ dependencies = [
  "critical-section",
  "defmt 1.0.1",
  "defmt-semihosting",
+ "embedded-hal 1.0.0",
  "heapless",
  "nb 1.1.0",
  "qemu-common",
