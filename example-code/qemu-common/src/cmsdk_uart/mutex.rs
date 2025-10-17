@@ -2,11 +2,11 @@
 
 use core::cell::RefCell;
 
-use super::{CmsdkUart, Error};
+use super::{Uart, Error};
 
 /// A CMSDK UART you can store as a static variable
 pub struct MutexUart {
-    inner: critical_section::Mutex<RefCell<Option<CmsdkUart>>>,
+    inner: critical_section::Mutex<RefCell<Option<Uart>>>,
 }
 
 impl MutexUart {
@@ -22,7 +22,7 @@ impl MutexUart {
     /// Pass in a `CmsdkUart` and it will be stored within and available at a later time.
     pub fn init(
         &self,
-        mut uart: CmsdkUart,
+        mut uart: Uart,
         baud_rate: u32,
         system_clock: u32,
     ) -> Result<(), Error> {
@@ -41,7 +41,7 @@ impl MutexUart {
             let Some(uart) = guard.as_mut() else {
                 return true;
             };
-            uart.registers.read_status().txf()
+            uart.regs().read_status().txf()
         })
     }
 
@@ -70,7 +70,7 @@ impl MutexUart {
             let Some(uart) = guard.as_mut() else {
                 panic!("tx_interrupts_on on uninit MutexUart");
             };
-            uart.registers.modify_control(|c| c.with_txie(enabled));
+            uart.regs().modify_control(|c| c.with_txie(enabled));
         })
     }
 
@@ -84,9 +84,9 @@ impl MutexUart {
             };
             defmt::debug!(
                 "Control {}, Status {}, IntStatus {}",
-                uart.registers.read_control(),
-                uart.registers.read_status(),
-                uart.registers.read_int_status()
+                uart.regs().read_control(),
+                uart.regs().read_status(),
+                uart.regs().read_int_status()
             );
         });
     }

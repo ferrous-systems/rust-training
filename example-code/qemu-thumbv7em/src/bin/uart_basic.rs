@@ -16,11 +16,11 @@ fn main() -> ! {
 
     let peripherals = qemu_thumbv7em::Peripherals::take().unwrap();
     let mut uarts = [
-        uart::CmsdkUart::new(peripherals.uart0),
-        uart::CmsdkUart::new(peripherals.uart1),
-        uart::CmsdkUart::new(peripherals.uart2),
-        uart::CmsdkUart::new(peripherals.uart3),
-        uart::CmsdkUart::new(peripherals.uart4),
+        uart::Uart::new(peripherals.uart0),
+        uart::Uart::new(peripherals.uart1),
+        uart::Uart::new(peripherals.uart2),
+        uart::Uart::new(peripherals.uart3),
+        uart::Uart::new(peripherals.uart4),
     ];
 
     for (idx, uart) in uarts.iter_mut().enumerate() {
