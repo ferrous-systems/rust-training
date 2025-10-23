@@ -7,6 +7,10 @@ inputs:
     description: 'Install Criticalup'
     required: false
     default: ""
+  channel:
+    description: 'Rust channel'
+    required: false
+    default: "stable"
   cache:
     description: "Workspace to cache with Swatinem/rust-cache@v2"
     required: false
@@ -44,14 +48,18 @@ runs:
       shell: bash
       run: |
         rustup set profile minimal
-        rustup update stable --no-self-update
+        rustup update ${RUSTUP_CHANNEL} --no-self-update
+        rustup default ${RUSTUP_CHANNEL}
+      env:
+        RUSTUP_CHANNEL: ${{ inputs.channel }}
     - name: Install Target
       if: ${{ inputs.target != '' }}
       shell: bash
       env:
         RUSTUP_TARGET: ${{ inputs.target }}
+        RUSTUP_CHANNEL: ${{ inputs.channel }}
       run: |
-        rustup target add ${RUSTUP_TARGET}
+        rustup target add ${RUSTUP_TARGET} --toolchain=${RUSTUP_CHANNEL}
     - name: Setup Rust Cache
       if: ${{ inputs.cache != '' }}
       uses: Swatinem/rust-cache@v2
