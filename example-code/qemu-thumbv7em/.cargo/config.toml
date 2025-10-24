@@ -7,3 +7,6 @@ rustflags = [
     "-Clink-arg=-Tdefmt.x",
 ]
 runner = "./qemu_run.sh"
+
+[env]
+DEFMT_LOG = "info"

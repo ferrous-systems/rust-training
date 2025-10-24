@@ -24,6 +24,9 @@ fn main() -> ! {
 
     _ = write!(&UART0, "Hello, this is on a static UART0!\r\n");
 
+    // Some time for the telnet server to receive the data.
+    cortex_m::asm::delay(500_000_000);
+
     semihosting::process::exit(0);
 }
 

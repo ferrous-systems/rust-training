@@ -30,6 +30,9 @@ fn main() -> ! {
         _ = write!(uart, "Hello, UART{}!\r\n", idx);
     }
 
+    // Some time for the telnet server to receive the data.
+    cortex_m::asm::delay(500_000_000);
+
     semihosting::process::exit(0);
 }
 
