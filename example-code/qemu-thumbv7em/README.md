@@ -43,9 +43,7 @@ The MPS-AN386 is described in Arm [Application Note AN386]. This image is based 
 
 This project has been setup to build with the standard Rust Project toolchain. You can also build it with Ferrocene.
 
-Ferrocene 24.05 is supported on *x86-64 Linux (glibc)*
-(`x86_64-unknown-linux-gnu`) as the host platform, and *Armv8-A bare-metal*
-(`aarch64-unknown-none`) as a cross-compilation target. To use Ferrocene with this project:
+To use Ferrocene with this project:
 
 1. Install Ferrocene by executing `criticalup install` inside this
 folder. This will require a valid CriticalUp token - please see the [CriticalUp
@@ -57,7 +55,47 @@ Alternatively, you can skip steps 2 and 3, and execute `criticalup run cargo run
 
 ## Running
 
-QEMU has been configured to redirect the UART data to a telnet server on `localhost:4321` so you can see the UART output separate from any `defmt` output. If QEMU pauses on start-up then it is waiting for you to run `telnet localhost 4321` to open a connection and start receiving the UART data.
+QEMU has been configured to redirect bytes from the first five UARTs to log files in `/target/uart*.log`. If you add `-- --telnet` to the `cargo run` command, a telnet server is started on `localhost:4321` so you can interact with UART0.
+
+```console
+$ cargo run --bin uart_buffered
+    Finished `dev` profile [optimized + debuginfo] target(s) in 0.02s
+     Running `/Users/jonathan/Documents/ferrous-systems/rust-training/example-code/qemu-thumbv7em/./qemu_run.sh target/thumbv7em-none-eabihf/debug/uart_buffered`
+ELF_BINARY=target/thumbv7em-none-eabihf/debug/uart_buffered
+Writing UART output to target/uart*.log
+Running on '-cpu cortex-m4 -machine mps2-an386'...
+------------------------------------------------------------------------
+[INFO ] Running uart_irq - printing to global UART0 (bin/uart_buffered.rs:32)
+-----------------------------------------------------------------------------
+$ bat target/uart*.log
+───────┬─────────────────────────────────────────────
+       │ File: target/uart0.log
+───────┼─────────────────────────────────────────────
+   1   │ Hello, this is on a static UART0!
+   2   │ Hello, this another string on a static UART0!
+───────┴─────────────────────────────────────────────
+───────┬─────────────────────────────────────────────
+       │ File: target/uart1.log   <EMPTY>
+───────┴─────────────────────────────────────────────
+───────┬─────────────────────────────────────────────
+       │ File: target/uart2.log   <EMPTY>
+───────┴─────────────────────────────────────────────
+───────┬─────────────────────────────────────────────
+       │ File: target/uart3.log   <EMPTY>
+───────┴─────────────────────────────────────────────
+───────┬─────────────────────────────────────────────
+       │ File: target/uart4.log   <EMPTY>
+───────┴─────────────────────────────────────────────
+$ cargo run --bin uart_buffered -- --telnet
+    Finished `dev` profile [optimized + debuginfo] target(s) in 0.02s
+     Running `/Users/jonathan/Documents/ferrous-systems/rust-training/example-code/qemu-thumbv7em/./qemu_run.sh target/thumbv7em-none-eabihf/debug/uart_buffered`
+ELF_BINARY=target/thumbv7em-none-eabihf/debug/uart_buffered
+Writing UART output to target/uart*.log
+Except UART0, which is waiting for telnet connection on localhost:4321...
+Running on '-cpu cortex-m4 -machine mps2-an386'...
+------------------------------------------------------------------------
+qemu-system-arm: -serial telnet:localhost:4321,server,wait: info: QEMU waiting for connection on: disconnected:telnet:::1:4321,server=on
+```
 
 ## License
 
