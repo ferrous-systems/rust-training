@@ -186,7 +186,7 @@ pub fn make_cheatsheet(lang: &str) -> Result<(), eyre::Report> {
     let text =
         read_to_string("./training-slides/src/SUMMARY.md").context("SUMMARY.md not found")?;
     let slide_texts = focus_regions(&text);
-    let uppercase_lang_name = lang.chars().nth(0).unwrap().to_uppercase().to_string() + &lang[1..];
+    let uppercase_lang_name = lang.chars().next().unwrap().to_uppercase().to_string() + &lang[1..];
     let mut slide_sections = vec![SlidesSection {
         header: format!("{uppercase_lang_name} Cheatsheet"),
         deck_titles: vec![],
@@ -251,7 +251,7 @@ fn cheatsheet_tester(
     cheatsheet_text: &str,
 ) -> Result<(), eyre::Error> {
     // Unwrap note: We know `lang` is part of our blessed lang-names, so it must be at least of size 1.
-    let lang_uppercase = lang.chars().nth(0).unwrap().to_uppercase().to_string() + &lang[1..];
+    let lang_uppercase = lang.chars().next().unwrap().to_uppercase().to_string() + &lang[1..];
     let cheatsheet_name = format!("# {lang_uppercase} Cheatsheet");
     if !cheatsheet_text.contains(&cheatsheet_name) {
         panic!("{lang}-cheatsheet.md does not contain a starting header `{cheatsheet_name}`");
@@ -440,7 +440,6 @@ Rust for the Linux Kernel and other no-std environments with an pre-existing C A
         };
         let region = focus_regions(test);
         assert_eq!(list_of_strings_to_slide_section(&region[0]), res);
-        assert!(true);
     }
     #[test]
     fn cheatsheet_tester_full_mock() {
