@@ -33,7 +33,7 @@ pub extern "C" fn kmain() {
 /// Called by [`kmain`].
 fn main() -> Result<(), core::fmt::Error> {
     UART.init(
-        unsafe { CmsdkUart::new(UART0_ADDR) },
+        unsafe { CmsdkUart::new_with_raw_addr(UART0_ADDR) },
         115200,
         PERIPHERAL_CLOCK,
     )

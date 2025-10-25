@@ -7,16 +7,7 @@ extern crate defmt_semihosting;
 
 use core::fmt::Write as _;
 
-use qemu_thumbv7em::{interrupts::Interrupts, uart, uart::BufferedUart};
-
-// Yes, these two must be imported with the same name
-// this is a macro
-use cortex_m_rt::interrupt;
-// this is an enum that the macro uses
-use qemu_thumbv7em::interrupts::Interrupts as interrupt;
-
-/// Our system clock speed
-const SYSTEM_CLOCK: u32 = 25_000_000;
+use qemu_thumbv7em::{interrupt, interrupts::Interrupts, uart, uart::BufferedUart, SYSTEM_CLOCK};
 
 /// Our UART buffer size
 ///
@@ -31,9 +22,10 @@ static UART0: BufferedUart<QLEN> = BufferedUart::empty();
 fn main() -> ! {
     defmt::info!("Running uart_irq - printing to global UART0");
 
+    let peripherals = qemu_thumbv7em::Peripherals::take().unwrap();
     UART0
         .init(
-            unsafe { uart::CmsdkUart::new(uart::UART0_ADDR) },
+            uart::CmsdkUart::new(peripherals.uart0),
             115200,
             SYSTEM_CLOCK,
         )

@@ -1,6 +1,9 @@
 //! Basic CMSDK UART driver
 
-use super::{Error, registers::{IntStatus, Status, Control}};
+use super::{
+    registers::{Control, IntStatus, Status},
+    Error,
+};
 
 /// Represents the MMIO registers for a CMSDK UART Peripheral
 ///
@@ -9,7 +12,7 @@ use super::{Error, registers::{IntStatus, Status, Control}};
 /// of these registers.
 #[derive(derive_mmio::Mmio)]
 #[repr(C)]
-struct Registers {
+pub struct Registers {
     #[mmio(Read, Write)]
     data: u32,
     #[mmio(PureRead)]
@@ -38,6 +41,11 @@ impl CmsdkUart {
     /// What we expect in the PID0 and half of PID1
     const VALID_PID: u16 = 0x821;
 
+    /// Create a new CMSDK UART driver from a register block.
+    pub const fn new(regs: MmioRegisters<'static>) -> CmsdkUart {
+        Self { registers: regs }
+    }
+
     /// Create a new CMSDK UART driver.
     ///
     /// # Safety
@@ -46,10 +54,8 @@ impl CmsdkUart {
     ///   never race on register accesses if multiple drivers exist.
     /// * Ensure the base address points to a valid CMSDK MMIO instance, with
     ///   at least 32-bit alignment.
-    pub const unsafe fn new(base_addr: usize) -> CmsdkUart {
-        CmsdkUart {
-            registers: unsafe { Registers::new_mmio_at(base_addr) },
-        }
+    pub const unsafe fn new_with_raw_addr(base_addr: usize) -> CmsdkUart {
+        Self::new(unsafe { Registers::new_mmio_at(base_addr) })
     }
 
     /// Initialise the UART
