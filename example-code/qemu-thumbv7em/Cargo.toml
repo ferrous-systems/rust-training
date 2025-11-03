@@ -13,6 +13,7 @@ cortex-m-rt = { version =  "0.7.5", features = ["device"] }
 critical-section = "1.2.0"
 defmt = "1.0"
 defmt-semihosting = "0.3.0"
+embedded-hal = "1"
 # TODO: Bump to v0.9 as soon as newer ferrocene with MSRV 1.87 is released.
 heapless = { version = "0.8", features = ["defmt-03"] }
 nb = { version = "1.1.0", features = ["defmt-0-3"] }

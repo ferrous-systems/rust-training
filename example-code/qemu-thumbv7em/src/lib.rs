@@ -10,6 +10,7 @@ pub use interrupts::Interrupts as interrupt;
 use core::sync::atomic::AtomicBool;
 
 pub mod interrupts;
+pub mod timer;
 pub mod uart;
 
 /// Number available in the NVIC for configuring priority. Required for RTIC as well.
@@ -20,7 +21,6 @@ pub const SYSTEM_CLOCK: u32 = 25_000_000;
 
 static PERIPHS_TAKEN: AtomicBool = AtomicBool::new(false);
 
-
 /// Singleton containing the CMSDK device peripherals.
 ///
 /// RTIC expects the singleton with this name.
@@ -30,6 +30,8 @@ pub struct Peripherals {
     pub uart2: uart::MmioRegisters<'static>,
     pub uart3: uart::MmioRegisters<'static>,
     pub uart4: uart::MmioRegisters<'static>,
+    pub timer0: timer::registers::MmioRegisters<'static>,
+    pub timer1: timer::registers::MmioRegisters<'static>,
 }
 
 impl Peripherals {
@@ -53,6 +55,8 @@ impl Peripherals {
             uart2: unsafe { uart::Registers::new_mmio_at(uart::UART2_ADDR) },
             uart3: unsafe { uart::Registers::new_mmio_at(uart::UART3_ADDR) },
             uart4: unsafe { uart::Registers::new_mmio_at(uart::UART4_ADDR) },
+            timer0: unsafe { timer::registers::Registers::new_mmio_at(timer::TIMER_0_ADDR) },
+            timer1: unsafe { timer::registers::Registers::new_mmio_at(timer::TIMER_1_ADDR) },
         }
     }
 }

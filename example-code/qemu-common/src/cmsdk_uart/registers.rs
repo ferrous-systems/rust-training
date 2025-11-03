@@ -1,4 +1,4 @@
-//! Register definitions for the CSMSDK UART
+//! Register definitions for the CMSDK UART
 
 /// UART Status
 #[bitbybit::bitfield(u32, defmt_bitfields)]
