@@ -1,3 +1,4 @@
+//! Register definitions for the CMSDK Timer
 
 #[derive(derive_mmio::Mmio)]
 #[repr(C)]

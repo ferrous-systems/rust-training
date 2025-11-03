@@ -1,3 +1,5 @@
+//! Timer driver for the CMSDK TIMER
+
 pub mod registers;
 
 /// Simple Timer driver.
@@ -23,7 +25,7 @@ impl Timer {
 
     /// Write the reload value.
     ///
-    /// This does not overwrite to the current value register.
+    /// NOTE: This does not affect the *current timer value*
     #[inline]
     pub fn write_reload(&mut self, value: u32) {
         self.regs.write_reload(value);
@@ -36,8 +38,6 @@ impl Timer {
     }
 
     /// Clear the interrupt flag.
-    ///
-    /// NOTE: This might not be useful because the interrupt is not latched.
     #[inline]
     pub fn clear_interrupt(&mut self) {
         self.regs.write_interrupt(
@@ -53,10 +53,12 @@ impl Timer {
         self.regs.modify_control(|c| c.with_enable(true));
     }
 
-    /// This does NOT enable the interrupt in the NVIC.
+    /// Control whether the timer interrupt is enabled
+    ///
+    /// NOTE: You might also need to enable the interrupt in the NVIC
     #[inline]
-    pub fn enable_interrupt(&mut self) {
-        self.regs.modify_control(|c| c.with_interrupt_enable(true));
+    pub fn enable_interrupt(&mut self, enabled: bool) {
+        self.regs.modify_control(|c| c.with_interrupt_enable(enabled));
     }
 
     /// Read the timer value.
