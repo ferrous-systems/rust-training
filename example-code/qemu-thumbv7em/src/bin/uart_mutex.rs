@@ -3,8 +3,8 @@
 #![no_std]
 #![no_main]
 
-use defmt_semihosting as _;
 use core::fmt::Write as _;
+use defmt_semihosting as _;
 
 use qemu_thumbv7em::{uart, SYSTEM_CLOCK};
 
