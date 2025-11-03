@@ -37,6 +37,12 @@ impl Timer {
         self.regs.write_value(value);
     }
 
+    /// Is the interrupt flag set?
+    #[inline]
+    pub fn interrupt_fired(&self) -> bool {
+        self.regs.read_interrupt().interrupt_bit()
+    }
+
     /// Clear the interrupt flag.
     #[inline]
     pub fn clear_interrupt(&mut self) {
@@ -88,26 +94,25 @@ impl DelayTimer {
 
 impl embedded_hal::delay::DelayNs for DelayTimer {
     fn delay_ns(&mut self, ns: u32) {
+        const MAX_TICKS_PER_LOOP: u32 = u32::MAX;
+        const NS_PER_SECOND: u64 = 1_000_000_000u64;
+
         let mut remaining_ticks =
-            (ns as u64).saturating_mul(self.sys_clk_hz as u64) / 1_000_000_000u64;
-        if remaining_ticks == 0 {
-            return;
-        }
-        // Setup timer once
+            (ns as u64).saturating_mul(self.sys_clk_hz as u64) / NS_PER_SECOND;
         self.timer.disable();
-        // Not strictly necessary, but enabling the timer with reload 0 leads to a warning
-        // which mentions that the time was diasbled..
-        self.timer.write_reload(u32::MAX);
-        self.timer.enable();
-
+        self.timer.enable_interrupt(true);
         while remaining_ticks > 0 {
-            let wait_ticks = core::cmp::min(remaining_ticks as u32, u32::MAX / 2);
-            let threshold = u32::MAX - wait_ticks;
-            self.timer.write_value(u32::MAX);
-
-            // I would prefer to use the interrupt bit, but it is not latched..
-            while self.timer.read() > threshold {}
-            remaining_ticks -= wait_ticks as u64;
+            // cap to at most u32::MAX ticks per go-around this loop
+            let wait_ticks = remaining_ticks.min(u64::from(MAX_TICKS_PER_LOOP)) as u32;
+            self.timer.write_value(wait_ticks);
+            self.timer.enable();
+            while !self.timer.interrupt_fired() {
+                core::hint::spin_loop();
+            }
+            self.timer.disable();
+            self.timer.clear_interrupt();
+            remaining_ticks -= u64::from(wait_ticks);
         }
+        self.timer.enable_interrupt(false);
     }
 }
