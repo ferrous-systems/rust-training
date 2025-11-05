@@ -79,7 +79,6 @@ jobs:
           CRITICALUP_TOKEN: ${{ secrets.CRITICALUP_TOKEN }}
         run: |
          just ferrocene-qemu-aarch64v8a
-         just ferrocene-qemu-aarch64v8a-no-cargo
 
   ferrocene-qemu-aarch32v8r:
     name: Build qemu-aarch32v8r with Ferrocene
@@ -160,19 +159,6 @@ jobs:
       - run: |
           rustup component add rust-src
       - run: just build-qemu-aarch64v8a
-
-  eg-qemu-aarch64v8a-no-cargo:
-    name: Build Example qemu-aarch64v8a-no-cargo
-    runs-on: ubuntu-24.04
-    steps:
-      - uses: actions/checkout@v4
-      - uses: ./.github/actions/setup
-        with:
-          target: aarch64-unknown-none
-      - run: |
-          rustup component add llvm-tools-preview
-          rustup component add rust-src
-      - run: just build-qemu-aarch64v8a-no-cargo
 
   eg-qemu-aarch32v8r:
     name: Build Example qemu-aarch32v8r

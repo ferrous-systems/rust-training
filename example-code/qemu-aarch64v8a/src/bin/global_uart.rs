@@ -8,8 +8,10 @@
 #![no_main]
 
 use core::{cell::RefCell, fmt::Write};
+
+use aarch64_rt::entry;
 use critical_section::Mutex;
-use qemu_aarch64v8a::virt_uart::Uart;
+use qemu_aarch64v8a::{exception_level, virt_uart::Uart};
 
 static UART: GlobalUart = GlobalUart::new();
 
@@ -51,20 +53,22 @@ impl core::fmt::Write for &GlobalUart {
     }
 }
 
+entry!(main);
+
 /// The entry-point to the Rust application.
 ///
-/// It is called by the start-up code in `lib.rs`.
-#[no_mangle]
-pub extern "C" fn kmain() {
-    if let Err(e) = main() {
+/// It is called by the start-up code in `aarch64-rt`
+fn main(_arg0: u64, _arg1: u64, _arg2: u64, _arg3: u64) -> ! {
+    if let Err(e) = rust_main() {
         panic!("main returned {:?}", e);
     }
+    semihosting::process::exit(0);
 }
 
 /// The main function of our Rust application.
 ///
-/// Called by [`kmain`].
-fn main() -> Result<(), core::fmt::Error> {
+/// Called by [`main`].
+fn rust_main() -> Result<(), core::fmt::Error> {
     let uart0 = unsafe { Uart::new_uart0() };
     UART.store(uart0);
 
@@ -72,8 +76,9 @@ fn main() -> Result<(), core::fmt::Error> {
     panic!("I am a panic");
 }
 
+/// Print some things to the global UART
 fn print_stuff() -> Result<(), core::fmt::Error> {
-    writeln!(&UART, "Hello, this is Rust!")?;
+    writeln!(&UART, "Hello, this is Rust @ {:?}", exception_level())?;
     for x in 1..=10 {
         for y in 1..=10 {
             let z = f64::from(x) * f64::from(y);
@@ -82,25 +87,6 @@ fn print_stuff() -> Result<(), core::fmt::Error> {
         writeln!(&UART)?;
     }
     Ok(())
-}
-
-/// Called when the application raises an unrecoverable `panic!`.
-///
-/// Prints the panic to the console and then exits QEMU using a semihosting
-/// breakpoint.
-#[panic_handler]
-fn panic(info: &core::panic::PanicInfo) -> ! {
-    const SYS_REPORTEXC: u64 = 0x18;
-    let _ = writeln!(&UART, "PANIC: {:?}", info);
-    loop {
-        // Exit, using semihosting
-        unsafe {
-            core::arch::asm!(
-                "hlt 0xf000",
-                in("x0") SYS_REPORTEXC
-            )
-        }
-    }
 }
 
 // End of file
