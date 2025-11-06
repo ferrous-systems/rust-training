@@ -44,8 +44,12 @@ fn main() -> ! {
         let read_bytes = UART0.read(&mut rx_buffer);
         if read_bytes > 0 {
             (&UART0).write_all(&rx_buffer[0..read_bytes]).unwrap();
+            // Immediately try reading again, some data might have arrive since we started sending
+            // out the full buffer.
+            continue;
         }
-        // Go to sleep until data is received.
+
+        // If no data was received, go to sleep until data is received.
         cortex_m::asm::wfi();
     }
 }
