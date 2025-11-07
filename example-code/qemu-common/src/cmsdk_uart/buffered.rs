@@ -150,7 +150,7 @@ impl<const QLEN: usize> BufferedUart<QLEN> {
                 while !inner.uart.registers.read_status().txf() && !inner.tx_buffer.is_empty() {
                     // UART is not full - load UART with next byte
                     let byte = unsafe { inner.tx_buffer.dequeue_unchecked() };
-                    defmt::error!("> TX 0x{=u8:02x}", byte);
+                    defmt::debug!("> TX 0x{=u8:02x}", byte);
                     inner.uart.write(byte).expect("TX space");
                 }
                 if inner.tx_buffer.is_empty() {
