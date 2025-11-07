@@ -16,6 +16,9 @@ use qemu_thumbv7em::{interrupt, interrupts::Interrupts, uart, uart::BufferedUart
 /// should use a value that is a power of 2.
 const QLEN: usize = 256;
 
+/// How much we process every go around the loop
+const MAX_READ_LEN: usize = 16;
+
 /// A global UART we can write to
 static UART0: BufferedUart<QLEN> = BufferedUart::empty();
 
@@ -38,19 +41,37 @@ fn main() -> ! {
         cortex_m::interrupt::enable();
     }
 
-    let mut rx_buffer: [u8; QLEN] = [0; QLEN];
+    let mut rx_buffer: [u8; MAX_READ_LEN] = [0; MAX_READ_LEN];
 
     loop {
-        let read_bytes = UART0.read(&mut rx_buffer);
+        // We do *not* want an interrupt to occur in-between checking our RX
+        // buffer and going to sleep, because we might end up sleeping with RX
+        // data in the buffer in an interrupt arrives between the check and
+        // the sleep!
+        //
+        // So, let's check the RX buffer with interrupts disabled.
+        let read_bytes = critical_section::with(|_| {
+            let read_bytes = UART0.read(&mut rx_buffer);
+            if read_bytes == 0 {
+                // WFI will wake on interrupt, even though interrupts are disabled.
+                cortex_m::asm::wfi();
+            }
+            read_bytes
+        });
+        // Now we either have data, which we can process, or we woke up, in
+        // which case we do nothing and deal with the data next-time around
+        // the loop.
         if read_bytes > 0 {
-            (&UART0).write_all(&rx_buffer[0..read_bytes]).unwrap();
-            // Immediately try reading again, some data might have arrive since we started sending
-            // out the full buffer.
-            continue;
+            let valid_data = &rx_buffer[0..read_bytes];
+            defmt::info!(
+                "Application read {} bytes ({=[u8]:02x}). Echoing back.",
+                read_bytes,
+                valid_data
+            );
+            (&UART0).write_all(valid_data).unwrap();
+        } else {
+            defmt::trace!("CPU woke up - checking for data...");
         }
-
-        // If no data was received, go to sleep until data is received.
-        cortex_m::asm::wfi();
     }
 }
 

@@ -66,8 +66,8 @@ impl<const QLEN: usize> BufferedUart<QLEN> {
         self.with(|inner| {
             for b in buf.iter_mut().take(rx_count) {
                 // We checked that at least rx_count bytes are available.
-                let byte = unsafe { inner.rx_buffer.dequeue_unchecked() };
-                defmt::debug!("Dequeued byte 0x{=u8:02x}", byte);
+                let byte = inner.rx_buffer.dequeue().unwrap();
+                defmt::debug!("< RXQ 0x{=u8:02x}", byte);
                 *b = byte;
             }
         });
@@ -86,59 +86,50 @@ impl<const QLEN: usize> BufferedUart<QLEN> {
     /// Transmit a byte, blocking until queued
     pub fn tx_byte_blocking(&self, byte: u8) {
         loop {
-            let is_full = self.with(|inner| inner.tx_buffer.is_full());
-            if is_full {
-                // sleep and try again later
-                defmt::debug!("Buffer full, sleeping...");
-                unsafe {
-                    core::arch::asm!("wfi");
+            let finished = self.with(|inner| {
+                // If TX interrupts aren't on, turn them on. Because we're in a CS,
+                // we can't be interrupted between that buffer enqueue and turning
+                // interrupts on
+                if !inner.uart.registers.read_control().txie() {
+                    defmt::debug!("> TXQ 0x{=u8:02x}, TXIE on", byte);
+                    // this will fire the ISR when the byte has finished sending
+                    inner.uart.registers.modify_control(|c| c.with_txie(true));
+                    // send the byte to the UART - we know it won't fail
+                    // because our TX interrupt was off indicating that there
+                    // is no TX in progress.
+                    _ = inner.uart.write(byte);
+                    // Unfortunately QEMU doesn't model the delay in sending
+                    // bytes, so the TX ISR will fire at this point and TXIE
+                    // will be turned off - meaning we never actually queue
+                    // data to send. But if you priority mask the TX ISR
+                    // temporarily, you can see this code working.
+                    return true;
+                } else if !inner.tx_buffer.is_full() {
+                    // TX interrupts are on, so we are in the middle of sending a byte.
+                    // Queue this byte, to send when the previous one has finished
+                    defmt::debug!("> TXQ 0x{=u8:02x}", byte);
+                    unsafe {
+                        inner.tx_buffer.enqueue_unchecked(byte);
+                    }
+                    return true;
+                } else {
+                    // buffer is full ... we need to try again
+                    return false;
                 }
-            } else {
+            });
+            if finished {
                 break;
             }
         }
-        // OK, we definitely have space now
-        self.with(|inner| {
-            // If TX interrupts aren't on, turn them on. Because we're in a CS,
-            // we can't be interrupted between that buffer enqueue and turning
-            // interrupts on
-            if !inner.uart.registers.read_control().txie() {
-                defmt::debug!("Sending 0x{=u8:02x} and turning TXIE on", byte);
-                inner.uart.registers.modify_control(|c| c.with_txie(true));
-                _ = inner.uart.write(byte);
-            } else {
-                // we know we have space - we checked earlier
-                defmt::debug!("Queued byte 0x{=u8:02x}", byte);
-                unsafe {
-                    inner.tx_buffer.enqueue_unchecked(byte);
-                }
-            }
-        })
     }
 
     /// Block until all bytes are gone
     pub fn flush(&self) {
-        loop {
-            let len = self.with(|inner| inner.tx_buffer.len());
-            if len != 0 {
-                // sleep and try again
-                unsafe {
-                    core::arch::asm!("wfi");
-                }
-            } else {
-                break;
-            }
+        while self.with(|inner| inner.tx_buffer.len()) != 0 {
+            core::hint::spin_loop();
         }
-        loop {
-            let is_txing = self.with(|inner| inner.uart.registers.read_status().txf());
-            if is_txing {
-                // sleep and try again
-                unsafe {
-                    core::arch::asm!("wfi");
-                }
-            } else {
-                break;
-            }
+        while self.with(|inner| inner.uart.registers.read_status().txf()) {
+            core::hint::spin_loop();
         }
     }
 
@@ -149,7 +140,7 @@ impl<const QLEN: usize> BufferedUart<QLEN> {
     /// the buffer runs out.
     pub fn tx_isr(&self) {
         const TXI_FLAG: IntStatus = IntStatus::DEFAULT.with_txi(true);
-        defmt::debug!("TX ISR");
+        defmt::debug!("- TX ISR");
         self.with(|inner| {
             let int_status = inner.uart.registers.read_int_status();
             if int_status.txi() {
@@ -157,12 +148,12 @@ impl<const QLEN: usize> BufferedUart<QLEN> {
                 while !inner.uart.registers.read_status().txf() && !inner.tx_buffer.is_empty() {
                     // UART is not full - load UART with next byte
                     let byte = unsafe { inner.tx_buffer.dequeue_unchecked() };
-                    defmt::debug!("Auto send 0x{=u8:02x}", byte);
+                    defmt::error!("> TX 0x{=u8:02x}", byte);
                     inner.uart.write(byte).expect("TX space");
                 }
                 if inner.tx_buffer.is_empty() {
                     // cancel TX interrupt
-                    defmt::debug!("Turning TXIE off");
+                    defmt::debug!("- TX buffer empty ... turning TXIE off");
                     inner.uart.registers.modify_control(|c| c.with_txie(false));
                 }
             }
@@ -176,7 +167,7 @@ impl<const QLEN: usize> BufferedUart<QLEN> {
     /// the buffer runs out.
     pub fn rx_isr(&self) {
         const RXI_FLAG: IntStatus = IntStatus::DEFAULT.with_rxi(true);
-        defmt::debug!("RX ISR");
+        defmt::debug!("- RX ISR");
         self.with(|inner| {
             let int_status = inner.uart.registers.read_int_status();
             if int_status.rxi() {
@@ -184,11 +175,12 @@ impl<const QLEN: usize> BufferedUart<QLEN> {
                 // Drop old data if buffer full.
                 if inner.rx_buffer.is_full() {
                     // Buffer is full so dequeing one byte should work.
-                    unsafe { inner.rx_buffer.dequeue_unchecked() };
+                    let _ = inner.rx_buffer.dequeue().unwrap();
                 }
-                let byte = inner.uart.registers.read_data();
+                let byte = inner.uart.registers.read_data() as u8;
+                defmt::debug!("< RX 0x{=u8:02x}", byte);
                 // We guaranteed that there is space.
-                unsafe { inner.rx_buffer.enqueue_unchecked(byte as u8) };
+                inner.rx_buffer.enqueue(byte).unwrap();
             }
         });
     }
