@@ -27,6 +27,7 @@ fn main() -> ! {
     defmt::info!("-- QEMU UART Echo example --");
 
     let peripherals = qemu_thumbv7em::Peripherals::take().unwrap();
+    let mut cp = cortex_m::Peripherals::take().unwrap();
     UART0
         .init(
             uart::CmsdkUart::new(peripherals.uart0),
@@ -36,6 +37,10 @@ fn main() -> ! {
         .unwrap();
 
     unsafe {
+        // mark receive as higher prio than transmit
+        cp.NVIC.set_priority(Interrupts::Uart0Rx, 0);
+        cp.NVIC.set_priority(Interrupts::Uart0Tx, 255);
+        // enable those interrupts
         cortex_m::peripheral::NVIC::unmask(Interrupts::Uart0Tx);
         cortex_m::peripheral::NVIC::unmask(Interrupts::Uart0Rx);
         cortex_m::interrupt::enable();
