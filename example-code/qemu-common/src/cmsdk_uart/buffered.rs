@@ -58,20 +58,22 @@ impl<const QLEN: usize> BufferedUart<QLEN> {
     ///
     /// Returns the number of read bytes.
     pub fn read(&self, buf: &mut [u8]) -> usize {
-        let rx_count = self.with(|inner| inner.rx_buffer.len());
-        if rx_count == 0 {
-            return 0;
-        }
-        let rx_count = core::cmp::min(rx_count, buf.len());
         self.with(|inner| {
+            let rx_count = inner.rx_buffer.len();
+            if rx_count == 0 {
+                return 0;
+            }
+            let rx_count = core::cmp::min(rx_count, buf.len());
             for b in buf.iter_mut().take(rx_count) {
-                // We checked that at least rx_count bytes are available.
+                // We checked that at least rx_count bytes are available and
+                // the CS ensures we haven't been interrupted since to change
+                // that count.
                 let byte = inner.rx_buffer.dequeue().unwrap();
                 defmt::debug!("< RXQ 0x{=u8:02x}", byte);
                 *b = byte;
             }
-        });
-        rx_count
+            rx_count
+        })
     }
 
     /// Transmit a byte slice, blocking until done
