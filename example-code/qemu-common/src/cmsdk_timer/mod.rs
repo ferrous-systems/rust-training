@@ -64,7 +64,8 @@ impl Timer {
     /// NOTE: You might also need to enable the interrupt in the NVIC
     #[inline]
     pub fn enable_interrupt(&mut self, enabled: bool) {
-        self.regs.modify_control(|c| c.with_interrupt_enable(enabled));
+        self.regs
+            .modify_control(|c| c.with_interrupt_enable(enabled));
     }
 
     /// Read the timer value.
