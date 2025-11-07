@@ -4,7 +4,7 @@ rustflags = [
     "-Clink-arg=-Tdefmt.x",
 ]
 # Note, this requires QEMU 9 or higher
-runner = "qemu-system-arm -machine mps3-an536 -cpu cortex-r52 -semihosting -nographic -kernel"
+runner = "qemu-run --machine mps3-an536 --cpu cortex-r52"
 
 [build]
 target = ["armv8r-none-eabihf"]

@@ -9,7 +9,10 @@ default-run = "global_uart"
 
 [dependencies]
 critical-section = { version = "1.1.2", features = ["restore-state-bool"] }
+defmt = "1.0.1"
+defmt-semihosting = "0.3.0"
 embedded-alloc = "0.5.1"
+semihosting = "0.1.20"
 
 [profile.release]
 opt-level = "s"

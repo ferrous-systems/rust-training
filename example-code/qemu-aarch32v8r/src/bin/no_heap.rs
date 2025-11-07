@@ -44,17 +44,4 @@ fn main() -> Result<(), core::fmt::Error> {
     panic!("I am a panic");
 }
 
-/// Called when the application raises an unrecoverable `panic!`.
-///
-/// Prints the panic to the console and then exits QEMU using a semihosting
-/// breakpoint.
-#[panic_handler]
-fn panic(info: &core::panic::PanicInfo) -> ! {
-    // We assume it is already enabled
-    let mut uart0 = unsafe { uart::CmsdkUart::new_with_raw_addr(uart::UART0_ADDR) };
-    let _ = writeln!(uart0, "PANIC: {:?}", info);
-    // Exit, using semihosting
-    semihosting::process::exit(1);
-}
-
 // End of file

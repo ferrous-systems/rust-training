@@ -11,9 +11,12 @@ default-run = "global_uart"
 cortex-ar = { version = "0.2.0", features = ["critical-section-single-core"] }
 cortex-r-rt = "0.2.0"
 critical-section = "1.2.0"
+defmt = "1.0.1"
+defmt-semihosting = "0.3.0"
 embedded-alloc = "0.5.1"
 qemu-common = { version = "0.1.0", path = "../qemu-common" }
 semihosting = { version = "0.1.19", features = ["stdio"] }
+
 
 [profile.release]
 opt-level = "s"

@@ -55,15 +55,4 @@ fn print_stuff() -> Result<(), core::fmt::Error> {
     Ok(())
 }
 
-/// Called when the application raises an unrecoverable `panic!`.
-///
-/// Prints the panic to the console and then exits QEMU using a semihosting
-/// breakpoint.
-#[panic_handler]
-fn panic(info: &core::panic::PanicInfo) -> ! {
-    let _ = writeln!(&UART, "PANIC: {:?}", info);
-    // Exit, using semihosting
-    semihosting::process::exit(1);
-}
-
 // End of file
