@@ -8,8 +8,11 @@ description = "A simple Aarch64 demo application that runs in QEMU and compiles 
 default-run = "global_uart"
 
 [dependencies]
+aarch64-paging = { version = "0.10.0", default-features = false }
+aarch64-rt =  { version = "0.2.2", default-features = false, features = ["el1", "exceptions", "initial-pagetable"] }
 critical-section = { version = "1.1.2", features = ["restore-state-bool"] }
 embedded-alloc = "0.5.1"
+semihosting = { version = "0.1.20", features = ["stdio"] }
 
 [profile.release]
 opt-level = "s"

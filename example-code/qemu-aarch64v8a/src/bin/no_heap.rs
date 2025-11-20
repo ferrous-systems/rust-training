@@ -10,22 +10,26 @@
 #![no_main]
 
 use core::fmt::Write;
+
+use aarch64_rt::entry;
 use qemu_aarch64v8a::{exception_level, virt_uart};
+
+entry!(main);
 
 /// The entry-point to the Rust application.
 ///
-/// It is called by the start-up code in `lib.rs`.
-#[no_mangle]
-pub extern "C" fn kmain() {
-    if let Err(e) = main() {
+/// It is called by the start-up code in `aarch64-rt`
+fn main(_arg0: u64, _arg1: u64, _arg2: u64, _arg3: u64) -> ! {
+    if let Err(e) = rust_main() {
         panic!("main returned {:?}", e);
     }
+    semihosting::process::exit(0);
 }
 
 /// The main function of our Rust application.
 ///
-/// Called by [`kmain`].
-fn main() -> Result<(), core::fmt::Error> {
+/// Called by [`main`].
+fn rust_main() -> Result<(), core::fmt::Error> {
     let mut uart0 = unsafe { virt_uart::Uart::new_uart0() };
     writeln!(uart0, "Hello, this is Rust @ {:?}", exception_level())?;
     for x in 1..=10 {
@@ -36,26 +40,6 @@ fn main() -> Result<(), core::fmt::Error> {
         writeln!(uart0)?;
     }
     panic!("I am a panic");
-}
-
-/// Called when the application raises an unrecoverable `panic!`.
-///
-/// Prints the panic to the console and then exits QEMU using a semihosting
-/// breakpoint.
-#[panic_handler]
-fn panic(info: &core::panic::PanicInfo) -> ! {
-    const SYS_REPORTEXC: u64 = 0x18;
-    let mut c = unsafe { virt_uart::Uart::new_uart0() };
-    let _ = writeln!(c, "PANIC: {:?}", info);
-    loop {
-        // Exit, using semihosting
-        unsafe {
-            core::arch::asm!(
-                "hlt 0xf000",
-                in("x0") SYS_REPORTEXC
-            )
-        }
-    }
 }
 
 // End of file
