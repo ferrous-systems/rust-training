@@ -83,8 +83,28 @@ impl CmsdkUart {
         Ok(())
     }
 
+    #[inline]
+    pub fn enable_rx_interrupt(&mut self) {
+        self.registers.modify_control(|mut c| {
+            c.set_rxie(true);
+            c
+        });
+    }
+
+    /// Read a byte from the UART, non-blocking
+    ///
+    /// If the UART FIFO is empty, you get nb::Error::WouldBlock. But
+    /// otherwise it cannot fail.
+    pub fn read(&mut self) -> nb::Result<u8, core::convert::Infallible> {
+        let status = self.registers.read_status();
+        if !status.rxf() {
+            return Err(nb::Error::WouldBlock);
+        }
+        Ok(self.registers.read_data() as u8)
+    }
+
     /// Write a byte, if possible
-    pub fn write(&mut self, byte: u8) -> nb::Result<(), Error> {
+    pub fn write(&mut self, byte: u8) -> nb::Result<(), core::convert::Infallible> {
         let status = self.registers.read_status();
         if status.txf() {
             defmt::debug!(
@@ -134,7 +154,14 @@ impl CmsdkUart {
         Ok(())
     }
 
-    /// Clear interrupts
+    /// Get the current interrupt status for the UART
+    #[inline]
+    pub fn read_int_status(&mut self) -> IntStatus {
+        self.registers.read_int_status()
+    }
+
+    /// Clear the given flags in the interrupt status register
+    #[inline]
     pub fn clear_interrupts(&mut self, mask: IntStatus) {
         self.registers.write_int_status(mask);
     }

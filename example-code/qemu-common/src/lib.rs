@@ -2,5 +2,5 @@
 
 #![no_std]
 
-pub mod cmsdk_uart;
 pub mod cmsdk_timer;
+pub mod cmsdk_uart;

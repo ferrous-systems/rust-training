@@ -1,4 +1,6 @@
 //! Print to the UART on an MPS2-AN505, using interrupts and a buffer.
+//!
+//! The UART output will be routed to log file logs/uart0.log
 
 #![no_std]
 #![no_main]

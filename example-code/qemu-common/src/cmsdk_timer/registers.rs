@@ -31,12 +31,12 @@ pub struct Control {
     #[bit(1, rw)]
     external_input_as_enable: bool,
     #[bit(0, rw)]
-    enable: bool
+    enable: bool,
 }
 
 #[bitbybit::bitfield(u32, default = 0x0, defmt_bitfields)]
 pub struct Interrupt {
     /// Write 1 to clear.
     #[bit(0, rw)]
-    interrupt_bit: bool
+    interrupt_bit: bool,
 }

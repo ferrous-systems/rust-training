@@ -1,4 +1,6 @@
-//! Print to the UART on an MPS2-AN505
+//! Print to the UARTs of the MPS2-AN386 UARTs
+//!
+//! The UART output will be routed to log files inside the logs folder.
 
 #![no_std]
 #![no_main]
