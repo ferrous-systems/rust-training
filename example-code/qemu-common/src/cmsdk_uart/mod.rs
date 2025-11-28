@@ -37,6 +37,8 @@ pub use buffered::*;
 
 mod registers;
 
+pub mod asynch;
+
 /// Error codes from this module
 #[derive(Debug, defmt::Format)]
 pub enum Error {

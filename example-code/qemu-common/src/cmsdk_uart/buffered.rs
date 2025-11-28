@@ -7,12 +7,12 @@ use core::convert::Infallible;
 
 use super::registers::IntStatus;
 
-use super::{CmsdkUart, Error};
+use super::{Uart, Error};
 
 /// Our context, stored inside a lock
 struct Inner<const QLEN: usize> {
     /// Our UART
-    uart: CmsdkUart,
+    uart: Uart,
     /// Our transmission buffer
     tx_buffer: heapless::spsc::Queue<u8, QLEN>,
     /// Our reception buffer
@@ -37,14 +37,14 @@ impl<const QLEN: usize> BufferedUart<QLEN> {
     /// Pass in a `CmsdkUart` and it will be stored within and available at a later time.
     pub fn init(
         &self,
-        mut uart: CmsdkUart,
+        mut uart: Uart,
         baud_rate: u32,
         system_clock: u32,
     ) -> Result<(), Error> {
         uart.init(baud_rate, system_clock)?;
         critical_section::with(|cs| {
             let mut guard = self.inner.borrow_ref_mut(cs);
-            uart.enable_rx_interrupt();
+            uart.enable_rx_interrupts();
             guard.replace(Inner {
                 uart,
                 tx_buffer: heapless::spsc::Queue::new(),
@@ -92,10 +92,10 @@ impl<const QLEN: usize> BufferedUart<QLEN> {
                 // If TX interrupts aren't on, turn them on. Because we're in a CS,
                 // we can't be interrupted between that buffer enqueue and turning
                 // interrupts on
-                if !inner.uart.registers.read_control().txie() {
+                if !inner.uart.regs().read_control().txie() {
                     defmt::debug!("> TXQ 0x{=u8:02x}, TXIE on", byte);
                     // this will fire the ISR when the byte has finished sending
-                    inner.uart.registers.modify_control(|c| c.with_txie(true));
+                    inner.uart.regs().modify_control(|c| c.with_txie(true));
                     // send the byte to the UART - we know it won't fail
                     // because our TX interrupt was off indicating that there
                     // is no TX in progress.
@@ -130,7 +130,7 @@ impl<const QLEN: usize> BufferedUart<QLEN> {
         while self.with(|inner| inner.tx_buffer.len()) != 0 {
             core::hint::spin_loop();
         }
-        while self.with(|inner| inner.uart.registers.read_status().txf()) {
+        while self.with(|inner| inner.uart.regs().read_status().txf()) {
             core::hint::spin_loop();
         }
     }
@@ -144,10 +144,10 @@ impl<const QLEN: usize> BufferedUart<QLEN> {
         const TXI_FLAG: IntStatus = IntStatus::DEFAULT.with_txi(true);
         defmt::debug!("- TX ISR");
         self.with(|inner| {
-            let int_status = inner.uart.registers.read_int_status();
+            let int_status = inner.uart.regs().read_int_status();
             if int_status.txi() {
                 inner.uart.clear_interrupts(TXI_FLAG);
-                while !inner.uart.registers.read_status().txf() && !inner.tx_buffer.is_empty() {
+                while !inner.uart.regs().read_status().txf() && !inner.tx_buffer.is_empty() {
                     // UART is not full - load UART with next byte
                     let byte = unsafe { inner.tx_buffer.dequeue_unchecked() };
                     defmt::debug!("> TX 0x{=u8:02x}", byte);
@@ -156,7 +156,7 @@ impl<const QLEN: usize> BufferedUart<QLEN> {
                 if inner.tx_buffer.is_empty() {
                     // cancel TX interrupt
                     defmt::debug!("- TX buffer empty ... turning TXIE off");
-                    inner.uart.registers.modify_control(|c| c.with_txie(false));
+                    inner.uart.regs().modify_control(|c| c.with_txie(false));
                 }
             }
         });
@@ -171,7 +171,7 @@ impl<const QLEN: usize> BufferedUart<QLEN> {
         const RXI_FLAG: IntStatus = IntStatus::DEFAULT.with_rxi(true);
         defmt::debug!("- RX ISR");
         self.with(|inner| {
-            let int_status = inner.uart.registers.read_int_status();
+            let int_status = inner.uart.regs().read_int_status();
             if int_status.rxi() {
                 inner.uart.clear_interrupts(RXI_FLAG);
                 // Drop old data if buffer full.
@@ -179,7 +179,7 @@ impl<const QLEN: usize> BufferedUart<QLEN> {
                     // Buffer is full so dequeing one byte should work.
                     let _ = inner.rx_buffer.dequeue().unwrap();
                 }
-                let byte = inner.uart.registers.read_data() as u8;
+                let byte = inner.uart.regs().read_data() as u8;
                 defmt::debug!("< RX 0x{=u8:02x}", byte);
                 // We guaranteed that there is space.
                 inner.rx_buffer.enqueue(byte).unwrap();
