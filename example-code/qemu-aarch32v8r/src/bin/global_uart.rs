@@ -13,6 +13,7 @@ use qemu_aarch32v8r::{
     PERIPHERAL_CLOCK,
 };
 
+
 /// Our global UART object
 static UART: MutexUart = MutexUart::empty();
 
