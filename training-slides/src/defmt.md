@@ -15,20 +15,22 @@ defmt is the *Deferred Formatter*
 * have a function that writes logs to the UART, and
 * instrument your code with logger calls.
 
-```c
-#define INFO(msg, ...) do { \
-    if (g_level >= LEVEL_INFO) { \
-        fprintf(g_uart, "INFO: " msg, __VA_ARGS__ ) \
-    }  \
-} while(0)
+    ```c
+    #define INFO(msg, ...) do { \
+        if (g_level >= LEVEL_INFO) { \
+            fprintf(g_uart, "INFO: " msg, __VA_ARGS__ ) \
+        }  \
+    } while(0)
 
-INFO("received %u bytes", rx_bytes);
-```
+    INFO("received %u bytes", rx_bytes);
+    ```
+
+* More modern approach: Use something like SEGGER RTT relying on the debug connection.
 
 ## Downsides
 
 * Code size - where do the strings live?
-* Waiting for the UART
+* UART specific: Waiting for the UART
 
 ## An idea
 
@@ -43,7 +45,7 @@ Do the logging strings even need to be in Flash?
 ## defmt
 
 * Deferred Formatting
-* Strings are *interned* into a .defmt section
+* Strings are *interned* into a `.defmt` section
   * Is in the ELF file
   * Is not in Flash
 * Arguments are packed in binary format
