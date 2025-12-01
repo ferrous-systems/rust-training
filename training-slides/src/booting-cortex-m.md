@@ -145,7 +145,7 @@ pub unsafe extern "C" fn rst_handler() {
 }
 ```
 
-Sadly, this is UB.
+Sadly, this is [UB](https://github.com/rust-embedded/cortex-m-rt/issues/300).
 
 Note:
 
