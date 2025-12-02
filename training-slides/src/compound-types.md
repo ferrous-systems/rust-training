@@ -133,7 +133,7 @@ fn main() {
 ## Enums with Values
 
 ```rust [1-5|2|3|4|8|9|10]
-pub enum Shapes {
+enum Shapes {
     Dot,
     Square(u32),
     Rectangle { width: u32, length: u32 }
@@ -166,7 +166,7 @@ Note:
 - New variables are created from the *pattern* (e.g. `radius`)
 
 ```rust [1-5|7-16|10|13]
-pub enum Shape {
+enum Shape {
     Dot,
     Square(u32),
     Rectangle { width: u32, length: u32 }
@@ -190,7 +190,7 @@ fn check_shape(shape: Shape) {
 - The binding of `width` in the pattern on line 10 hides the `width` variable on line 8
 
 ```rust [8|10]
-pub enum Shape {
+enum Shape {
     Dot,
     Square(u32),
     Rectangle { width: u32, length: u32 }
@@ -218,7 +218,7 @@ Note:
 Match guards allow further refining of a `match`
 
 ```rust [9]
-pub enum Shape {
+enum Shape {
     Dot,
     Square(u32),
     Rectangle { width: u32, length: u32 }
@@ -241,7 +241,7 @@ fn check_shape(shape: Shape) {
 - You can use the `|` operator to join patterns together
 
 ```rust [1-16|9]
-pub enum Shape {
+enum Shape {
     Dot,
     Square(u32),
     Rectangle { width: u32, length: u32 }
@@ -265,7 +265,7 @@ fn test_shape(shape: Shape) {
 - Still *pattern matching*
 
 ```rust []
-pub enum Shape {
+enum Shape {
     Dot,
     Square(u32),
     Rectangle { width: u32, length: u32 }
@@ -303,7 +303,7 @@ fn test_shape(shape: Shape) {
 - The `else` block must *diverge*
 
 ```rust []
-pub enum Shape {
+enum Shape {
     Dot,
     Square(u32),
     Rectangle { width: u32, length: u32 }
@@ -323,7 +323,7 @@ fn test_shape(shape: Shape) {
 - Keep looping whilst the pattern still matches
 
 ```rust should_panic []
-pub enum Shape {
+enum Shape {
     Dot,
     Square(u32),
     Rectangle { width: u32, length: u32 }
