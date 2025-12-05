@@ -27,7 +27,7 @@ defmt is the *Deferred Formatter*
 
 Note:
 
-* Many MCUs use SEGGER RTT instead of UART to for debug printouts.
+* Many MCUs use SEGGER RTT instead of UART for debug printouts.
 
 ## Downsides
 
