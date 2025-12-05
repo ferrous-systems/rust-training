@@ -167,7 +167,7 @@ See [Reset](https://github.com/rust-embedded/cortex-m/blob/c-m-rt-v0.7.3/cortex-
 
 ## Using the crate
 
-See [Cortex-M Quickstart](https://github.com/rust-embedded/cortex-m-quickstart)
+See [knurling-rs App Template](https://github.com/knurling-rs/app-template)
 
 ## Linker scripts
 
