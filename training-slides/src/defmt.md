@@ -25,12 +25,14 @@ defmt is the *Deferred Formatter*
     INFO("received %u bytes", rx_bytes);
     ```
 
-* More modern approach: Use something like SEGGER RTT relying on the debug connection.
+Note:
+
+* Many MCUs use SEGGER RTT instead of UART to for debug printouts.
 
 ## Downsides
 
 * Code size - where do the strings live?
-* UART specific: Waiting for the UART
+* Waiting for the UART
 
 ## An idea
 
