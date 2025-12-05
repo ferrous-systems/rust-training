@@ -8,7 +8,7 @@
 #![no_main]
 
 use core::fmt::Write;
-use qemu_aarch32v8r::uart::{CmsdkUart, MutexUart, UART0_ADDR};
+use qemu_aarch32v8r::uart::{Uart, MutexUart, UART0_ADDR};
 
 /// The clock speed of the peripheral subsystem on an SSE-300 SoC an on MPS3 board.
 ///
@@ -33,7 +33,7 @@ pub extern "C" fn kmain() {
 /// Called by [`kmain`].
 fn main() -> Result<(), core::fmt::Error> {
     UART.init(
-        unsafe { CmsdkUart::new_with_raw_addr(UART0_ADDR) },
+        unsafe { Uart::new_with_raw_addr(UART0_ADDR) },
         115200,
         PERIPHERAL_CLOCK,
     )
