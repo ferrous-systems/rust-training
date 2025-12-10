@@ -262,63 +262,57 @@ Note:
 * Use `thiserror` if you must design your own error types but want easy `Error` trait impl. This
   oftentimes applies to libraries.
 
-## `Result` value conversions
+## `Result` type conversions
 
-```rust [|1,4,6-9|1-4,11-15]
-struct OhNoError;
-struct ThisIsBadError;
+```rust [|4-6|8-10]
+enum ErrorX { Oops };
+enum ErrorY { Oops };
 
-fn result_u32() -> Result<u32, OhNoError> { Ok(1) }
-
-fn result_but_its_u64() -> Result<u64, OhNoError> {
-    // `map` expects a function which maps the value to another value.
-    // It takes any function which implements [core::ops::FnOnce].
-    result_u32().map(|v| v as u64)
+fn convert_ok(input: Result<u32, ErrorX>) -> Result<u64, ErrorX> {
+    input().map(|v| v as u64)
 }
 
-fn result_u32_but_error_is_bad() -> Result<u32, ThisIsBadError> {
-    // `map_err` expects a function which maps the error to another error.
-    // It takes any function which implements [core::ops::FnOnce].
-    result_u32().map_err(|_| ThisIsBadError)
+fn convert_err(input: Result<u32, ErrorX>) -> Result<u32, ErrorY> {
+    result_u32().map_err(|e| ErrorY::Oops)
 }
 ```
 
-## Convert `Result` and `Option` into each other
+Note:
 
-```rust
-struct OhNoError;
+The `|..| ...` syntax is a *closure* - an anonymous inline function, where the function parameters are between the `|` symbols, and the function body follows. The parameter types and the return type are usually inferred automatically (but you can add them if required).
 
-fn option_to_result() -> Result<u32, OhNoError> {
-    let option = None;
-    option.ok_or(OhNoError)
+## Convert `Result` <-> `Option`
+
+```rust [|3-5|7-9]
+enum Error { Oops };
+
+fn option_to_result(input: Option<u32>) -> Result<u32, Error> {
+    option.ok_or(Error::Oops)
 }
 
-fn result_to_option() -> Option<u32> {
-    let result: Result<u32, OhNoError> = Ok(2);
+fn result_to_option(input: Result<u32, Error>) -> Option<u32> {
     result.ok()
 }
 ```
 
-## Convert `Option::None` or `Result::Err(E)` to value
+## Replace `None` or `Err(e)` with a value
 
-```rust
-struct OhNoError;
+```rust [|3-5|7-9]
+enum Error { Oops };
 
-fn none_becomes_be_zero() -> u32 {
-    let opt_val: Option<u32> = None;
-    opt_val.unwrap_or(0)
+fn none_becomes_be_zero(input: Option<u32>) -> u32 {
+    input.unwrap_or(0)
 }
 
-fn error_becomes_zero() -> u32 {
-    let fail_val: Result<u32, OhNoError> = Err(OhNoError);
-    fail_val.unwrap_or(0)
+fn error_becomes_zero(input: Result<u32, Error>) -> u32 {
+    input.unwrap_or(0)
 }
 ```
 
 ## There is more
 
 * `Result` and `Option` have a lot more methods available!
-* [`Result` documenation](https://doc.rust-lang.org/std/result/enum.Result.html)
+* [`Result` documentation](https://doc.rust-lang.org/std/result/enum.Result.html)
 * [`Option` documentation](https://doc.rust-lang.org/std/option/enum.Option.html)
 * These methods can reduce a lot of boilerplate code, especially when
   combined with the `From` and `Into` value conversion traits.
