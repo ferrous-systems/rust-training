@@ -312,7 +312,7 @@ fn error_becomes_zero(input: Result<u32, Error>) -> u32 {
 ## There is more
 
 * `Result` and `Option` have a lot more methods available!
-* [`Result` documenation](https://doc.rust-lang.org/std/result/enum.Result.html)
+* [`Result` documentation](https://doc.rust-lang.org/std/result/enum.Result.html)
 * [`Option` documentation](https://doc.rust-lang.org/std/option/enum.Option.html)
 * These methods can reduce a lot of boilerplate code, especially when
   combined with the `From` and `Into` value conversion traits.
