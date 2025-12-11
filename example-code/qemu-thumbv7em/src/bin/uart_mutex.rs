@@ -16,7 +16,7 @@ fn main() -> ! {
     defmt::info!("Running uart_mutex - printing to global UART0");
 
     let peripherals = qemu_thumbv7em::Peripherals::take().unwrap();
-    let uart_handle = uart::CmsdkUart::new(peripherals.uart0);
+    let uart_handle = uart::Uart::new(peripherals.uart0);
     UART0.init(uart_handle, 115200, SYSTEM_CLOCK).unwrap();
 
     _ = write!(&UART0, "Hello, this is on a static UART0!\r\n");
