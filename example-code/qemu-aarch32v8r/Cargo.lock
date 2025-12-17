@@ -3,16 +3,67 @@
 version = 4
 
 [[package]]
+name = "aarch32-cpu"
+version = "0.1.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "5db6700cf01549520abec199376115e1ceb6fde1d1de30064f0f230be8a0c305"
+dependencies = [
+ "arbitrary-int 2.0.0",
+ "arm-targets",
+ "bitbybit",
+ "critical-section",
+ "num_enum",
+ "thiserror",
+]
+
+[[package]]
+name = "aarch32-rt"
+version = "0.1.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "3b2aced8779594762e12f1c8196b29e52a5e7743ffe06602b6dfe80504d4ae12"
+dependencies = [
+ "aarch32-cpu",
+ "aarch32-rt-macros",
+ "arm-targets",
+]
+
+[[package]]
+name = "aarch32-rt-macros"
+version = "0.1.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "2a2c6caee3f48c427d9e1c5c11fe143767dc678e60d16bec1f0db63aeda0e48e"
+dependencies = [
+ "proc-macro2",
+ "quote",
+ "syn",
+]
+
+[[package]]
 name = "arbitrary-int"
 version = "1.3.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "825297538d77367557b912770ca3083f778a196054b3ee63b22673c4a3cae0a5"
 
 [[package]]
-name = "arm-targets"
-version = "0.2.0"
+name = "arbitrary-int"
+version = "2.0.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "49743b294a925497a72abb5d7f3b0c9a1b390a65a92d72e38e915df767438664"
+checksum = "c858caffa49edfc4ecc45a4bec37abd3e88041a2903816f10f990b7b41abc281"
+
+[[package]]
+name = "arm-targets"
+version = "0.4.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "8d29a37f252452446b67d5e50dee82a6ce12781218b915244bb6507c10b72812"
+
+[[package]]
+name = "bare-metal"
+version = "0.2.5"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "5deb64efa5bd81e31fcd1938615a6d98c82eafcbcd787162b6f63b91d6bac5b3"
+dependencies = [
+ "rustc_version",
+]
 
 [[package]]
 name = "bitbybit"
@@ -20,11 +71,17 @@ version = "1.4.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "ec187a89ab07e209270175faf9e07ceb2755d984954e58a2296e325ddece2762"
 dependencies = [
- "arbitrary-int",
+ "arbitrary-int 1.3.0",
  "proc-macro2",
  "quote",
  "syn",
 ]
+
+[[package]]
+name = "bitfield"
+version = "0.13.2"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "46afbd2983a5d5a7bd740ccb198caf5b82f45c40c09c0eed36052d91cb92e719"
 
 [[package]]
 name = "bitflags"
@@ -39,39 +96,15 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "1fd0f2584146f6f2ef48085050886acf353beff7305ebd1ae69500e27c67f64b"
 
 [[package]]
-name = "cortex-ar"
-version = "0.2.0"
+name = "cortex-m"
+version = "0.7.7"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "13f5d76ad942231363ff04266e7ce867db0450f520f30579fe3007b639902367"
+checksum = "8ec610d8f49840a5b376c69663b6369e71f4b34484b9b2eb29fb918d92516cb9"
 dependencies = [
- "arbitrary-int",
- "arm-targets",
- "bitbybit",
- "critical-section",
- "num_enum",
-]
-
-[[package]]
-name = "cortex-ar-rt-macros"
-version = "0.1.0"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "d8f9e342ee3ad1cfa79ab8746e26e0173241ef10d992f6c1d915d93052690c27"
-dependencies = [
- "proc-macro2",
- "quote",
- "syn",
-]
-
-[[package]]
-name = "cortex-r-rt"
-version = "0.2.0"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "12a98c416d305cb86ccf835fefe3476ec148578376a3aded3da10a2e61fcb2de"
-dependencies = [
- "arm-targets",
- "cortex-ar",
- "cortex-ar-rt-macros",
- "semihosting",
+ "bare-metal",
+ "bitfield",
+ "embedded-hal 0.2.7",
+ "volatile-register",
 ]
 
 [[package]]
@@ -113,6 +146,18 @@ dependencies = [
 ]
 
 [[package]]
+name = "defmt-semihosting"
+version = "0.3.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "63b0302c696f9080df24a40eed6d34e34de9a610723b8176df52272798971250"
+dependencies = [
+ "cortex-m",
+ "critical-section",
+ "defmt",
+ "semihosting",
+]
+
+[[package]]
 name = "derive-mmio"
 version = "0.6.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -142,6 +187,16 @@ checksum = "ddae17915accbac2cfbc64ea0ae6e3b330e6ea124ba108dada63646fd3c6f815"
 dependencies = [
  "critical-section",
  "linked_list_allocator",
+]
+
+[[package]]
+name = "embedded-hal"
+version = "0.2.7"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "35949884794ad573cf46071e41c9b60efb0cb311e3ca01f7af807af1debc66ff"
+dependencies = [
+ "nb 0.1.3",
+ "void",
 ]
 
 [[package]]
@@ -180,6 +235,15 @@ name = "linked_list_allocator"
 version = "0.10.5"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "9afa463f5405ee81cdb9cc2baf37e08ec7e4c8209442b5d72c04cfb2cd6e6286"
+
+[[package]]
+name = "nb"
+version = "0.1.3"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "801d31da0513b6ec5214e9bf433a77966320625a37860f910be265be6e18d06f"
+dependencies = [
+ "nb 1.1.0",
+]
 
 [[package]]
 name = "nb"
@@ -242,9 +306,11 @@ dependencies = [
 name = "qemu-aarch32v8r"
 version = "0.1.0"
 dependencies = [
- "cortex-ar",
- "cortex-r-rt",
+ "aarch32-cpu",
+ "aarch32-rt",
  "critical-section",
+ "defmt",
+ "defmt-semihosting",
  "embedded-alloc",
  "qemu-common",
  "semihosting",
@@ -258,10 +324,10 @@ dependencies = [
  "critical-section",
  "defmt",
  "derive-mmio",
- "embedded-hal",
+ "embedded-hal 1.0.0",
  "embedded-io",
  "heapless",
- "nb",
+ "nb 1.1.0",
 ]
 
 [[package]]
@@ -271,6 +337,15 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "0e4dccaaaf89514f546c693ddc140f729f958c247918a13380cccc6078391acc"
 dependencies = [
  "proc-macro2",
+]
+
+[[package]]
+name = "rustc_version"
+version = "0.2.3"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "138e3e0acb6c9fb258b19b67cb8abd63c00679d2851805ea151465464fe9030a"
+dependencies = [
+ "semver",
 ]
 
 [[package]]
@@ -284,6 +359,21 @@ name = "semihosting"
 version = "0.1.19"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "407ec8d274cd77556e9c2bef886df91eb3447b4059e603d6fb19f85e6452e275"
+
+[[package]]
+name = "semver"
+version = "0.9.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "1d7eb9ef2c18661902cc47e535f9bc51b78acd254da71d375c2f6720d9a40403"
+dependencies = [
+ "semver-parser",
+]
+
+[[package]]
+name = "semver-parser"
+version = "0.7.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "388a1df253eca08550bef6c72392cfe7c30914bf41df5269b68cbd6ff8f570a3"
 
 [[package]]
 name = "stable_deref_trait"
@@ -327,3 +417,24 @@ name = "unicode-ident"
 version = "1.0.17"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "00e2473a93778eb0bad35909dff6a10d28e63f792f16ed15e404fca9d5eeedbe"
+
+[[package]]
+name = "vcell"
+version = "0.1.3"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "77439c1b53d2303b20d9459b1ade71a83c716e3f9c34f3228c00e6f185d6c002"
+
+[[package]]
+name = "void"
+version = "1.0.2"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "6a02e4885ed3bc0f2de90ea6dd45ebcbb66dacffe03547fadbb0eeae2770887d"
+
+[[package]]
+name = "volatile-register"
+version = "0.2.2"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "de437e2a6208b014ab52972a27e59b33fa2920d3e00fe05026167a1c509d19cc"
+dependencies = [
+ "vcell",
+]

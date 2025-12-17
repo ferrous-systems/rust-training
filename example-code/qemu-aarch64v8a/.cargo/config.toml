@@ -1,7 +1,8 @@
 [target.aarch64-unknown-none]
-# QEMU Aarch64 boots in EL1 by default
-# Add "-machine virtualization=on" to boot in EL2
-runner = "qemu-system-aarch64 -machine virt -cpu cortex-a57 -semihosting -nographic -kernel"
+runner = "qemu-run --machine virt --cpu cortex-a57 --aarch64"
 
 [build]
 target = ["aarch64-unknown-none"]
+
+[env]
+DEFMT_LOG = "info"

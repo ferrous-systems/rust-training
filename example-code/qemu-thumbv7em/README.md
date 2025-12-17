@@ -4,21 +4,19 @@ These examples are designed to run in QEMU emulating the MPS2-AN386 machine.
 
 ## Examples
 
-### `defmt`
+There are seven binaries in `./src/bin`:
 
-Demomstrates how to use `defmt` inside QEMU. It uses `defmt-semihosting` to output the `defmt` frames using Cortex-M semi-hosting interrupts. The script `qemu_run.sh` will start QEMU and pipe the semihosting output into `defmt-print` so that the `defmt` logs are decoded.
+* `defmt` prints some demt logs at different levels
+* `panic` shows the panic handling
+* `rtic_empty` is a simple RTIC skeleton app
+* `timer` sets up the SysTick timer
+* `uart_mutex` sets up a UART as a global variable and prints to it
+* `uart_echo` sets up a UART and echos any input received
+* `uart_buffered` sets up an interrupt-drive UART using an in-memory buffer
+* `with_heap` sets up a heap allocator and uses the `format!` macro to generate
+  heap-allocated strings, which it then prints.
 
-### `uart_basic`
-
-Demonstrates use of stack-allocated CMSDK UART object from Rust. The UART writes are blocking.
-
-### `uart_mutex`
-
-Demonstrates use of globally-allocated CMSDK UART object from Rust. The UART writes are blocking and execute in a critical-section with interrupts disabled.
-
-### `uart_buffered`
-
-Demonstrates use of globally-allocated CMSDK UART object from Rust alongside a circular buffer. The UART writes are copied into the ring-buffer (blocking is space is exhausted) and the ring-buffer is emptied byte-by-byte under interrupt.
+All binaries use defmt to print logging information.
 
 ## Target Hardware
 

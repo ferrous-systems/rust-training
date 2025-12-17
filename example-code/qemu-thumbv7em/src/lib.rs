@@ -1,5 +1,7 @@
 #![no_std]
 
+use core::sync::atomic::AtomicBool;
+
 // Yes, these two must be imported with the same name. It is also required for RTIC.
 //
 // this is a macro
@@ -7,7 +9,7 @@ pub use cortex_m_rt::interrupt;
 // this is an enum that the macro uses
 pub use interrupts::Interrupts as interrupt;
 
-use core::sync::atomic::AtomicBool;
+use defmt_semihosting as _;
 
 pub mod interrupts;
 pub mod timer;
