@@ -1,4 +1,8 @@
-//! Print to the UART on an MPS2-AN505, using a static driver
+//! An example program for QEMU's Armv7E-M Virtual Machine
+//!
+//! Written by Jonathan Pallant at Ferrous Systems
+//!
+//! Copyright (c) Ferrous Systems, 2025
 
 #![no_std]
 #![no_main]

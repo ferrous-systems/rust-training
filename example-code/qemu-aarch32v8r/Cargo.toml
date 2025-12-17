@@ -5,15 +5,18 @@ edition = "2021"
 authors = ["Ferrous Systems"]
 license = "MIT OR Apache-2.0"
 description = "A simple ARMv8-R demo application that runs in QEMU and compiles with Ferrocene"
-default-run = "global_uart"
+default-run = "defmt"
 
 [dependencies]
-cortex-ar = { version = "0.2.0", features = ["critical-section-single-core"] }
-cortex-r-rt = "0.2.0"
+aarch32-cpu = { version = "0.1.0", features = ["critical-section-single-core"] }
+aarch32-rt = "0.1.0"
 critical-section = "1.2.0"
+defmt = "1.0.1"
+defmt-semihosting = "0.3.0"
 embedded-alloc = "0.5.1"
 qemu-common = { version = "0.1.0", path = "../qemu-common" }
 semihosting = { version = "0.1.19", features = ["stdio"] }
+
 
 [profile.release]
 opt-level = "s"

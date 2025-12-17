@@ -1,6 +1,8 @@
-//! Print to the UARTs of the MPS2-AN386 UARTs
+//! An example program for QEMU's Armv7E-M Virtual Machine
 //!
-//! The UART output will be routed to log files inside the logs folder.
+//! Written by Jonathan Pallant at Ferrous Systems
+//!
+//! Copyright (c) Ferrous Systems, 2025
 
 #![no_std]
 #![no_main]

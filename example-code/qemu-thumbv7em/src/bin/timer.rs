@@ -1,4 +1,8 @@
-//! Use the timer of the MPS2-AN386 UARTs
+//! An example program for QEMU's Armv7E-M Virtual Machine
+//!
+//! Written by Jonathan Pallant at Ferrous Systems
+//!
+//! Copyright (c) Ferrous Systems, 2025
 
 #![no_std]
 #![no_main]
