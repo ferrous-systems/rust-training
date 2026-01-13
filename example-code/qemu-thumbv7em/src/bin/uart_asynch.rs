@@ -42,7 +42,7 @@ mod app {
 
         let mut index = 0;
         loop {
-            defmt::info!("Writing string {} asycnhronously", index);
+            defmt::info!("Writing string {} asynchronously", index);
             // This is a non-blocking transfer! While it is on-going, the executor can run other
             // tasks. The hardware will transfer the passed buffer in the background using the
             // [tx_interrupt] task to make progress.
