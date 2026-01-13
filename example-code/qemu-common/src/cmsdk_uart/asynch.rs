@@ -1,19 +1,26 @@
-use core::{cell::RefCell, convert::Infallible, sync::atomic::AtomicBool};
+use core::{cell::Cell, convert::Infallible, sync::atomic::AtomicBool};
 
 use atomic_waker::AtomicWaker;
 use critical_section::Mutex;
 
 use crate::cmsdk_uart::Tx;
 
+// Currently, a maximum of 5 CMSDK UART instances are supported.
 const MAX_WAKERS: usize = 5;
 
+// Each CMSDK UART has a waker which is used to notify the executor when a transfer is done.
 static TX_WAKERS: [AtomicWaker; 5] = [const { AtomicWaker::new() }; 5];
+// Each CMSDK UART has a atomic completion flag which is used to check for transfer completion
+// without a lock.
 static TX_DONE: [AtomicBool; 5] = [const { AtomicBool::new(false) }; 5];
-static TX_CONTEXTS: [Mutex<RefCell<TranferContext>>; 5] =
-    [const { Mutex::new(RefCell::new(TranferContext::new())) }; 5];
+
+// The transfer information and context for each asynchronous CMSDK UART driver is tracked in
+// this structure.
+static TX_CONTEXTS: [Mutex<Cell<TranferContext>>; 5] =
+    [const { Mutex::new(Cell::new(TranferContext::new())) }; 5];
 
 #[derive(Debug)]
-pub struct InvalidWakerIndex(pub usize);
+pub struct InvalidWakerIndexError(pub usize);
 
 pub fn on_interrupt_tx(tx: &mut Tx, uart_index: usize) {
     if uart_index >= MAX_WAKERS {
@@ -25,7 +32,7 @@ pub fn on_interrupt_tx(tx: &mut Tx, uart_index: usize) {
     }
     let mut context = critical_section::with(|cs| {
         let context_ref = TX_CONTEXTS[uart_index].borrow(cs);
-        *context_ref.borrow()
+        context_ref.get()
     });
     // No transfer active.
     if context.data_ptr.is_null() {
@@ -48,14 +55,17 @@ pub fn on_interrupt_tx(tx: &mut Tx, uart_index: usize) {
     // Write back updated context structure.
     critical_section::with(|cs| {
         let context_ref = TX_CONTEXTS[uart_index].borrow(cs);
-        *context_ref.borrow_mut() = context;
+        context_ref.set(context);
     });
 }
 
 #[derive(Clone, Copy)]
 struct TranferContext {
+    // Data pointer of the data to be transmitted.
     data_ptr: *const u8,
+    // Full transfer length.
     transfer_len: usize,
+    // Current progress.
     progress: usize,
 }
 
@@ -70,7 +80,7 @@ impl TranferContext {
     }
 }
 
-// We only use this type wrapped in a mutex.
+// Safety: We only use this type wrapped in a mutex.
 unsafe impl Sync for TranferContext {}
 unsafe impl Send for TranferContext {}
 
@@ -81,9 +91,9 @@ pub struct TxAsynch {
 
 impl TxAsynch {
     /// Create a new asynchronous TX driver from a blocking one.
-    pub fn new(tx: Tx, uart_index: usize) -> Result<Self, InvalidWakerIndex> {
+    pub fn new(tx: Tx, uart_index: usize) -> Result<Self, InvalidWakerIndexError> {
         if uart_index > 4 {
-            return Err(InvalidWakerIndex(uart_index));
+            return Err(InvalidWakerIndexError(uart_index));
         }
 
         Ok(Self {
@@ -114,6 +124,9 @@ impl embedded_io_async::Write for TxAsynch {
     }
 
     async fn flush(&mut self) -> Result<(), Self::Error> {
+        while self.inner.regs().read_status().txf() {
+            core::hint::spin_loop();
+        }
         Ok(())
     }
 }
@@ -130,10 +143,12 @@ impl<'tx> TxFuture<'tx> {
         tx.inner.disable();
         tx.inner.disable_interrupts();
         critical_section::with(|cs| {
-            let mut context = TX_CONTEXTS[uart_index].borrow_ref_mut(cs);
-            context.data_ptr = data.as_ptr();
-            context.transfer_len = data.len();
-            context.progress = 1;
+            let context_ref = TX_CONTEXTS[uart_index].borrow(cs);
+            context_ref.set(TranferContext {
+                data_ptr: data.as_ptr(),
+                transfer_len: data.len(),
+                progress: 1,
+            });
             // We checked in our API that the buffer is not empty. The API should ensure that TX
             // is always empty.
             tx.inner.clear_interrupts();
@@ -157,10 +172,10 @@ impl core::future::Future for TxFuture<'_> {
         TX_WAKERS[self.uart_index].register(cx.waker());
         if TX_DONE[self.uart_index].swap(false, core::sync::atomic::Ordering::Relaxed) {
             let progress = critical_section::with(|cs| {
-                let mut ctx = TX_CONTEXTS[self.uart_index].borrow(cs).borrow_mut();
-                ctx.data_ptr = core::ptr::null();
-                ctx.transfer_len = 0;
-                ctx.progress
+                let context = TX_CONTEXTS[self.uart_index].borrow(cs);
+                let progress = context.get().progress;
+                context.set(TranferContext::new());
+                progress
             });
             return core::task::Poll::Ready(progress);
         }
