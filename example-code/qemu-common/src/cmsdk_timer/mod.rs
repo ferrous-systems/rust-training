@@ -83,11 +83,13 @@ impl Timer {
 
 /// Delay timer which implements the [embedded_hal::delay::DelayNs] trait.
 pub struct DelayTimer {
+    /// Timer driver structure.
     pub timer: Timer,
     sys_clk_hz: u32,
 }
 
 impl DelayTimer {
+    /// Create a delay timer from a timer instance and a system clock frequency.
     pub fn new(timer: Timer, sys_clk_hz: u32) -> Self {
         Self { timer, sys_clk_hz }
     }

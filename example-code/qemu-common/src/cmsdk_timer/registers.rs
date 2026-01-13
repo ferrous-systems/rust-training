@@ -1,5 +1,6 @@
 //! Register definitions for the CMSDK Timer
 
+/// Register block of the CMSDK Timer.
 #[derive(derive_mmio::Mmio)]
 #[repr(C)]
 pub struct Registers {
@@ -22,18 +23,24 @@ pub struct Registers {
     component_id_3: u32,
 }
 
+/// Control register.
 #[bitbybit::bitfield(u32, defmt_bitfields)]
 pub struct Control {
+    /// Interrupt enable bit.
     #[bit(3, rw)]
     interrupt_enable: bool,
+    /// Use external input as clock.
     #[bit(2, rw)]
     external_input_as_clock: bool,
+    /// Use external input as enable bit.
     #[bit(1, rw)]
     external_input_as_enable: bool,
+    /// Enable the timer.
     #[bit(0, rw)]
     enable: bool,
 }
 
+/// Interrupt register.
 #[bitbybit::bitfield(u32, default = 0x0, defmt_bitfields)]
 pub struct Interrupt {
     /// Write 1 to clear.

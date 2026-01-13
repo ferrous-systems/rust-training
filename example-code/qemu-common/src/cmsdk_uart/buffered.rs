@@ -105,7 +105,7 @@ impl<const QLEN: usize> BufferedUart<QLEN> {
                     // will be turned off - meaning we never actually queue
                     // data to send. But if you priority mask the TX ISR
                     // temporarily, you can see this code working.
-                    return true;
+                    true
                 } else if !inner.tx_buffer.is_full() {
                     // TX interrupts are on, so we are in the middle of sending a byte.
                     // Queue this byte, to send when the previous one has finished
@@ -113,10 +113,10 @@ impl<const QLEN: usize> BufferedUart<QLEN> {
                     unsafe {
                         inner.tx_buffer.enqueue_unchecked(byte);
                     }
-                    return true;
+                    true
                 } else {
                     // buffer is full ... we need to try again
-                    return false;
+                    false
                 }
             });
             if finished {
