@@ -29,7 +29,7 @@ pub struct Registers {
     cid: [u32; 4],
 }
 
-/// A UART driver
+/// A CMSDK UART driver
 pub struct CmsdkUart {
     tx: Tx,
     rx: Rx,
