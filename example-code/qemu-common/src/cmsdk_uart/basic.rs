@@ -83,6 +83,7 @@ impl CmsdkUart {
         Ok(())
     }
 
+    /// Enable reception interrupts.
     #[inline]
     pub fn enable_rx_interrupt(&mut self) {
         self.registers.modify_control(|mut c| {

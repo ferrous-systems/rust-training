@@ -40,7 +40,9 @@ mod registers;
 /// Error codes from this module
 #[derive(Debug, defmt::Format)]
 pub enum Error {
+    /// Invalid instance.
     InvalidInstance,
+    /// Invalid baudrate.
     InvalidBaudRate,
 }
 
