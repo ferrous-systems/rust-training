@@ -90,7 +90,7 @@ build-nrf52-bsp-demo:
 	cd example-code/nrf52/bsp_demo && cargo build --release
 
 build-qemu-aarch32v8r:
-	cd example-code/qemu-aarch32v8r && cargo +nightly build --release
+	cd example-code/qemu-aarch32v8r && cargo build --release
 
 build-qemu-aarch64v8a:
 	cd example-code/qemu-aarch64v8a && cargo build --release
