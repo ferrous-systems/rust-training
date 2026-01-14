@@ -133,8 +133,6 @@ impl embedded_io_async::ErrorType for TxAsynch {
 }
 
 impl embedded_io_async::Write for TxAsynch {
-    /// It is very important that the data which is sent outlives the asynchronous futures
-    /// created with it.
     async fn write(&mut self, buf: &[u8]) -> Result<usize, Self::Error> {
         Ok(self.write(buf).await)
     }
