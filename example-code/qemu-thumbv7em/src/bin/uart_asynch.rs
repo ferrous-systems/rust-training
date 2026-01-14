@@ -19,6 +19,7 @@ mod app {
     #[local]
     struct Local {
         tx: uart::asynch::TxAsynch,
+        handler_id: uart::asynch::TxHandlerId,
     }
 
     #[init]
@@ -31,9 +32,9 @@ mod app {
         uart.init(115200, SYSTEM_CLOCK).unwrap();
         uart.check().unwrap();
         let (tx, _rx) = uart.split();
-        let tx_async = uart::asynch::TxAsynch::new(tx, 0).unwrap();
+        let (tx_async, handler_id) = uart::asynch::TxAsynch::new(tx).unwrap();
         tx_task::spawn().unwrap();
-        (Shared {}, Local { tx: tx_async })
+        (Shared {}, Local { tx: tx_async, handler_id })
     }
 
     #[task(local = [tx])]
@@ -56,12 +57,12 @@ mod app {
     }
 
     /// This interrupt is important so the asynchronous UART transmission can progress.
-    #[task(binds = Uart0Tx)]
-    fn tx_interrupt(_cx: tx_interrupt::Context) {
+    #[task(binds = Uart0Tx, local = [handler_id])]
+    fn tx_interrupt(cx: tx_interrupt::Context) {
         // It would be nice if we could hide this inside the interrupt handler, but the interrupt
         // handler lives inside a generic library which does not know the base addresses of the
         // UARTS..
         let mut tx = unsafe { uart::Tx::steal(uart::UART0_ADDR) };
-        uart::asynch::on_interrupt_tx(&mut tx, 0);
+        uart::asynch::on_interrupt_tx(&mut tx, *cx.local.handler_id);
     }
 }

@@ -1,12 +1,19 @@
-use core::{cell::Cell, convert::Infallible, sync::atomic::AtomicBool};
+//! # Asynchronous UART support
+//!
+//! Currently, this module provides asynchronous TX support.
+use core::{
+    cell::Cell,
+    convert::Infallible,
+    sync::atomic::{AtomicBool, AtomicUsize, Ordering},
+};
 
 use atomic_waker::AtomicWaker;
 use critical_section::Mutex;
 
 use crate::cmsdk_uart::Tx;
 
-// Currently, a maximum of 5 CMSDK UART instances are supported.
-const MAX_WAKERS: usize = 5;
+/// Currently, a maximum of 5 CMSDK UART instances are supported.
+pub const MAX_WAKERS: usize = 5;
 
 // Each CMSDK UART has a waker which is used to notify the executor when a transfer is done.
 static TX_WAKERS: [AtomicWaker; 5] = [const { AtomicWaker::new() }; 5];
@@ -19,19 +26,27 @@ static TX_DONE: [AtomicBool; 5] = [const { AtomicBool::new(false) }; 5];
 static TX_CONTEXTS: [Mutex<Cell<TranferContext>>; 5] =
     [const { Mutex::new(Cell::new(TranferContext::new())) }; 5];
 
-#[derive(Debug)]
-pub struct InvalidWakerIndexError(pub usize);
+/// TX index which is incremented every time as asynchronous TX driver is created.
+static TX_INDEX: AtomicUsize = AtomicUsize::new(0);
 
-pub fn on_interrupt_tx(tx: &mut Tx, uart_index: usize) {
-    if uart_index >= MAX_WAKERS {
-        return;
-    }
+/// Waker limit exceeded. This module only supports a maximum of [MAX_WAKERS] wakers.
+#[derive(Debug)]
+pub struct WakerLimitExceededError;
+
+/// TX handler ID which is created when creating an asynchronous TX driver.
+#[derive(Debug, Clone, Copy)]
+pub struct TxHandlerId(usize);
+
+/// This function should be called on CMSDK UART interrupts to allow asynchronous TX operations
+/// to work.
+pub fn on_interrupt_tx(tx: &mut Tx, id: TxHandlerId) {
+    let raw_id = id.0;
     tx.clear_interrupts();
     if !tx.regs().read_control().txie() || tx.regs().read_status().txf() {
         return;
     }
     let mut context = critical_section::with(|cs| {
-        let context_ref = TX_CONTEXTS[uart_index].borrow(cs);
+        let context_ref = TX_CONTEXTS[raw_id].borrow(cs);
         context_ref.get()
     });
     // No transfer active.
@@ -42,8 +57,8 @@ pub fn on_interrupt_tx(tx: &mut Tx, uart_index: usize) {
     let slice_len = slice.len();
     if context.progress >= slice_len || slice_len == 0 {
         // Transfer is done. Notify executor and set completion flag.
-        TX_DONE[uart_index].store(true, core::sync::atomic::Ordering::Relaxed);
-        TX_WAKERS[uart_index].wake();
+        TX_DONE[raw_id].store(true, core::sync::atomic::Ordering::Relaxed);
+        TX_WAKERS[raw_id].wake();
         tx.disable_interrupts();
         return;
     }
@@ -54,7 +69,7 @@ pub fn on_interrupt_tx(tx: &mut Tx, uart_index: usize) {
 
     // Write back updated context structure.
     critical_section::with(|cs| {
-        let context_ref = TX_CONTEXTS[uart_index].borrow(cs);
+        let context_ref = TX_CONTEXTS[raw_id].borrow(cs);
         context_ref.set(context);
     });
 }
@@ -84,24 +99,25 @@ impl TranferContext {
 unsafe impl Sync for TranferContext {}
 unsafe impl Send for TranferContext {}
 
+/// Asycnhronous TX driver.
 pub struct TxAsynch {
     inner: Tx,
-    uart_index: usize,
+    id: TxHandlerId,
 }
 
 impl TxAsynch {
     /// Create a new asynchronous TX driver from a blocking one.
-    pub fn new(tx: Tx, uart_index: usize) -> Result<Self, InvalidWakerIndexError> {
-        if uart_index > 4 {
-            return Err(InvalidWakerIndexError(uart_index));
+    pub fn new(tx: Tx) -> Result<(Self, TxHandlerId), WakerLimitExceededError> {
+        let current_index = TX_INDEX.fetch_add(1, Ordering::Relaxed);
+        if current_index >= MAX_WAKERS {
+            return Err(WakerLimitExceededError);
         }
+        let id = TxHandlerId(current_index);
 
-        Ok(Self {
-            inner: tx,
-            uart_index,
-        })
+        Ok((Self { inner: tx, id }, id))
     }
 
+    /// Asynchronously write data to the UART.
     pub async fn write(&mut self, buf: &[u8]) -> usize {
         if buf.is_empty() {
             return 0;
@@ -131,19 +147,19 @@ impl embedded_io_async::Write for TxAsynch {
     }
 }
 
+/// TX future structure for an asynchronous UART transmission which can be polled.
 pub struct TxFuture<'tx> {
     tx: &'tx mut TxAsynch,
-    uart_index: usize,
 }
 
 impl<'tx> TxFuture<'tx> {
+    /// Create a new asynchronous future for a write/transmit operation.
     pub fn new(tx: &'tx mut TxAsynch, data: &[u8]) -> Self {
-        let uart_index = tx.uart_index;
-        TX_DONE[uart_index].store(false, core::sync::atomic::Ordering::Relaxed);
+        TX_DONE[tx.id.0].store(false, core::sync::atomic::Ordering::Relaxed);
         tx.inner.disable();
         tx.inner.disable_interrupts();
         critical_section::with(|cs| {
-            let context_ref = TX_CONTEXTS[uart_index].borrow(cs);
+            let context_ref = TX_CONTEXTS[tx.id.0].borrow(cs);
             context_ref.set(TranferContext {
                 data_ptr: data.as_ptr(),
                 transfer_len: data.len(),
@@ -158,7 +174,7 @@ impl<'tx> TxFuture<'tx> {
             tx.inner.write(data[0]).unwrap();
         });
 
-        Self { tx, uart_index }
+        Self { tx }
     }
 }
 
@@ -169,10 +185,10 @@ impl core::future::Future for TxFuture<'_> {
         self: core::pin::Pin<&mut Self>,
         cx: &mut core::task::Context<'_>,
     ) -> core::task::Poll<Self::Output> {
-        TX_WAKERS[self.uart_index].register(cx.waker());
-        if TX_DONE[self.uart_index].swap(false, core::sync::atomic::Ordering::Relaxed) {
+        TX_WAKERS[self.tx.id.0].register(cx.waker());
+        if TX_DONE[self.tx.id.0].swap(false, core::sync::atomic::Ordering::Relaxed) {
             let progress = critical_section::with(|cs| {
-                let context = TX_CONTEXTS[self.uart_index].borrow(cs);
+                let context = TX_CONTEXTS[self.tx.id.0].borrow(cs);
                 let progress = context.get().progress;
                 context.set(TranferContext::new());
                 progress
@@ -185,7 +201,7 @@ impl core::future::Future for TxFuture<'_> {
 
 impl Drop for TxFuture<'_> {
     fn drop(&mut self) {
-        if !TX_DONE[self.uart_index].load(core::sync::atomic::Ordering::Relaxed) {
+        if !TX_DONE[self.tx.id.0].load(core::sync::atomic::Ordering::Relaxed) {
             self.tx.inner.clear_interrupts();
             self.tx.inner.disable_interrupts();
         }

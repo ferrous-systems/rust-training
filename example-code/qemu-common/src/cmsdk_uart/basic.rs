@@ -187,6 +187,7 @@ impl core::fmt::Write for Uart {
     }
 }
 
+/// UART TX driver.
 pub struct Tx(MmioRegisters<'static>);
 
 impl Tx {
@@ -203,6 +204,7 @@ impl Tx {
         Tx(regs)
     }
 
+    /// Raw register access.
     #[inline]
     pub fn regs(&mut self) -> &mut MmioRegisters<'static> {
         &mut self.0
@@ -213,22 +215,26 @@ impl Tx {
         _ = nb::block!(self.write(byte));
     }
 
+    /// Disable the TX driver.
     #[inline]
     pub fn disable(&mut self) {
         self.0.modify_control(|c| c.with_txe(false));
     }
 
+    /// Enable the TX driver.
     #[inline]
     pub fn enable(&mut self) {
         self.0.modify_control(|c| c.with_txe(true));
     }
 
+    /// Enable TX interrupts.
     #[inline]
     pub fn enable_interrupts(&mut self) {
         self.0
             .modify_control(|c| c.with_txie(true).with_txoie(true));
     }
 
+    /// Disable TX interrupts.
     #[inline]
     pub fn disable_interrupts(&mut self) {
         self.0
@@ -248,6 +254,7 @@ impl Tx {
         );
     }
 
+    /// Write a byte in a non-blocking manner using [nb].
     pub fn write(&mut self, byte: u8) -> nb::Result<(), Error> {
         let status = self.0.read_status();
         if status.txf() {
@@ -272,6 +279,7 @@ impl core::fmt::Write for Tx {
     }
 }
 
+/// UART RX driver.
 pub struct Rx(MmioRegisters<'static>);
 
 impl Rx {
@@ -288,6 +296,7 @@ impl Rx {
         Rx(regs)
     }
 
+    /// Enable RX interrupts.
     #[inline]
     pub fn enable_interrupts(&mut self) {
         self.0.modify_control(|mut c| {
@@ -297,6 +306,7 @@ impl Rx {
         });
     }
 
+    /// Disable RX interrupts.
     #[inline]
     pub fn disable_interrupts(&mut self) {
         self.0.modify_control(|mut c| {
@@ -306,6 +316,7 @@ impl Rx {
         });
     }
 
+    /// Read the UART in a non-blocking manner.
     pub fn read(&mut self) -> nb::Result<u8, Error> {
         let status = self.0.read_status();
         if !status.rxf() {
