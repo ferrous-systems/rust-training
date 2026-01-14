@@ -136,6 +136,16 @@ jobs:
           cache: example-code/native/stdout
       - run: just build-native-stdout
 
+  eg-native-lifetimes:
+    name: Build Example native-lifetimes
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - uses: ./.github/actions/setup
+        with:
+          cache: example-code/native/lifetimes
+      - run: just build-native-lifetimes
+
   eg-nrf52-bsp-demo:
     name: Build Example nrf52-bsp-demo
     runs-on: ubuntu-24.04

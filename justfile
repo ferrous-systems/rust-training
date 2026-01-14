@@ -75,7 +75,7 @@ format-rust:
 	cargo fmt --manifest-path example-code/qemu-thumbv7em/Cargo.toml
 	cargo fmt --manifest-path xtask/Cargo.toml
 
-build-rust: build-native-ffi-use-c-in-rust build-native-ffi-use-rust-in-c build-native-stdout build-nrf52-bsp-demo build-qemu-aarch32v8r build-qemu-aarch64v8a build-qemu-thumbv7em build-xtask
+build-rust: build-native-ffi-use-c-in-rust build-native-ffi-use-rust-in-c build-native-stdout build-native-lifetimes build-nrf52-bsp-demo build-qemu-aarch32v8r build-qemu-aarch64v8a build-qemu-thumbv7em build-xtask
 
 build-native-ffi-use-c-in-rust:
 	cd example-code/native/ffi/use-c-in-rust && cargo build --release
@@ -85,6 +85,9 @@ build-native-ffi-use-rust-in-c:
 
 build-native-stdout:
 	cd example-code/native/stdout && RUSTC_BOOTSTRAP=1 cargo build --release
+
+build-native-lifetimes:
+	cd example-code/native/lifetimes && cargo build --release && cargo run --release
 
 build-nrf52-bsp-demo:
 	cd example-code/nrf52/bsp_demo && cargo build --release
