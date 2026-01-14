@@ -27,7 +27,7 @@ fn main() -> ! {
     let peripherals = qemu_thumbv7em::Peripherals::take().unwrap();
     UART0
         .init(
-            uart::Uart::new(peripherals.uart0),
+            uart::CmsdkUart::new(peripherals.uart0),
             115200,
             SYSTEM_CLOCK,
         )

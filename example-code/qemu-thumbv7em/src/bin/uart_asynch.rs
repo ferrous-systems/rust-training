@@ -28,7 +28,7 @@ mod app {
         defmt::println!("RTIC sample app!");
 
         let peripherals = qemu_thumbv7em::Peripherals::take().unwrap();
-        let mut uart = uart::Uart::new(peripherals.uart0);
+        let mut uart = uart::CmsdkUart::new(peripherals.uart0);
         uart.init(115200, SYSTEM_CLOCK).unwrap();
         uart.check().unwrap();
         let (tx, _rx) = uart.split();

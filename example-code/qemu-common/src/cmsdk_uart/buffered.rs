@@ -7,12 +7,12 @@ use core::convert::Infallible;
 
 use super::registers::IntStatus;
 
-use super::{Uart, Error};
+use super::{CmsdkUart, Error};
 
 /// Our context, stored inside a lock
 struct Inner<const QLEN: usize> {
     /// Our UART
-    uart: Uart,
+    uart: CmsdkUart,
     /// Our transmission buffer
     tx_buffer: heapless::spsc::Queue<u8, QLEN>,
     /// Our reception buffer
@@ -37,7 +37,7 @@ impl<const QLEN: usize> BufferedUart<QLEN> {
     /// Pass in a `CmsdkUart` and it will be stored within and available at a later time.
     pub fn init(
         &self,
-        mut uart: Uart,
+        mut uart: CmsdkUart,
         baud_rate: u32,
         system_clock: u32,
     ) -> Result<(), Error> {

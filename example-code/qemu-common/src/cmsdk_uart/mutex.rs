@@ -2,11 +2,11 @@
 
 use core::cell::RefCell;
 
-use super::{Uart, Error};
+use super::{CmsdkUart, Error};
 
 /// A CMSDK UART you can store as a static variable
 pub struct MutexUart {
-    inner: critical_section::Mutex<RefCell<Option<Uart>>>,
+    inner: critical_section::Mutex<RefCell<Option<CmsdkUart>>>,
 }
 
 impl MutexUart {
@@ -22,7 +22,7 @@ impl MutexUart {
     /// Pass in a `CmsdkUart` and it will be stored within and available at a later time.
     pub fn init(
         &self,
-        mut uart: Uart,
+        mut uart: CmsdkUart,
         baud_rate: u32,
         system_clock: u32,
     ) -> Result<(), Error> {

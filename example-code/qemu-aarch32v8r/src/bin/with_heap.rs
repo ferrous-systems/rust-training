@@ -45,7 +45,7 @@ pub extern "C" fn kmain() {
 ///
 /// Called by [`kmain`].
 fn main() -> Result<(), core::fmt::Error> {
-    let mut uart0 = unsafe { uart::Uart::new_with_raw_addr(uart::UART0_ADDR) };
+    let mut uart0 = unsafe { uart::CmsdkUart::new_with_raw_addr(uart::UART0_ADDR) };
     uart0.init(115200, PERIPHERAL_CLOCK).unwrap();
 
     writeln!(uart0, "Hello, this is Rust!")?;
@@ -67,7 +67,7 @@ fn main() -> Result<(), core::fmt::Error> {
 #[panic_handler]
 fn panic(info: &core::panic::PanicInfo) -> ! {
     // We assume it is already enabled
-    let mut uart0 = unsafe { uart::Uart::new_with_raw_addr(uart::UART0_ADDR) };
+    let mut uart0 = unsafe { uart::CmsdkUart::new_with_raw_addr(uart::UART0_ADDR) };
     let _ = writeln!(uart0, "PANIC: {:?}", info);
     // Exit, using semihosting
     semihosting::process::exit(1);

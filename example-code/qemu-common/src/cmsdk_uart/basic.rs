@@ -30,12 +30,12 @@ pub struct Registers {
 }
 
 /// A UART driver
-pub struct Uart {
+pub struct CmsdkUart {
     tx: Tx,
     rx: Rx,
 }
 
-impl Uart {
+impl CmsdkUart {
     /// What we expect in the CID registers
     const VALID_CID: [u32; 4] = [0x0D, 0xF0, 0x05, 0xB1];
 
@@ -181,7 +181,7 @@ impl Uart {
     }
 }
 
-impl core::fmt::Write for Uart {
+impl core::fmt::Write for CmsdkUart {
     fn write_str(&mut self, s: &str) -> core::fmt::Result {
         self.tx.write_str(s)
     }

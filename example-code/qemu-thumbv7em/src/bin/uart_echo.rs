@@ -30,7 +30,7 @@ fn main() -> ! {
     let mut cp = cortex_m::Peripherals::take().unwrap();
     UART0
         .init(
-            uart::Uart::new(peripherals.uart0),
+            uart::CmsdkUart::new(peripherals.uart0),
             115200,
             SYSTEM_CLOCK,
         )
