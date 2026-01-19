@@ -1,0 +1,8 @@
+[package]
+name = "rust-program"
+authors = ["Jonathan Pallant <jonathan.pallant@ferrous-systems.com>"]
+version = "1.0.0"
+edition = "2024"
+
+[dependencies]
+libdatabase-rs = { version = "1.0.0", path = "../libdatabase-rs" }
