@@ -167,10 +167,15 @@ See [Reset](https://github.com/rust-embedded/cortex-m/blob/c-m-rt-v0.7.3/cortex-
 
 ## Using the crate
 
-See [knurling-rs App Template](https://github.com/knurling-rs/app-template)
+* [knurling-rs/app-template](https://github.com/knurling-rs/app-template)
+* [ferrous/rust-training](https://github.com/ferrous-systems/rust-training/tree/main/example-code/qemu-thumbv7em)
 
 ## Linker scripts
 
 * In Rust, they work exactly like they do in clang or gcc.
 * Same `.text`, `.rodata`, `.data`, `.bss` sections
 * `cortex-m-rt` provides `link.x`, which pulls in a `memory.x` you supply.
+* You must tell the linker to use `link.x`, with:
+    * A build-script
+    * `rustflags` in `.cargo/config.toml`
+    * The `RUSTFLAGS` environment variable
