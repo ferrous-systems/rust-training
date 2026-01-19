@@ -12,21 +12,59 @@
 
 #include "libdatabase.h"
 
-#define DATABASE_NAME_MAX_LEN 32
+/******************************************************************************
+ * Data Types
+ *****************************************************************************/
 
+/**
+ * An concrete type representing a Database object
+ */
 struct database_t {
+    /**
+     * The name of the database we opened.
+     *
+     * This is a null-terminated string, which we do not free.
+     */
     const char* name;
 };
 
+/**
+ * An concrete type representing Table within a Database.
+ */
 struct table_t {
+    /**
+     * The database the table belongs to.
+     *
+     * Must be a valid non-null pointer, which we do not free.
+     */
     database_t* p_parent;
+    /**
+     * The name of the table we opened.
+     *
+     * This is a null-terminated string, which we do not free.
+     */
     const char* name;
 };
 
+/**
+ * An concrete type representing Row within a Table.
+ */
 struct row_t {
+    /**
+     * The table the row belongs to.
+     *
+     * Must be a valid non-null pointer, which we do not free.
+     */
     table_t* p_parent;
+    /**
+      * The zero-based index of the row within the table.
+      */
     unsigned int index;
 };
+
+/******************************************************************************
+ * Database Methods
+ *****************************************************************************/
 
 /**
  * Heap allocate a new database object.
@@ -44,12 +82,12 @@ database_t* libdatabase_database_create(const char* database_name) {
 }
 
 /**
- * Heap allocate a new table, pointing at the database.
+ * Heap allocate a new table, pointing at a database.
  *
  * I hope that string sticks around - we don't copy it.
  */
 table_t*
-libdatabase_database_add_table(database_t* p_database, const char* table_name) {
+libdatabase_database_get_table(database_t* p_database, const char* table_name) {
     printf("> %s\n", __FUNCTION__);
     if (!p_database) {
         return NULL;
@@ -68,7 +106,8 @@ libdatabase_database_add_table(database_t* p_database, const char* table_name) {
  *
  * I hope there aren't any tables left lying around.
  */
-void libdatabase_database_close(database_t* p_database) {
+void
+libdatabase_database_close(database_t* p_database) {
     printf("< %s\n", __FUNCTION__);
     if (!p_database) {
         return;
@@ -76,8 +115,12 @@ void libdatabase_database_close(database_t* p_database) {
     free(p_database);
 }
 
+/******************************************************************************
+ * Table Methods
+ *****************************************************************************/
+
 /**
- * Heap allocate a new row that points to the table
+ * Heap allocate a new row, pointing at a table.
  */
 row_t*
 libdatabase_table_get_row(table_t* p_table, unsigned int row_index) {
@@ -95,11 +138,12 @@ libdatabase_table_get_row(table_t* p_table, unsigned int row_index) {
 }
 
 /**
- * Destroy the table object.
+ * Destroy a table object.
  *
  * I hope there aren't any rows left lying around.
  */
-void libdatabase_table_close(table_t* p_table) {
+void
+libdatabase_table_close(table_t* p_table) {
     printf("< %s\n", __FUNCTION__);
     if (!p_table) {
         return;
@@ -107,12 +151,17 @@ void libdatabase_table_close(table_t* p_table) {
     free(p_table);
 }
 
+/******************************************************************************
+ * Row Methods
+ *****************************************************************************/
+
 /**
  * Print a row to stdout.
  *
  * Useful to check the pointers are all still valid.
  */
-void libdatabase_row_print(row_t* p_row) {
+void
+libdatabase_row_print(row_t* p_row) {
     if (!p_row) {
         return;
     }
@@ -122,9 +171,10 @@ void libdatabase_row_print(row_t* p_row) {
 }
 
 /**
- * Destroy the row object
+ * Destroy a row object
  */
-void libdatabase_row_close(row_t* p_row) {
+void
+libdatabase_row_close(row_t* p_row) {
     printf("< %s\n", __FUNCTION__);
     if (!p_row) {
         return;
@@ -132,6 +182,6 @@ void libdatabase_row_close(row_t* p_row) {
     free(p_row);
 }
 
-/*
+/******************************************************************************
  * End of file
- */
+ *****************************************************************************/

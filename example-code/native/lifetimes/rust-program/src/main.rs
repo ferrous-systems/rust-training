@@ -12,7 +12,7 @@ fn main() {
     // You cannot drop the database name then go on to use the database:
     // drop(db_name);
 
-    let mut table = db.add_table(&table_name).expect("adding table");
+    let mut table = db.get_table(&table_name).expect("adding table");
 
     // You cannot drop the DB then go on to use it, or its tables, or its rows:
     // drop(db);

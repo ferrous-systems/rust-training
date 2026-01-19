@@ -20,7 +20,7 @@ int main(int argc, char** argv) {
     }
 
     printf("2. Opening Table in Database\n");
-    table_t* p_table = libdatabase_database_add_table(p_database, "example_table");
+    table_t* p_table = libdatabase_database_get_table(p_database, "example_table");
     if (!p_table) {
         fprintf(stderr, "Failed to open table\n");
         return -1;
