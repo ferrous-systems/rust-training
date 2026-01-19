@@ -12,8 +12,8 @@ fn main() {
         .unwrap()
         .write_all(include_bytes!("memory.ld"))
         .unwrap();
-    println!("cargo:rustc-link-arg=-Timage.ld");
     println!("cargo:rustc-link-arg=-Tmemory.ld");
+    println!("cargo:rustc-link-arg=-Timage.ld");
     println!("cargo:rerun-if-changed=memory.ld");
     println!("cargo:rustc-link-search={}", out.display());
 }
