@@ -91,7 +91,7 @@ spend time discussing the impact of many features on large projects.
 -   Zero-cost abstractions
 -   Use threads with *confidence*
 
-## Productive
+## Productivity
 
 -   User-focused tooling
 -   Comes with a build-system, dependency manager, formatter, etc
