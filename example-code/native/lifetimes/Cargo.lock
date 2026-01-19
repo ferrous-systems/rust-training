@@ -108,14 +108,14 @@ checksum = "bcc35a38544a891a5f7c865aca548a982ccb3b8650a5b06d0fd33a10283c56fc"
 
 [[package]]
 name = "libdatabase-rs"
-version = "0.1.0"
+version = "1.0.0"
 dependencies = [
  "libdatabase-sys",
 ]
 
 [[package]]
 name = "libdatabase-sys"
-version = "0.1.0"
+version = "1.0.0"
 dependencies = [
  "bindgen",
  "cc",
@@ -218,7 +218,7 @@ checksum = "7a2d987857b319362043e95f5353c0535c1f58eec5336fdfcf626430af7def58"
 
 [[package]]
 name = "rust-program"
-version = "0.1.0"
+version = "1.0.0"
 dependencies = [
  "libdatabase-rs",
 ]

@@ -1,8 +1,8 @@
 [package]
 name = "libdatabase-rs"
 authors = ["Jonathan Pallant <jonathan.pallant@ferrous-systems.com>"]
-version = "0.1.0"
+version = "1.0.0"
 edition = "2024"
 
 [dependencies]
-libdatabase-sys = { version = "0.1.0", path = "../libdatabase-sys" }
+libdatabase-sys = { version = "1.0.0", path = "../libdatabase-sys" }
