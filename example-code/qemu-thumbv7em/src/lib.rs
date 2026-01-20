@@ -63,18 +63,25 @@ impl Peripherals {
     }
 }
 
-/// A panic handler which logs to defmt and then does a semihosting exit.
+/// Called when the application raises an unrecoverable `panic!`.
+///
+/// Prints the panic to the console and then exits QEMU using a semihosting
+/// breakpoint.
 #[panic_handler]
 fn panic(info: &core::panic::PanicInfo) -> ! {
-    if let Some(location) = info.location() {
-        defmt::error!(
-            "Panic! {} ({=str}:{=u32})",
-            defmt::Debug2Format(&info.message()),
-            location.file(),
-            location.line()
-        );
-    } else {
-        defmt::error!("Panic! {}", defmt::Debug2Format(&info.message()));
+    match (info.message().as_str(), info.location()) {
+        (Some(m), Some(l)) => {
+            defmt::error!("PANIC at {=str}:{=u32}: {}", l.file(), l.line(), m);
+        }
+        (Some(m), None) => {
+            defmt::error!("PANIC: {}", m);
+        }
+        (None, Some(l)) => {
+            defmt::error!("PANIC at {=str}:{=u32}", l.file(), l.line());
+        }
+        (None, None) => {
+            defmt::error!("PANIC!");
+        }
     }
     semihosting::process::exit(1);
 }
@@ -82,7 +89,17 @@ fn panic(info: &core::panic::PanicInfo) -> ! {
 /// A Hard Fault handler which logs to defmt and then does a semihosting exit.
 #[cortex_m_rt::exception(trampoline = true)]
 unsafe fn HardFault(frame: &cortex_m_rt::ExceptionFrame) -> ! {
-    defmt::error!("HardFault: {}", defmt::Debug2Format(frame));
+    defmt::error!(
+        "HardFault: r0=0x{=u32:08x}, r1=0x{=u32:08x}, r2=0x{=u32:08x}, r3=0x{=u32:08x}, r12=0x{=u32:08x}, lr=0x{=u32:08x}, pc=0x{=u32:08x}, xpsr=0x{=u32:08x}",     
+        frame.r0(),
+        frame.r1(),
+        frame.r2(),
+        frame.r3(),
+        frame.r12(),
+        frame.lr(),
+        frame.pc(),
+        frame.xpsr()
+    );
     semihosting::process::exit(1);
 }
 
