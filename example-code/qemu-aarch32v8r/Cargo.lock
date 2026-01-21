@@ -4,9 +4,9 @@ version = 4
 
 [[package]]
 name = "aarch32-cpu"
-version = "0.1.0"
+version = "0.2.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "5db6700cf01549520abec199376115e1ceb6fde1d1de30064f0f230be8a0c305"
+checksum = "1417bbf608824a44cb2fa2ad74b5ec28c0ae4c83df62a4bd2b532bf04c241ade"
 dependencies = [
  "arbitrary-int 2.0.0",
  "arm-targets",
@@ -18,9 +18,9 @@ dependencies = [
 
 [[package]]
 name = "aarch32-rt"
-version = "0.1.0"
+version = "0.2.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "3b2aced8779594762e12f1c8196b29e52a5e7743ffe06602b6dfe80504d4ae12"
+checksum = "82edb5b5e12bb60043fd7ca0d927f04dcb36ebe3909f8906641f766bbb6e528b"
 dependencies = [
  "aarch32-cpu",
  "aarch32-rt-macros",
@@ -29,9 +29,9 @@ dependencies = [
 
 [[package]]
 name = "aarch32-rt-macros"
-version = "0.1.0"
+version = "0.2.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "2a2c6caee3f48c427d9e1c5c11fe143767dc678e60d16bec1f0db63aeda0e48e"
+checksum = "fb3a0c69d7b102122ffb88ed4167eb2972338fb9c47a7ef9b587a8ee1db6f4d0"
 dependencies = [
  "proc-macro2",
  "quote",

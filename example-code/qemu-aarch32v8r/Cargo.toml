@@ -8,8 +8,8 @@ description = "A simple ARMv8-R demo application that runs in QEMU and compiles 
 default-run = "defmt"
 
 [dependencies]
-aarch32-cpu = { version = "0.1.0", features = ["critical-section-single-core"] }
-aarch32-rt = "0.1.0"
+aarch32-cpu = { version = "0.2.0", features = ["critical-section-single-core"] }
+aarch32-rt = "0.2.0"
 critical-section = "1.2.0"
 defmt = "1.0.1"
 defmt-semihosting = "0.3.0"
