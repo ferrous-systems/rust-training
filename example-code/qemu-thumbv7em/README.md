@@ -4,21 +4,19 @@ These examples are designed to run in QEMU emulating the MPS2-AN386 machine.
 
 ## Examples
 
-### `defmt`
+There are seven binaries in `./src/bin`:
 
-Demomstrates how to use `defmt` inside QEMU. It uses `defmt-semihosting` to output the `defmt` frames using Cortex-M semi-hosting interrupts. The script `qemu_run.sh` will start QEMU and pipe the semihosting output into `defmt-print` so that the `defmt` logs are decoded.
+* `defmt` prints some demt logs at different levels
+* `panic` shows the panic handling
+* `rtic_empty` is a simple RTIC skeleton app
+* `timer` sets up the SysTick timer
+* `uart_mutex` sets up a UART as a global variable and prints to it
+* `uart_echo` sets up a UART and echos any input received
+* `uart_buffered` sets up an interrupt-drive UART using an in-memory buffer
+* `with_heap` sets up a heap allocator and uses the `format!` macro to generate
+  heap-allocated strings, which it then prints.
 
-### `uart_basic`
-
-Demonstrates use of stack-allocated CMSDK UART object from Rust. The UART writes are blocking.
-
-### `uart_mutex`
-
-Demonstrates use of globally-allocated CMSDK UART object from Rust. The UART writes are blocking and execute in a critical-section with interrupts disabled.
-
-### `uart_buffered`
-
-Demonstrates use of globally-allocated CMSDK UART object from Rust alongside a circular buffer. The UART writes are copied into the ring-buffer (blocking is space is exhausted) and the ring-buffer is emptied byte-by-byte under interrupt.
+All binaries use defmt to print logging information.
 
 ## Target Hardware
 
@@ -55,47 +53,29 @@ Alternatively, you can skip steps 2 and 3, and execute `criticalup run cargo run
 
 ## Running
 
-QEMU has been configured to redirect bytes from the first five UARTs to log files in `/target/uart*.log`. If you add `-- --telnet` to the `cargo run` command, a telnet server is started on `localhost:4321` so you can interact with UART0.
+You will need to install [qemu-run](https://crates.io/crates/qemu-run), which
+handles starting `qemu-system-aarch64` and decoding the defmt logs sent over
+semihosting.
+
+Most of the examples will run as-is, however if want to access the virtual UART
+over telnet, you need to add the `-- --uart-telnet` option to the `cargo run`
+invocation.
 
 ```console
-$ cargo run --bin uart_buffered
-    Finished `dev` profile [optimized + debuginfo] target(s) in 0.02s
-     Running `/Users/jonathan/Documents/ferrous-systems/rust-training/example-code/qemu-thumbv7em/./qemu_run.sh target/thumbv7em-none-eabihf/debug/uart_buffered`
-ELF_BINARY=target/thumbv7em-none-eabihf/debug/uart_buffered
-Writing UART output to target/uart*.log
-Running on '-cpu cortex-m4 -machine mps2-an386'...
-------------------------------------------------------------------------
-[INFO ] Running uart_irq - printing to global UART0 (bin/uart_buffered.rs:32)
------------------------------------------------------------------------------
-$ bat target/uart*.log
-───────┬─────────────────────────────────────────────
-       │ File: target/uart0.log
-───────┼─────────────────────────────────────────────
-   1   │ Hello, this is on a static UART0!
-   2   │ Hello, this another string on a static UART0!
-───────┴─────────────────────────────────────────────
-───────┬─────────────────────────────────────────────
-       │ File: target/uart1.log   <EMPTY>
-───────┴─────────────────────────────────────────────
-───────┬─────────────────────────────────────────────
-       │ File: target/uart2.log   <EMPTY>
-───────┴─────────────────────────────────────────────
-───────┬─────────────────────────────────────────────
-       │ File: target/uart3.log   <EMPTY>
-───────┴─────────────────────────────────────────────
-───────┬─────────────────────────────────────────────
-       │ File: target/uart4.log   <EMPTY>
-───────┴─────────────────────────────────────────────
-$ cargo run --bin uart_buffered -- --telnet
-    Finished `dev` profile [optimized + debuginfo] target(s) in 0.02s
-     Running `/Users/jonathan/Documents/ferrous-systems/rust-training/example-code/qemu-thumbv7em/./qemu_run.sh target/thumbv7em-none-eabihf/debug/uart_buffered`
-ELF_BINARY=target/thumbv7em-none-eabihf/debug/uart_buffered
-Writing UART output to target/uart*.log
-Except UART0, which is waiting for telnet connection on localhost:4321...
-Running on '-cpu cortex-m4 -machine mps2-an386'...
-------------------------------------------------------------------------
-qemu-system-arm: -serial telnet:localhost:4321,server,wait: info: QEMU waiting for connection on: disconnected:telnet:::1:4321,server=on
+$ cargo run --bin uart_echo -- --uart-telnet
+    Finished `dev` profile [optimized + debuginfo] target(s) in 0.03s
+     Running `qemu-run --machine mps2-an386 --cpu cortex-m4 --log-format=oneline target/thumbv7em-none-eabihf/debug/uart_echo --uart-telnet`
+[INFO ] Told QEMU to start telnet server on localhost:4321. Connect to interact with UART0. (<crate> qemu-run/src/main.rs:157) (HOST)
+qemu-system-arm: -chardev socket,id=sock0,server=on,telnet=on,port=4321,host=localhost: info: QEMU waiting for connection on: disconnected:telnet:::1:4321,server=on
+[INFO ] Running uart_echo - echoing via to global buffered UART0 (uart_echo src/bin/uart_echo.rs:32)
+[INFO ] Application read 1 bytes ([54]). Echoing back. (uart_echo src/bin/uart_echo.rs:76)
+[INFO ] Application read 1 bytes ([48]). Echoing back. (uart_echo src/bin/uart_echo.rs:76)
+[INFO ] Application read 1 bytes ([69]). Echoing back. (uart_echo src/bin/uart_echo.rs:76)
+[INFO ] Application read 1 bytes ([73]). Echoing back. (uart_echo src/bin/uart_echo.rs:76)
+[INFO ] Application read 1 bytes ([20]). Echoing back. (uart_echo src/bin/uart_echo.rs:76)
 ```
+
+You can access the telnet server with `telnet localhost:4321` or similar.
 
 ## License
 

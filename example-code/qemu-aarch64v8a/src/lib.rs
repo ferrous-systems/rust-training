@@ -6,9 +6,9 @@ use aarch64_paging::{
 };
 use aarch64_rt::initial_pagetable;
 use aarch64_rt::InitialPagetable;
+use defmt_semihosting as _;
 
 pub mod critical_section;
-pub mod virt_uart;
 
 /// An Aarch64 Exception Level
 #[derive(Debug, Copy, Clone, PartialEq, Eq)]
@@ -83,7 +83,20 @@ initial_pagetable!(
 /// breakpoint.
 #[panic_handler]
 fn panic(info: &core::panic::PanicInfo) -> ! {
-    semihosting::println!("PANIC: {:?}", info);
+    match (info.message().as_str(), info.location()) {
+        (Some(m), Some(l)) => {
+            defmt::error!("PANIC at {=str}:{=u32}: {}", l.file(), l.line(), m);
+        }
+        (Some(m), None) => {
+            defmt::error!("PANIC: {}", m);
+        }
+        (None, Some(l)) => {
+            defmt::error!("PANIC at {=str}:{=u32}", l.file(), l.line());
+        }
+        (None, None) => {
+            defmt::error!("PANIC!");
+        }
+    }
     semihosting::process::exit(1);
 }
 
@@ -110,3 +123,5 @@ extern "C" fn fiq_lower(_elr: u64, _spsr: u64) {}
 
 #[unsafe(no_mangle)]
 extern "C" fn serr_lower(_elr: u64, _spsr: u64) {}
+
+// End of file

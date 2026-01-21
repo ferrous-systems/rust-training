@@ -1,16 +1,16 @@
-//! An example program for QEMU's Armv7E-M Virtual Machine
-//!
-//! Written by Jonathan Pallant at Ferrous Systems
-//!
-//! Copyright (c) Ferrous Systems, 2025
-
 #![no_std]
 #![no_main]
 
-use qemu_thumbv7em as _;
+use aarch64_rt::entry;
 
-#[cortex_m_rt::entry]
-fn main() -> ! {
+use qemu_aarch64v8a as _;
+
+entry!(main);
+
+/// The entry-point to the Rust application.
+///
+/// It is called by the start-up code in `aarch64-rt`
+fn main(_arg0: u64, _arg1: u64, _arg2: u64, _arg3: u64) -> ! {
     defmt::println!("Hello, world!");
     defmt::error!("This is an error log");
     defmt::warn!("This is a warn log");

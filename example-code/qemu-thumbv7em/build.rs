@@ -1,15 +1,24 @@
-use std::{env, error::Error, fs, path::PathBuf};
+//! # Build script for the QEMU Ferrocene demo project
+//!
+//! This script only executes when using `cargo` to build the project.
 
-fn main() -> Result<(), Box<dyn Error>> {
-    let out_dir = PathBuf::from(env::var("OUT_DIR")?);
-    // put memory layout (linker script) in the linker search path as the
-    // package root isn't always searched
-    fs::copy("memory.x", out_dir.join("memory.x"))?;
-    fs::copy("device.x", out_dir.join("device.x"))?;
-    // important - if the file changes, re-run the build
-    println!("cargo::rerun-if-changed=device.x");
+use std::io::Write;
+
+fn main() {
+    // Put `memory.ld` file in our output directory and ensure it's on the
+    // linker search path.
+    let out = &std::path::PathBuf::from(std::env::var_os("OUT_DIR").unwrap());
+    std::fs::File::create(out.join("memory.x"))
+        .unwrap()
+        .write_all(include_bytes!("memory.x"))
+        .unwrap();
     println!("cargo::rerun-if-changed=memory.x");
-    // tell the linker where to find them
-    println!("cargo::rustc-link-search={}", out_dir.display());
-    Ok(())
+    std::fs::File::create(out.join("device.x"))
+        .unwrap()
+        .write_all(include_bytes!("device.x"))
+        .unwrap();
+    println!("cargo::rerun-if-changed=device.x");
+    println!("cargo:rustc-link-arg=-Tlink.x");
+    println!("cargo:rustc-link-arg=-Tdefmt.x");
+    println!("cargo:rustc-link-search={}", out.display());
 }

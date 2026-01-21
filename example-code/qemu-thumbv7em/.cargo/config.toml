@@ -2,11 +2,7 @@
 target = ["thumbv7em-none-eabihf"]
 
 [target.thumbv7em-none-eabihf]
-rustflags = [
-    "-Clink-arg=-Tlink.x",
-    "-Clink-arg=-Tdefmt.x",
-]
-runner = "./qemu_run.sh"
+runner = "qemu-run --machine mps2-an386 --cpu cortex-m4 --log-format=oneline"
 
 [env]
 DEFMT_LOG = "info"

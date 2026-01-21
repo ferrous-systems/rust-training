@@ -5,14 +5,17 @@ edition = "2021"
 authors = ["Ferrous Systems"]
 license = "MIT OR Apache-2.0"
 description = "A simple Aarch64 demo application that runs in QEMU and compiles with Ferrocene"
-default-run = "global_uart"
+default-run = "defmt"
 
 [dependencies]
 aarch64-paging = { version = "0.10.0", default-features = false }
 aarch64-rt =  { version = "0.2.2", default-features = false, features = ["el1", "exceptions", "initial-pagetable"] }
+arm-pl011-uart = "0.4.0"
 critical-section = { version = "1.1.2", features = ["restore-state-bool"] }
+defmt = "1.0.1"
+defmt-semihosting = "0.3.0"
 embedded-alloc = "0.5.1"
-semihosting = { version = "0.1.20", features = ["stdio"] }
+semihosting = "0.1.20"
 
 [profile.release]
 opt-level = "s"

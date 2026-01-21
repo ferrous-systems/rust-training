@@ -1,19 +1,18 @@
-//! An example program for QEMU's Aarch64 Virtual Machine
+//! An example program for QEMU's Armv8-R Virtual Machine
 //!
 //! Written by Jonathan Pallant at Ferrous Systems
 //!
-//! Copyright (c) Ferrous Systems, 2024
+//! Copyright (c) Ferrous Systems, 2025
 
 #![no_std]
 #![no_main]
 
 extern crate alloc;
 
-use core::{fmt::Write, ptr::addr_of_mut};
-
 use aarch64_rt::entry;
 use embedded_alloc::Heap;
-use qemu_aarch64v8a::{exception_level, virt_uart};
+
+use qemu_aarch64v8a as _;
 
 #[global_allocator]
 static HEAP: Heap = Heap::empty();
@@ -29,31 +28,15 @@ fn main(_arg0: u64, _arg1: u64, _arg2: u64, _arg3: u64) -> ! {
         const HEAP_SIZE: usize = 1024;
         static mut HEAP_MEM: [u8; HEAP_SIZE] = [0u8; HEAP_SIZE];
         unsafe {
-            let heap_start = addr_of_mut!(HEAP_MEM);
+            let heap_start = core::ptr::addr_of_mut!(HEAP_MEM);
             HEAP.init(heap_start as usize, HEAP_SIZE);
         }
     }
-    if let Err(e) = rust_main() {
-        panic!("main returned {:?}", e);
-    }
+    defmt::println!("This is the with_heap example.");
+    let pi: f64 = core::f64::consts::PI;
+    let s = alloc::format!("This is a heap allocated string, π = {:0.6}", pi);
+    defmt::println!("s = {:?}", s.as_str());
     semihosting::process::exit(0);
-}
-
-/// The main function of our Rust application.
-///
-/// Called by [`main`].
-fn rust_main() -> Result<(), core::fmt::Error> {
-    let mut uart0 = unsafe { virt_uart::Uart::new_uart0() };
-    writeln!(uart0, "Hello, this is Rust @ {:?}", exception_level())?;
-    for x in 1..=10 {
-        for y in 1..=10 {
-            let z = f64::from(x) * f64::from(y);
-            let msg = alloc::format!("{z:>8.2} ");
-            write!(uart0, "{}", msg)?;
-        }
-        writeln!(uart0)?;
-    }
-    panic!("I am a panic");
 }
 
 // End of file

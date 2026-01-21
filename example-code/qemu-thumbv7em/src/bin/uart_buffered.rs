@@ -1,6 +1,8 @@
-//! Print to the UART on an MPS2-AN505, using interrupts and a buffer.
+//! An example program for QEMU's Armv7E-M Virtual Machine
 //!
-//! The UART output will be routed to log file logs/uart0.log
+//! Written by Jonathan Pallant at Ferrous Systems
+//!
+//! Copyright (c) Ferrous Systems, 2025
 
 #![no_std]
 #![no_main]
@@ -22,7 +24,7 @@ static UART0: BufferedUart<QLEN> = BufferedUart::empty();
 
 #[cortex_m_rt::entry]
 fn main() -> ! {
-    defmt::info!("Running uart_irq - printing to global UART0");
+    defmt::info!("Running uart_buffered - printing to global buffered UART0");
 
     let peripherals = qemu_thumbv7em::Peripherals::take().unwrap();
     UART0
@@ -38,11 +40,14 @@ fn main() -> ! {
         cortex_m::interrupt::enable();
     }
 
-    _ = write!(&UART0, "Hello, this is on a static UART0!\r\n");
+    _ = write!(&UART0, "Hello, this is on a buffered UART0!\r\n");
 
     // these should all be queued (don't send more than `QLEN` bytes!)
     critical_section::with(|_| {
-        _ = write!(&UART0, "Hello, this another string on a static UART0!\r\n");
+        _ = write!(
+            &UART0,
+            "Hello, this another string on a buffered UART0!\r\n"
+        );
     });
     // now they should transmit
 
