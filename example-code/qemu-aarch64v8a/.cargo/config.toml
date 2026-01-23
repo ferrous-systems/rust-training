@@ -1,6 +1,14 @@
 [target.aarch64-unknown-none]
 # QEMU Aarch64 boots in EL1 by default
-runner = "qemu-run --machine virt --cpu cortex-a57 --aarch64 --log-format=oneline"
+runner = [
+  "qemu-run",
+  "--machine",
+  "virt",
+  "--cpu",
+  "cortex-a57",
+  "--log-format",
+  "{[{L}]%bold} {s} {({ff}:{l:1})%dimmed}"
+]
 
 [build]
 target = ["aarch64-unknown-none"]

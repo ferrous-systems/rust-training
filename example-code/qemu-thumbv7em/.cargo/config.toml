@@ -2,7 +2,15 @@
 target = ["thumbv7em-none-eabihf"]
 
 [target.thumbv7em-none-eabihf]
-runner = "qemu-run --machine mps2-an386 --cpu cortex-m4 --log-format=oneline"
+runner = [
+  "qemu-run",
+  "--machine",
+  "mps2-an386",
+  "--cpu",
+  "cortex-m4",
+  "--log-format",
+  "{[{L}]%bold} {s} {({ff}:{l:1})%dimmed}"
+]
 
 [env]
 DEFMT_LOG = "info"
