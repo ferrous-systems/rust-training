@@ -1,6 +1,14 @@
 [target.armv8r-none-eabihf]
 # Note, this requires QEMU 9 or higher
-runner = "qemu-run --machine mps3-an536 --cpu cortex-r52 --log-format=oneline"
+runner = [
+  "qemu-run",
+  "--machine",
+  "mps3-an536",
+  "--cpu",
+  "cortex-r52",
+  "--log-format",
+  "{[{L}]%bold} {s} {({ff}:{l:1})%dimmed}"
+]
 
 [build]
 target = ["armv8r-none-eabihf"]
