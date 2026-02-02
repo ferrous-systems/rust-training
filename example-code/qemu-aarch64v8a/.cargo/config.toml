@@ -6,6 +6,7 @@ runner = [
   "virt",
   "--cpu",
   "cortex-a57",
+  "--aarch64",
   "--log-format",
   "{[{L}]%bold} {s} {({ff}:{l:1})%dimmed}"
 ]
