@@ -15,15 +15,15 @@ Other Arm processors, and processors from other companies may vary.
 
 ## An example
 
-* Arm Cortex-M4 - a processor core from Arm
+* Arm Cortex-M4 - a 32-bit processor core aimed at microcontrollers
   * Use the `thumbv7em-none-eabi` or `thumbv7em-none-eabihf` targets
 * nRF52840 - a SoC from Nordic Semi that uses that processor core
 
 ## An example (2)
 
-* Arm Cortex-M0+ - a smaller, simpler, processor core from Arm
+* Arm Cortex-M0+ - a smaller, simpler, 32-bit processor core
   * Use the `thumbv6m-none-eabi` target
-* RP2040 - a SoC from Raspberry Pi that uses *two* of those processor cores
+* RP2040 - a SoC from Raspberry Pi that has *two* of those processor cores
 
 ## Booting a Cortex-M
 
@@ -167,10 +167,15 @@ See [Reset](https://github.com/rust-embedded/cortex-m/blob/c-m-rt-v0.7.3/cortex-
 
 ## Using the crate
 
-See [knurling-rs App Template](https://github.com/knurling-rs/app-template)
+* [knurling-rs/app-template](https://github.com/knurling-rs/app-template)
+* [ferrous/rust-training](https://github.com/ferrous-systems/rust-training/tree/main/example-code/qemu-thumbv7em)
 
 ## Linker scripts
 
-* In Rust, they work exactly like they do in clang or gcc.
+* In Rust they work exactly like they do in `clang` or `gcc`
 * Same `.text`, `.rodata`, `.data`, `.bss` sections
-* `cortex-m-rt` provides `link.x`, which pulls in a `memory.x` you supply.
+* `cortex-m-rt` provides `link.x`, which pulls in a `memory.x` you supply
+* You must tell the linker to use `link.x`, with:
+    * A build-script
+    * `rustflags` in `.cargo/config.toml`, or
+    * The `RUSTFLAGS` environment variable
