@@ -21,12 +21,12 @@ Other Arm processors, and processors from other companies may vary.
 
 * Arm Cortex-R52 - a real-time processor core from Arm
   * Use the `armv8r-none-eabihf` (or `thumbv8r-none-eabihf`) target
-* NXP S32Z2 - a SoC that has Cortex-R52 core in its safety-island
+* NXP S32Z2 - a SoC that has 8x Cortex-R52 cores (plus six Cortex-M33s and a Cortex-M7)
 
 ## An example (2)
 
 * Arm Cortex-A7 - an application-class processor core from Arm
-  * Use the `armv7a-none-eabihf` (or `thumbv7a-none-eabihf`) targets
+  * Use the `armv7a-none-eabihf` (or `thumbv7a-none-eabihf`) target
 * ST STM32MP15x - a SoC that includes two Cortex-A7 cores (and a Cortex-M4)
 
 ## Booting AArch32
@@ -98,19 +98,23 @@ core::arch::global_asm!(r#"
 "#);
 ```
 
+Note:
+
+It's exactly the same assembly code with the same directives, just in a `global_asm!` block.
+
 ## Reset Handler
 
-* Arm systems boot with an invalid stack pointer.
-* C, and Rust, require a stack.
-* So the reset handler has to be written in assembly.
-* Once you have a stack, you can jump to C (or Rust) code.
+* Arm systems boot with an invalid stack pointer
+* C, and Rust, require a stack
+* So the reset handler has to be written in assembly
+* Once you have a stack, you can jump to C (or Rust) code
 
 ## Reset Handler (Rust)
 
 * We could ship `.s` files, and use [`cc-rs`](https://crates.io/crates/cc-rs) to build them
 * But `global_asm!` lets us use nice Rust constants...
 
-## Rust Reset Handler (2)
+## Using const with asm!
 
 ```rust ignore
 core::arch::global_asm!(
@@ -148,10 +152,10 @@ See [Reset](https://github.com/rust-embedded/aarch32/blob/0bf83561144c2f2367d992
 
 ## Linker scripts
 
-* In Rust, they work exactly like they do in clang or gcc
+* In Rust they work exactly like they do with `clang` or `gcc`
 * Same `.text`, `.rodata`, `.data`, `.bss` sections
 * `aarch32-rt` provides `link.x`, which pulls in a `memory.x` you supply
 * You must tell the linker to use `link.x`, with:
     * A build-script
-    * `rustflags` in `.cargo/config.toml`
+    * `rustflags` in `.cargo/config.toml`, or
     * The `RUSTFLAGS` environment variable
