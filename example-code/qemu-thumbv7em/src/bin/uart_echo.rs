@@ -1,6 +1,11 @@
-//! UART echo application using an CMSDK UART.
+//! An example program for QEMU's Armv7E-M Virtual Machine
 //!
-//! You can connect to this app via telnet and you should see all sent characters echoed back.
+//! Run as `cargo run --bin uart_echo -- --uart-telnet` to get a telnet server
+//! you can interface with.
+//!
+//! Written by Jonathan Pallant at Ferrous Systems
+//!
+//! Copyright (c) Ferrous Systems, 2025
 
 #![no_std]
 #![no_main]
@@ -24,7 +29,7 @@ static UART0: BufferedUart<QLEN> = BufferedUart::empty();
 
 #[cortex_m_rt::entry]
 fn main() -> ! {
-    defmt::info!("-- QEMU UART Echo example --");
+    defmt::info!("Running uart_echo - echoing via to global buffered UART0");
 
     let peripherals = qemu_thumbv7em::Peripherals::take().unwrap();
     let mut cp = cortex_m::Peripherals::take().unwrap();
