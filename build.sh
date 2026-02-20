@@ -14,7 +14,7 @@ if [ "$(uname)" == "Darwin" ]; then
     ./mdbook --version || curl -sSL https://github.com/rust-lang/mdBook/releases/download/v0.4.40/mdbook-v0.4.40-x86_64-apple-darwin.tar.gz | tar -xvzf -
     dot -V || brew install graphviz
     mdbook-graphviz --version || cargo install mdbook-graphviz --locked
-    ./mdslides --version || ( curl -sSL https://github.com/ferrous-systems/mdslides/releases/download/v0.6.1/mdslides-x86_64-apple-darwin.tar.xz | tar -xvJf - \
+    ./mdslides --version || ( curl -sSL https://github.com/ferrous-systems/mdslides/releases/download/v0.7.2/mdslides-x86_64-apple-darwin.tar.xz | tar -xvJf - \
         && mv ./mdslides-*/mdslides . \
         && rm -rf ./mdslides-*/ )
 else
@@ -24,7 +24,7 @@ else
         && unzip mdbook-graphviz.zip \
         && rm mdbook-graphviz.zip \
         && chmod a+x ./mdbook-graphviz )
-    ./mdslides --version || ( curl -sSL https://github.com/ferrous-systems/mdslides/releases/download/v0.6.1/mdslides-x86_64-unknown-linux-gnu.tar.xz | tar -xvJf - \
+    ./mdslides --version || ( curl -sSL https://github.com/ferrous-systems/mdslides/releases/download/v0.7.2/mdslides-x86_64-unknown-linux-gnu.tar.xz | tar -xvJf - \
         && mv ./mdslides-*/mdslides . \
         && rm -rf ./mdslides-*/ )
 fi
