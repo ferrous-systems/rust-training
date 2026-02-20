@@ -1,2 +1,4 @@
 / /latest/slides
-/:version /:version/slides
+/latest /latest/slides
+/v:version/ /v:version/slides
+/v:version /v:version/slides
