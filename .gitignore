@@ -3,3 +3,4 @@ mdbook
 mdbook-graphviz
 mdslides
 target
+v*.zip
