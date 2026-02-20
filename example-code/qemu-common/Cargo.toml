@@ -11,8 +11,10 @@ bitbybit = "1.4"
 critical-section = "1.2"
 defmt = "1"
 derive-mmio = "0.6"
+atomic-waker = "1"
 # TODO: Bump to v0.9 as soon as newer ferrocene with MSRV 1.87 is released.
 heapless = "0.8"
 embedded-io = "0.7"
+embedded-io-async = "0.7"
 nb = "1.1"
 embedded-hal = { version = "1" }
