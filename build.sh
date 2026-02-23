@@ -11,16 +11,16 @@ set -euo pipefail
 
 # We only support macOS (the x86 binaries work OK on Apple Silicon), or x86-64 Linux
 if [ "$(uname)" == "Darwin" ]; then
-    ./mdbook --version || curl -sSL https://github.com/rust-lang/mdBook/releases/download/v0.4.40/mdbook-v0.4.40-x86_64-apple-darwin.tar.gz | tar -xvzf -
+    ./mdbook --version || curl -sSL https://github.com/rust-lang/mdBook/releases/download/v0.5.2/mdbook-v0.5.2-x86_64-apple-darwin.tar.gz | tar -xvzf -
     dot -V || brew install graphviz
-    mdbook-graphviz --version || cargo install mdbook-graphviz --locked
+    mdbook-graphviz --version || cargo install mdbook-graphviz@0.3.1 --locked
     ./mdslides --version || ( curl -sSL https://github.com/ferrous-systems/mdslides/releases/download/v0.7.2/mdslides-x86_64-apple-darwin.tar.xz | tar -xvJf - \
         && mv ./mdslides-*/mdslides . \
         && rm -rf ./mdslides-*/ )
 else
-    ./mdbook --version || curl -sSL https://github.com/rust-lang/mdBook/releases/download/v0.4.40/mdbook-v0.4.40-x86_64-unknown-linux-gnu.tar.gz | tar -xvzf -
+    ./mdbook --version || curl -sSL https://github.com/rust-lang/mdBook/releases/download/v0.5.2/mdbook-v0.5.2-x86_64-unknown-linux-gnu.tar.gz | tar -xvzf -
     dot -V || ( curl -ssL https://github.com/restruct/dot-static/raw/refs/heads/master/x64/dot_static -o ./dot && chmod a+x ./dot )
-    ./mdbook-graphviz --version || ( curl -sSL https://github.com/dylanowen/mdbook-graphviz/releases/download/v0.2.1/mdbook-graphviz_v0.2.1_x86_64-unknown-linux-musl.zip -o mdbook-graphviz.zip \
+    ./mdbook-graphviz --version || ( curl -sSL https://github.com/dylanowen/mdbook-graphviz/releases/download/v0.3.1/mdbook-graphviz_v0.3.1_x86_64-unknown-linux-musl.zip -o mdbook-graphviz.zip \
         && unzip mdbook-graphviz.zip \
         && rm mdbook-graphviz.zip \
         && chmod a+x ./mdbook-graphviz )
