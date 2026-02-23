@@ -46,9 +46,9 @@ function build_and_store {
     mkdir -p "${OUTPUT_DIR}/$1"
     # Build the book first, because mdbook will create any empty sections
     # The PATH override lets it find our local copy of mdbook-graphviz or mdbook-mermaid
-    PATH=$PATH:. ./mdbook build -d "${OUTPUT_DIR}/$1/book" ./training-slides
+    PATH=$PATH:$(pwd) ./mdbook build -d "${OUTPUT_DIR}/$1/book" ./training-slides
     # Then build the slides
-    PATH=$PATH:. RUST_LOG=info ./mdslides --template ./training-slides/template.html \
+    PATH=$PATH:$(pwd) RUST_LOG=info ./mdslides --template ./training-slides/template.html \
         --output-dir "${OUTPUT_DIR}/$1/slides" \
         --mdbook-path ./training-slides \
         --index-template ./training-slides/index-template.html
