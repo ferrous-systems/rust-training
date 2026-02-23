@@ -1,6 +1,7 @@
 html
 mdbook
 mdbook-graphviz
+dot
 mdslides
 target
 v*.zip
