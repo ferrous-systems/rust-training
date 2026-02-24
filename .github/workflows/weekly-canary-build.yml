@@ -22,7 +22,7 @@ jobs:
       - name: Install tools
         uses: taiki-e/install-action@v2
         with:
-          tool: mdbook@0.4.42,mdbook-graphviz@0.2.1
+          tool: mdbook@0.5.2,mdbook-graphviz@0.3.1
 
       - uses: extractions/setup-just@v3
         with:
@@ -30,7 +30,7 @@ jobs:
 
       - name: Add mdslides
         run: |
-          curl --proto '=https' --tlsv1.2 -LsSf https://github.com/ferrous-systems/mdslides/releases/download/v0.5.0/mdslides-installer.sh | sh
+          curl -LsSf https://github.com/ferrous-systems/mdslides/releases/download/v0.7.2/mdslides-installer.sh | sh
 
       - name: Add graphviz
         run: |

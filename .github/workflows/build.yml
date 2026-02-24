@@ -29,7 +29,7 @@ jobs:
           slug=$(./describe.sh "${GITHUB_REF}")
           echo "Building with slug '${slug}'"
           echo "slug=${slug}" >> "${GITHUB_ENV}"
-          curl --proto '=https' --tlsv1.2 -LsSf https://github.com/ferrous-systems/mdslides/releases/download/v0.6.1/mdslides-installer.sh | sh
+          curl -LsSf https://github.com/ferrous-systems/mdslides/releases/download/v0.7.2/mdslides-installer.sh | sh
       - run: just assemble ${{ env.slug }}
       - uses: actions/upload-artifact@v4
         if: ${{success()}}

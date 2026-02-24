@@ -71,7 +71,7 @@ $ rustup target install wasm32-wasi
 ## Installing a host runtime
 
 ```console
-$ curl --proto '=https' --tlsv1.2 -sSf https://wasmtime.dev/install.sh | bash
+$ curl -sSLf https://wasmtime.dev/install.sh | bash
 ```
 
 * Currently need building from git: https://github.com/bytecodealliance/wasmtime
