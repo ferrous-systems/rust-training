@@ -83,6 +83,32 @@ Note:
 
 The cortex-m-rt crate does it more nicely than this. Unlike in C, it's actually not easy at all to put both a `*mut u32` for the stack pointer, and a `unsafe extern "C" fn() -> !` for the reset function into the same array!
 
+## Memory Layout
+
+Most embedded applications written in C/C++ and Rust have a very similar memory and binary layout.
+Many systems use separate flash and RAM memory regions:
+
+<figure>
+  <img src="images/MemoryLayoutCodeAndRamSeparate.drawio.svg">
+</figure>
+
+Note:
+
+Some of those memory segments need to be set up by code! `.bss` is a RAM segment which needs to be
+zero-initialized, and `.data` is a segment in RAM where the initial values are stored in the
+flash memory and need to be copied from there.
+Some larger embedded applications might also use a heap. In embedded applications, those heaps are
+oftentimes also statically allocated and might be a part of the `.bss` or `.uninit` segments.
+
+## Memory Layout - Unified
+
+Some systems also have a run-time layout where code and data are located in the same
+memory region:
+
+<figure>
+  <img src="images/MemoryLayoutUnified.drawio.svg">
+</figure>
+
 ## C Reset Handler
 
 Can be written in C! But it's hazardous.
