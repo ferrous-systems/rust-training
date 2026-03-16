@@ -54,14 +54,14 @@ There are fourteen defined Exception Handlers (if the chip does not support a pa
 2. Convince the linker to put it at the right memory address
 3. Profit
 
-## C vector table 
+## C vector table
 
 ```c
-__attribute__ ((section(".nvic_table"))) unsigned long myvectors[] =
+__attribute__ ((section(".vector_table"))) unsigned long myvectors[] =
 {
     (unsigned long) &_stack_top,
-    (unsigned long) rst_handler, 
-    (unsigned long) nmi_handler, 
+    (unsigned long) rst_handler,
+    (unsigned long) nmi_handler,
     // ...
 }
 ```
@@ -69,14 +69,24 @@ __attribute__ ((section(".nvic_table"))) unsigned long myvectors[] =
 ## Rust vector table
 
 ```rust ignore
-#[link_section=".nvic_table"]
-#[no_mangle]
-pub static ISR_VECTORS: [Option<Handler>; 155] = [
-    Some(_stack_top),
-    Some(rst_handler),
-    Some(nmi_handler),
+extern "C" {
+    static mut _stack_top: usize
+}
+
+pub struct VectorTable {
+    stack_top: usize,
+    rst_handler: extern "C" fn(),
+    nmi_handler: extern "C" fn(),
     // ...
-]
+}
+#[link_section=".vector_table"]
+#[no_mangle]
+static VECTOR_TABLE: VectorTable = VectorTable {
+    stack_top: _stack_top,
+    rst_handler,
+    nmi_handler,
+    // ...
+}
 ```
 
 Note:
