@@ -133,16 +133,16 @@ fn main() {
 ## Enums with Values
 
 ```rust [1-5|2|3|4|8|9|10]
-enum Shapes {
+enum Shape {
     Dot,
     Square(u32),
     Rectangle { width: u32, length: u32 }
 }
 
 fn main() {
-    let dot = Shapes::Dot;
-    let square = Shapes::Square(10);
-    let rectangle = Shapes::Rectangle { width: 10, length: 20 };
+    let dot = Shape::Dot;
+    let square = Shape::Square(10);
+    let rectangle = Shape::Rectangle { width: 10, length: 20 };
 }
 ```
 
