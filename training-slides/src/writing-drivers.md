@@ -52,8 +52,8 @@ let p = pac::Peripherals.take().unwrap();
 // Make a driver for GPIO port P0
 let pins = hal::gpio::p0::Parts::new(p.P0);
 // Get Pin 13 on port P0 and make it an output
-let mut led_pin = pins.p0_13.into_push_pull_output(Level::High);
-// Now set the output low
+let mut led_pin = hal::gpio::Output::new(pins.p0_13, Level::High);
+// Now set the output low.
 led_pin.set_low();
 ```
 
@@ -70,14 +70,15 @@ restrictive!
 ## Giving the pins to the driver
 
 ```rust ignore []
-// 'degrade()' converts a P0_08 type into a generic Pin type.
+// Add all the pins that we want to use for the UART.
 let uarte_pins =  hal::uarte::Pins {
-    rxd: pins.p0_08.degrade().into_floating_input(),
-    txd: pins.p0_06.degrade().into_push_pull_output(Level::High),
+    rxd: pins.p0_08,
+    txd: pins.p0_06,
     cts: None,
     rts: None,
 };
 
+// The driver automatically configures the pins correctly.
 let uarte = hal::uarte::Uarte::new(
     periph.UARTE1, uarte_pins, Parity::EXCLUDED, Baudrate::BAUD115200
 );
