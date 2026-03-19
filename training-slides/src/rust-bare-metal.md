@@ -33,8 +33,8 @@ digraph {
 
     node [shape=record, width=1.5, fillcolor=lightblue, style=filled];
     bsc [label="Board Support\n(nrf52840_dk)"]
-    hal [label="MCU HAL Implementation\n(nrf52480_hal)"]
-    pac [label="MCU PAC\n(nrf52840-pac)"]
+    hal [label="MCU HAL Implementation\n(embassy-nrf)"]
+    pac [label="MCU PAC\n(nrf-pac)"]
 
     node [shape=record, width=1.5, fillcolor=orange, style=filled];
     lcd_driver [label="SPI LCD Driver\n(ssd1306)"]
