@@ -66,7 +66,9 @@ __attribute__ ((section(".vector_table"))) unsigned long myvectors[] =
 }
 ```
 
-## Rust vector table
+## Rust vector table - type definitions
+
+This is possible in Rust as well, but is a bit more involved due to stronger typing rules.
 
 ```rust ignore
 extern "C" {
@@ -74,15 +76,21 @@ extern "C" {
 }
 
 pub struct VectorTable {
-    stack_top: usize,
+    stack_top: *mut usize,
     rst_handler: extern "C" fn(),
     nmi_handler: extern "C" fn(),
     // ...
 }
+```
+
+## Rust vector table
+
+```rust ignore
 #[link_section=".vector_table"]
 #[no_mangle]
 static VECTOR_TABLE: VectorTable = VectorTable {
-    stack_top: _stack_top,
+    // Create a raw pointer from the stack top address.
+    stack_top: &raw mut _stack_top,
     rst_handler,
     nmi_handler,
     // ...
@@ -91,7 +99,9 @@ static VECTOR_TABLE: VectorTable = VectorTable {
 
 Note:
 
-The cortex-m-rt crate does it more nicely than this. Unlike in C, it's actually not easy at all to put both a `*mut u32` for the stack pointer, and a `unsafe extern "C" fn() -> !` for the reset function into the same array!
+The cortex-m-rt crate does not use a dedicated `VectorTable` struct. Instead it places some of the
+individual vector table components into dedicated segments and then places all components in the
+correct order inside the linker script.
 
 ## C Reset Handler
 
