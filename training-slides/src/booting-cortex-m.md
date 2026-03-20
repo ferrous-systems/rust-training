@@ -76,7 +76,7 @@ extern "C" {
 }
 
 pub struct VectorTable {
-    stack_top: *mut usize,
+    stack_top: *const usize,
     rst_handler: extern "C" fn(),
     nmi_handler: extern "C" fn(),
     // ...
@@ -90,7 +90,7 @@ pub struct VectorTable {
 #[no_mangle]
 static VECTOR_TABLE: VectorTable = VectorTable {
     // Create a raw pointer from the stack top address.
-    stack_top: &raw mut _stack_top,
+    stack_top: &raw const _stack_top,
     rst_handler,
     nmi_handler,
     // ...
