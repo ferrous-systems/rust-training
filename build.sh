@@ -29,7 +29,11 @@ else
         && rm -rf ./mdslides-*/ )
 fi
 
-mdbook-striplineno supports || cargo install --path ./mdbook-striplineno
+mdbook-striplineno supports || (
+    cargo || ( curl -sSLf https://sh.rustup.rs > rustup.sh && bash ./rustup.sh -y )
+    source $HOME/.cargo/env
+    cargo install --path ./mdbook-striplineno
+)
 
 # Must be an absolute path, otherwise mdbook puts the output in the wrong place
 OUTPUT_DIR=$(pwd)/html
