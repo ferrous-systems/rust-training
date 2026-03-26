@@ -269,11 +269,11 @@ enum ErrorX { Oops };
 enum ErrorY { Oops };
 
 fn convert_ok(input: Result<u32, ErrorX>) -> Result<u64, ErrorX> {
-    input().map(|v| v as u64)
+    input.map(|v| v as u64)
 }
 
 fn convert_err(input: Result<u32, ErrorX>) -> Result<u32, ErrorY> {
-    result_u32().map_err(|e| ErrorY::Oops)
+    input.map_err(|e| ErrorY::Oops)
 }
 ```
 
@@ -287,11 +287,11 @@ The `|..| ...` syntax is a *closure* - an anonymous inline function, where the f
 enum Error { Oops };
 
 fn option_to_result(input: Option<u32>) -> Result<u32, Error> {
-    option.ok_or(Error::Oops)
+    input.ok_or(Error::Oops)
 }
 
 fn result_to_option(input: Result<u32, Error>) -> Option<u32> {
-    result.ok()
+    input.ok()
 }
 ```
 
