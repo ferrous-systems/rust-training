@@ -24,7 +24,7 @@ jobs:
           graphviz: true
       - uses: taiki-e/install-action@v2
         with:
-          tool: mdbook@0.4.42,mdbook-graphviz@0.2.1
+          tool: mdbook@0.5.2,mdbook-graphviz@0.3.1
       - run: |
           slug=$(./describe.sh "${GITHUB_REF}")
           echo "Building with slug '${slug}'"
@@ -54,7 +54,7 @@ jobs:
           graphviz: true
       - uses: taiki-e/install-action@v2
         with:
-          tool: mdbook@0.4.42,mdbook-graphviz@0.2.1
+          tool: mdbook@0.5.2,mdbook-graphviz@0.3.1
       - run: just test-book
 
   test-cheatsheets:
