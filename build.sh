@@ -29,6 +29,8 @@ else
         && rm -rf ./mdslides-*/ )
 fi
 
+mdbook-striplineno supports || cargo install --path ./mdbook-striplineno
+
 # Must be an absolute path, otherwise mdbook puts the output in the wrong place
 OUTPUT_DIR=$(pwd)/html
 VERSION_FILE="${OUTPUT_DIR}/history/index.html"
@@ -46,7 +48,7 @@ function build_and_store {
     mkdir -p "${OUTPUT_DIR}/$1"
     # Build the book first, because mdbook will create any empty sections
     # The PATH override lets it find our local copy of mdbook-graphviz or mdbook-mermaid
-    PATH=$PATH:$(pwd) ./mdbook build -d "${OUTPUT_DIR}/$1/book" ./training-slides
+    PATH=$PATH:$(pwd):$(pwd)/target/debug ./mdbook build -d "${OUTPUT_DIR}/$1/book" ./training-slides
     # Then build the slides
     PATH=$PATH:$(pwd) RUST_LOG=info ./mdslides --template ./training-slides/template.html \
         --output-dir "${OUTPUT_DIR}/$1/slides" \
