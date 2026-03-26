@@ -37,7 +37,7 @@ enum Result<T, E> {
 }
 ```
 
-<p>&nbsp<!-- run-button placeholder --></p>
+<p>&nbsp;<!-- run-button placeholder --></p>
 
 For now, think of `T` and `E` as placeholders for your own types. These are also called
 generics and there will be a dedicated chapter for them.

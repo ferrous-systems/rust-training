@@ -289,7 +289,7 @@ Vec::len(<Arc<_> as Deref>::deref(&log));
 ```rust ignore
 let log = Arc::new(Mutex::new(Vec::new()));
 ```
-<p>&nbsp<!-- run-button placeholder --></p>
+<p>&nbsp;<!-- run-button placeholder --></p>
 
 * `Arc` guarantees *availability* of data in memory
   * prevents memory form being cleaned up prematurely
@@ -352,7 +352,7 @@ fn handle_client(..., log: &Mutex<Vec<usize>>) -> ... {
     }
 }
 ```
-<p>&nbsp<!-- run-button placeholder --></p>
+<p>&nbsp;<!-- run-button placeholder --></p>
 
 * `drop(guard)` also works, but extra block nicely highlights the critical section
 

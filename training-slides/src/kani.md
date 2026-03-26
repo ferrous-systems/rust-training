@@ -193,7 +193,7 @@ mod proofs {
 }
 ```
 
-<p>&nbsp<!-- run-button placeholder --></p>
+<p>&nbsp;<!-- run-button placeholder --></p>
 
 ```bash
 &#35; run playback tests
