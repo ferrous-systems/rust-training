@@ -33,6 +33,7 @@ mdbook-striplineno supports || (
     cargo || ( curl -sSLf https://sh.rustup.rs > rustup.sh && bash ./rustup.sh -y )
     source $HOME/.cargo/env
     cargo install --path ./mdbook-striplineno
+    chmod o+x $HOME/.cargo/bin/mdbook-striplineno
 )
 
 # Must be an absolute path, otherwise mdbook puts the output in the wrong place
@@ -47,12 +48,14 @@ mkdir -p "${OUTPUT_DIR}/history"
 cp ./_redirects "${OUTPUT_DIR}/_redirects"
 cp ./index-top.html "${VERSION_FILE}"
 
+export PATH=$PATH:${HOME}/.cargo/bin
+
 # Build the book and slides
 function build_and_store {
     mkdir -p "${OUTPUT_DIR}/$1"
     # Build the book first, because mdbook will create any empty sections
     # The PATH override lets it find our local copy of mdbook-graphviz or mdbook-mermaid
-    PATH=$PATH:$(pwd):$(pwd)/target/debug ./mdbook build -d "${OUTPUT_DIR}/$1/book" ./training-slides
+    PATH=$PATH:$(pwd) ./mdbook build -d "${OUTPUT_DIR}/$1/book" ./training-slides
     # Then build the slides
     PATH=$PATH:$(pwd) RUST_LOG=info ./mdslides --template ./training-slides/template.html \
         --output-dir "${OUTPUT_DIR}/$1/slides" \
