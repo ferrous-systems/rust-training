@@ -1,5 +1,5 @@
 [workspace]
-members = ["xtask"]
+members = ["mdbook-striplineno","xtask"]
 exclude = ["example-code/"]
 
 resolver = "2"

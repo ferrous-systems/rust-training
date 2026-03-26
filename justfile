@@ -22,11 +22,14 @@ clean: clean-rust
 serve: build-book build-slides
 	cd training-slides && python3 -m http.server
 
-build-book:
+build-book: make-plugins
 	cd training-slides && RUST_LOG=info mdbook build
 
-test-book:
+test-book: make-plugins
 	cd training-slides && RUST_LOG=info mdbook test
+
+make-plugins:
+	mdbook-striplineno supports || cargo install --path ./mdbook-striplineno
 
 build-slides: build-book
 	cd training-slides && RUST_LOG=debug mdslides --template ./template.html --output-dir ./slides --mdbook-path . --index-template ./index-template.html
