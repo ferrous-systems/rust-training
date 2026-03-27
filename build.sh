@@ -29,6 +29,13 @@ else
         && rm -rf ./mdslides-*/ )
 fi
 
+mdbook-striplineno supports || (
+    cargo || ( curl -sSLf https://sh.rustup.rs > rustup.sh && bash ./rustup.sh -y )
+    source $HOME/.cargo/env
+    cargo install --path ./mdbook-striplineno
+    chmod o+x $HOME/.cargo/bin/mdbook-striplineno
+)
+
 # Must be an absolute path, otherwise mdbook puts the output in the wrong place
 OUTPUT_DIR=$(pwd)/html
 VERSION_FILE="${OUTPUT_DIR}/history/index.html"
@@ -40,6 +47,8 @@ mkdir -p "${OUTPUT_DIR}"
 mkdir -p "${OUTPUT_DIR}/history"
 cp ./_redirects "${OUTPUT_DIR}/_redirects"
 cp ./index-top.html "${VERSION_FILE}"
+
+export PATH=$PATH:${HOME}/.cargo/bin
 
 # Build the book and slides
 function build_and_store {
