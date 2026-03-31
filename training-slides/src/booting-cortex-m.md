@@ -9,9 +9,14 @@ Other Arm processors, and processors from other companies may vary.
 ## Terms
 
 * Processor - the core that executes instructions
-* SoC - the *system-on-a-chip* that contains a processor, some peripherals, and usually some memory
-* Flash - the *flash memory* that the code and the constants live in
-* RAM - the *random-access memory* that the global variables, heap and stack live in
+* Peripherals - Hardware block for performing dedicated tasks, e.g. a UART peripheral
+  or a random number generator block.
+* Flash - the non-volatile *flash memory* that the code and the constants live in
+* RAM - the volatile *random-access memory* that the global variables, heap and stack live in
+* SoC - the *system-on-a-chip* that contains (a) processor(s), some peripherals, and usually some
+  memory
+* MCU - A *microcontroller unit* is a more specialized kind of SoC which is usually less complex
+  but usually also includes the same base components. It is designed to run an embedded system.
 
 ## An example
 
