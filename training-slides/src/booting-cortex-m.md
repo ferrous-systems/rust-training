@@ -10,6 +10,8 @@ Other Arm processors, and processors from other companies may vary.
 
 * Processor - the core that executes instructions
 * SoC - the *system-on-a-chip* that contains a processor, some peripherals, and usually some memory
+* MCU - A *microcontroller unit* is a kind SoC that includes RAM, and is designed to run an embedded
+  system
 * Flash - the *flash memory* that the code and the constants live in
 * RAM - the *random-access memory* that the global variables, heap and stack live in
 
