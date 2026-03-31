@@ -134,17 +134,21 @@ memory region:
 Can be written in C! But it's hazardous.
 
 ```c
-extern unsigned long _start_data_flash, _start_data, _end_data;
-extern unsigned long _bss_start, _bss_end;
+// Start and end of the initialized data block (.data). `__sidata` is the load address in flash.
+extern unsigned long __sidata, __sdata, __edata;
+// Start and end of zero-initialized block (.bss).
+extern unsigned long __sbss, __ebss;
 
 void rst_handler(void) {
-    unsigned long *src = &_start_data_flash;
-    unsigned long *dest = &_start_data;
+    // Copy .data block from flash to RAM.
+    unsigned long *src = &__sidata;
+    unsigned long *dest = &__sdata;
     while (dest < &_end_data) {
         *dest++ = *src++;
     }
-    dest = &_bss_start,
-    while (dest < &_bss_end) {
+    // Initialize .bss block.
+    dest = &__sbss,
+    while (dest < &__ebss) {
         *dest++ = 0;
     }
     main();
@@ -160,11 +164,13 @@ Global variables are not initialised when this function is executed. What if the
 
 ```rust ignore
 extern "C" {
-    static mut _start_data_flash: usize;
-    static mut _start_data: usize;
-    static mut _end_data: usize;
-    static mut _bss_start: usize;
-    static mut _bss_end: usize;
+    // Start and end of the initialized data block (.data). `__sidata` is the load address in flash.
+    static mut __sidata: usize;
+    static mut __sdata: usize;
+    static mut __edata: usize;
+    // Start and end of zero-initialized block (.bss).
+    static mut __sbss: usize;
+    static mut __ebss: usize;
 }
 ```
 
@@ -176,14 +182,16 @@ use core::ptr::{addr_of, addr_of_mut};
 #[unsafe(no_mangle)]
 pub unsafe extern "C" fn rst_handler() {
     unsafe {
-        let src = addr_of!(_start_data_flash);
-        let dest = addr_of_mut!(_start_data);
-        let size = addr_of_mut!(_end_data).offset_from(dest);
+        // Start and end of the initialized data block (.data). `__sidata` is the load address in flash.
+        let src = addr_of!(__sidata);
+        let dest = addr_of_mut!(__sdata);
+        let size = addr_of_mut!(__edata).offset_from(dest);
         for i in 0..size {
             dest.offset(i).write_volatile(src.offset(i).read());
         }
-        let dest = addr_of_mut!(_bss_start);
-        let size = addr_of_mut!(_bss_end).offset_from(dest);
+        // Start and end of zero-initialized block (.bss).
+        let dest = addr_of_mut!(__sbss);
+        let size = addr_of_mut!(__ebss).offset_from(dest);
         for i in 0..size {
             dest.offset(i).write_volatile(0);
         }
@@ -195,9 +203,15 @@ Sadly, this is [UB](https://github.com/rust-embedded/cortex-m-rt/issues/300).
 
 Note:
 
-This is Undefined Behaviour because globals haven't been initialised yet and it is illegal to execute any Rust code in the presence of global variables with invalid values (e.g. a `bool` with an integer value of `2`). It's also arguably UB because you're using `write_volatile` to write outside the bounds the objects we have declared to Rust (we said that `_start_data` was *only* a single `u32`).
+This is Undefined Behaviour because globals haven't been initialised yet and it is illegal to
+execute any Rust code in the presence of global variables with invalid values
+(e.g. a `bool` with an integer value of `2`). It's also arguably UB because you're using
+`write_volatile` to write outside the bounds the objects we have declared to Rust
+(we said that `__sdata` was *only* a single `u32`).
 
-It is now reasonably settled that this is bad in theory, but it's debatable whether it's currently bad in practice (cortex-m-rt got away with it for years). I believe that in time it will get *worse* in practice, so don't do it.
+It is now reasonably settled that this is bad in theory, but it's debatable whether it's currently
+bad in practice (cortex-m-rt got away with it for years). I believe that in time it will get *worse*
+in practice, so don't do it.
 
 ## The cortex-m-rt crate
 
