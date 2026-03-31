@@ -211,3 +211,17 @@ fn get_number(x: bool) -> i32 {
     -1
 }
 ```
+
+## `?`
+
+- Used for more ergonomic error handling.
+- Return the error if the result of an operation is an error, otherwise continue.
+
+```rust [], ignore
+fn main() -> std::io::Result<()> {
+    let file = std::fs::File::open("file.txt")?;
+    // If file was opened successfully, do something with it.
+    // (...)
+    Ok(())
+}
+```
