@@ -1,207 +1,253 @@
 //! # Asynchronous UART support
 //!
-//! Currently, this module provides asynchronous TX support.
+//! Currently, this module only provides asynchronous TX support and not RX support.
+//!
+//! The module name is `asynch` and not `async` because `async` is a keyword and `asynch` is not.
+
 use core::{
-    cell::Cell,
     convert::Infallible,
-    sync::atomic::{AtomicBool, AtomicUsize, Ordering},
+    sync::atomic::{
+        AtomicPtr, AtomicUsize,
+        Ordering::{Acquire, Relaxed, Release},
+    },
 };
 
 use atomic_waker::AtomicWaker;
-use critical_section::Mutex;
 
-use crate::cmsdk_uart::Tx;
+use crate::cmsdk_uart::basic;
 
 /// Currently, a maximum of 5 CMSDK UART instances are supported.
 pub const MAX_WAKERS: usize = 5;
 
-// Each CMSDK UART has a waker which is used to notify the executor when a transfer is done.
-static TX_WAKERS: [AtomicWaker; 5] = [const { AtomicWaker::new() }; 5];
-// Each CMSDK UART has a atomic completion flag which is used to check for transfer completion
-// without a lock.
-static TX_DONE: [AtomicBool; 5] = [const { AtomicBool::new(false) }; 5];
+/// Hold the state for our UARTs
+static UART_STATE: [UartState; MAX_WAKERS] = [const { UartState::new() }; MAX_WAKERS];
 
-// The transfer information and context for each asynchronous CMSDK UART driver is tracked in
-// this structure.
-static TX_CONTEXTS: [Mutex<Cell<TranferContext>>; 5] =
-    [const { Mutex::new(Cell::new(TranferContext::new())) }; 5];
+/// Hold the async state for one UART
+struct UartState {
+    /// UART base pointer
+    uart_base: AtomicUsize,
+    /// Used to notify the executor when a transfer is done
+    waker: AtomicWaker,
+    /// The buffer currently being transferred (or null if no transfer in progress)
+    ///
+    /// This also acts as the in-progress flag (we are in-progress when this is non-null)
+    tx_buffer: AtomicPtr<u8>,
+    /// The length of the buffer being transferred, in bytes
+    tx_length: AtomicUsize,
+    /// The numbers of bytes transferred so far
+    tx_transmitted: AtomicUsize,
+}
 
-/// TX index which is incremented every time as asynchronous TX driver is created.
-static TX_INDEX: AtomicUsize = AtomicUsize::new(0);
+impl UartState {
+    /// Create a new, empty, UartState
+    const fn new() -> UartState {
+        UartState {
+            waker: AtomicWaker::new(),
+            tx_buffer: AtomicPtr::new(core::ptr::null_mut()),
+            tx_length: AtomicUsize::new(0),
+            tx_transmitted: AtomicUsize::new(0),
+            uart_base: AtomicUsize::new(0),
+        }
+    }
+}
 
 /// Waker limit exceeded. This module only supports a maximum of [MAX_WAKERS] wakers.
 #[derive(Debug)]
 pub struct WakerLimitExceededError;
 
-/// TX handler ID which is created when creating an asynchronous TX driver.
-#[derive(Debug, Clone, Copy)]
-pub struct TxHandlerId(usize);
-
-/// This function should be called on CMSDK UART interrupts to allow asynchronous TX operations
-/// to work.
-pub fn on_interrupt_tx(tx: &mut Tx, id: TxHandlerId) {
-    let raw_id = id.0;
-    tx.clear_interrupts();
-    if !tx.regs().read_control().txie() || tx.regs().read_status().txf() {
-        return;
-    }
-    let mut context = critical_section::with(|cs| {
-        let context_ref = TX_CONTEXTS[raw_id].borrow(cs);
-        context_ref.get()
-    });
-    // No transfer active.
-    if context.data_ptr.is_null() {
-        return;
-    }
-    let slice = unsafe { core::slice::from_raw_parts(context.data_ptr, context.transfer_len) };
-    let slice_len = slice.len();
-    if context.progress >= slice_len || slice_len == 0 {
-        // Transfer is done. Notify executor and set completion flag.
-        TX_DONE[raw_id].store(true, core::sync::atomic::Ordering::Relaxed);
-        TX_WAKERS[raw_id].wake();
-        tx.disable_interrupts();
-        return;
-    }
-
-    // Write next byte of transfer.
-    tx.write(slice[context.progress]).unwrap();
-    context.progress += 1;
-
-    // Write back updated context structure.
-    critical_section::with(|cs| {
-        let context_ref = TX_CONTEXTS[raw_id].borrow(cs);
-        context_ref.set(context);
-    });
+/// Holds the information we need to handle a UART TX interrupt.
+pub struct InterruptCtx {
+    uart_state: &'static UartState,
 }
 
-#[derive(Clone, Copy)]
-struct TranferContext {
-    // Data pointer of the data to be transmitted.
-    data_ptr: *const u8,
-    // Full transfer length.
-    transfer_len: usize,
-    // Current progress.
-    progress: usize,
-}
-
-#[allow(clippy::new_without_default)]
-impl TranferContext {
-    pub const fn new() -> Self {
-        Self {
-            progress: 0,
-            data_ptr: core::ptr::null(),
-            transfer_len: 0,
+impl InterruptCtx {
+    /// Handle the UART TX Interrupt
+    ///
+    /// # Safety
+    ///
+    /// This function must only be called from the UART TX interrupt context.
+    pub unsafe fn handle_irq(&mut self) {
+        let uart_state = self.uart_state;
+        defmt::debug!(
+            "on_interrupt_tx(state @ 0x{=usize:08x})",
+            uart_state as *const UartState as usize
+        );
+        // Safety: We are called in a UART interrupt, so we're safe to talk to the TX side of the UART
+        let base = uart_state.uart_base.load(Relaxed);
+        if base == 0 {
+            panic!("TX fired on invalid UART?!");
         }
+        let mut tx = unsafe { crate::cmsdk_uart::Tx::steal(base) };
+        tx.clear_interrupts();
+        if !tx.regs().read_control().txie() || tx.regs().read_status().txf() {
+            // TX Interrupt is not enabled, or TX FIFO is Full - we cannot proceed
+            defmt::warn!("Spurious on_interrupt_tx() call!");
+            return;
+        }
+        let tx_buffer = uart_state.tx_buffer.load(Relaxed);
+        let tx_length = uart_state.tx_length.load(Relaxed);
+        let tx_transmitted = uart_state.tx_transmitted.fetch_add(1, Relaxed);
+        // No transfer active.
+        if tx_buffer.is_null() {
+            return;
+        }
+        if tx_transmitted >= tx_length || tx_length == 0 {
+            defmt::debug!("TX Done! Waking...");
+            // Transfer is done. Notify executor and set completion flag.
+            uart_state.tx_buffer.store(core::ptr::null_mut(), Release);
+            uart_state.waker.wake();
+            return;
+        }
+
+        let byte = unsafe { tx_buffer.add(tx_transmitted).read() };
+        defmt::debug!("TX 0x{:02x}", byte);
+
+        // Write next byte of transfer. We do not expect this to block.
+        tx.write(byte).expect("TX IRQ should be non-blocking");
     }
 }
 
-// Safety: We only use this type wrapped in a mutex.
-unsafe impl Sync for TranferContext {}
-unsafe impl Send for TranferContext {}
-
-/// Asycnhronous TX driver.
-pub struct TxAsynch {
-    inner: Tx,
-    id: TxHandlerId,
+/// Asynchronous UART Transmit driver
+///
+/// Like [`cmsdk_uart::basic::Tx`](crate::cmsdk_uart::basic::Tx), but async.
+pub struct AsyncTx {
+    basic_tx: basic::Tx,
+    uart_state: &'static UartState,
 }
 
-impl TxAsynch {
+impl AsyncTx {
     /// Create a new asynchronous TX driver from a blocking one.
-    pub fn new(tx: Tx) -> Result<(Self, TxHandlerId), WakerLimitExceededError> {
-        let current_index = TX_INDEX.fetch_add(1, Ordering::Relaxed);
-        if current_index >= MAX_WAKERS {
-            return Err(WakerLimitExceededError);
-        }
-        let id = TxHandlerId(current_index);
+    pub fn new(mut basic_tx: basic::Tx) -> Result<(Self, InterruptCtx), WakerLimitExceededError> {
+        /// TX index which is incremented every time as asynchronous TX driver is created.
+        ///
+        /// This ensures we don't let the user make more drivers than we have space in UART_STATE for.
+        static NEXT_STATE_IDX: AtomicUsize = AtomicUsize::new(0);
 
-        Ok((Self { inner: tx, id }, id))
+        let current_index = NEXT_STATE_IDX.fetch_add(1, Relaxed);
+
+        let Some(uart_state) = UART_STATE.get(current_index) else {
+            return Err(WakerLimitExceededError);
+        };
+
+        // Stash the UART base address for use later
+        uart_state
+            .uart_base
+            .store(unsafe { basic_tx.regs().ptr() as usize }, Relaxed);
+        // set up our UART:
+
+        // just in case anything is pending
+        basic_tx.clear_interrupts();
+
+        // we want the TX interrupt to fire when the FIFO is empty
+        basic_tx.enable_interrupts();
+
+        // Ensure the UART is enabled (in case they disabled it before)
+        basic_tx.enable();
+
+        Ok((
+            AsyncTx {
+                basic_tx,
+                uart_state: &UART_STATE[current_index],
+            },
+            InterruptCtx {
+                uart_state: &UART_STATE[current_index],
+            },
+        ))
     }
 
     /// Asynchronously write data to the UART.
-    pub async fn write(&mut self, buf: &[u8]) -> usize {
+    ///
+    /// Completes when all bytes have sent from the TX FIFO.
+    pub async fn write(&mut self, buf: &[u8]) {
+        defmt::debug!("Transmitting {=[u8]:02x}", buf);
+        // note: we must not try and transmit an empty buffer - bail out early instead
         if buf.is_empty() {
-            return 0;
+            return;
         }
-        let tx_fut = TxFuture::new(self, buf);
-        tx_fut.await;
-        buf.len()
+        Transmission::new(self, buf).await;
     }
 }
 
-impl embedded_io_async::ErrorType for TxAsynch {
+impl embedded_io_async::ErrorType for AsyncTx {
     type Error = Infallible;
 }
 
-impl embedded_io_async::Write for TxAsynch {
+impl embedded_io_async::Write for AsyncTx {
     async fn write(&mut self, buf: &[u8]) -> Result<usize, Self::Error> {
-        Ok(self.write(buf).await)
+        self.write(buf).await;
+        Ok(buf.len())
     }
 
     async fn flush(&mut self) -> Result<(), Self::Error> {
-        while self.inner.regs().read_status().txf() {
+        while self.basic_tx.regs().read_status().txf() {
             core::hint::spin_loop();
         }
         Ok(())
     }
 }
 
-/// TX future structure for an asynchronous UART transmission which can be polled.
-pub struct TxFuture<'tx> {
-    tx: &'tx mut TxAsynch,
+/// Represents an ongoing asynchronous UART transmission, which can be polled.
+///
+/// The lifetime annotation `'tx` represents the lifetime of the Async UART the transmission is borrowing.
+pub struct Transmission<'uart> {
+    tx: &'uart mut AsyncTx,
 }
 
-impl<'tx> TxFuture<'tx> {
+impl<'uart> Transmission<'uart> {
     /// Create a new asynchronous future for a write/transmit operation.
-    pub fn new(tx: &'tx mut TxAsynch, data: &[u8]) -> Self {
-        TX_DONE[tx.id.0].store(false, core::sync::atomic::Ordering::Relaxed);
-        tx.inner.disable();
-        tx.inner.disable_interrupts();
-        critical_section::with(|cs| {
-            let context_ref = TX_CONTEXTS[tx.id.0].borrow(cs);
-            context_ref.set(TranferContext {
-                data_ptr: data.as_ptr(),
-                transfer_len: data.len(),
-                progress: 1,
-            });
-            // We checked in our API that the buffer is not empty. The API should ensure that TX
-            // is always empty.
-            tx.inner.clear_interrupts();
-            tx.inner.enable_interrupts();
-            tx.inner.enable();
-            // It is actually important to write AFTER the UART was enabled.
-            tx.inner.write(data[0]).unwrap();
-        });
+    ///
+    /// Will send the given buffer under interrupt, producing
+    /// `core::task::Poll::Ready` once complete.
+    ///
+    /// Do not pass a zero-length slice - this will panic.
+    ///
+    /// We can only keep this object whilst *both* the Async TX UART *and* the buffer are alive.
+    fn new(tx_async: &'uart mut AsyncTx, data: &'uart [u8]) -> Self {
+        defmt::debug!(
+            "Creating Transmission(data=0x{=usize:08x}, len={})",
+            data.as_ptr() as usize,
+            data.len(),
+        );
+        assert!(!data.is_empty());
+        // tx.inner.disable_interrupts();
+        tx_async.uart_state.tx_length.store(data.len(), Relaxed);
+        tx_async.uart_state.tx_transmitted.store(1, Relaxed);
+        tx_async
+            .uart_state
+            .tx_buffer
+            .store(data.as_ptr() as *mut u8, Release);
+        // It is actually important to write AFTER the UART was enabled.
+        defmt::debug!("TX 0x{:02x}", data[0]);
+        tx_async.basic_tx.write(data[0]).unwrap();
 
-        Self { tx }
+        Self { tx: tx_async }
     }
 }
 
-impl core::future::Future for TxFuture<'_> {
-    type Output = usize;
+impl core::future::Future for Transmission<'_> {
+    type Output = ();
 
     fn poll(
         self: core::pin::Pin<&mut Self>,
         cx: &mut core::task::Context<'_>,
     ) -> core::task::Poll<Self::Output> {
-        TX_WAKERS[self.tx.id.0].register(cx.waker());
-        if TX_DONE[self.tx.id.0].swap(false, core::sync::atomic::Ordering::Relaxed) {
-            let progress = critical_section::with(|cs| {
-                let context = TX_CONTEXTS[self.tx.id.0].borrow(cs);
-                let progress = context.get().progress;
-                context.set(TranferContext::new());
-                progress
-            });
-            return core::task::Poll::Ready(progress);
+        defmt::debug!("Polling Transmission complete...");
+        self.tx.uart_state.waker.register(cx.waker());
+        if self.tx.uart_state.tx_buffer.load(Acquire).is_null() {
+            defmt::debug!("Ready!");
+            core::task::Poll::Ready(())
+        } else {
+            defmt::debug!("Pending...");
+            core::task::Poll::Pending
         }
-        core::task::Poll::Pending
     }
 }
 
-impl Drop for TxFuture<'_> {
+impl Drop for Transmission<'_> {
     fn drop(&mut self) {
-        if !TX_DONE[self.tx.id.0].load(core::sync::atomic::Ordering::Relaxed) {
-            self.tx.inner.clear_interrupts();
-            self.tx.inner.disable_interrupts();
+        if !self.tx.uart_state.tx_buffer.load(Acquire).is_null() {
+            self.tx.basic_tx.clear_interrupts();
+            self.tx.basic_tx.disable_interrupts();
         }
     }
 }
