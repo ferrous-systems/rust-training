@@ -9,7 +9,7 @@ Other Arm processors, and processors from other companies may vary.
 ## Terms
 
 * Processor - the core that executes instructions
-* Peripherals - Hardware block for performing dedicated tasks, e.g. a UART peripheral
+* Peripheral - Hardware block for performing dedicated tasks, e.g. a UART
   or a random number generator block.
 * Flash - the non-volatile *flash memory* that the code and the constants live in
 * RAM - the volatile *random-access memory* that the global variables, heap and stack live in
