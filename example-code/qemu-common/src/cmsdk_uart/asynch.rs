@@ -56,11 +56,11 @@ impl UartState {
 pub struct WakerLimitExceededError;
 
 /// Holds the information we need to handle a UART TX interrupt.
-pub struct InterruptCtx {
+pub struct InterruptContext {
     uart_state: &'static UartState,
 }
 
-impl InterruptCtx {
+impl InterruptContext {
     /// Handle the UART TX Interrupt
     ///
     /// # Safety
@@ -117,7 +117,7 @@ pub struct AsyncTx {
 
 impl AsyncTx {
     /// Create a new asynchronous TX driver from a blocking one.
-    pub fn new(mut basic_tx: basic::Tx) -> Result<(Self, InterruptCtx), WakerLimitExceededError> {
+    pub fn new(mut basic_tx: basic::Tx) -> Result<(Self, InterruptContext), WakerLimitExceededError> {
         /// TX index which is incremented every time as asynchronous TX driver is created.
         ///
         /// This ensures we don't let the user make more drivers than we have space in UART_STATE for.
@@ -149,7 +149,7 @@ impl AsyncTx {
                 basic_tx,
                 uart_state: &UART_STATE[current_index],
             },
-            InterruptCtx {
+            InterruptContext {
                 uart_state: &UART_STATE[current_index],
             },
         ))

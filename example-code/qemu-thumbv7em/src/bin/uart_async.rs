@@ -23,7 +23,7 @@ mod app {
     #[local]
     struct Local {
         async_tx: uart::asynch::AsyncTx,
-        async_tx_irq_ctx: uart::asynch::InterruptCtx,
+        async_tx_irq_ctx: uart::asynch::InterruptContext,
     }
 
     #[init]
