@@ -41,7 +41,7 @@ impl MutexUart {
             let Some(uart) = guard.as_mut() else {
                 return true;
             };
-            uart.regs().read_status().txf()
+            uart.tx().tx_fifo_full()
         })
     }
 
@@ -56,7 +56,7 @@ impl MutexUart {
             let Some(uart) = guard.as_mut() else {
                 panic!("TX on uninitialised UART!");
             };
-            match uart.write(byte) {
+            match uart.tx().write(byte) {
                 Err(nb::Error::WouldBlock) => Err(byte),
                 _ => Ok(()),
             }
@@ -64,31 +64,14 @@ impl MutexUart {
     }
 
     /// Turn TX interrupt on
-    pub fn set_tx_interrupt(&self, enabled: bool) {
+    pub fn enable_tx_interrupt(&self, enabled: bool) {
         critical_section::with(|cs| {
             let mut guard = self.inner.borrow_ref_mut(cs);
             let Some(uart) = guard.as_mut() else {
                 panic!("tx_interrupts_on on uninit MutexUart");
             };
-            uart.regs().modify_control(|c| c.with_txie(enabled));
+            uart.enable_tx_interrupt(enabled);
         })
-    }
-
-    /// Print some debug info to defmt
-    pub fn dump_info(&self) {
-        critical_section::with(|cs| {
-            let mut guard = self.inner.borrow_ref_mut(cs);
-            let Some(uart) = guard.as_mut() else {
-                defmt::debug!("UART is not initialised");
-                return;
-            };
-            defmt::debug!(
-                "Control {}, Status {}, IntStatus {}",
-                uart.regs().read_control(),
-                uart.regs().read_status(),
-                uart.regs().read_int_status()
-            );
-        });
     }
 }
 
@@ -111,7 +94,7 @@ impl core::fmt::Write for &MutexUart {
                         // if the UART isn't initialised, give up quietly
                         return Ok(());
                     };
-                    uart.write(b)
+                    uart.tx().write(b)
                 });
                 match result {
                     Ok(()) => {

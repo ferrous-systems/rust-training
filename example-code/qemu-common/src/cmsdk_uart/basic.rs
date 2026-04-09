@@ -17,15 +17,15 @@ pub struct Registers {
     data: u32,
     #[mmio(PureRead)]
     status: Status,
-    #[mmio(Read, Write, Modify)]
+    #[mmio(PureRead, Write, Modify)]
     control: Control,
-    #[mmio(Read, Write)]
+    #[mmio(PureRead, Write)]
     int_status: IntStatus,
     _reserved: [u32; 1012],
-    #[mmio(Read)]
+    #[mmio(PureRead)]
     pid: [u32; 2],
     _reserved2: [u32; 2],
-    #[mmio(Read)]
+    #[mmio(PureRead)]
     cid: [u32; 4],
 }
 
@@ -70,7 +70,7 @@ impl CmsdkUart {
     pub fn init(&mut self, baud_rate: u32, system_clock: u32) -> Result<(), Error> {
         defmt::debug!(
             "Init UART @ {=usize:08x}, baud_rate={=u32}, system_clock={=u32}",
-            self.rx.0.pointer_to_data() as usize,
+            self.tx.0.pointer_to_data() as usize,
             baud_rate,
             system_clock
         );
@@ -81,10 +81,11 @@ impl CmsdkUart {
             return Err(Error::InvalidBaudRate);
         }
         // enable TX and RX
-        self.regs()
+        self.tx
+            .0
             .modify_control(|c| c.with_txe(true).with_rxe(true));
         // show the settings
-        defmt::debug!("{}", self.rx.0.read_control());
+        defmt::debug!("{}", self.tx.0.read_control());
         Ok(())
     }
 
@@ -93,62 +94,69 @@ impl CmsdkUart {
         (self.tx, self.rx)
     }
 
-    /// Direct access to the underlying MMIO registers.
+    /// Get the base address of this UART
+    pub fn base_address(&self) -> usize {
+        unsafe { self.tx.0.ptr() as usize }
+    }
+
+    /// Access the TX half of the UART
+    pub fn tx(&mut self) -> &mut Tx {
+        &mut self.tx
+    }
+
+    /// Access the RX half of the UART
+    pub fn rx(&mut self) -> &mut Rx {
+        &mut self.rx
+    }
+
+    /// Enable/disable the UART TX.
     #[inline]
-    pub fn regs(&mut self) -> &mut MmioRegisters<'static> {
-        &mut self.rx.0
+    pub fn enable_tx(&mut self, enabled: bool) {
+        self.tx.0.modify_control(|c| c.with_txe(enabled));
     }
 
-    /// Read a byte from the UART, non-blocking
-    ///
-    /// If the UART FIFO is empty, you get nb::Error::WouldBlock. But
-    /// otherwise it cannot fail.
-    pub fn read(&mut self) -> nb::Result<u8, core::convert::Infallible> {
-        let status = self.regs().read_status();
-        if !status.rxf() {
-            return Err(nb::Error::WouldBlock);
-        }
-        Ok(self.regs().read_data() as u8)
+    /// Enable/disable TX interrupts.
+    #[inline]
+    pub fn enable_tx_interrupt(&mut self, enable: bool) {
+        self.tx.0.modify_control(|mut c| {
+            c.set_txie(enable);
+            c
+        });
     }
 
-    /// Write a byte, if possible
-    pub fn write(&mut self, byte: u8) -> nb::Result<(), core::convert::Infallible> {
-        let status = self.regs().read_status();
-        if status.txf() {
-            defmt::debug!(
-                "Blocking on UART @ {=usize:08x}, {}",
-                self.regs().pointer_to_data() as usize,
-                status
-            );
-            return Err(nb::Error::WouldBlock);
-        }
-        self.regs().write_data(byte as u32);
-        Ok(())
+    /// Enable/disable the UART RX.
+    #[inline]
+    pub fn enable_rx(&mut self, enabled: bool) {
+        self.tx.0.modify_control(|c| c.with_txe(enabled));
     }
 
-    /// Write a byte, blocking until space available
-    pub fn write_blocking(&mut self, byte: u8) {
-        self.tx.write_blocking(byte);
+    /// Enable/disable RX interrupts.
+    #[inline]
+    pub fn enable_rx_interrupt(&mut self, enable: bool) {
+        self.tx.0.modify_control(|mut c| {
+            c.set_rxie(enable);
+            c
+        });
     }
 
     /// Check that this is a valid CMSDK UART instance
     pub fn check(&mut self) -> Result<(), Error> {
         defmt::debug!(
             "Checking UART @ 0x{=usize:08x}",
-            self.rx.0.pointer_to_data() as usize
+            self.tx.0.pointer_to_data() as usize
         );
         let cid_read = [
-            self.regs().read_cid(0).unwrap(),
-            self.regs().read_cid(1).unwrap(),
-            self.regs().read_cid(2).unwrap(),
-            self.regs().read_cid(3).unwrap(),
+            self.tx.0.read_cid(0).unwrap(),
+            self.tx.0.read_cid(1).unwrap(),
+            self.tx.0.read_cid(2).unwrap(),
+            self.tx.0.read_cid(3).unwrap(),
         ];
         defmt::debug!("CIDS: {:?} vs {:?}", cid_read, Self::VALID_CID);
         if cid_read != Self::VALID_CID {
             return Err(Error::InvalidInstance);
         }
-        let pid0 = self.regs().read_pid(0).unwrap() as u8;
-        let pid1 = self.regs().read_pid(1).unwrap() as u8 & 0x0F;
+        let pid0 = self.tx.0.read_pid(0).unwrap() as u8;
+        let pid1 = self.tx.0.read_pid(1).unwrap() as u8 & 0x0F;
         let pid = u16::from_be_bytes([pid1, pid0]);
         defmt::trace!(
             "PID0 {=u8:02x} PID1 {=u8:02X} PID {=u16:04x}",
@@ -160,24 +168,6 @@ impl CmsdkUart {
             return Err(Error::InvalidInstance);
         }
         Ok(())
-    }
-
-    /// Get the current interrupt status for the UART
-    #[inline]
-    pub fn read_int_status(&mut self) -> IntStatus {
-        self.regs().read_int_status()
-    }
-
-    /// Clear the given flags in the interrupt status register
-    #[inline]
-    pub fn clear_interrupts(&mut self, mask: IntStatus) {
-        self.regs().write_int_status(mask);
-    }
-
-    /// ENable RX interrupts.
-    #[inline]
-    pub fn enable_rx_interrupts(&mut self) {
-        self.rx.enable_interrupts();
     }
 }
 
@@ -204,54 +194,14 @@ impl Tx {
         Tx(regs)
     }
 
-    /// Raw register access.
-    #[inline]
-    pub fn regs(&mut self) -> &mut MmioRegisters<'static> {
-        &mut self.0
+    /// Get the base address of this UART
+    pub fn base_address(&self) -> usize {
+        unsafe { self.0.ptr() as usize }
     }
 
     /// Write a byte, blocking until space available
     pub fn write_blocking(&mut self, byte: u8) {
         _ = nb::block!(self.write(byte));
-    }
-
-    /// Disable the TX driver.
-    #[inline]
-    pub fn disable(&mut self) {
-        self.0.modify_control(|c| c.with_txe(false));
-    }
-
-    /// Enable the TX driver.
-    #[inline]
-    pub fn enable(&mut self) {
-        self.0.modify_control(|c| c.with_txe(true));
-    }
-
-    /// Enable TX interrupts.
-    #[inline]
-    pub fn enable_interrupts(&mut self) {
-        self.0
-            .modify_control(|c| c.with_txie(true).with_txoie(true));
-    }
-
-    /// Disable TX interrupts.
-    #[inline]
-    pub fn disable_interrupts(&mut self) {
-        self.0
-            .modify_control(|c| c.with_txie(false).with_txoie(false));
-    }
-
-    /// Clear TX interrupts
-    #[inline]
-    pub fn clear_interrupts(&mut self) {
-        self.0.write_int_status(
-            IntStatus::builder()
-                .with_txi(true)
-                .with_rxi(false)
-                .with_txoi(true)
-                .with_rxoi(false)
-                .build(),
-        );
     }
 
     /// Write a byte in a non-blocking manner using [nb].
@@ -267,6 +217,56 @@ impl Tx {
         }
         self.0.write_data(byte as u32);
         Ok(())
+    }
+
+    /// Is the TX FIFO full?
+    ///
+    /// If so, a call to [`write`] will fail and a call to [`write_blocking`] will block.
+    pub fn tx_fifo_full(&self) -> bool {
+        self.0.read_status().txf()
+    }
+
+    /// Enable/disable the UART TX.
+    #[inline]
+    pub fn enable(&mut self, enabled: bool) {
+        critical_section::with(|_cs| {
+            self.0.modify_control(|c| c.with_txe(enabled));
+        });
+    }
+
+    /// Enable/disable TX interrupts.
+    #[inline]
+    pub fn enable_interrupt(&mut self, enable: bool) {
+        critical_section::with(|_cs| {
+            self.0.modify_control(|mut c| {
+                c.set_txie(enable);
+                c
+            });
+        })
+    }
+
+    /// Is TX Interrupt enabled?
+    #[inline]
+    pub fn interrupt_enabled(&self) -> bool {
+        self.0.read_control().txie()
+    }
+
+    /// Is TX Interrupt pending?
+    #[inline]
+    pub fn interrupt_status(&self) -> bool {
+        self.0.read_int_status().txi()
+    }
+
+    /// Clear TX interrupts
+    pub fn clear_interrupts(&mut self) {
+        self.0.write_int_status(
+            IntStatus::builder()
+                .with_txi(true)
+                .with_rxi(false)
+                .with_txoi(false)
+                .with_rxoi(false)
+                .build(),
+        );
     }
 }
 
@@ -296,24 +296,9 @@ impl Rx {
         Rx(regs)
     }
 
-    /// Enable RX interrupts.
-    #[inline]
-    pub fn enable_interrupts(&mut self) {
-        self.0.modify_control(|mut c| {
-            c.set_rxie(true);
-            c.set_rxoie(true);
-            c
-        });
-    }
-
-    /// Disable RX interrupts.
-    #[inline]
-    pub fn disable_interrupts(&mut self) {
-        self.0.modify_control(|mut c| {
-            c.set_rxie(false);
-            c.set_rxoie(false);
-            c
-        });
+    /// Get the base address of this UART
+    pub fn base_address(&self) -> usize {
+        unsafe { self.0.ptr() as usize }
     }
 
     /// Read the UART in a non-blocking manner.
@@ -325,6 +310,37 @@ impl Rx {
         Ok(self.0.read_data() as u8)
     }
 
+    /// Enable/disable the UART RX.
+    #[inline]
+    pub fn enable(&mut self, enabled: bool) {
+        critical_section::with(|_cs| {
+            self.0.modify_control(|c| c.with_txe(enabled));
+        });
+    }
+
+    /// Enable/disable RX interrupts.
+    #[inline]
+    pub fn enable_interrupt(&mut self, enable: bool) {
+        critical_section::with(|_cs| {
+            self.0.modify_control(|mut c| {
+                c.set_rxie(enable);
+                c
+            });
+        })
+    }
+
+    /// Is RX Interrupt enabled?
+    #[inline]
+    pub fn interrupt_enabled(&self) -> bool {
+        self.0.read_control().rxie()
+    }
+
+    /// Is RX Interrupt pending?
+    #[inline]
+    pub fn interrupt_status(&self) -> bool {
+        self.0.read_int_status().rxi()
+    }
+
     /// Clear RX interrupts
     pub fn clear_interrupts(&mut self) {
         self.0.write_int_status(
@@ -332,7 +348,7 @@ impl Rx {
                 .with_txi(false)
                 .with_rxi(true)
                 .with_txoi(false)
-                .with_rxoi(true)
+                .with_rxoi(false)
                 .build(),
         );
     }

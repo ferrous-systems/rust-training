@@ -79,7 +79,7 @@ impl InterruptContext {
         }
         let mut tx = unsafe { crate::cmsdk_uart::Tx::steal(base) };
         tx.clear_interrupts();
-        if !tx.regs().read_control().txie() || tx.regs().read_status().txf() {
+        if !tx.interrupt_enabled() || tx.tx_fifo_full() {
             // TX Interrupt is not enabled, or TX FIFO is Full - we cannot proceed
             defmt::warn!("Spurious on_interrupt_tx() call!");
             return;
@@ -117,7 +117,9 @@ pub struct AsyncTx {
 
 impl AsyncTx {
     /// Create a new asynchronous TX driver from a blocking one.
-    pub fn new(mut basic_tx: basic::Tx) -> Result<(Self, InterruptContext), WakerLimitExceededError> {
+    pub fn new(
+        mut basic_tx: basic::Tx,
+    ) -> Result<(Self, InterruptContext), WakerLimitExceededError> {
         /// TX index which is incremented every time as asynchronous TX driver is created.
         ///
         /// This ensures we don't let the user make more drivers than we have space in UART_STATE for.
@@ -130,19 +132,17 @@ impl AsyncTx {
         };
 
         // Stash the UART base address for use later
-        uart_state
-            .uart_base
-            .store(unsafe { basic_tx.regs().ptr() as usize }, Relaxed);
+        uart_state.uart_base.store(basic_tx.base_address(), Relaxed);
         // set up our UART:
 
         // just in case anything is pending
         basic_tx.clear_interrupts();
 
         // we want the TX interrupt to fire when the FIFO is empty
-        basic_tx.enable_interrupts();
+        basic_tx.enable_interrupt(true);
 
         // Ensure the UART is enabled (in case they disabled it before)
-        basic_tx.enable();
+        basic_tx.enable(true);
 
         Ok((
             AsyncTx {
@@ -179,7 +179,7 @@ impl embedded_io_async::Write for AsyncTx {
     }
 
     async fn flush(&mut self) -> Result<(), Self::Error> {
-        while self.basic_tx.regs().read_status().txf() {
+        while self.basic_tx.tx_fifo_full() {
             core::hint::spin_loop();
         }
         Ok(())
@@ -247,7 +247,7 @@ impl Drop for Transmission<'_> {
     fn drop(&mut self) {
         if !self.tx.uart_state.tx_buffer.load(Acquire).is_null() {
             self.tx.basic_tx.clear_interrupts();
-            self.tx.basic_tx.disable_interrupts();
+            self.tx.basic_tx.enable_interrupt(false);
         }
     }
 }
