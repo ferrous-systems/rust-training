@@ -1,9 +1,10 @@
 name: Weekly Canary Build
 
 on:
+  pull_request:
+  merge_group:
   schedule:
-    #- cron: '45 7 * * Mon' # 07:45 UTC on Monday
-    - cron: '25 15 * * Fri' # 15:25 UTC on Friday
+    - cron: '45 7 * * Mon' # 07:45 UTC on Monday
 
 env:
   CARGO_TERM_COLORS: always    # We want colors in our CI output
