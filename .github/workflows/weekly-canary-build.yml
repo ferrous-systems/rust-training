@@ -2,7 +2,8 @@ name: Weekly Canary Build
 
 on:
   schedule:
-    - cron: '45 7 * * Mon' # 07:45 UTC on Monday
+    #- cron: '45 7 * * Mon' # 07:45 UTC on Monday
+    - cron: '25 15 * * Fri' # 15:25 UTC on Friday
 
 env:
   CARGO_TERM_COLORS: always    # We want colors in our CI output
@@ -47,6 +48,7 @@ jobs:
           rustup component add rust-src
           rustup target add aarch64-unknown-none
           rustup target add thumbv7em-none-eabihf
+          rustup target add armv8r-none-eabihf
 
       - name: Execute render-material
         run: just build-book build-slides build-rust
