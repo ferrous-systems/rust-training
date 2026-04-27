@@ -9,8 +9,10 @@ default-run = "defmt"
 
 [dependencies]
 cortex-m = { version = "0.7.7", features = ["critical-section-single-core", "inline-asm"] }
+cortex-m-types = "0.1"
 cortex-m-rt = { version =  "0.7.5", features = ["device"] }
 critical-section = "1.2.0"
+num_enum = { version = "0.7", default-features = false }
 defmt = "1.0"
 defmt-semihosting = "0.3.0"
 embedded-hal = "1"
