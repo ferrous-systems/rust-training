@@ -13,7 +13,7 @@ unsafe extern "C" fn DefaultInterrupt() {
 }
 
 /// A list of all our interrupts
-#[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord)]
+#[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, num_enum::TryFromPrimitive)]
 #[repr(u16)]
 pub enum Interrupts {
     /// UART 0 Receive
@@ -85,6 +85,27 @@ pub enum Interrupts {
 unsafe impl cortex_m::interrupt::InterruptNumber for Interrupts {
     fn number(self) -> u16 {
         self as u16
+    }
+}
+
+unsafe impl cortex_m_types::InterruptNumber for Interrupts {
+    const MAX_INTERRUPT_NUMBER: usize = 31;
+
+    #[inline]
+    fn number(self) -> usize {
+        self as usize
+    }
+
+    fn from_number(value: usize) -> cortex_m_types::result::Result<Self> {
+        if value > Self::MAX_INTERRUPT_NUMBER {
+            return Err(cortex_m_types::result::Error::IndexOutOfBounds {
+                index: value,
+                min: 0,
+                max: Self::MAX_INTERRUPT_NUMBER,
+            });
+        }
+        Ok(Self::try_from(value as u16)
+            .map_err(|_| cortex_m_types::result::Error::InvalidVariant(value))?)
     }
 }
 
