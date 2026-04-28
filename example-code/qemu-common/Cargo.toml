@@ -7,13 +7,12 @@ license = "MIT OR Apache-2.0"
 description = "Common drivers for Arm QEMU hardware"
 
 [dependencies]
-bitbybit = "1.4"
+bitbybit = "2"
 critical-section = "1.2"
 defmt = "1"
 derive-mmio = "0.6"
 atomic-waker = "1"
-# TODO: Bump to v0.9 as soon as newer ferrocene with MSRV 1.87 is released.
-heapless = "0.8"
+heapless = "0.9"
 embedded-io = "0.7"
 embedded-io-async = "0.7"
 nb = "1.1"
