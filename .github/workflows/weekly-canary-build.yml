@@ -1,6 +1,8 @@
 name: Weekly Canary Build
 
 on:
+  pull_request:
+  merge_group:
   schedule:
     - cron: '45 7 * * Mon' # 07:45 UTC on Monday
 
@@ -47,6 +49,7 @@ jobs:
           rustup component add rust-src
           rustup target add aarch64-unknown-none
           rustup target add thumbv7em-none-eabihf
+          rustup target add armv8r-none-eabihf
 
       - name: Execute render-material
         run: just build-book build-slides build-rust
