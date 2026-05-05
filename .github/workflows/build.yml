@@ -22,9 +22,12 @@ jobs:
       - uses: ./.github/actions/setup
         with:
           graphviz: true
-      - uses: taiki-e/install-action@v2
+      - run: curl -sSL  https://github.com/jonathanpallant/mdBook/releases/download/v0.5.2-current-page-active/mdbook -o ~/.cargo/bin/mdbook
+      - run: chmod a+x ~/.cargo/bin/mdbook
+      - name: Install mdbook-graphviz
+        uses: taiki-e/install-action@v2
         with:
-          tool: mdbook@0.5.2,mdbook-graphviz@0.3.1
+          tool: mdbook-graphviz@0.3.1
       - run: |
           slug=$(./describe.sh "${GITHUB_REF}")
           echo "Building with slug '${slug}'"
@@ -52,9 +55,12 @@ jobs:
       - uses: ./.github/actions/setup
         with:
           graphviz: true
-      - uses: taiki-e/install-action@v2
+      - run: curl -sSL  https://github.com/jonathanpallant/mdBook/releases/download/v0.5.2-current-page-active/mdbook -o ~/.cargo/bin/mdbook
+      - run: chmod a+x ~/.cargo/bin/mdbook
+      - name: Install mdbook-graphviz
+        uses: taiki-e/install-action@v2
         with:
-          tool: mdbook@0.5.2,mdbook-graphviz@0.3.1
+          tool: mdbook-graphviz@0.3.1
       - run: just test-book
 
   test-cheatsheets:
