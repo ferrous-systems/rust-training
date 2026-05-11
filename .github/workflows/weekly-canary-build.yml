@@ -21,10 +21,12 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Install tools
+      - run: curl -sSL  https://github.com/jonathanpallant/mdBook/releases/download/v0.5.2-current-page-active/mdbook -o ~/.cargo/bin/mdbook
+      - run: chmod a+x ~/.cargo/bin/mdbook
+      - name: Install mdbook-graphviz
         uses: taiki-e/install-action@v2
         with:
-          tool: mdbook@0.5.2,mdbook-graphviz@0.3.1
+          tool: mdbook-graphviz@0.3.1
 
       - uses: extractions/setup-just@v3
         with:
