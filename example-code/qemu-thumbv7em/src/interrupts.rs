@@ -6,10 +6,12 @@
 type IrqFunction = unsafe extern "C" fn();
 
 /// Our default interrupt handler
-#[no_mangle]
+#[unsafe(no_mangle)]
 unsafe extern "C" fn DefaultInterrupt() {
     defmt::error!("Unexpected interrupt in bagging area.");
-    core::arch::asm!("udf 0");
+    unsafe {
+        core::arch::asm!("udf 0");
+    }
 }
 
 /// A list of all our interrupts
@@ -109,7 +111,7 @@ unsafe impl cortex_m_types::InterruptNumber for Interrupts {
     }
 }
 
-extern "C" {
+unsafe extern "C" {
     fn Uart0Rx();
     fn Uart0Tx();
     fn Uart1Rx();
@@ -177,8 +179,8 @@ impl Vector {
 ///
 /// Normally you would use `svd2rust` to generate this, but we've done it by
 /// hand to show that it isn't magical.
-#[link_section = ".vector_table.interrupts"]
-#[no_mangle]
+#[unsafe(link_section = ".vector_table.interrupts")]
+#[unsafe(no_mangle)]
 #[used]
 pub static __INTERRUPTS: [Vector; 32] = [
     // UART 0 Receive
