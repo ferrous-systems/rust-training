@@ -101,24 +101,31 @@ fn main() {
 
 ## Character
 
-`char` is a [Unicode Scalar Value](https://www.unicode.org/glossary/#unicode_scalar_value) being represented as a "single character"
+`char` is a [Unicode Scalar Value](https://www.unicode.org/versions/Unicode17.0.0/core-spec/chapter-3/#G7404) being represented as a "single character"
 
-* A literal in single quotes: `'r'`
-* Four (4) bytes in size
+* A literal in single quotes: `'r'` or `'\u{0072}'`
+* Exactly four (4) bytes in size
 * More than just ASCII: glyphs, emoji, accented characters, etc.
+
+Note:
+
+* Unicode Scalar Values can be represeted by:
+   - one 32-bit code unit (UTF-32)
+   - one or two 16-bit code units (UTF-16), or
+   - up to four 8-bit bytes (UTF-8)
 
 ## Character Literals
 
 ```rust [2-3|4-5|6-7|8-9]
 fn main() {
     // U+0072 LATIN SMALL LETTER R
-    let ascii_char = 'r';
+    let c1 = 'r';
     // U+03BC GREEK SMALL LETTER MU
-    let special_char = 'μ';
+    let c2 = 'μ';
     // U+0154 LATIN CAPITAL LETTER R WITH ACUTE
-    let accented_char = 'Ŕ';
+    let c3 = '\u{0154}';
     // U+1F60E SMILING FACE WITH SUNGLASSES
-    let emoji_char = '😎';
+    let c4 = '😎';
 }
 ```
 
@@ -130,6 +137,10 @@ fn main() {
     let seven_chars_emoji = '👨‍👩‍👧‍👧'; // Error: char must be one codepoint long
 }
 ```
+
+Note:
+
+As we can see, glyphs can be comprised of more than one Unicode Scalar Value. That needs to be stored as a string (`String` or `&str`), not a `char`.
 
 ## Arrays
 
