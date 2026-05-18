@@ -12,6 +12,8 @@ Most of our modules are available now (shown in green), but some are still in de
 
 ## Ferrous Systems' Rust Training Modules
 
+Our training courses have the following dependencies, in terms of content we can assume at least some knowledge of:
+
 ```dot process
 digraph {
     node [shape=record, width=1.5, fillcolor=green3, style=filled];
