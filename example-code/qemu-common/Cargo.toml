@@ -1,19 +1,29 @@
 [package]
 name = "qemu-common"
 version = "0.1.0"
-edition = "2021"
+edition = "2024"
 authors = ["Ferrous Systems"]
 license = "MIT OR Apache-2.0"
 description = "Common drivers for Arm QEMU hardware"
 
 [dependencies]
+cortex-m = "0.7"
 bitbybit = "2"
 critical-section = "1.2"
+atomic-waker = "1"
 defmt = "1"
 derive-mmio = "0.6"
-atomic-waker = "1"
 heapless = "0.9"
 embedded-io = "0.7"
 embedded-io-async = "0.7"
 nb = "1.1"
 embedded-hal = { version = "1" }
+
+[dependencies.embassy-time]
+version = "0.5"
+git = "https://github.com/embassy-rs/embassy.git"
+rev = "8c3394803dcae13c22a24920b774855145d858fd"
+features = [
+  "cortex-m",
+  "cmsdk",
+]

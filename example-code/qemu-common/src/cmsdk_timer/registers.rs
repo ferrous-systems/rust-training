@@ -24,7 +24,7 @@ pub struct Registers {
 }
 
 /// Control register.
-#[bitbybit::bitfield(u32, defmt_bitfields)]
+#[bitbybit::bitfield(u32, default = 0x0, defmt_bitfields)]
 pub struct Control {
     /// Interrupt enable bit.
     #[bit(3, rw)]
@@ -46,4 +46,10 @@ pub struct Interrupt {
     /// Write 1 to clear.
     #[bit(0, rw)]
     interrupt_bit: bool,
+}
+
+impl From<MmioRegisters<'_>> for embassy_time::driver_cmsdk::regs::MmioRegisters<'_> {
+    fn from(value: MmioRegisters<'_>) -> Self {
+        unsafe { embassy_time::driver_cmsdk::regs::Registers::new_mmio_at(value.ptr as usize) }
+    }
 }
