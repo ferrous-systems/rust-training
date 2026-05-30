@@ -1,4 +1,4 @@
-//! This file implements the `make-cheatsheets`, `test-cheetsheets` and, `test-all-cheatsheets` `xtasks` commands.
+//! This file implements the `make-cheatsheets`, `test-cheatsheets` and, `test-all-cheatsheets` `xtasks` commands.
 //! These commands offer us the ability to
 //! 1. Make a cheatsheet for a predetermined language, coded in `main.rs` and which will mainly be c/c++/python/java
 //! 2. Test that said cheatsheet does not fall out of sync with the rest of the `training-material`.
