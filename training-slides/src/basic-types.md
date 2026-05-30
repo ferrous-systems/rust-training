@@ -109,7 +109,7 @@ fn main() {
 
 Note:
 
-* Unicode Scalar Values can be represeted by:
+* Unicode Scalar Values can be represented by:
    - one 32-bit code unit (UTF-32)
    - one or two 16-bit code units (UTF-16), or
    - up to four 8-bit bytes (UTF-8)
