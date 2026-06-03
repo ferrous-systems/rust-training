@@ -71,7 +71,7 @@ typedef volatile struct uart0_reg_t {
     uint32_t tasks_stoprx; // @ 0x004
     // ...
     uint32_t inten; // @ 0x300
-    uint32_t _padding[79]; 
+    uint32_t _padding[79];
     uint32_t baudrate; // @ 0x500
 } uart0_reg_t
 
@@ -91,7 +91,7 @@ pub struct Uart0 {
     pub baudrate: VolatileCell<u32>, // @ 0x500
 }
 
-let p_uart: &Uart0 = unsafe { &*(0x40002000 as *const Uart0) };    
+let p_uart: &Uart0 = unsafe { &*(0x40002000 as *const Uart0) };
 ```
 
 <p>&nbsp;<!-- spacer for "run" button --></p>
@@ -103,6 +103,8 @@ type ensures the compiler emits volatile pointer read/writes. But, the reference
 Note:
 
 svd2rust (later) generates structures that look like this.
+Why are the references unsound? The compiler is allowed to insert aribtrary reads
+for shared references, e.g. `&VolatileCell<u32>`. But reads can have side-effects for MMIO.
 
 ## Access via functions
 
@@ -262,7 +264,7 @@ p.UARTE1.inten().modify(|_r, w| {
     w.cts().enabled();
     w.ncts().enabled();
     w.rxrdy().enabled();
-    w    
+    w
 });
 ```
 
@@ -293,7 +295,7 @@ p.UARTE1.inten().modify(|_r, w| {
     w.cts().enabled();
     w.ncts().enabled();
     w.rxrdy().enabled();
-    w    
+    w
 });
 ```
 
@@ -382,4 +384,7 @@ Support is available for bitfields within registers.
 * [`bitflags::bitflags!`](https://docs.rs/bitflags/2.9.1/bitflags/)
 * [`#[bitbybit::bitfield(u32)]`](https://crates.io/crates/bitbybit)
 
-Using `bitfield` for the [Arm CPSR](https://github.com/rust-embedded/cortex-ar/blob/cortex-ar-v0.1.0/cortex-ar/src/register/cpsr.rs) ([docs](https://docs.rs/cortex-ar/0.1.0/cortex_ar/register/cpsr/struct.Cpsr.html))
+Examples:
+
+- `bitfield` for the [Arm CPSR](https://github.com/rust-embedded/aarch32/blob/aarch32-rt-v0.3.0/cortex-ar/src/register/cpsr.rs) ([docs](https://docs.rs/aarch32-cpu/latest/aarch32_cpu/register/cpsr/struct.Cpsr.html))
+- `bitfield` and `derive-mmio` combined for the [ARM CMSDK Timer Peripheral](https://github.com/ferrous-systems/rust-training/blob/main/example-code/qemu-common/src/cmsdk_timer/registers.rs)
