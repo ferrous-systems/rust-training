@@ -1,6 +1,12 @@
-# Non-blocking programming and async/await
+# async/await in Rust
 
 ## Non-blocking programming
+
+- General goal: Offload work to the hardware, and use some mechanism to allow
+  the CPU to do otehr work while the hardware does the work
+- Interrupts are used to signal progress or completion of an operation
+
+## Model of task contexts
 
 In embedded systems, a generic model of how non-blocking programming works
 often looks like this:
@@ -37,6 +43,9 @@ let async_delay = Delay;
 async_delay.delay_ms(200).await;
 ```
 
+- The CPU can do other work while it is waiting for the UART transfer to complete
+  or the delay to elapse.
+
 Note:
 
 - We assume that the async UART driver was written in a non-blocking way. It would
@@ -45,12 +54,11 @@ Note:
 
 ## `async` executors
 
-- This is essentially the scheduler of your system, which polls
-  all `async` tasks.
-- Possible implementation: Executor has task queue with a static size and 
-  always polls all active tasks
-- If there is nothing to do, the executor might put the system to sleep. This
-  is one of the few spots where the executor is not architecture independent.
+- This is the scheduler of your system, which polls all `async` tasks.
+- Simplified mental model: Executor manages task queue with a static size and 
+  always polls all active tasks.
+- If there is nothing to do, the executor might put the system to sleep to save
+  power. This is one of the few spots where the executor is not architecture independent.
 
 Note:
 
@@ -107,10 +115,11 @@ fn my_async_fn() -> impl Future<Output = u32>;
 
 ## Wakers
 
-- Wakers are the reactors of our `async` system.
-- We register them inside the initial poll call.
-- We wake them inside the interrupt handler, to notify the executor about the completion of an
-  operation.
+- Wakers are the primary mechanism used to notify the executor of task completion.
+- A waker is registered inside the hardware task is started.
+- The task is put to sleep until the waker is called.
+- Inside an interrupt handler, the `wake` method on the waker is called to notify the executor
+  about the completion of an operation.
 
 Note:
 
@@ -126,8 +135,8 @@ Note:
 
 ## Under the hood of `embassy-time`
 
-- `embassy-time` provides a very convenient API. The high-level API for users is also hardware independent.s
-  How does this work?
+- `embassy-time` provides a very convenient API. The high-level API for users is also (seemingly)
+  hardware independent. How does this work?
 - We have written an embassy time driver for the simple ARM CMSDK Timer [here](https://github.com/embassy-rs/embassy/blob/main/embassy-time/src/driver_cmsdk/mod.rs)
 - Providing `embassy-time` support essential boils down to mapping a timekeeper and an alarm mechanism
   to a hardware timer inside a driver and then creating a global instance of that driver.
