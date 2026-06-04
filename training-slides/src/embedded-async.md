@@ -83,6 +83,23 @@ Note:
 - The `Context` can be used to retrieve a waker object. This can be used to implement
   the notification mechanism for completion of a future.
 
+## Mapping to the `async` keyword
+
+`async` functions are essentially syntactic sugar. An asynchronous function like this
+
+```rust
+async fn my_async_fn() -> u32;
+```
+
+desugars into this for the compiler
+
+
+```rust
+fn my_async_fn() -> impl Future<Output = u32>;
+```
+
+`await`ing a `async` fn is essentially resolving the future it returns to completion.
+
 ## Wakers
 
 - Wakers are the reactors of our `async` system.
@@ -101,3 +118,10 @@ Note:
 - We have written an `async` UART driver which can be run with QEMU. An example app using it
   can be found [here](https://github.com/ferrous-systems/rust-training/blob/main/example-code/qemu-thumbv7em/src/bin/uart_async.rs)
 - The driver can be found [here](https://github.com/ferrous-systems/rust-training/blob/main/example-code/qemu-common/src/cmsdk_uart/asynch.rs)
+
+## Under the hood of `embassy-time`
+
+- `embassy-time` provides a very convenient API. The API is also hardware independent. How does it work?
+- We have written an embassy time driver for the simple ARM CMSDK Timer [here](https://github.com/embassy-rs/embassy/blob/main/embassy-time/src/driver_cmsdk/mod.rs)
+- Providing `embassy-time` support essential boils down to mapping a timekeeper and an alarm mechanism
+  to a hardware timer inside a driver and then creating a global instance of that driver.
