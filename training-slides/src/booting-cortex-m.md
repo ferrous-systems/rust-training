@@ -149,10 +149,10 @@ extern unsigned long __sbss, __ebss;
 void rst_handler(void) {
     unsigned long *src = &__sidata;
     unsigned long *dest = &__sdata;
-    while (dest < &_end_data) {
+    while (dest < &__edata) {
         *dest++ = *src++;
     }
-    dest = &__sbss,
+    dest = &__sbss;
     while (dest < &__ebss) {
         *dest++ = 0;
     }
@@ -166,8 +166,10 @@ Note:
 - This code copies `.data` from flash to RAM, and zero-initializes the `.bss` block.
 - `__sidata` is the load address in flash.
 - Global variables are not initialised when this function is executed. What if the C code touches
-  an uninitialised global variable? C programmers don't worry so much about this. Rust programmers
-  definitely worry about this.
+  an uninitialised global variable? C programmers don't worry so much about this because
+  the C language spec does not care about global variables not being initialized when this
+  code runs. Rust programmers definitely worry about this.
+- Why is it hazardous? Working with raw pointers is easy to get wrong.
 
 ## Rust Reset Handler (1)
 
@@ -213,9 +215,9 @@ Note:
 
 This is Undefined Behaviour because globals haven't been initialised yet and it is illegal to
 execute any Rust code in the presence of global variables with invalid values
-(e.g. a `bool` with an integer value of `2`). It's also arguably UB because you're using
-`write_volatile` to write outside the bounds the objects we have declared to Rust
-(we said that `__sdata` was *only* a single `u32`).
+(e.g. a `bool` with an integer value of `2`). It's also arguably UB because we are violating the rules
+of pointer provenance: We are using `write_volatile` to write outside the bounds the objects we
+have declared to Rust (we said that `__sdata` was *only* a single `u32`).
 
 It is now reasonably settled that this is bad in theory, but it's debatable whether it's currently
 bad in practice (cortex-m-rt got away with it for years). I believe that in time it will get *worse*
@@ -232,6 +234,18 @@ See [Reset](https://github.com/rust-embedded/cortex-m/blob/c-m-rt-v0.7.3/cortex-
 * Attaches your `fn main()` to the reset function in cmrt
 * Hides your `fn main()` so no-one else can call it
 * Remaps `static mut FOO: T` to `static FOO: &mut T` so they are safe
+
+Note:
+
+Why does it map static mut FOO: T to static FOO: &mut T?. We can not prove to the compiler
+that the static mutable variables is actually safe to use (our entry point is just called once, and can
+not be reached otherwise).
+
+Expand the entry macro by using `cargo expand --bin hello`. Allowing `static_mut_ref` is required
+to allow static mutable references which clippy is unhappy about. There is actually some discussion
+on whether the macro should do this source code manipulation, which might look a little bit
+like magic for someone who does not know what is happening.
+
 
 ## Using the crate
 
