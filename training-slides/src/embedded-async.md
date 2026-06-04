@@ -138,5 +138,5 @@ Note:
 - `embassy-time` provides a very convenient API. The high-level API for users is also (seemingly)
   hardware independent. How does this work?
 - We have written an embassy time driver for the simple ARM CMSDK Timer [here](https://github.com/embassy-rs/embassy/blob/main/embassy-time/src/driver_cmsdk/mod.rs)
-- Providing `embassy-time` support essential boils down to mapping a timekeeper and an alarm mechanism
-  to a hardware timer inside a driver and then creating a global instance of that driver.
+- Providing `embassy-time` support boils down to mapping a timekeeper and an scheduling / alarm
+  mechanism to a hardware timer inside a driver and then creating a global instance of that driver.
