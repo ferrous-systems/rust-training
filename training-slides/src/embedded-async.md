@@ -98,7 +98,12 @@ desugars into this for the compiler
 fn my_async_fn() -> impl Future<Output = u32>;
 ```
 
-`await`ing a `async` fn is essentially resolving the future it returns to completion.
+## The `await` keyword
+
+- `await`ing a `async` fn is essentially resolving the future it returns to completion.
+- Every `await` is a point in code where the execution of the future might be paused and the current
+  execution context needs to be saved.
+- Essentially, `await`s are transition points of the compiler generated state machines.
 
 ## Wakers
 
@@ -121,7 +126,8 @@ Note:
 
 ## Under the hood of `embassy-time`
 
-- `embassy-time` provides a very convenient API. The API is also hardware independent. How does it work?
+- `embassy-time` provides a very convenient API. The high-level API for users is also hardware independent.s
+  How does this work?
 - We have written an embassy time driver for the simple ARM CMSDK Timer [here](https://github.com/embassy-rs/embassy/blob/main/embassy-time/src/driver_cmsdk/mod.rs)
 - Providing `embassy-time` support essential boils down to mapping a timekeeper and an alarm mechanism
   to a hardware timer inside a driver and then creating a global instance of that driver.
