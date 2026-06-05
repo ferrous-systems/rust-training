@@ -1,9 +1,9 @@
-# async/await in Rust
+# async/await in Embedded Rust
 
 ## Non-blocking programming
 
 - General goal: Offload work to the hardware, and use some mechanism to allow
-  the CPU to do otehr work while the hardware does the work
+  the CPU to do other work while the hardware does the work
 - Interrupts are used to signal progress or completion of an operation
 
 ## Model of task contexts
@@ -93,7 +93,7 @@ Note:
 
 ## Mapping to the `async` keyword
 
-`async` functions are essentially syntactic sugar. An asynchronous function like this
+`async` functions are syntactic sugar. An asynchronous function like this
 
 ```rust
 async fn my_async_fn() -> u32;
@@ -108,7 +108,7 @@ fn my_async_fn() -> impl Future<Output = u32>;
 
 ## The `await` keyword
 
-- `await`ing a `async` fn is essentially resolving the future it returns to completion.
+- `await`ing a `async` fn is resolving the future it returns to completion.
 - Every `await` is a point in code where the execution of the future might be paused and the current
   execution context needs to be saved.
 - Essentially, `await`s are transition points of the compiler generated state machines.
@@ -137,6 +137,7 @@ Note:
 
 - `embassy-time` provides a very convenient API. The high-level API for users is also (seemingly)
   hardware independent. How does this work?
-- We have written an embassy time driver for the simple ARM CMSDK Timer [here](https://github.com/embassy-rs/embassy/blob/main/embassy-time/src/driver_cmsdk/mod.rs)
+- We have written an embassy time driver for the simple ARM CMSDK Timer
+  [here](https://github.com/embassy-rs/embassy/blob/main/embassy-time/src/driver_cmsdk/mod.rs)
 - Providing `embassy-time` support boils down to mapping a timekeeper and an scheduling / alarm
   mechanism to a hardware timer inside a driver and then creating a global instance of that driver.
