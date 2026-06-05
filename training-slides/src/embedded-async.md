@@ -34,7 +34,8 @@ Note:
 - Async / Await works by transforming you code into pollable state machines.
 - From a users perspective, you can write code like this
 
-```rust
+```rust,no_run
+// Some HAL specific constructor.
 let my_async_uart = (...)
 let my_data = &[1, 2, 3, 4];
 let result = my_async_uart.write_all(my_data).await;
