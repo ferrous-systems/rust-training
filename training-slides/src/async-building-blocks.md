@@ -188,3 +188,4 @@ async fn main() {
 while let Some(item) = stream.next().await {
     //...
 }
+```
