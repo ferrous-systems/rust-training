@@ -172,7 +172,7 @@ impl<const QLEN: usize> BufferedUart<QLEN> {
                 rx.clear_interrupts();
                 // Drop old data if buffer full.
                 if inner.rx_buffer.is_full() {
-                    // Buffer is full so dequeing one byte should work.
+                    // Buffer is full so dequeuing one byte should work.
                     let _ = inner.rx_buffer.dequeue().unwrap();
                 }
                 let byte = rx.read().expect("RX FIFO should have data in it?");
