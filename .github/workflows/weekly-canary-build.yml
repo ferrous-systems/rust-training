@@ -19,7 +19,7 @@ jobs:
             rust-channel: [stable, beta, nightly]
     runs-on: ubuntu-24.04
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
 
       - run: curl -sSL  https://github.com/jonathanpallant/mdBook/releases/download/v0.5.2-current-page-active/mdbook -o ~/.cargo/bin/mdbook
       - run: chmod a+x ~/.cargo/bin/mdbook
