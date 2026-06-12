@@ -150,20 +150,20 @@ async fn main() {
 
 * Ownership works just like expected - it flows in and out of tasks/futures
 * Borrows work over `.await` points
-    * This means: All owned memory in a Future _must remain at the same place_
+  * This means: All owned memory in a Future _must remain at the same place_
 * Sharing between tasks is often done using `Rc/Arc`
 
 ## Categories of Executors
 
 * Single-threaded
-** Generally better latency, no synchronisation requirements
-** Highly susceptible to accidental blockades
-** Harmed by accidental pre-emption
+  * Generally better latency, no synchronisation requirements
+  * Highly susceptible to accidental blockades
+  * Harmed by accidental pre-emption
 * Multi-threaded
-** Generally better resource use, synchronisation requirements
-** Harmed by accidental pre-emption
+  * Generally better resource use, synchronisation requirements
+  * Harmed by accidental pre-emption
 * Deblocking
-** Actively monitor for blocked execution threads and will spin up new ones
+  * Actively monitor for blocked execution threads and will spin up new ones
 
 ## Reference Counting
 
@@ -188,3 +188,4 @@ async fn main() {
 while let Some(item) = stream.next().await {
     //...
 }
+```
