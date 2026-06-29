@@ -10,7 +10,7 @@
 extern crate alloc;
 
 use aarch64_rt::entry;
-use embedded_alloc::Heap;
+use embedded_alloc::LlffHeap as Heap;
 
 use qemu_aarch64v8a as _;
 

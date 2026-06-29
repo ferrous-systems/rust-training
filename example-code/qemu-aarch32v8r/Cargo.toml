@@ -11,9 +11,9 @@ default-run = "defmt"
 aarch32-cpu = { version = "0.2.0", features = ["critical-section-single-core"] }
 aarch32-rt = "0.2.0"
 critical-section = "1.2.0"
-defmt = "1.0.1"
-defmt-semihosting = "0.3.0"
-embedded-alloc = "0.5.1"
+defmt = "1"
+defmt-semihosting = "0.3"
+embedded-alloc = "0.7"
 qemu-common = { version = "0.1.0", path = "../qemu-common" }
 semihosting = { version = "0.1.19", features = ["stdio"] }
 
