@@ -13,15 +13,15 @@ cortex-m-types = "0.1"
 cortex-m-rt = { version =  "0.7.5", features = ["device"] }
 critical-section = "1.2.0"
 num_enum = { version = "0.7", default-features = false }
-defmt = "1.0"
-defmt-semihosting = "0.3.0"
+defmt = "1"
+defmt-semihosting = "0.3"
 embedded-hal = "1"
 embedded-hal-async = "1"
 heapless = { version = "0.9", features = ["defmt"] }
 embedded-io = "0.7"
 nb = { version = "1.1.0", features = ["defmt-0-3"] }
 qemu-common = { path = "../qemu-common" }
-semihosting = { version = "0.1.20", features = ["stdio"] }
+semihosting = { version = "0.1", features = ["stdio"] }
 rtic = { version = "2", features = ["thumbv7-backend"] }
 rtic-monotonics = { version = "2", features = ["cortex-m-systick"] }
 
