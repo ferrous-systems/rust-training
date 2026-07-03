@@ -85,6 +85,7 @@ async fn read_from_disk(path: &str) -> std::io::Result<String> {
 
 ```rust [], ignore
 fn main() {
+    // This code will not start reading from the disk on its own.
     let read_from_disk_future = read_from_disk();
 }
 ```
@@ -96,13 +97,10 @@ use tokio::{fs::File, io::AsyncReadExt};
 
 #[tokio::main]
 async fn main() {
-    let read_from_disk_future = read_from_disk("Cargo.toml");
-
-    let result = async {
-        let task = tokio::task::spawn(read_from_disk_future);
-        task.await
-    }
-    .await;
+    let read_from_disk_future = read_from_disk();
+    // We resolve the future by awaiting it. The runtime handles this for us.
+    let result = read_from_disk_future.await;
+    // When we get here, the read has been finished.
 
     println!("{:?}", result);
 }
