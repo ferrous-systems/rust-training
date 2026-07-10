@@ -4,13 +4,13 @@ version = 4
 
 [[package]]
 name = "aarch32-cpu"
-version = "0.2.0"
+version = "0.4.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "1417bbf608824a44cb2fa2ad74b5ec28c0ae4c83df62a4bd2b532bf04c241ade"
+checksum = "685b9d999a309934c295fce81bb0ab632351449ba87990588cef879521c8f2aa"
 dependencies = [
- "arbitrary-int 2.1.1",
+ "arbitrary-int",
  "arm-targets",
- "bitbybit 1.4.0",
+ "bitbybit",
  "critical-section",
  "num_enum",
  "thiserror",
@@ -18,9 +18,9 @@ dependencies = [
 
 [[package]]
 name = "aarch32-rt"
-version = "0.2.0"
+version = "0.4.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "82edb5b5e12bb60043fd7ca0d927f04dcb36ebe3909f8906641f766bbb6e528b"
+checksum = "9498bf78ddd7131ae7905db1f06f1bdbe306467f1ae26f6e1b1cf36ab9674f7d"
 dependencies = [
  "aarch32-cpu",
  "aarch32-rt-macros",
@@ -29,20 +29,14 @@ dependencies = [
 
 [[package]]
 name = "aarch32-rt-macros"
-version = "0.2.0"
+version = "0.4.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "fb3a0c69d7b102122ffb88ed4167eb2972338fb9c47a7ef9b587a8ee1db6f4d0"
+checksum = "29bb0176de85eb569c424320f5e8c32a7e0043ab6b12d76dbc33ef093eb3fb5f"
 dependencies = [
  "proc-macro2",
  "quote",
  "syn 2.0.118",
 ]
-
-[[package]]
-name = "arbitrary-int"
-version = "1.3.0"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "825297538d77367557b912770ca3083f778a196054b3ee63b22673c4a3cae0a5"
 
 [[package]]
 name = "arbitrary-int"
@@ -52,9 +46,9 @@ checksum = "993a810118f8f37e9c4411c86f1c4c940a09a7ab34b7bf2d88d06f50c553fab7"
 
 [[package]]
 name = "arm-targets"
-version = "0.4.2"
+version = "0.4.3"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "570304ff56d67c17f521f68d55a63dffbb067d63f675e2b4603283e2d50b9d59"
+checksum = "c0555f30eb9cd1a07d7677d01971da6c74cbbb0f73f0667cbee74e590a68a619"
 
 [[package]]
 name = "atomic-waker"
@@ -76,18 +70,6 @@ name = "base64"
 version = "0.13.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "9e1b586273c5702936fe7b7d6896644d8be71e6314cfe09d3167c95f712589e8"
-
-[[package]]
-name = "bitbybit"
-version = "1.4.0"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "ec187a89ab07e209270175faf9e07ceb2755d984954e58a2296e325ddece2762"
-dependencies = [
- "arbitrary-int 1.3.0",
- "proc-macro2",
- "quote",
- "syn 2.0.118",
-]
 
 [[package]]
 name = "bitbybit"
@@ -254,8 +236,8 @@ name = "embassy-time"
 version = "0.5.1"
 source = "git+https://github.com/embassy-rs/embassy.git?rev=8c3394803dcae13c22a24920b774855145d858fd#8c3394803dcae13c22a24920b774855145d858fd"
 dependencies = [
- "arbitrary-int 2.1.1",
- "bitbybit 2.0.0",
+ "arbitrary-int",
+ "bitbybit",
  "cfg-if",
  "cortex-m",
  "critical-section",
@@ -484,7 +466,7 @@ name = "qemu-common"
 version = "0.1.0"
 dependencies = [
  "atomic-waker",
- "bitbybit 2.0.0",
+ "bitbybit",
  "cortex-m",
  "critical-section",
  "defmt",
