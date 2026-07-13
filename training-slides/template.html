@@ -23,6 +23,16 @@
             float: left;
         }
 
+        .copy-snippet {
+            background: #3a8;
+            font-size: 100%;
+            color: white;
+            font-weight: 700;
+            cursor: pointer;
+            float: left;
+            margin-left: 0.5em;
+        }
+
         .reveal h2 code {
             font-size: 80%;
         }
@@ -126,31 +136,48 @@ $CONTENT
     <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/highlight.min.js"></script>
     <script src="https://code.jquery.com/jquery-3.6.4.min.js" crossorigin="anonymous"></script>
     <script>
-        const buttons = '<p><button class="open-in-playground">RUN</button></p>\n';
+        const buttons = '<p><button class="open-in-playground">RUN</button><button class="copy-snippet">COPY</button></p>\n';
+
+        function getCodeSource(codeElement) {
+            const code = codeElement.cloneNode(true);
+            const content = code.firstChild;
+            if (content && content.tagName === "TABLE") {
+                let source = "";
+                for (let row of content.rows) {
+                    source += row.cells[1].innerText + "\n";
+                }
+                return source;
+            }
+            return code.innerText;
+        }
 
         function addButtons() {
             $('pre code.rust:not(.fragment)').each(function (i, block) {
                 $(block).parent().append(buttons);
             });
             $('.open-in-playground').click(function () {
-                const baseUrl = 'https://play.rust-lang.org/?version=stable&edition=2018&code=';
-                const code = $(this).parent().parent().children('code')[0].cloneNode(true);
-                var payload;
-                const content = code.firstChild;
-                if (content.tagName == "TABLE") {
-                    // We have line numbers
-                    var source = "";
-                    for (let row of content.rows) {
-                        // Source is in the second column. The first column is line numbers.
-                        source += row.cells[1].innerText + "\n";
-                    }
-                    payload = encodeURIComponent(source);
-                } else {
-                    // We do not have line numbers
-                    payload = encodeURIComponent(code.innerText);
-                }
+                const baseUrl = 'https://play.rust-lang.org/?version=stable&edition=2021&code=';
+                const code = $(this).parent().parent().children('code')[0];
+                const payload = encodeURIComponent(getCodeSource(code));
                 const url = baseUrl + payload;
                 window.open(url, '_blank');
+            });
+            $('.copy-snippet').click(async function () {
+                const button = this;
+                const code = $(button).parent().parent().children('code')[0];
+                const source = getCodeSource(code);
+                const originalLabel = button.innerText;
+                try {
+                    await navigator.clipboard.writeText(source);
+                    button.innerText = 'COPIED';
+                } catch (err) {
+                    console.error('Could not copy code snippet:', err);
+                    button.innerText = 'FAILED';
+                } finally {
+                    setTimeout(() => {
+                        button.innerText = originalLabel;
+                    }, 1500);
+                }
             });
         }
 
@@ -337,17 +364,17 @@ $CONTENT
             function resetSlideScrolling(slide) {
                 $(slide).removeClass('scrollable-slide');
             }
-            
+
             function handleSlideScrolling(slide) {
                 if ($(slide).height() >= 720) {
                     $(slide).addClass('scrollable-slide');
                 }
             }
-            
+
             Reveal.addEventListener('ready', function (event) {
                 handleSlideScrolling(event.currentSlide);
             });
-            
+
             Reveal.addEventListener('slidechanged', function (event) {
                 resetSlideScrolling(event.previousSlide)
                 handleSlideScrolling(event.currentSlide);
