@@ -55,68 +55,13 @@ Note:
 
 ## `async` executors
 
-- This is the scheduler of your system, which polls all `async` tasks.
-- Simplified mental model: Executor manages task queue with a static size and 
-  always polls all active tasks.
-- If there is nothing to do, the executor might put the system to sleep to save
-  power. This is one of the few spots where the executor is not architecture independent.
-
-Note:
-
+- Embedded specific executors are usually static
 - Popular executors in the Rust ecosystem: RTICv2, embassy
-- Show the architecture specific parts of `embassy`, which put the system to sleep.
+- Only architecture specific parts that an executor might have: Putting the system to sleep
+  when there is nothing to do.
 
-## The `Future` trait
+## Wakers in embedded `async`
 
-- A `Future` is an operation which can be polled to completion.
-
-```rust
-pub enum Poll<T> {
-    Ready(T),
-    Pending,
-}
-
-pub trait Future {
-    type Output;
-
-    // Required method
-    fn poll(self: Pin<&mut Self>, cx: &mut Context<'_>) -> Poll<Self::Output>;
-}
-```
-
-Note:
-
-- `Pin`: The compiler-generated `Future` may contain self-referential pointers, so `Pin` is
-  required for safety guarantees. It ensures that the value a pointer refers will not move in
-  memory while the computation has not completed yet.
-- The `Context` can be used to retrieve a waker object. This can be used to implement
-  the notification mechanism for completion of a future.
-
-## Mapping to the `async` keyword
-
-`async` functions are syntactic sugar. An asynchronous function like this
-
-```rust
-async fn my_async_fn() -> u32;
-```
-
-desugars into this for the compiler
-
-
-```rust
-fn my_async_fn() -> impl Future<Output = u32>;
-```
-
-## The `await` keyword
-
-- `await`ing a `async` fn is resolving the future it returns to completion.
-- Every `await` is a point in code where the execution of the future might be paused and the current
-  execution context needs to be saved.
-- Essentially, `await`s are transition points of the compiler generated state machines.
-
-## Wakers
-
-- Wakers are the primary mechanism used to notify the executor of task completion.
 - A waker is registered inside the hardware task is started.
 - The task is put to sleep until the waker is called.
 - Inside an interrupt handler, the `wake` method on the waker is called to notify the executor
