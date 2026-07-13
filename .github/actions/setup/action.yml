@@ -41,7 +41,7 @@ runs:
         sudo apt -y update
         sudo apt -y install graphviz
     - name: Install Just 1.42
-      uses: extractions/setup-just@v3
+      uses: extractions/setup-just@v4
       with:
         just-version: 1.42
     - name: Update Rust

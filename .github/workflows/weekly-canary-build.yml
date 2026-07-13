@@ -19,7 +19,7 @@ jobs:
             rust-channel: [stable, beta, nightly]
     runs-on: ubuntu-24.04
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
 
       - run: curl -sSL  https://github.com/jonathanpallant/mdBook/releases/download/v0.5.2-current-page-active/mdbook -o ~/.cargo/bin/mdbook
       - run: chmod a+x ~/.cargo/bin/mdbook
@@ -28,7 +28,7 @@ jobs:
         with:
           tool: mdbook-graphviz@0.3.1
 
-      - uses: extractions/setup-just@v3
+      - uses: extractions/setup-just@v4
         with:
           just-version: 1.42
 
