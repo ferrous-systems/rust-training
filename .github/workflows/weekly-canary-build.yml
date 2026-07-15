@@ -52,6 +52,7 @@ jobs:
           rustup target add aarch64-unknown-none
           rustup target add thumbv7em-none-eabihf
           rustup target add armv8r-none-eabihf
+          rustup target add riscv64imac-unknown-none-elf
 
       - name: Execute render-material
         run: just build-book build-slides build-rust
