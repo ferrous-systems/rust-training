@@ -1,0 +1,12 @@
+[package]
+name = "qemu-riscv64"
+version = "0.1.0"
+edition = "2024"
+authors = ["Ferrous Systems"]
+license = "MIT OR Apache-2.0"
+description = "A simple RISC-V 64-bit demo application that runs in QEMU"
+default-run = "hello"
+
+[dependencies]
+riscv-rt = { version = "0.18.0", features = ["s-mode"] }
+sbi = "0.3.0"

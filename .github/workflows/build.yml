@@ -198,6 +198,17 @@ jobs:
           target: thumbv7em-none-eabihf
       - run: just build-qemu-thumbv7em
 
+  eg-qemu-riscv64:
+    name: Build Example qemu-riscv64
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v7
+      - uses: ./.github/actions/setup
+        with:
+          cache: example-code/qemu-riscv64
+          target: riscv64imac-unknown-none-elf
+      - run: just build-qemu-riscv64
+
   build-windows-examples:
     name: Build Example ffi-use-rust-in-c on Windows
     runs-on: windows-2022

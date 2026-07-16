@@ -2,21 +2,13 @@
 //!
 //! This script only executes when using `cargo` to build the project.
 
-use std::io::Write;
-
 fn main() {
     // Put `memory.ld` file in our output directory and ensure it's on the
     // linker search path.
     let out = &std::path::PathBuf::from(std::env::var_os("OUT_DIR").unwrap());
-    std::fs::File::create(out.join("memory.x"))
-        .unwrap()
-        .write_all(include_bytes!("memory.x"))
-        .unwrap();
+    std::fs::write(out.join("memory.x"), include_bytes!("memory.x")).expect("Writing memory.x");
     println!("cargo::rerun-if-changed=memory.x");
-    std::fs::File::create(out.join("device.x"))
-        .unwrap()
-        .write_all(include_bytes!("device.x"))
-        .unwrap();
+    std::fs::write(out.join("device.x"), include_bytes!("device.x")).expect("Writing device.x");
     println!("cargo::rerun-if-changed=device.x");
     println!("cargo:rustc-link-arg=-Tlink.x");
     println!("cargo:rustc-link-arg=-Tdefmt.x");
