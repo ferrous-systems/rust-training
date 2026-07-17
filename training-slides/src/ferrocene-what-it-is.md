@@ -19,8 +19,8 @@
 
 ## A downstream of The Rust Project
 
-* One of the Ferrocene pillars is that the standard library and the compiler must not diverge from upstream.
-* We've been pulling the `master` branch of `rust-lang/rust` into our tree since 2021
+* One of the Ferrocene pillars is that the standard library and the compiler must not diverge from upstream
+* We've been pulling changes from `rust-lang/rust` into our tree since 2021
 
 ## Patches
 
