@@ -13,7 +13,7 @@
 * `ferrocene-self-test` - checks your installation
 * `ferrocene-docs-xxx` - documentation
 
-★: qualified tool ☆: certification in progress
+★: qualified tool ☆: certified subset available
 
 Note:
 
