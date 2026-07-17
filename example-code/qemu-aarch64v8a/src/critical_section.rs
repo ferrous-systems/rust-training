@@ -1,4 +1,4 @@
-//! Code that implements the `critical-section` traits on 64-bit Aarch64.
+//! Code that implements the `critical-section` traits on 64-bit AArch64.
 
 struct SingleCoreCriticalSection;
 critical_section::set_impl!(SingleCoreCriticalSection);

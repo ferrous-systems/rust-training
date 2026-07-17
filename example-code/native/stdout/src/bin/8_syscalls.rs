@@ -2,7 +2,7 @@
 //!
 //! Requires `RUSTFLAGS="-C panic=abort -lc"` (and nightly Rust for Linux targets).
 //!
-//! Runs on Aarch64 macOS, Aarch64 Linux and x86-64 Linux.
+//! Runs on AArch64 macOS, AArch64 Linux and x86-64 Linux.
 
 #![no_std]
 #![no_main]

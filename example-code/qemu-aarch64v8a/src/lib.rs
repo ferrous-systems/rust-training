@@ -10,7 +10,7 @@ use defmt_semihosting as _;
 
 pub mod critical_section;
 
-/// An Aarch64 Exception Level
+/// An AArch64 Exception Level
 #[derive(Debug, Copy, Clone, PartialEq, Eq)]
 pub enum ExceptionLevel {
     /// User code
