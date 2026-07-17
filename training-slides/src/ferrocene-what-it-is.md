@@ -49,13 +49,13 @@
 
 ## Long-term Stable
 
-As of 3 September 2024, the Ferrocene releases are:
+The Ferrocene releases are:
 
-* *nightly* (upstream *nightly*)
-* *pre-rolling* (upstream *beta*)
+* Ferrocene Stable, four times per year
+* Ferrocene Beta, ahead of each Ferrocene Stable
 * *rolling* (upstream *stable*)
-* stable-24.05 (upstream *1.76*)
-* stable-24.08 (upstream *1.79*)
+* *pre-rolling* (upstream *beta*)
+* *nightly* (upstream *nightly*)
 
 Note:
 
@@ -66,29 +66,33 @@ releases. See
 <https://public-docs.ferrocene.dev/main/qualification/plan/release.html> for
 details.
 
+We generally have releases numbered `YY.02`, `YY.05`, `YY.08` and `YY.11`.
+
 ## Open Source
 
 * Ferrocene lives at <https://github.com/ferrocene/ferrocene>
 * The source code is MIT || Apache-2.0
 * The docs are published at <https://public-docs.ferrocene.dev>
 
-## Qualified per ISO 26262 (ASIL D) / IEC 61508 (SIL 4)
+## Qualified Toolchain
 
-We're in [the TÜV SÜD database](https://www.tuvsud.com/en/services/product-certification/ps-cert?q=Z10+123030+0001+Rev.+00)
+Meets ISO 26262 (ASIL D) / IEC 61508 (SIL 3) / ISO 62304 (Class C)
 
-![TÜV SÜD logo](./images/Z1_en-3D_N.png)
+[![TÜV SÜD logo](./images/Z1_en-3D_N.png)](https://www.tuvsud.com/en/customer-hub/ps-cert/?q=Z10+123030+0001+Rev.+01)
+
+## Certified Rust Standard Library (subset)
+
+Meets ISO 26262 (ASIL B) / IEC 61508 (SIL 2)
+
+Our [docs](https://public-docs.ferrocene.dev/main/core/ptr/index.html) note which functions are 'validated'.
+
+We can also lint for use of non-validated APIs.
 
 ## `cargo` isn't qualified
 
 * Qualifying a tool that touches the Internet is hard
 * You don't *need* a build system...
 * You can just call `rustc` (which is qualified) from a simple script for production
-
-## `libstd` isn't certified, `libcore` will be
-
-* It doesn't make sense to certify the Standard Library
-  * It's mostly "If Windows, do X; if POSIX, do Y"
-* We are looking at certifying `libcore`
 
 ## Supplied with a warranty
 
