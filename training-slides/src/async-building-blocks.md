@@ -2,14 +2,25 @@
 
 ## Async
 
-* Built from important "building blocks"
+* Built from important building blocks, which are partially baked into the language
 * Futures, Tasks, Executors, Streams, and more
 
 ## Differences between async & sync
 
 * sync programming often has imperative behaviour
-* async programming is about constructing a process at runtime and then executing it
-* this process is called the "futures tree"
+* async programming is an abstraction that allows developers to define pausing points where
+  the execution can be paused and later resumed
+
+Note:
+
+- Imperative: Statements in synchronous code are just executed step-by-step.
+
+## Async language support
+
+* `async` functions can define yield points where the execution can be paused, represented by
+  `await`ion points.
+* Built into the language: The compiler generates the state machines required to do this
+  automatically.
 
 ## An async Rust function
 
@@ -25,7 +36,12 @@ async fn read_from_disk(path: &str) -> std::io::Result<String> {
 }
 ```
 
-## (sketch) Desugaring return type
+Note:
+
+- function must be `async` so `await` can be used inside it.
+- The code between two `await`ion points has a regular synchronous flow.
+
+## (sketch) Desugaring the return type
 
 ```rust [], ignore
 use std::future::Future;
@@ -45,9 +61,14 @@ fn read_from_disk<'a>(path: &'a str)
 }
 ```
 
+Note:
+
+- Helpful mental model: A `async` function is a regular synchronous functions that returns a `Future`.
+
 ## What are Futures
 
-Futures represent a datastructure that - at some point in the future - give us the value that we are waiting for. The Future may be:
+Futures represent a datastructure that - at some point in the future - give us the value that we
+are waiting for. The Future may be:
 
 * delayed
 * immediate
@@ -63,9 +84,16 @@ Examples:
 * `read_to_end`: Read a complete input stream
 * `connect`: Connect a socket
 
+Note:
+
+- Alternative wording: A future can be resolved or polled to completion.
+
 ## Futures are poll-based
 
-They can be checked if they are _done_, and are usually mapped to readiness based APIs like `epoll`.
+They can be checked if they are _done_, and are usually mapped to readiness based APIs:
+
+- On full operating systems, mechanisms like `epoll` are used
+- On embedded systems, interrupts are used to advance or complete operations
 
 ## .await registers interest in completion
 
@@ -80,6 +108,11 @@ async fn read_from_disk(path: &str) -> std::io::Result<String> {
     Ok(buffer)
 }
 ```
+
+Note:
+
+- Reminder: `await` are the yield/pause points where the execution might be paused and later
+  resumed
 
 ## Futures are cold
 
