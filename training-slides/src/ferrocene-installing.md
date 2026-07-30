@@ -151,7 +151,7 @@ Tier 1 target, depending on whether we're running the Test Suite in CI.
 manifest-version = 1
 
 [products.ferrocene]
-release = "stable-26.02.0"
+release = "stable-26.05.0"
 packages = [
   "rustc-${rustc-host}", "rust-std-${rustc-host}", "cargo-${rustc-host}",
   "rust-src", "rust-std-aarch64-unknown-none"
