@@ -2,13 +2,13 @@
 
 ## Async
 
-* Built from important building blocks, which are partially baked into the language
+* Built from various important building blocks
 * Futures, Tasks, Executors, Streams, and more
 
 ## Differences between async & sync
 
 * sync programming often has imperative behaviour
-* async programming is an abstraction that allows developers to define pausing points where
+* async programming is an abstraction that allows developers to define yield points where
   the execution can be paused and later resumed
 
 Note:
@@ -18,7 +18,7 @@ Note:
 ## Async language support
 
 * `async` functions can define yield points where the execution can be paused, represented by
-  `await`ion points.
+  `.await` syntax.
 * Built into the language: The compiler generates the state machines required to do this
   automatically.
 
@@ -86,14 +86,15 @@ Examples:
 
 Note:
 
-- Alternative wording: A future can be resolved or polled to completion.
+- A future can be resolved or polled to completion, or canceled by `drop`ing them.
 
 ## Futures are poll-based
 
-They can be checked if they are _done_, and are usually mapped to readiness based APIs:
+They can be checked if they are _done_, and are usually mapped to readiness based APIs. Some
+examples:
 
-- On full operating systems, mechanisms like `epoll` are used
-- On embedded systems, interrupts are used to advance or complete operations
+- On full operating systems, OS mechanisms like `epoll`.
+- On embedded systems, interrupts to advance or complete operations.
 
 ## .await registers interest in completion
 
