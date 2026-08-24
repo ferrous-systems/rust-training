@@ -1,0 +1,22 @@
+<mxfile host="Electron">
+  <diagram name="Page-1" id="G1ky4Ve2bphZ_M0nSspA">
+    <mxGraphModel dx="808" dy="500" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="0dsqggcIrK4pdbSAJdBq-2" parent="1" style="rounded=0;whiteSpace=wrap;html=1;" value="Executor" vertex="1">
+          <mxGeometry height="60" width="120" x="410" y="310" as="geometry" />
+        </mxCell>
+        <mxCell id="0dsqggcIrK4pdbSAJdBq-3" parent="1" style="rounded=0;whiteSpace=wrap;html=1;" value="Reactor" vertex="1">
+          <mxGeometry height="60" width="120" x="410" y="380" as="geometry" />
+        </mxCell>
+        <mxCell id="0dsqggcIrK4pdbSAJdBq-4" parent="1" style="rounded=0;whiteSpace=wrap;html=1;" value="Futures" vertex="1">
+          <mxGeometry height="60" width="120" x="550" y="380" as="geometry" />
+        </mxCell>
+        <mxCell id="0dsqggcIrK4pdbSAJdBq-5" parent="1" style="rounded=0;whiteSpace=wrap;html=1;" value="Tasks" vertex="1">
+          <mxGeometry height="60" width="120" x="550" y="310" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
