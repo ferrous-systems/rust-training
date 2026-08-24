@@ -90,13 +90,11 @@ Note:
 
 ## Futures are poll-based
 
-They can be checked if they are _done_, and are usually mapped to readiness based APIs. Those
-can be polling or event-driven. Some examples:
+They can be checked if they are _done_, and are usually mapped to readiness based APIs.
+Some examples:
 
-- An event driven executor on a full Linux OS driven by [`epoll`](https://man7.org/linux/man-pages/man7/epoll.7.html).
-- A polling executor on an embedded system which simply polls in a permanent loop.
-- An event driven executor on an Embedded ARM Cortex-M using architecture specific wakeup and
-  sleep instructions.
+- On a UNIX based OS: Using the [`epoll`](https://man7.org/linux/man-pages/man7/epoll.7.html) mechanism.
+- On an Embedded ARM Cortex-M: Using architecture specific wakeup and sleep instructions.
 
 ## .await registers interest in completion
 
