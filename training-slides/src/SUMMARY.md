@@ -80,7 +80,7 @@ Rust for the Linux Kernel and other no-std environments with an pre-existing C A
 
 # Async Rust
 
-* [Async Building Blocks](./async-building-blocks.md)
+* [Intro to Async](./async-intro.md)
 * [Intro to Tokio](./async-intro-to-tokio.md)
 * [Async Implementation Details](./async-implementation-details.md)
 * [Async Component Interaction](./async-component-interaction.md)
