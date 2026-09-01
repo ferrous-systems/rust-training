@@ -4,7 +4,7 @@ version = "0.1.0"
 edition = "2021"
 authors = ["Ferrous Systems"]
 license = "MIT OR Apache-2.0"
-description = "A simple Aarch64 demo application that runs in QEMU and compiles with Ferrocene"
+description = "A simple AArch64 demo application that runs in QEMU and compiles with Ferrocene"
 default-run = "defmt"
 
 [dependencies]

@@ -7,7 +7,7 @@ runner = [
   "--cpu",
   "cortex-r52",
   "--log-format",
-  "{[{L}]%bold} {s} {({ff}:{l:1})%dimmed}"
+  "oneline"
 ]
 
 [build]

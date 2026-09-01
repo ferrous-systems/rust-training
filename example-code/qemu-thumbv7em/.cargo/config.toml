@@ -9,7 +9,7 @@ runner = [
   "--cpu",
   "cortex-m4",
   "--log-format",
-  "{[{L}]%bold} {s} {({ff}:{l:1})%dimmed}"
+  "oneline"
 ]
 
 [env]

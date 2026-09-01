@@ -13,7 +13,7 @@
 * `ferrocene-self-test` - checks your installation
 * `ferrocene-docs-xxx` - documentation
 
-★: qualified tool ☆: certification in progress
+★: qualified tool ☆: certified subset available
 
 Note:
 
@@ -34,21 +34,17 @@ Examples of channels include:
 * nightly
 * pre-rolling
 * rolling
-* beta-24.05
-* beta-24.08
-* stable-24.05
-* stable-24.08
+* beta-26.05
+* stable-26.02
 * etc
 
 Examples of releases include:
 
-* nightly-2024-08-29
-* pre-rolling-2024-08-28
-* rolling-2024-08-08
-* beta-24.05-2024-06-19
-* beta-24.08-2024-08-22
-* stable-24.05.0
-* stable-24.08.0
+* nightly-2026-07-16
+* pre-rolling-2026-07-03
+* rolling-2026-07-15
+* beta-26.05-2026-07-12
+* stable-26.02.0
 * etc
 
 See <https://public-docs.ferrocene.dev/main/qualification/plan/release.html>
@@ -77,8 +73,6 @@ We have two dimensions:
 
 Note:
 
-In stable-24.08 and earlier, these were called "Supported Targets"
-
 Each release has a User Manual and it is important to follow the instructions
 for that target in that release otherwise you may be outside the qualification
 scope. As an example, we don't let you give arbitrary arguments to the linker -
@@ -86,16 +80,31 @@ you can only pass the arguments we say are OK.
 
 ## Quality Managed (QM) Targets
 
+Quality managed targets are targets which are suitable for use in production
+outside of safety critical contexts.
+
 * Production Ready
 * Passes the Rust Test Suite
 * Support is available
-* ~~Signed qualification material~~
 
 Note:
 
-It may be that the target is en-route to being a Qualified Target, or it may be
-that it is deemed unlikely that the target would be useful in a safety critical
-context. Talk to us if you would like a QM Target available as a Qualified
+Talk to us if you would like a QM Target available as a Qualified
+Target.
+
+## Supported Targets
+
+Supported targets are targets which are suitable for use outside of
+safety-critical contexts, and may be suitable for production given adequate user
+testing.
+
+* Maybe Production Ready
+* Low-priority support is available
+* Maybe passed the Rust Test Suite
+
+Note:
+
+Talk to us if you would like a Supported Target available as a QM or Qualified
 Target.
 
 ## Experimental Targets
@@ -108,8 +117,7 @@ Target.
 Note:
 
 A Ferrocene 'Experimental Target' is broadly equivalent to an upstream Tier 2 or
-Tier 1 target, depending on whether we're running the Test Suite in CI. And, to
-be fair, plenty of people use upstream Rust in production.
+Tier 1 target, depending on whether we're running the Test Suite in CI.
 
 ## Host Targets
 
@@ -143,7 +151,7 @@ be fair, plenty of people use upstream Rust in production.
 manifest-version = 1
 
 [products.ferrocene]
-release = "stable-24.08.0"
+release = "stable-26.05.0"
 packages = [
   "rustc-${rustc-host}", "rust-std-${rustc-host}", "cargo-${rustc-host}",
   "rust-src", "rust-std-aarch64-unknown-none"
@@ -163,11 +171,11 @@ packages = [
 ```console
 $ criticalup auth set
 $ criticalup install
-info: installing product 'ferrocene' (stable-24.08.0)
-info: downloading component 'cargo-x86_64-unknown-linux-gnu' for 'ferrocene' (stable-24.08.0)
+info: installing product 'ferrocene' (stable-26.02.0)
+info: downloading component 'cargo-x86_64-unknown-linux-gnu' for 'ferrocene' (stable-26.02.0)
 ...
-info: downloading component 'rustc-x86_64-unknown-linux-gnu' for 'ferrocene' (stable-24.08.0)
-info: installing component 'rustc-x86_64-unknown-linux-gnu' for 'ferrocene' (stable-24.08.0)
+info: downloading component 'rustc-x86_64-unknown-linux-gnu' for 'ferrocene' (stable-26.02.0)
+info: installing component 'rustc-x86_64-unknown-linux-gnu' for 'ferrocene' (stable-26.02.0)
 $ criticalup run rustc --version
 ```
 
@@ -222,13 +230,12 @@ NB: `cargo` uses the corresponding `rustc`
 
 ## rust-analyzer in VS Code
 
-Set `RUSTC` to tell it which `rustc` to use
+VS Code uses `rustup`, so tell `rustup` to use `criticalup`:
 
 ```text
-$ RUSTC=$(criticalup which rustc) code .
-
-PS D:\project> $Env:RUSTC=$(criticalup which rustc)
-PS D:\project> code .
+$ criticalup link create
+$ rustup override set ferrocene
+$ code .
 ```
 
 Ensure you have the `rust-src` package installed.
