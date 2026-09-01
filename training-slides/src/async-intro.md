@@ -1,9 +1,4 @@
-# Async Building Blocks
-
-## Async
-
-* Built from various important building blocks
-* Futures, Tasks, Executors, Streams, and more
+# Intro to Async Rust
 
 ## Differences between async & sync
 
@@ -21,6 +16,11 @@ Note:
   `.await` syntax.
 * Built into the language: The compiler generates the state machines required to do this
   automatically.
+
+## Building blocks
+
+* Built from various important building blocks
+* Executors, Tasks, Futures, Reactors, and more
 
 ## An async Rust function
 
@@ -65,9 +65,21 @@ Note:
 
 - Helpful mental model: A `async` function is a regular synchronous functions that returns a `Future`.
 
-## What are Futures
+## Executor
 
-Futures represent a datastructure that - at some point in the future - give us the value that we
+- Manages, schedules and executes a queue of asynchronous tasks.
+- Examples of executors on host systems: `tokio` executor
+- Examples of executors on embedded systems: `rtic` or `embassy-executor`
+
+Note:
+
+- The compiler generates Future-implementing state machines from our `async` code. The executor
+  polls them
+- This is inversion of control: the runtime drives our code, not the other way around.
+
+## Futures
+
+Represent a datastructure that - at some point in the future - give us the value that we
 are waiting for. The Future may be:
 
 * delayed
@@ -148,12 +160,6 @@ async fn read_from_disk(path: &str) -> std::io::Result<String> {
 }
 ```
 
-## Tasks
-
-* A task connects a future to the executor
-* _The task is the concurrent unit_!
-* A task is similar to a thread, but is user-space scheduled
-
 ## Futures all the way down: Combining Futures
 
 ```rust [], ignore
@@ -178,14 +184,37 @@ async fn main() {
 }
 ```
 
-## Ownership/Borrowing Memory in concurrent systems
+## Tasks
 
-* Ownership works just like expected - it flows in and out of tasks/futures
-* Borrows work over `.await` points
-  * This means: All owned memory in a Future _must remain at the same place_
-* Sharing between tasks is often done using `Rc/Arc`
+* A task connects a future to the executor
+* _The task is the concurrent unit_!
+* A task is similar to a thread, but is user-space scheduled
 
-## Categories of Executors
+## Reactors
+
+* How do we avoid busy polling async tasks? Is it possible to only poll on interesting events?
+* Reactors are the mechanism for this which map interest in completion to operating system
+  or platform specific event mechanisms.
+
+## Example of reactors
+
+* In `tokio`: The low-level `mio` library provides a cross-platform API wrapping OS mechanisms
+  like `epoll` / `kqueue` / `IOCP`.
+* On embedded systems, interrupts are the primary reactors for event handling.
+
+## Wakers
+
+- Generic mechanism used by reactors or user code to notify the executor about relevant events.
+- The `Context` structure passed into the `poll` method of a `Future` can be used to retrieve
+  a waker.
+- That waker can be stored/cached/registered for later access by other user code or by the reactor.
+- At a later stage, `wake` might be called to notify the executor on relevant events.
+
+## Tying everything together
+
+![Async building blocks](./images/async-building-blocks.drawio.svg)
+
+## Categories of executors on host systems
 
 * Single-threaded
   * Generally better latency, no synchronisation requirements
@@ -196,6 +225,13 @@ async fn main() {
   * Harmed by accidental pre-emption
 * Deblocking
   * Actively monitor for blocked execution threads and will spin up new ones
+
+## Ownership/Borrowing Memory in concurrent systems
+
+* Ownership works just like expected - it flows in and out of tasks/futures
+* Borrows work over `.await` points
+  * This means: All owned memory in a Future _must remain at the same place_
+* Sharing between tasks is often done using `Rc/Arc`
 
 ## Reference Counting
 
