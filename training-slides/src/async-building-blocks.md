@@ -124,6 +124,12 @@ fn main() {
 }
 ```
 
+Note:
+
+- You can still create objects that implement Future using a regular `fn` — for example, a `fn new`
+  constructor that returns a `Future`-implementing type. That synchronous function might do some
+  setup work.
+
 ## Futures need to be executed
 
 ```rust [], ignore
