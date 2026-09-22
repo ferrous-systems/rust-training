@@ -67,9 +67,9 @@ Note:
 
 ## Executor
 
-- Manages, schedules and executes a queue of asynchronous tasks.
-- Examples of executors on host systems: `tokio` executor
-- Examples of executors on embedded systems: `rtic` or `embassy-executor`
+- Manages, schedules and executes a collection of asynchronous tasks
+- Examples of executors on host systems: [`tokio`](https://tokio.rs) and [`smol`](https://github.com/smol-rs/smol).
+- Examples of executors on no-std systems: [`rtic`](https://rtic.rs) and [`embassy`](https://embassy.dev)
 
 Note:
 
@@ -79,7 +79,7 @@ Note:
 
 ## Futures
 
-Represent a datastructure that - at some point in the future - give us the value that we
+Represent a data structure that - at some point in the future - gives us the value that we
 are waiting for. The Future may be:
 
 * delayed
@@ -199,8 +199,8 @@ async fn main() {
 ## Reactors
 
 * How do we avoid busy polling async tasks? Is it possible to only poll on interesting events?
-* Reactors are the mechanism for this which map interest in completion to operating system
-  or platform specific event mechanisms.
+* Reactors are the mechanism for this
+* They map interest in completion to operating system or platform specific event mechanisms
 
 ## Example of reactors
 
@@ -228,8 +228,8 @@ async fn main() {
 
 * Ownership works just like expected - it flows in and out of tasks/futures
 * Borrows work over `.await` points
-  * This means: All owned memory in a Future _must remain at the same place_
-* Sharing between tasks is often done using `Rc/Arc`
+  * This means all owned memory in a Future _must remain at the same place_
+* Sharing between tasks is often done using `Rc` or `Arc`
 
 ## Reference Counting
 
