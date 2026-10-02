@@ -21,7 +21,7 @@ else
     #./mdbook --version || curl -sSL https://github.com/rust-lang/mdBook/releases/download/v0.5.2/mdbook-v0.5.2-x86_64-unknown-linux-gnu.tar.gz | tar -xvzf -
     # This one carries a patch we want
     ./mdbook --version || ( curl -sSL  https://github.com/jonathanpallant/mdBook/releases/download/v0.5.2-current-page-active/mdbook -o ./mdbook && chmod a+x ./mdbook )
-    dot -V || ( curl -ssL https://github.com/restruct/dot-static/raw/refs/heads/master/x64/dot_static -o ./dot && chmod a+x ./dot )
+    dot -V || ( curl -ssL https://github.com/restruct/dot-static/raw/refs/tags/2.0.2/x64/dot_static -o ./dot && chmod a+x ./dot )
     ./mdbook-graphviz --version || ( curl -sSL https://github.com/dylanowen/mdbook-graphviz/releases/download/v0.3.1/mdbook-graphviz_v0.3.1_x86_64-unknown-linux-musl.zip -o mdbook-graphviz.zip \
         && unzip mdbook-graphviz.zip \
         && rm mdbook-graphviz.zip \
