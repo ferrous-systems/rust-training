@@ -2,7 +2,6 @@
 //!
 //! Spawns varies tasks, according to the command-line arguments.
 
-#![deny(warnings)]
 #![deny(missing_docs)]
 
 mod tasks;
