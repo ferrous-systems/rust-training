@@ -19,16 +19,18 @@ jobs:
             rust-channel: [stable, beta, nightly]
     runs-on: ubuntu-24.04
     steps:
-      - uses: actions/checkout@v7
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1 
+        with:
+          persist-credentials: false
 
       - run: curl -sSL  https://github.com/jonathanpallant/mdBook/releases/download/v0.5.2-current-page-active/mdbook -o ~/.cargo/bin/mdbook
       - run: chmod a+x ~/.cargo/bin/mdbook
       - name: Install mdbook-graphviz
-        uses: taiki-e/install-action@v2
+        uses: taiki-e/install-action@183e4297cca2404691e9380e1307288dced5c82a # v2.87.25
         with:
           tool: mdbook-graphviz@0.3.1
 
-      - uses: extractions/setup-just@v4
+      - uses: extractions/setup-just@53165ef7e734c5c07cb06b3c8e7b647c5aa16db3 # v4
         with:
           just-version: 1.42
 
