@@ -212,17 +212,20 @@ async fn main() {
 
 ![Async building blocks](./images/async-building-blocks.drawio.svg)
 
-## Categories of executors on host systems
+## Categories of executors - Single threaded
 
-* Single-threaded
-  * Generally better latency, no synchronisation requirements
-  * Highly susceptible to accidental blockades
-  * Harmed by accidental pre-emption
-* Multi-threaded
-  * Generally better resource use, synchronisation requirements
-  * Harmed by accidental pre-emption
-* Deblocking
-  * Actively monitor for blocked execution threads and will spin up new ones
+* Generally better latency, no synchronisation requirements
+* Highly susceptible to accidental blockades
+* Harmed by accidental pre-emption
+
+## Categories of executors - Multi threaded
+
+* Generally better resource use, synchronisation requirements
+* Harmed by accidental pre-emption
+
+## Categories of executors - Deblocking
+
+* Actively monitor for blocked execution threads and will spin up new ones
 
 ## Ownership/Borrowing Memory in concurrent systems
 
