@@ -32,6 +32,7 @@ jobs:
           tool: mdbook-graphviz@0.3.1
       - run: curl -LsSf https://github.com/ferrous-systems/mdslides/releases/download/v0.7.2/mdslides-installer.sh | sh
       - run: |
+          echo "Given GITHUB_REF '${GITHUB_REF}'"
           slug=$(./describe.sh "${GITHUB_REF}")
           echo "Building with slug '${slug}'"
           echo "slug=${slug}" >> "${GITHUB_ENV}"
@@ -42,7 +43,7 @@ jobs:
           name: Material
           if-no-files-found: error
           path: |
-            ./rust-training-*/
+            ./rust-training-*.zip
 
   test-book:
     name: Test Book
@@ -260,8 +261,6 @@ jobs:
   # It the necessary resulting builds as artifacts, zips them, and uploads with a tag if necessary.
   deploy:
     runs-on: ubuntu-24.04
-    # Notice that because our repo expects all checks to pass, we don't need to include every other job
-    # as a dependency of the `deploy` job.
     needs:
       - render-material
       - test-book
@@ -292,6 +291,7 @@ jobs:
           slug=$(./describe.sh "${GITHUB_REF}")
           echo "Building with slug '${slug}'"
           echo "slug=${slug}" >> "${GITHUB_ENV}"
+          ls -l
       - if: github.event_name == 'push' && startswith(github.ref, 'refs/tags/')
         id: create_release
         env:
