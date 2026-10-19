@@ -260,8 +260,6 @@ jobs:
   # It the necessary resulting builds as artifacts, zips them, and uploads with a tag if necessary.
   deploy:
     runs-on: ubuntu-24.04
-    # Notice that because our repo expects all checks to pass, we don't need to include every other job
-    # as a dependency of the `deploy` job.
     needs:
       - render-material
       - test-book
