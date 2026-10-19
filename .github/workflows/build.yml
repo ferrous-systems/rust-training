@@ -30,11 +30,11 @@ jobs:
         uses: taiki-e/install-action@183e4297cca2404691e9380e1307288dced5c82a # v2.87.25
         with:
           tool: mdbook-graphviz@0.3.1
+      - run: curl -LsSf https://github.com/ferrous-systems/mdslides/releases/download/v0.7.2/mdslides-installer.sh | sh
       - run: |
           slug=$(./describe.sh "${GITHUB_REF}")
           echo "Building with slug '${slug}'"
           echo "slug=${slug}" >> "${GITHUB_ENV}"
-          curl -LsSf https://github.com/ferrous-systems/mdslides/releases/download/v0.7.2/mdslides-installer.sh | sh
       - run: just assemble ${slug}
       - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
         if: ${{success()}}
