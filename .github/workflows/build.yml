@@ -42,7 +42,7 @@ jobs:
           name: Material
           if-no-files-found: error
           path: |
-            ./rust-training-*/
+            ./rust-training-*.zip
 
   test-book:
     name: Test Book
@@ -292,6 +292,7 @@ jobs:
           slug=$(./describe.sh "${GITHUB_REF}")
           echo "Building with slug '${slug}'"
           echo "slug=${slug}" >> "${GITHUB_ENV}"
+          ls -l
       - if: github.event_name == 'push' && startswith(github.ref, 'refs/tags/')
         id: create_release
         env:
