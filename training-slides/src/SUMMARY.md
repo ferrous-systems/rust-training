@@ -98,6 +98,7 @@ Topics about using Rust on ARM Cortex-M Microcontrollers (and similar). Requires
 * [The Embedded HAL and its implementations](./embedded-hals.md)
 * [Board Support Crates](./board-support.md)
 * [Using defmt](./defmt.md)
+* [async/await](./embedded-async.md)
 
 ## Under development
 
