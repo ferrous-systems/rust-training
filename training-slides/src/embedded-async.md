@@ -81,6 +81,16 @@ Note:
   can be found [here](https://github.com/ferrous-systems/rust-training/blob/main/example-code/qemu-thumbv7em/src/bin/uart_async.rs)
 - The driver can be found [here](https://github.com/ferrous-systems/rust-training/blob/main/example-code/qemu-common/src/cmsdk_uart/asynch.rs)
 
+
+## Future cancellation in embedded Rust
+
+- Cancellation: A future can be dropped before it completes, for example when it loses a
+  `select` or hits a timeout.
+- The driver should then stop the hardware operation, which usually involves disabling the module
+  interrupt as a minimum.
+- Our UART driver does this in the `Drop` impl of its transmission future by disabling the
+  TX interrupt.
+
 ## Under the hood of `embassy-time`
 
 - `embassy-time` provides a very convenient API. The high-level API for users is also (seemingly)
