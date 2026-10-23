@@ -8,9 +8,9 @@ description = "Simple Armv7E-M demo applications that run in QEMU and compile wi
 default-run = "defmt"
 
 [dependencies]
-cortex-m = { version = "0.7.7", features = ["critical-section-single-core", "inline-asm"] }
+cortex-m = { version = "0.7.10", features = ["critical-section-single-core", "inline-asm"] }
 cortex-m-types = "0.1"
-cortex-m-rt = { version =  "0.7.5", features = ["device"] }
+cortex-m-rt = { version =  "0.7.7", features = ["device"] }
 critical-section = "1.2.0"
 num_enum = { version = "0.7", default-features = false }
 defmt = "1"
