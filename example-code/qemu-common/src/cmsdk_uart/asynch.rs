@@ -170,14 +170,19 @@ impl AsyncTx {
             buf.len(),
         );
         assert!(!buf.is_empty());
+        // A cancelled transfer might still have left a byte in the TX buffer.
+        while self.basic_tx.tx_fifo_full() {}
         self.uart_state.tx_length.store(buf.len(), Relaxed);
         self.uart_state.tx_transmitted.store(1, Relaxed);
         self.uart_state
             .tx_buffer
             .store(buf.as_ptr() as *mut u8, Release);
-        // It is actually important to write AFTER the UART was enabled.
         defmt::debug!("TX 0x{:02x}", buf[0]);
-        self.basic_tx.write(buf[0]).unwrap();
+        // A previous transfer cancellation might have disabled the interrupts.
+        self.basic_tx.clear_interrupts();
+        self.basic_tx.enable_interrupt(true);
+        // It is actually important to write AFTER the UART was enabled.
+        self.basic_tx.write(buf[0]).expect("TX buffer should be empty");
 
         let guard = TransferGuard(self);
         core::future::poll_fn(|cx| {
