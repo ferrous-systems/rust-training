@@ -164,7 +164,39 @@ impl AsyncTx {
         if buf.is_empty() {
             return;
         }
-        Transmission::new(self, buf).await;
+        defmt::debug!(
+            "Creating Transmission(data=0x{=usize:08x}, len={})",
+            buf.as_ptr() as usize,
+            buf.len(),
+        );
+        assert!(!buf.is_empty());
+        // A cancelled transfer might still have left a byte in the TX buffer.
+        while self.basic_tx.tx_fifo_full() {}
+        self.uart_state.tx_length.store(buf.len(), Relaxed);
+        self.uart_state.tx_transmitted.store(1, Relaxed);
+        self.uart_state
+            .tx_buffer
+            .store(buf.as_ptr() as *mut u8, Release);
+        defmt::debug!("TX 0x{:02x}", buf[0]);
+        // A previous transfer cancellation might have disabled the interrupts.
+        self.basic_tx.clear_interrupts();
+        self.basic_tx.enable_interrupt(true);
+        // It is actually important to write AFTER the UART was enabled.
+        self.basic_tx.write(buf[0]).expect("TX buffer should be empty");
+
+        let guard = TransferGuard(self);
+        core::future::poll_fn(|cx| {
+            defmt::debug!("Polling Transmission complete...");
+            guard.0.uart_state.waker.register(cx.waker());
+            if guard.0.uart_state.tx_buffer.load(Acquire).is_null() {
+                defmt::debug!("Ready!");
+                core::task::Poll::Ready(())
+            } else {
+                defmt::debug!("Pending...");
+                core::task::Poll::Pending
+            }
+        })
+        .await;
     }
 }
 
@@ -186,68 +218,16 @@ impl embedded_io_async::Write for AsyncTx {
     }
 }
 
-/// Represents an ongoing asynchronous UART transmission, which can be polled.
+/// This wrapper structure also acts as a cancellation guard.
 ///
-/// The lifetime annotation `'tx` represents the lifetime of the Async UART the transmission is borrowing.
-pub struct Transmission<'uart> {
-    tx: &'uart mut AsyncTx,
-}
+/// It clears and disables interrupts on drop if the transfer has not finished regularly.
+struct TransferGuard<'tx>(&'tx mut AsyncTx);
 
-impl<'uart> Transmission<'uart> {
-    /// Create a new asynchronous future for a write/transmit operation.
-    ///
-    /// Will send the given buffer under interrupt, producing
-    /// `core::task::Poll::Ready` once complete.
-    ///
-    /// Do not pass a zero-length slice - this will panic.
-    ///
-    /// We can only keep this object whilst *both* the Async TX UART *and* the buffer are alive.
-    fn new(tx_async: &'uart mut AsyncTx, data: &'uart [u8]) -> Self {
-        defmt::debug!(
-            "Creating Transmission(data=0x{=usize:08x}, len={})",
-            data.as_ptr() as usize,
-            data.len(),
-        );
-        assert!(!data.is_empty());
-        // tx.inner.disable_interrupts();
-        tx_async.uart_state.tx_length.store(data.len(), Relaxed);
-        tx_async.uart_state.tx_transmitted.store(1, Relaxed);
-        tx_async
-            .uart_state
-            .tx_buffer
-            .store(data.as_ptr() as *mut u8, Release);
-        // It is actually important to write AFTER the UART was enabled.
-        defmt::debug!("TX 0x{:02x}", data[0]);
-        tx_async.basic_tx.write(data[0]).unwrap();
-
-        Self { tx: tx_async }
-    }
-}
-
-impl core::future::Future for Transmission<'_> {
-    type Output = ();
-
-    fn poll(
-        self: core::pin::Pin<&mut Self>,
-        cx: &mut core::task::Context<'_>,
-    ) -> core::task::Poll<Self::Output> {
-        defmt::debug!("Polling Transmission complete...");
-        self.tx.uart_state.waker.register(cx.waker());
-        if self.tx.uart_state.tx_buffer.load(Acquire).is_null() {
-            defmt::debug!("Ready!");
-            core::task::Poll::Ready(())
-        } else {
-            defmt::debug!("Pending...");
-            core::task::Poll::Pending
-        }
-    }
-}
-
-impl Drop for Transmission<'_> {
+impl Drop for TransferGuard<'_> {
     fn drop(&mut self) {
-        if !self.tx.uart_state.tx_buffer.load(Acquire).is_null() {
-            self.tx.basic_tx.clear_interrupts();
-            self.tx.basic_tx.enable_interrupt(false);
+        if !self.0.uart_state.tx_buffer.load(Acquire).is_null() {
+            self.0.basic_tx.clear_interrupts();
+            self.0.basic_tx.enable_interrupt(false);
         }
     }
 }
